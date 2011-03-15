@@ -61,7 +61,7 @@
 \begin_body
 
 \begin_layout Title
-Bachelor Thesis Specification
+Specification for Bachelor Thesis
 \end_layout
 
 \begin_layout Author
@@ -103,9 +103,8 @@ MongoDB is a young document-oriented database system that has started to
 \end_layout
 
 \begin_layout Standard
-Prolog, being a type-inferring language, agrees with the document-oriented
- approach of relaxing manifests in order to create more dynamic and flexible
- systems.
+Prolog, being an untyped language, agrees with the document-oriented approach
+ of relaxing manifests in order to create more dynamic and flexible systems.
  Embedding terms in other terms is natural in Prolog, and embedding documents
  in other documents in natural in MongoDB.
 \end_layout
@@ -123,8 +122,8 @@ Task Description
 
 \begin_layout Standard
 The task is to design and implement an interface between Prolog and MongoDB.
- This involves creating a BSON serializer/deserializer, and then wrapping
- the MongoDB API in Prolog predicates.
+ This involves creating a BSON (the data format used by MongoDB) serializer/dese
+rializer, and then wrapping the MongoDB API in Prolog predicates.
  The task also involves setting up network communication between the Prolog
  environment and the database server.
 \end_layout
@@ -147,7 +146,7 @@ Unit testing will be pursued using PlUnit, which is bundled with SWI-Prolog.
 \end_layout
 
 \begin_layout Standard
-A local instance of MongoDB will be used for testing the interface.
+A local instance of MongoDB will be used for testing the driver.
 \end_layout
 
 \begin_layout Subsection
@@ -158,32 +157,67 @@ Literature
 Books
 \end_layout
 
-\begin_layout Description
-MongoDB: The Definitive Guide
-\end_layout
+\begin_layout Standard
+Chodorow, K.
+ & Dirolf, M.
+ (2010) 
+\emph on
+MongoDB: The Definitive Guide.
 
-\begin_layout Description
+\emph default
+ Sebastopol, United States of America: O'Reilly Media, Inc.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
 PROLOG Programming for Artificial Intelligence, Bratko
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Description
-The Craft of Prolog, O'Keefe
+
+\begin_inset Newline newline
+\end_inset
+
+The Craft of Prolog, Richard O'Keefe
 \end_layout
 
 \begin_layout Subsubsection
 Internet Resources
 \end_layout
 
-\begin_layout Description
-MongoDB Driver Documentation: http://www.mongodb.org/display/DOCS/Drivers
-\end_layout
+\begin_layout Standard
+MongoDB Driver Documentation
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Description
-BSON Specification: http://bsonspec.org/
-\end_layout
+http://www.mongodb.org/display/DOCS/Drivers
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Description
-SWI Prolog Documentation: http://www.swi-prolog.org/pldoc/
+
+\begin_inset Newline newline
+\end_inset
+
+BSON Specification
+\begin_inset Newline newline
+\end_inset
+
+http://bsonspec.org/
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+SWI Prolog Documentation
+\begin_inset Newline newline
+\end_inset
+
+http://www.swi-prolog.org/pldoc/
 \end_layout
 
 \begin_layout Section
@@ -191,8 +225,8 @@ Scope
 \end_layout
 
 \begin_layout Standard
-Although I will strive to write code that is as portable as possible, developmen
-t and testing will focus solely on SWI-Prolog.
+Although the system will be made as portable as possible, development and
+ testing will focus solely on SWI-Prolog.
 \end_layout
 
 \begin_layout Standard
