@@ -65,7 +65,7 @@ Specification for Bachelor Thesis
 \end_layout
 
 \begin_layout Author
-Sebastian Lundström
+Sebastian Lundström (selu7901)
 \begin_inset Newline newline
 \end_inset
 
@@ -121,9 +121,12 @@ Task Description
 \end_layout
 
 \begin_layout Standard
-The task is to design and implement an interface between Prolog and MongoDB.
- This involves creating a BSON (the data format used by MongoDB) serializer/dese
-rializer, and then wrapping the MongoDB API in Prolog predicates.
+The task is to design and implement an interface between Prolog and Mongo\SpecialChar \-
+DB.
+ This involves creating a BSON (the data format used by Mongo\SpecialChar \-
+DB) serializer/dese
+rializer, and then wrapping the Mongo\SpecialChar \-
+DB API in Prolog predicates.
  The task also involves setting up network communication between the Prolog
  environment and the database server.
 \end_layout
@@ -146,7 +149,8 @@ Unit testing will be pursued using PlUnit, which is bundled with SWI-Prolog.
 \end_layout
 
 \begin_layout Standard
-A local instance of MongoDB will be used for testing the driver.
+A local instance of Mongo\SpecialChar \-
+DB will be used for testing the driver.
 \end_layout
 
 \begin_layout Subsection
@@ -173,7 +177,14 @@ MongoDB: The Definitive Guide.
 \begin_inset Newline newline
 \end_inset
 
-PROLOG Programming for Artificial Intelligence, Bratko
+Bratko, I.
+ (2001) 
+\emph on
+PROLOG Programming for Artificial Intelligence.
+
+\emph default
+ 3rd ed.
+ Essex, England: Pearson Education Limited.
 \begin_inset Newline newline
 \end_inset
 
@@ -181,11 +192,18 @@ PROLOG Programming for Artificial Intelligence, Bratko
 \begin_inset Newline newline
 \end_inset
 
-The Craft of Prolog, Richard O'Keefe
+O'Keefe, R.
+ A.
+ (1990) 
+\emph on
+The Craft of Prolog.
+
+\emph default
+ Cambridge, United States of America: The MIT Press.
 \end_layout
 
 \begin_layout Subsubsection
-Internet Resources
+Technical Documentation
 \end_layout
 
 \begin_layout Standard
@@ -213,7 +231,7 @@ http://bsonspec.org/
 \begin_inset Newline newline
 \end_inset
 
-SWI Prolog Documentation
+SWI-Prolog Documentation
 \begin_inset Newline newline
 \end_inset
 
@@ -225,13 +243,22 @@ Scope
 \end_layout
 
 \begin_layout Standard
-Although the system will be made as portable as possible, development and
- testing will focus solely on SWI-Prolog.
+Creating a driver that is usable with, or at least easily portable to, other
+ Prolog environments is desirable, but development and testing will focus
+ on SWI-Prolog.
 \end_layout
 
 \begin_layout Standard
-More complex features of MongoDB, such as advanced connection management
+More complex features of Mongo\SpecialChar \-
+DB, such as advanced connection management
  and GridFS, will not be implemented.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+[XXX - Should I motivate why I'm making these delimitations? The reason
+ is simply that I probably won't have time.]
 \end_layout
 
 \begin_layout Section
@@ -239,19 +266,66 @@ Time Plan
 \end_layout
 
 \begin_layout Standard
-Tentative schedule, 2011:
+Tentative schedule spanning eleven weeks (of which one is unrelated) during
+ 2011.
+ Technical development and thesis writing will be done in parallel.
 \end_layout
 
-\begin_layout Standard
-March 28, start
+\begin_layout Description
+March
+\begin_inset space ~
+\end_inset
+
+28 First day.
 \end_layout
 
-\begin_layout Standard
-prog theory exam
+\begin_layout Description
+2
+\begin_inset space ~
+\end_inset
+
+weeks Research MongoDB and BSON.
+ Study drivers for other languages.
 \end_layout
 
-\begin_layout Standard
-finish sometime xxx
+\begin_layout Description
+3
+\begin_inset space ~
+\end_inset
+
+weeks Implement BSON serializer/deserializer.
+\end_layout
+
+\begin_layout Description
+April
+\begin_inset space ~
+\end_inset
+
+20-26 Pause from thesis work to study for unrelated exam.
+\end_layout
+
+\begin_layout Description
+1
+\begin_inset space ~
+\end_inset
+
+week Implement network connection.
+\end_layout
+
+\begin_layout Description
+4
+\begin_inset space ~
+\end_inset
+
+weeks Implement bulk of driver functionality.
+\end_layout
+
+\begin_layout Description
+June
+\begin_inset space ~
+\end_inset
+
+10 Last day.
 \end_layout
 
 \end_body
