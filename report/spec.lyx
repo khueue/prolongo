@@ -254,13 +254,6 @@ DB, such as advanced connection management
  and GridFS, will not be implemented.
 \end_layout
 
-\begin_layout Standard
-
-\emph on
-[XXX - Should I motivate why I'm making these delimitations? The reason
- is simply that I probably won't have time.]
-\end_layout
-
 \begin_layout Section
 Time Plan
 \end_layout
@@ -268,7 +261,7 @@ Time Plan
 \begin_layout Standard
 Tentative schedule spanning eleven weeks (of which one is unrelated) during
  2011.
- Technical development and thesis writing will be done in parallel.
+ Technical development and writing the thesis will be done in parallel.
 \end_layout
 
 \begin_layout Description
