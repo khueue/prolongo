@@ -1,0 +1,5 @@
+# Backup files and such.
+._*
+*~
+*.swp
+.DS_Store
