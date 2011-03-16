@@ -106,7 +106,7 @@ MongoDB is a young document-oriented database system that has started to
 Prolog, being an untyped language, agrees with the document-oriented approach
  of relaxing manifests in order to create more dynamic and flexible systems.
  Embedding terms in other terms is natural in Prolog, and embedding documents
- in other documents in natural in MongoDB.
+ in other documents is natural in MongoDB.
 \end_layout
 
 \begin_layout Standard
