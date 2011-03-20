@@ -1,5 +1,8 @@
-# Backup files and such.
-._*
+# Backup files and other irrelevant stuff.
 *~
 *.swp
 .DS_Store
+Icon?
+._*
+.Spotlight-V100
+.Trashes
