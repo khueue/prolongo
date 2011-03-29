@@ -6,7 +6,7 @@
 
 test_decode :-
     % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00
-    _BsonHelloWorld =
+    BsonHelloWorld =
     [
         0x16,0x00,0x00,0x00,0x02,
         104, 101, 108, 108, 111,
@@ -24,26 +24,31 @@ test_decode :-
     BsonAwesome =
     [
         49,0,0,0, % length
-        4, % array tag
+        0x04, % array tag
             66,83,79,78,0, % element name, "BSON\0"
             38,0,0,0, % length of embedded doc (array)
-            2, % string tag
+            0x02, % string tag
                 48,0, % index 0 ("0\0")
                 8,0,0,0, % length of string, incl. nul
                 97,119,101,115,111,109,101, 0, % string, "awesome\0"
-            1, % double tag
+            0x01, % double tag
                 49,0, % ename, index 1 ("1\0")
                 51,51,51,51,51,51,20,64, % double 8-byte
-            16, % int32 tag
+            0x10, % int32 tag
                 50,0, % ename, index 2 ("2\0")
                 194,7,0,0, % int32 data
             0, % end of array doc
         0 % end of doc
     ],
-    Bson = BsonAwesome,
+    Bson = BsonHelloWorld,
     bson:decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
     io:format('Term: ~w~n', [Term]).
+
+putit([]).
+putit([X|Xs]) :-
+    put_byte(X),
+    putit(Xs).
 
 encode(Term, Bson) :-
     % XXX Stub.
@@ -74,9 +79,12 @@ element(Element) -->
 element(Element) -->
     [0x10], !,
     element_int32(Element).
-element(Element) -->
+/*
+% XXX: This won't work, as it tries the doc end 0x00 and fails.
+element(_Element) -->
     [Tag], !,
-    { io:format('Unhandled element type: ~w~n', [Tag]), fail }.
+    { io:format('Unhandled element type: ~w~n', [Tag]), halt }.
+*/
 
 element_utf8_string((Ename,String)) -->
     e_name(Ename),
