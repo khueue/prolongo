@@ -68,6 +68,14 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Section
+Diary
+\end_layout
+
+\begin_layout Itemize
+March 29, wrote a decoder that decodes {hello: world}
+\end_layout
+
+\begin_layout Section
 Background
 \end_layout
 

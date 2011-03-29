@@ -1,11 +1,15 @@
-# Flags: skip welcome, optimize, run goal (expects argument).
-PROLOG = swipl --quiet -O -g
+PROLOG = swipl -O
 
-all: trim
+all: trim run
 
 trim:
 	@# Remove trailing whitespace and such. Not vital.
-	- trim *.md **/*.pl
+	@- trim *.md src/*.pl
 
 run:
-	$(PROLOG) "['src/*.pl'], halt"
+	clear
+	@ $(PROLOG) -g "['src/load.pl'], run"
+
+halt:
+	clear
+	@ $(PROLOG) -g "['src/load.pl'], call_cleanup(run, halt)"
