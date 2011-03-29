@@ -5,5 +5,5 @@
 
 run :-
     nl,
-    bson:test_decode,
+    ignore(bson:test_decode),
     nl.

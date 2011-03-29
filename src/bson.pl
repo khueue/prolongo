@@ -6,19 +6,41 @@
 
 test_decode :-
     % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00
-    _BsonHelloWorld = [
+    _BsonHelloWorld =
+    [
         0x16,0x00,0x00,0x00,0x02,
         104, 101, 108, 108, 111,
         0x00,0x06,0x00,0x00,0x00,
         119, 111, 114, 108, 100,
-        0x00,0x00],
-    BsonHello32 = [
+        0x00,0x00
+    ],
+    _BsonHello32 =
+    [
         0xFF,0x00,0x00,0x00,
         0x10, 104, 101, 108, 108, 111, 0x00,
         0x20,0x00,0x00,0x00,
         0x00
     ],
-    Bson = BsonHello32,
+    BsonAwesome =
+    [
+        49,0,0,0, % length
+        4, % array tag
+            66,83,79,78,0, % element name, "BSON\0"
+            38,0,0,0, % length of embedded doc (array)
+            2, % string tag
+                48,0, % index 0 ("0\0")
+                8,0,0,0, % length of string, incl. nul
+                97,119,101,115,111,109,101, 0, % string, "awesome\0"
+            1, % double tag
+                49,0, % ename, index 1 ("1\0")
+                51,51,51,51,51,51,20,64, % double 8-byte
+            16, % int32 tag
+                50,0, % ename, index 2 ("2\0")
+                194,7,0,0, % int32 data
+            0, % end of array doc
+        0 % end of doc
+    ],
+    Bson = BsonAwesome,
     bson:decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
     io:format('Term: ~w~n', [Term]).
@@ -47,8 +69,14 @@ element(Element) -->
     [0x02], !,
     element_utf8_string(Element).
 element(Element) -->
+    [0x04], !,
+    document(Element).
+element(Element) -->
     [0x10], !,
     element_int32(Element).
+element(Element) -->
+    [Tag], !,
+    { io:format('Unhandled element type: ~w~n', [Tag]), fail }.
 
 element_utf8_string((Ename,String)) -->
     e_name(Ename),
