@@ -72,7 +72,8 @@ Diary
 \end_layout
 
 \begin_layout Itemize
-March 29, wrote a decoder that decodes {hello: world}
+March 29, wrote a decoder that decodes {hello: world} and {hello: 32}.
+ Learned some DCG and rewrote the parser with it.
 \end_layout
 
 \begin_layout Section
