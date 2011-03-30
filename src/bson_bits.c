@@ -21,7 +21,7 @@ get_int(term_t t)
  * Convert 8 bytes into a double (64-bit IEEE 754 floating point).
  */
 static foreign_t
-bytes8_to_double(
+pl_bytes8_to_double(
     term_t byte0, term_t byte1, term_t byte2, term_t byte3,
     term_t byte4, term_t byte5, term_t byte6, term_t byte7,
     term_t result)
@@ -45,7 +45,7 @@ bytes8_to_double(
  * Convert 4 bytes into a long (32-bit). Byte-order is little-endian.
  */
 static foreign_t
-bytes4_to_int32(
+pl_bytes4_to_int32(
     term_t byte0, term_t byte1, term_t byte2, term_t byte3,
     term_t result)
 {
@@ -64,7 +64,7 @@ bytes4_to_int32(
  * Convert 8 bytes into an int64_t (64-bit). Byte-order is little-endian.
  */
 static foreign_t
-bytes8_to_int64(
+pl_bytes8_to_int64(
     term_t byte0, term_t byte1, term_t byte2, term_t byte3,
     term_t byte4, term_t byte5, term_t byte6, term_t byte7,
     term_t result)
@@ -91,7 +91,7 @@ bytes8_to_int64(
 install_t
 install_bson_bits(void)
 {
-    PL_register_foreign("bytes_to_float",   9, bytes8_to_double, 0);
-    PL_register_foreign("bytes_to_integer", 5, bytes4_to_int32,  0);
-    PL_register_foreign("bytes_to_integer", 9, bytes8_to_int64,  0);
+    PL_register_foreign("bytes_to_float",   9, pl_bytes8_to_double, 0);
+    PL_register_foreign("bytes_to_integer", 5, pl_bytes4_to_int32,  0);
+    PL_register_foreign("bytes_to_integer", 9, pl_bytes8_to_int64,  0);
 }
