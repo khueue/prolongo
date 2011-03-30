@@ -99,24 +99,119 @@ March 30.
 Background
 \end_layout
 
+\begin_layout Standard
+From spec:
+\end_layout
+
+\begin_layout Standard
+[MongoDB is a young document-oriented database system that has started to
+ gain much attention recently.
+ Document-orientation involves removing rigid database schemas and advanced
+ transactions, in favor of flexibility.
+ Document-orientation also promotes a certain degree of denormalization
+ which allows embedding documents into each other, leading to potentially
+ much better performance by avoiding the need for expensive join operations.
+\end_layout
+
+\begin_layout Standard
+Prolog, being an untyped language, agrees with the document-oriented approach
+ of relaxing manifests in order to create more dynamic and flexible systems.
+ Embedding terms in other terms is natural in Prolog, and embedding documents
+ in other documents is natural in MongoDB.
+\end_layout
+
+\begin_layout Standard
+Many drivers exist, both official and unofficial, that enable the use of
+ Mongo\SpecialChar \-
+DB from various programming languages.
+ At the time of writing, no such driver for Prolog seems to exist.]
+\end_layout
+
 \begin_layout Section
 Method
+\end_layout
+
+\begin_layout Standard
+Research other drivers, docs.
+\end_layout
+
+\begin_layout Standard
+Test-driven development.
 \end_layout
 
 \begin_layout Section
 Result
 \end_layout
 
+\begin_layout Itemize
+BSON encoder/decoder
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Some parts written in C.
+ Why? (Didn't know how to handle bytes-to-float in Prolog, basically.)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+MongoDB API
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Thoroughly discuss design of wrapper API, how lists and structures are represent
+ed etc.
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Discussion
 \end_layout
 
+\begin_layout Itemize
+Portability
+\end_layout
+
+\begin_layout Itemize
+Efficiency
+\end_layout
+
+\begin_layout Itemize
+Future
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+BSON implementation in C? Already exists, I think.
+\end_layout
+
+\begin_layout Itemize
+More advanced features
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Conclusion
 \end_layout
 
+\begin_layout Standard
+Difficulties? Did it work? Is it usable?
+\end_layout
+
 \begin_layout Section
 Literature
+\end_layout
+
+\begin_layout Standard
+Chodorow, K.
+ & Dirolf, M.
+ (2010) 
+\emph on
+MongoDB: The Definitive Guide.
+
+\emph default
+ Sebastopol, United States of America: O'Reilly Media, Inc.
 \end_layout
 
 \end_body
