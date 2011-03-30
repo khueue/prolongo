@@ -173,6 +173,12 @@ Discussion
 Portability
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Tested on Mac, SWI, GCC, etc.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Efficiency
 \end_layout
