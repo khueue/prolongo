@@ -83,6 +83,16 @@ March 30.
  the rest of the system.
  Separated bson into separate files, encoder and decoder.
  Should think about researching PlUnit by now.
+ Thought about and tried PlUnit.
+ Works fine.
+ But how to organize tests? Implemented all bit-hacking in C for the time
+ being.
+ Works.
+ Simple.
+ Fun.
+ Started looking at PlDoc.
+ Generating actual docs seems like a hassle, probably won't do it.
+ But the important thing is unit tests, and some comments inside the source.
 \end_layout
 
 \begin_layout Section
