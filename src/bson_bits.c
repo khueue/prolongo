@@ -1,3 +1,8 @@
+/**
+ * Bit-packing routines used by the Prolog BSON parser.
+ * These functions do no error checking whatsoever.
+ */
+
 #include <SWI-Prolog.h>
 
 /**
@@ -45,11 +50,12 @@ bytes4_to_int32(
     term_t result)
 {
     long val = 0;
+    unsigned char *byte = (unsigned char *)&val;
 
-    val |= get_int(byte0) << (8*0);
-    val |= get_int(byte1) << (8*1);
-    val |= get_int(byte2) << (8*2);
-    val |= get_int(byte3) << (8*3);
+    byte[0] = get_int(byte0);
+    byte[1] = get_int(byte1);
+    byte[2] = get_int(byte2);
+    byte[3] = get_int(byte3);
 
     return PL_unify_integer(result, val);
 }
@@ -64,15 +70,16 @@ bytes8_to_int64(
     term_t result)
 {
     int64_t val = 0;
+    unsigned char *byte = (unsigned char *)&val;
 
-    val |= (int64_t)get_int(byte0) << (8*0);
-    val |= (int64_t)get_int(byte1) << (8*1);
-    val |= (int64_t)get_int(byte2) << (8*2);
-    val |= (int64_t)get_int(byte3) << (8*3);
-    val |= (int64_t)get_int(byte4) << (8*4);
-    val |= (int64_t)get_int(byte5) << (8*5);
-    val |= (int64_t)get_int(byte6) << (8*6);
-    val |= (int64_t)get_int(byte7) << (8*7);
+    byte[0] = get_int(byte0);
+    byte[1] = get_int(byte1);
+    byte[2] = get_int(byte2);
+    byte[3] = get_int(byte3);
+    byte[4] = get_int(byte4);
+    byte[5] = get_int(byte5);
+    byte[6] = get_int(byte6);
+    byte[7] = get_int(byte7);
 
     return PL_unify_int64(result, val);
 }
