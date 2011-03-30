@@ -1,7 +1,7 @@
 #include <SWI-Prolog.h>
 
 /**
- * Get the integer from a term and return it as a byte.
+ * Get the integer from a term.
  */
 static int
 get_int(term_t t)
