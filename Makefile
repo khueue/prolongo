@@ -1,6 +1,6 @@
 PROLOG    = swipl -O
 PROLOG_LD = swipl-ld
-CFLAGS    = -Wall -Wextra -ansi -pedantic
+CFLAGS    = -Wall -Wextra -ansi -pedantic -O3
 
 all: trim libs run
 

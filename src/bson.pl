@@ -41,9 +41,11 @@ test_decode :-
         0 % end of doc
     ],
     Bson = BsonHelloWorld,
-    bson:decode(Bson, Term),
+    decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
-    io:format('Term: ~w~n', [Term]).
+    io:format('Term: ~w~n', [Term]),
+    bson_bits:bytes_as_float(51,51,51,51, 51,51,20,64, F),
+    io:format('Float: ~w~n', [F]).
 
 putit([]).
 putit([X|Xs]) :-
