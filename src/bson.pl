@@ -5,9 +5,10 @@
 :- use_module(bson_decoder).
 :- use_module(bson_encoder).
 
-test_decode :-
-    % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00
-    BsonHelloWorld =
+:- begin_tests(bson).
+
+test(1) :-
+    Bson =
     [
         0x16,0x00,0x00,0x00,0x02,
         104, 101, 108, 108, 111,
@@ -15,7 +16,13 @@ test_decode :-
         119, 111, 114, 108, 100,
         0x00,0x00
     ],
-    _BsonHello32 =
+    bson_decoder:decode(Bson, Term),
+    Term = bson([hello:world]).
+
+:- end_tests(bson).
+
+test_decode :-
+    BsonHello32 =
     [
         0xFF,0x00,0x00,0x00,
         0x10, 104, 101, 108, 108, 111, 0x00,
@@ -41,7 +48,7 @@ test_decode :-
             0, % end of array doc
         0 % end of doc
     ],
-    Bson = BsonHelloWorld,
+    Bson = BsonHello32,
     bson_decoder:decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
     io:format('Term: ~w~n', [Term]),

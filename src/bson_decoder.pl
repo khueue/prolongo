@@ -12,6 +12,13 @@
 
 :- use_module(bson_bits).
 
+:- begin_tests(bson_decoder).
+
+test('key value pair uses colon') :-
+    key_value_pair(key, value, key:value).
+
+:- end_tests(bson_decoder).
+
 decode(Bson, Term) :-
     phrase(decode(Term), Bson).
 
@@ -57,13 +64,6 @@ element_int32(Pair) -->
     e_name(Ename),
     int32(Integer),
     { key_value_pair(Ename, Integer, Pair) }.
-
-:- begin_tests(bson).
-
-test(key222) :-
-    key_value_pair(key, value, key:value).
-
-:- end_tests(bson).
 
 key_value_pair(Key, Value, Key:Value).
 
