@@ -1,1 +1,1 @@
-:- module(utils, []).
+:- module(_, []).

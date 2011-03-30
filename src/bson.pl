@@ -1,11 +1,9 @@
 %%% Implements BSON 1.0. <http://bsonspec.org/>
 
-:- module(bson, []).
-:- reexport(
-[
-    bson_decoder,
-    bson_encoder
-]).
+:- module(_, []).
+
+:- use_module(bson_decoder).
+:- use_module(bson_encoder).
 
 test_decode :-
     % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00
@@ -44,7 +42,7 @@ test_decode :-
         0 % end of doc
     ],
     Bson = BsonHelloWorld,
-    decode(Bson, Term),
+    bson_decoder:decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
     io:format('Term: ~w~n', [Term]),
     bson_bits:bytes_to_float(51,51,51,51, 51,51,20,64, F),

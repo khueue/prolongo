@@ -1,9 +1,4 @@
-:- module(bson_bits,
-[
-    bytes_to_float/9,
-    bytes_to_integer/5,
-    bytes_to_integer/9
-]).
+:- module(_, []).
 
 :-
     absolute_file_name('bson_bits', [relative_to('./lib')], LibPath),
