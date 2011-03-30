@@ -44,8 +44,10 @@ test_decode :-
     decode(Bson, Term),
     io:format('BSON: ~w~n', [Bson]),
     io:format('Term: ~w~n', [Term]),
-    bson_bits:bytes_as_float(51,51,51,51, 51,51,20,64, F),
-    io:format('Float: ~w~n', [F]).
+    bson_bits:bytes_to_float(51,51,51,51, 51,51,20,64, F),
+    io:format('Float: ~w~n', [F]),
+    bson_bits:bytes_to_integer(255,255,255,127, Int),
+    io:format('Integer: ~w~n', [Int]).
 
 putit([]).
 putit([X|Xs]) :-
@@ -111,7 +113,7 @@ length(Length) -->
 
 int32(Integer) -->
     [Byte0,Byte1,Byte2,Byte3],
-    { bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) }.
+    { bson_bits:bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) }.
 
 e_name(Ename) -->
     cstring(CharList),
@@ -123,23 +125,3 @@ cstring([Char|Cs]) -->
     cstring(Cs).
 
 end --> [0x00].
-
-bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) :-
-    Integer is
-        (Byte0 << (8*0)) \/
-        (Byte1 << (8*1)) \/
-        (Byte2 << (8*2)) \/
-        (Byte3 << (8*3)).
-
-bytes_to_integer(
-    Byte0, Byte1, Byte2, Byte3,
-    Byte4, Byte5, Byte6, Byte7, Integer) :-
-    Integer is
-        (Byte0 << (8*0)) \/
-        (Byte1 << (8*1)) \/
-        (Byte2 << (8*2)) \/
-        (Byte3 << (8*3)) \/
-        (Byte4 << (8*4)) \/
-        (Byte5 << (8*5)) \/
-        (Byte6 << (8*6)) \/
-        (Byte7 << (8*7)).

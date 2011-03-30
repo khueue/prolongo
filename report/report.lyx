@@ -76,6 +76,13 @@ March 29, wrote a decoder that decodes {hello: world} and {hello: 32}.
  Learned some DCG and rewrote the parser with it.
 \end_layout
 
+\begin_layout Itemize
+March 30.
+ Researched how SWI interacts with C.
+ Wrote a bytes8_to_double function in C and managed to integrate it with
+ the rest of the system.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout
