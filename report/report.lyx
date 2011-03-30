@@ -93,6 +93,7 @@ March 30.
  Started looking at PlDoc.
  Generating actual docs seems like a hassle, probably won't do it.
  But the important thing is unit tests, and some comments inside the source.
+ Started fleshing out the report slightly, with some ideas and stubs.
 \end_layout
 
 \begin_layout Section
