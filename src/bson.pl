@@ -2,7 +2,7 @@
 
 :- module(bson, [encode/2,decode/2]).
 
-:- include(includes).
+:- use_module(bson_bits).
 
 test_decode :-
     % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00
@@ -21,7 +21,7 @@ test_decode :-
         0x20,0x00,0x00,0x00,
         0x00
     ],
-    BsonAwesome =
+    _BsonAwesome =
     [
         49,0,0,0, % length
         0x04, % array tag
@@ -36,7 +36,7 @@ test_decode :-
                 51,51,51,51,51,51,20,64, % double 8-byte
             0x10, % int32 tag
                 50,0, % ename, index 2 ("2\0")
-                194,7,0,0, % int32 data
+                194,7,0,0, % int32 data (1986)
             0, % end of array doc
         0 % end of doc
     ],
@@ -66,18 +66,22 @@ document(bson(Elements)) -->
     end.
 
 element_list([Element|Elements]) -->
-    element(Element), !,
+    element(Element),
+    !,
     element_list(Elements).
 element_list([]) --> [].
 
 element(Element) -->
-    [0x02], !,
+    [0x02],
+    !,
     element_utf8_string(Element).
 element(Element) -->
-    [0x04], !,
+    [0x04],
+    !,
     document(Element).
 element(Element) -->
-    [0x10], !,
+    [0x10],
+    !,
     element_int32(Element).
 /*
 % XXX: This won't work, as it tries the doc end 0x00 and fails.
@@ -97,8 +101,8 @@ element_int32((Ename,Integer)) -->
 % XXX: Handle unicode (do not use cstring).
 string(String) -->
     length(_Integer),
-    cstring(AsciiList),
-    { atom_asciilist(String, AsciiList) }.
+    cstring(CharList),
+    { atom_codes(String, CharList) }.
 
 length(Length) -->
     int32(Length).
@@ -108,8 +112,8 @@ int32(Integer) -->
     { bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) }.
 
 e_name(Ename) -->
-    cstring(AsciiList),
-    { atom_asciilist(Ename, AsciiList) }.
+    cstring(CharList),
+    { atom_codes(Ename, CharList) }.
 
 cstring([]) --> [0x00], !.
 cstring([Char|Cs]) -->
@@ -118,25 +122,22 @@ cstring([Char|Cs]) -->
 
 end --> [0x00].
 
-atom_asciilist(Atom, AsciiList) :-
-    name(Atom, AsciiList).
-
 bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) :-
     Integer is
-        (Byte0 << (8*0)) +
-        (Byte1 << (8*1)) +
-        (Byte2 << (8*2)) +
+        (Byte0 << (8*0)) \/
+        (Byte1 << (8*1)) \/
+        (Byte2 << (8*2)) \/
         (Byte3 << (8*3)).
 
 bytes_to_integer(
     Byte0, Byte1, Byte2, Byte3,
     Byte4, Byte5, Byte6, Byte7, Integer) :-
     Integer is
-        (Byte0 << (8*0)) +
-        (Byte1 << (8*1)) +
-        (Byte2 << (8*2)) +
-        (Byte3 << (8*3)) +
-        (Byte4 << (8*4)) +
-        (Byte5 << (8*5)) +
-        (Byte6 << (8*6)) +
+        (Byte0 << (8*0)) \/
+        (Byte1 << (8*1)) \/
+        (Byte2 << (8*2)) \/
+        (Byte3 << (8*3)) \/
+        (Byte4 << (8*4)) \/
+        (Byte5 << (8*5)) \/
+        (Byte6 << (8*6)) \/
         (Byte7 << (8*7)).
