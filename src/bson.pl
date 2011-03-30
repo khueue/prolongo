@@ -1,8 +1,11 @@
-%%% Implements BSON 1.0.
+%%% Implements BSON 1.0. <http://bsonspec.org/>
 
 :- module(bson, []).
-:- reexport(bson_decoder, [decode/2]).
-:- reexport(bson_encoder, [encode/2]).
+:- reexport(
+[
+    bson_decoder,
+    bson_encoder
+]).
 
 test_decode :-
     % \x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00

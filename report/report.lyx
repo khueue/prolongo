@@ -81,6 +81,8 @@ March 30.
  Researched how SWI interacts with C.
  Wrote a bytes8_to_double function in C and managed to integrate it with
  the rest of the system.
+ Separated bson into separate files, encoder and decoder.
+ Should think about researching PlUnit by now.
 \end_layout
 
 \begin_layout Section

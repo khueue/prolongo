@@ -1,4 +1,7 @@
-:- module(bson_decoder, [decode/2]).
+:- module(bson_decoder,
+[
+    decode/2
+]).
 
 :- use_module(bson_bits).
 
