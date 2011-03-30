@@ -1,3 +1,13 @@
+/** <module> BSON Decoder
+ *
+ * This module processes structured comments and generates both formal
+ * mode declarations from them as well as documentation in the form of
+ * HTML or LaTeX.
+ *
+ * @author khueue
+ * @license GPL
+ */
+
 :- module(_, []).
 
 :- use_module(bson_bits).
@@ -38,13 +48,24 @@ element(_Element) -->
     { io:format('Unhandled element type: ~w~n', [Tag]), halt }.
 */
 
-element_utf8_string((Ename,String)) -->
+element_utf8_string(Pair) -->
     e_name(Ename),
-    string(String).
+    string(String),
+    { key_value_pair(Ename, String, Pair) }.
 
-element_int32((Ename,Integer)) -->
+element_int32(Pair) -->
     e_name(Ename),
-    int32(Integer).
+    int32(Integer),
+    { key_value_pair(Ename, Integer, Pair) }.
+
+:- begin_tests(bson).
+
+test(key222) :-
+    key_value_pair(key, value, key:value).
+
+:- end_tests(bson).
+
+key_value_pair(Key, Value, Key:Value).
 
 % XXX: Handle unicode (do not use cstring).
 string(String) -->
