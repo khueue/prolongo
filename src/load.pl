@@ -1,7 +1,7 @@
-%:- set_prolog_flag(iso, true).
+% :- set_prolog_flag(iso, true).
 :- encoding(utf8).
 
-:- include(includes).
+:- use_module(bson).
 
 run :-
     nl,
