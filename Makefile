@@ -14,16 +14,18 @@ test: compile
 	$(PROLOG) -g "[load], test, halt"
 
 stay: compile
-	@ echo "--- Running test suite and staying open ..."
+	@ echo "--- Running test suite and remaining open ..."
 	$(PROLOG) -g "[load], test"
 
 compile: lib/bson_bits
 
-lib/bson_bits: Makefile ext/bson_bits.c
-	@ mkdir -p lib
+lib/bson_bits: setup Makefile ext/bson_bits.c
 	@ echo "--- Compiling foreign library 'bson_bits' ..."
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
-	@ mv $@.dylib $@
+	mv $@.dylib $@
+
+setup:
+	mkdir -p lib
 
 clean:
 	rm -rf lib/*
