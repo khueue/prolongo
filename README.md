@@ -2,6 +2,8 @@
 
 ## Todo
 
+ * Proper decoding of UTF-8 strings, and finish the decoder.
+ * Write more decoder tests.
  * Research exception handling in Prolog.
 
 ## Food for Thought
