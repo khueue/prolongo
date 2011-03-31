@@ -7,14 +7,14 @@
 % Enable this to see how modules and such are located.
 % :- set_prolog_flag(verbose_file_search, true).
 
-:-
-    prolog_load_context(directory, Dir), % Dir of this file.
-    atom_concat(Dir, '/src/bson', DirBson),
-    asserta(user:file_search_path(bson, DirBson)),
-    atom_concat(Dir, '/src/mongo', DirMongo),
-    asserta(user:file_search_path(mongo, DirMongo)),
-    atom_concat(Dir, '/lib', DirLib),
-    asserta(user:file_search_path(foreign, DirLib)).
+:- % Set up load paths.
+    prolog_load_context(directory, RootDir), % Dir of this file.
+    atom_concat(RootDir, '/src/bson', Bson),
+    asserta(user:file_search_path(bson, Bson)),
+    atom_concat(RootDir, '/src/mongo', Mongo),
+    asserta(user:file_search_path(mongo, Mongo)),
+    atom_concat(RootDir, '/lib', Lib),
+    asserta(user:file_search_path(foreign, Lib)).
 
 run :-
     use_module(bson(bson)),
