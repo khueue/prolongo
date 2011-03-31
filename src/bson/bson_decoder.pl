@@ -17,11 +17,11 @@ test('hello: world', [true(Got == Expected)]) :-
         119, 111, 114, 108, 100,
         0x00,0x00
     ],
-    bson_decoder:decode(Bson, Got),
     Expected =
     [
         'hello': world
-    ].
+    ],
+    bson_decoder:decode(Bson, Got).
 
 test('hello: 32', [true(Got == Expected)]) :-
     Bson =
@@ -31,11 +31,11 @@ test('hello: 32', [true(Got == Expected)]) :-
         0x20,0x00,0x00,0x00,
         0x00
     ],
-    bson_decoder:decode(Bson, Got),
     Expected =
     [
         'hello': 32
-    ].
+    ],
+    bson_decoder:decode(Bson, Got).
 
 test('hello: 5.05', [true(Got == Expected)]) :-
     Bson =
@@ -46,11 +46,11 @@ test('hello: 5.05', [true(Got == Expected)]) :-
         51,51,51,51,51,51,20,64, % Double data 5.05.
         0x00
     ],
-    bson_decoder:decode(Bson, Got),
     Expected =
     [
         'hello': 5.05
-    ].
+    ],
+    bson_decoder:decode(Bson, Got).
 
 test('complex', [true(Got == Expected)]) :-
     Bson =
@@ -72,7 +72,6 @@ test('complex', [true(Got == Expected)]) :-
             0, % end of array doc
         0 % end of doc
     ],
-    bson_decoder:decode(Bson, Got),
     Expected =
     [
         'BSON':
@@ -81,7 +80,8 @@ test('complex', [true(Got == Expected)]) :-
                 '1': 5.05,
                 '2': 1986
             ]
-    ].
+    ],
+    bson_decoder:decode(Bson, Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     Bson =
