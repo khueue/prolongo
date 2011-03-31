@@ -24,7 +24,9 @@ lib/bson_bits: Makefile ext/bson_bits.c
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	mv $@.dylib $@
 
-setup:
+setup: lib
+
+lib:
 	mkdir -p lib
 
 clean:
