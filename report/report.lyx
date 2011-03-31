@@ -72,7 +72,8 @@ Diary
 \end_layout
 
 \begin_layout Itemize
-March 29, wrote a decoder that decodes {hello: world} and {hello: 32}.
+March 29.
+ Wrote a decoder that decodes {hello: world} and {hello: 32}.
  Learned some DCG and rewrote the parser with it.
 \end_layout
 
@@ -99,7 +100,7 @@ March 30.
 \begin_layout Itemize
 March 31.
  Restructured project folder.
- Better include system now, I think.
+ Better including of modules now, I think.
  Starting to write nice unit tests.
  Continued with the decoder a little, the complex BSON example works.
  Wrote nice TextMate snippets for test boilerplating.
