@@ -1,23 +1,30 @@
 PROLOG    = swipl -O
 PROLOG_LD = swipl-ld
-CFLAGS    = -Wall -Wextra -ansi -pedantic -O3
+CC        = clang
+CFLAGS    = -cc $(CC) -Wall -Wextra -ansi -pedantic -O4
 
-all: trim clear libs run
+.PHONY: lib
 
-clear:
-	clear
+all: trim lib halt
+
+clean:
+	rm -rf lib/*
 
 trim:
 	@# Remove trailing whitespace and such. Not vital.
 	@- trim *.md src/*.pl src/*.c
 
-run:
-	$(PROLOG) -g "['src/load.pl'], call_cleanup(run, halt)"
+halt:
+	clear
+	$(PROLOG) -g "[load], call_cleanup(run, halt)"
 
 stay:
-	$(PROLOG) -g "['src/load.pl'], run"
+	clear
+	$(PROLOG) -g "[load], run"
 
-libs:
+lib: lib/bson_bits
+
+lib/bson_bits: Makefile ext/bson_bits.c
 	@ mkdir -p lib
-	$(PROLOG_LD) -shared -o lib/bson_bits.dylib src/bson_bits.c $(CFLAGS)
-	@ mv lib/bson_bits.dylib lib/bson_bits
+	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
+	@ mv $@.dylib $@
