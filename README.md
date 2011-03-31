@@ -1,5 +1,10 @@
 # Design and Implementation of a MongoDB Driver for Prolog
 
+## Usage
+
+Clone the repository and run `make` to compile the necessary C libraries
+and run the test suite. Requires a C compiler and SWI-Prolog.
+
 ## Todo
 
  * Proper decoding of UTF-8 strings, and finish the decoder.
