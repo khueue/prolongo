@@ -17,9 +17,9 @@ stay: compile
 	@ echo "--- Running test suite and remaining open ..."
 	$(PROLOG) -g "[load], test"
 
-compile: lib/bson_bits
+compile: setup lib/bson_bits
 
-lib/bson_bits: setup Makefile ext/bson_bits.c
+lib/bson_bits: Makefile ext/bson_bits.c
 	@ echo "--- Compiling foreign library 'bson_bits' ..."
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	mv $@.dylib $@
