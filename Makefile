@@ -11,7 +11,7 @@ trim:
 
 test: compile
 	@ echo "--- Running test suite and exiting ..."
-	$(PROLOG) -g "[load], test, halt"
+	$(PROLOG) -g "[load], call_cleanup(test, halt)"
 
 stay: compile
 	@ echo "--- Running test suite and remaining open ..."

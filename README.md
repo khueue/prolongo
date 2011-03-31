@@ -1,5 +1,9 @@
 # Design and Implementation of a MongoDB Driver for Prolog
 
+## Todo
+
+ * Research exception handling in Prolog.
+
 ## Food for Thought
 
  * Implement BSON in Prolog or use existing C lib? Prolog is more fun.

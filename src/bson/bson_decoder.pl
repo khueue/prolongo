@@ -83,10 +83,23 @@ test('complex', [true(Got == Expected)]) :-
             ]
     ].
 
+test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
+    Bson =
+    [
+        0xFF,0x00,0x00,0x00,
+        0x10, 104, 101, 108, 108, 111, 0x00,
+        0x20,0x00,0x00,0x00
+        % Missing nul at end-of-doc.
+    ],
+    bson_decoder:decode(Bson, _Got).
+
 :- end_tests(bson_decoder).
 
 decode(Bson, Term) :-
-    phrase(decode(Term), Bson).
+    phrase(decode(Term), Bson),
+    !.
+decode(_Bson, _Term) :-
+    throw(bson_error('Invalid BSON.')).
 
 decode(Term) -->
     document(Term).
