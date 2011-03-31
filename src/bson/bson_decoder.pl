@@ -118,12 +118,6 @@ element(Element) -->
     [0x10],
     !,
     element_int32(Element).
-/*
-% XXX: This won't work, as it tries the doc end 0x00 and fails.
-element(_Element) -->
-    [Tag], !,
-    { io:format('Unhandled element type: ~w~n', [Tag]), halt }.
-*/
 
 element_document(Pair) -->
     e_name(Ename),
@@ -154,7 +148,7 @@ double(Double) -->
         Byte4, Byte5, Byte6, Byte7,
         Double) }.
 
-% XXX: Handle unicode (do not use cstring).
+% XXX: Handle unicode (do not use cstring). Count.
 string(String) -->
     length(_Integer),
     cstring(CharList),
