@@ -1,30 +1,29 @@
 PROLOG    = swipl -O
 PROLOG_LD = swipl-ld
-CC        = clang
+CC        = gcc
 CFLAGS    = -cc $(CC) -Wall -Wextra -ansi -pedantic -O4
 
-.PHONY: lib
-
-all: trim lib halt
-
-clean:
-	rm -rf lib/*
+all: trim compile test
 
 trim:
 	@# Remove trailing whitespace and such. Not vital.
-	@- trim *.md src/*.pl src/*.c
+	@- trim *.md *.pl src/*.pl src/bson/*.pl src/mongo/*.pl ext/*.c
 
-halt:
-	clear
-	$(PROLOG) -g "[load], call_cleanup(run, halt)"
+test: compile
+	@ echo "--- Running test suite and exiting ..."
+	$(PROLOG) -g "[load], test, halt"
 
-stay:
-	clear
-	$(PROLOG) -g "[load], run"
+stay: compile
+	@ echo "--- Running test suite and staying open ..."
+	$(PROLOG) -g "[load], test"
 
-lib: lib/bson_bits
+compile: lib/bson_bits
 
 lib/bson_bits: Makefile ext/bson_bits.c
 	@ mkdir -p lib
+	@ echo "--- Compiling foreign library 'bson_bits' ..."
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	@ mv $@.dylib $@
+
+clean:
+	rm -rf lib/*
