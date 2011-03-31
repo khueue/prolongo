@@ -103,6 +103,8 @@ March 31.
  Starting to write nice unit tests.
  Continued with the decoder a little, the complex BSON example works.
  Wrote nice TextMate snippets for test boilerplating.
+ Rewrote Makefile, yet again.
+ Added make test, for instance.
 \end_layout
 
 \begin_layout Section
