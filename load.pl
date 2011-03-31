@@ -16,8 +16,7 @@
     atom_concat(Dir, '/lib', DirLib),
     asserta(user:file_search_path(foreign, DirLib)).
 
-:- use_module(bson(bson)).
-
 run :-
+    use_module(bson(bson)),
     io:format('~n% Running tests ...~n'),
     run_tests.
