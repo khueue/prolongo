@@ -4,9 +4,10 @@
 
  * Implement BSON in Prolog or use existing C lib? Prolog is more fun.
    C would be better for efficiency, and probably also easier since the lib
-   already exists... *Resolution:* Mostly Prolog, some bithacking in C.
+   already exists... **Solution:** Mostly Prolog, some bithacking in C.
  * Interleave tests with code or keep separate test files? I like
-   interleaving...
+   interleaving... **Solution:** Looks like no interleaving, but tests
+   go at the top of each module.
 
 ## Links
 
