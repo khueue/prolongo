@@ -10,17 +10,17 @@ trim:
 	@- trim *.md *.pl src/*.pl src/bson/*.pl src/mongo/*.pl ext/*.c
 
 test: compile
-	@ echo "--- Running test suite and exiting ..."
+	@ echo "--- Running tests and exiting ..."
 	$(PROLOG) -g "[load], call_cleanup(test, halt)"
 
 stay: compile
-	@ echo "--- Running test suite ..."
+	@ echo "--- Running tests ..."
 	$(PROLOG) -g "[load], test"
 
 compile: setup lib/bson_bits
 
 # Generic name (not sure what file extensions different systems use).
-lib/bson_bits: Makefile ext/bson_bits.c
+lib/bson_bits: ext/bson_bits.c Makefile
 	@ echo "--- Compiling foreign library 'bson_bits' ..."
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	mv $@.dylib $@

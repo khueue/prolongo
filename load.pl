@@ -7,7 +7,7 @@
 % Enable this to see how modules and such are located.
 % :- set_prolog_flag(verbose_file_search, true).
 
-% Set up load paths.
+% Set up load paths during compilation.
 :-
     prolog_load_context(directory, RootDir), % Dir of this file.
     atom_concat(RootDir, '/src/bson', Bson),
