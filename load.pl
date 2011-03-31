@@ -23,4 +23,4 @@ test :-
     run_tests.
 
 load_all_modules :-
-    use_module(['src/bson/*.pl', 'src/mongo/*.pl']).
+    use_module(['src/**/*.pl']).
