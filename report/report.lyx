@@ -160,7 +160,17 @@ BSON encoder/decoder
 \begin_deeper
 \begin_layout Itemize
 Some parts written in C.
- Why? (Didn't know how to handle bytes-to-float in Prolog, basically.)
+ Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Network communication
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+How does the communication work? Out of scope?
 \end_layout
 
 \end_deeper
