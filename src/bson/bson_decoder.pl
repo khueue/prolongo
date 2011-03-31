@@ -1,11 +1,5 @@
-/** <module> BSON Decoder
- *
- * This module processes structured comments and generates both formal
- * mode declarations from them as well as documentation in the form of
- * HTML or LaTeX.
- *
- * @author khueue
- * @license GPL
+/**
+ * BSON decoder.
  */
 
 :- module(_, []).
@@ -14,7 +8,7 @@
 
 :- begin_tests(bson_decoder).
 
-test('hello: world') :-
+test('hello: world', [true(Got == Expected)]) :-
     Bson =
     [
         0x16,0x00,0x00,0x00,0x02,
@@ -23,12 +17,13 @@ test('hello: world') :-
         119, 111, 114, 108, 100,
         0x00,0x00
     ],
-    bson_decoder:decode(Bson, Term),
-    Term = bson([
+    bson_decoder:decode(Bson, Got),
+    Expected =
+    [
         'hello': world
-    ]).
+    ].
 
-test('hello: 32') :-
+test('hello: 32', [true(Got == Expected)]) :-
     Bson =
     [
         0xFF,0x00,0x00,0x00,
@@ -36,12 +31,13 @@ test('hello: 32') :-
         0x20,0x00,0x00,0x00,
         0x00
     ],
-    bson_decoder:decode(Bson, Term),
-    Term = bson([
+    bson_decoder:decode(Bson, Got),
+    Expected =
+    [
         'hello': 32
-    ]).
+    ].
 
-test('hello: 5.05') :-
+test('hello: 5.05', [true(Got == Expected)]) :-
     Bson =
     [
         0xFF,0x00,0x00,0x00, % Top doc length.
@@ -50,12 +46,13 @@ test('hello: 5.05') :-
         51,51,51,51,51,51,20,64, % Double data 5.05.
         0x00
     ],
-    bson_decoder:decode(Bson, Term),
-    Term = bson([
+    bson_decoder:decode(Bson, Got),
+    Expected =
+    [
         'hello': 5.05
-    ]).
+    ].
 
-test('complex') :-
+test('complex', [true(Got == Expected)]) :-
     Bson =
     [
         49,0,0,0, % length
@@ -75,17 +72,16 @@ test('complex') :-
             0, % end of array doc
         0 % end of doc
     ],
-    bson_decoder:decode(Bson, Term),
-    Term = bson([
-        'BSON': bson([
-            '0': 'awesome',
-            '1': 5.05,
-            '2': 1986
-        ])
-    ]).
-
-test('key value pair uses colon') :-
-    key_value_pair(key, value, key:value).
+    bson_decoder:decode(Bson, Got),
+    Expected =
+    [
+        'BSON':
+            [
+                '0': 'awesome',
+                '1': 5.05,
+                '2': 1986
+            ]
+    ].
 
 :- end_tests(bson_decoder).
 
@@ -95,7 +91,7 @@ decode(Bson, Term) :-
 decode(Term) -->
     document(Term).
 
-document(bson(Elements)) -->
+document(Elements) -->
     length(_Length),
     element_list(Elements),
     end.
