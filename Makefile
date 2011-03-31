@@ -5,8 +5,8 @@ CFLAGS    = -cc $(CC) -Wall -Wextra -ansi -pedantic -O4
 
 all: trim compile test
 
+# Remove trailing whitespace and such. Not important.
 trim:
-	@# Remove trailing whitespace and such. Not vital.
 	@- trim *.md *.pl src/*.pl src/bson/*.pl src/mongo/*.pl ext/*.c
 
 test: compile
@@ -14,11 +14,12 @@ test: compile
 	$(PROLOG) -g "[load], call_cleanup(test, halt)"
 
 stay: compile
-	@ echo "--- Running test suite and remaining open ..."
+	@ echo "--- Running test suite ..."
 	$(PROLOG) -g "[load], test"
 
 compile: setup lib/bson_bits
 
+# Generic name (not sure what file extensions different systems use).
 lib/bson_bits: Makefile ext/bson_bits.c
 	@ echo "--- Compiling foreign library 'bson_bits' ..."
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
