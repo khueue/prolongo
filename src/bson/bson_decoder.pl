@@ -14,7 +14,7 @@
 
 :- begin_tests(bson_decoder).
 
-test('hello world') :-
+test('hello: world') :-
     Bson =
     [
         0x16,0x00,0x00,0x00,0x02,
@@ -25,10 +25,10 @@ test('hello world') :-
     ],
     bson_decoder:decode(Bson, Term),
     Term = bson([
-        hello: world
+        'hello': world
     ]).
 
-test('hello 32') :-
+test('hello: 32') :-
     Bson =
     [
         0xFF,0x00,0x00,0x00,
@@ -38,7 +38,21 @@ test('hello 32') :-
     ],
     bson_decoder:decode(Bson, Term),
     Term = bson([
-        hello: 32
+        'hello': 32
+    ]).
+
+test('hello: 5.05') :-
+    Bson =
+    [
+        0xFF,0x00,0x00,0x00, % Top doc length.
+        0x01, % Double tag.
+        104, 101, 108, 108, 111, 0x00, % Ename "hello\0".
+        51,51,51,51,51,51,20,64, % Double data 5.05.
+        0x00
+    ],
+    bson_decoder:decode(Bson, Term),
+    Term = bson([
+        'hello': 5.05
     ]).
 
 test('complex') :-
@@ -63,7 +77,11 @@ test('complex') :-
     ],
     bson_decoder:decode(Bson, Term),
     Term = bson([
-        'BSON': [awesome,5.05,1986]
+        'BSON': bson([
+            '0': 'awesome',
+            '1': 5.05,
+            '2': 1986
+        ])
     ]).
 
 test('key value pair uses colon') :-
@@ -89,13 +107,17 @@ element_list([Element|Elements]) -->
 element_list([]) --> [].
 
 element(Element) -->
+    [0x01],
+    !,
+    element_double(Element).
+element(Element) -->
     [0x02],
     !,
     element_utf8_string(Element).
 element(Element) -->
     [0x04],
     !,
-    document(Element).
+    element_document(Element).
 element(Element) -->
     [0x10],
     !,
@@ -106,6 +128,16 @@ element(_Element) -->
     [Tag], !,
     { io:format('Unhandled element type: ~w~n', [Tag]), halt }.
 */
+
+element_document(Pair) -->
+    e_name(Ename),
+    document(Doc),
+    { key_value_pair(Ename, Doc, Pair) }.
+
+element_double(Pair) -->
+    e_name(Ename),
+    double(Double),
+    { key_value_pair(Ename, Double, Pair) }.
 
 element_utf8_string(Pair) -->
     e_name(Ename),
@@ -118,6 +150,13 @@ element_int32(Pair) -->
     { key_value_pair(Ename, Integer, Pair) }.
 
 key_value_pair(Key, Value, Key:Value).
+
+double(Double) -->
+    [Byte0,Byte1,Byte2,Byte3,Byte4,Byte5,Byte6,Byte7],
+    { bson_bits:bytes_to_float(
+        Byte0, Byte1, Byte2, Byte3,
+        Byte4, Byte5, Byte6, Byte7,
+        Double) }.
 
 % XXX: Handle unicode (do not use cstring).
 string(String) -->

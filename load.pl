@@ -5,7 +5,7 @@
 :- set_test_options([load(always)]).
 
 % Enable this to see how modules and such are located.
-:- set_prolog_flag(verbose_file_search, true).
+% :- set_prolog_flag(verbose_file_search, true).
 
 :-
     prolog_load_context(directory, Dir), % Dir of this file.
