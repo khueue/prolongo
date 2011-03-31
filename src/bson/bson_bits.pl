@@ -1,4 +1,9 @@
-:- module(_, []).
+:- module(_,
+[
+    bytes_to_float/9,
+    bytes_to_integer/5,
+    bytes_to_integer/9
+]).
 :- use_foreign_library(foreign(bson_bits)).
 
 :- begin_tests(bson_bits).

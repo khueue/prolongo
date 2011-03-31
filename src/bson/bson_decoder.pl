@@ -2,7 +2,7 @@
  * BSON decoder.
  */
 
-:- module(_, []).
+:- module(_, [decode/2]).
 
 :- use_module(bson_bits).
 

@@ -2,5 +2,5 @@
 
 :- module(_, []).
 
-:- use_module(bson_decoder).
-:- use_module(bson_encoder).
+:- reexport(bson_decoder, [decode/2]).
+:- reexport(bson_encoder, [encode/2]).
