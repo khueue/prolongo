@@ -18,5 +18,5 @@
 
 run :-
     use_module(bson(bson)),
-    io:format('~n% Running tests ...~n'),
+    io:format('~n% Running tests~n'),
     run_tests.
