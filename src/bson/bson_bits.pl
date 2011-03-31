@@ -1,8 +1,5 @@
 :- module(_, []).
-:- initialization(init_module).
-
-init_module :-
-    use_foreign_library(foreign(bson_bits)).
+:- use_foreign_library(foreign(bson_bits)).
 
 :- begin_tests(bson_bits).
 

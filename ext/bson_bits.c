@@ -1,6 +1,6 @@
 /**
  * Bit-packing routines used by the Prolog BSON parser.
- * These functions do no error checking whatsoever.
+ * These functions do no error-checking whatsoever.
  */
 
 #include <SWI-Prolog.h>
@@ -86,7 +86,7 @@ pl_bytes8_to_int64(
 
 /**
  * Export functions to Prolog. Called implicitly by Prolog's
- * use_foreign_library(foreign(LibPath)).
+ * use_foreign_library/1.
  */
 install_t
 install_bson_bits(void)
