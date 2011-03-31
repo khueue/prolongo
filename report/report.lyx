@@ -101,6 +101,8 @@ March 31.
  Restructured project folder.
  Better include system now, I think.
  Starting to write nice unit tests.
+ Continued with the decoder a little, the complex BSON example works.
+ Wrote nice TextMate snippets for test boilerplating.
 \end_layout
 
 \begin_layout Section
