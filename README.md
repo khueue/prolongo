@@ -3,7 +3,8 @@
 ## Usage
 
 Clone the repository and run `make` to compile the necessary C libraries
-and run the test suite. Requires a C compiler and SWI-Prolog.
+and run the test suite. Requires SWI-Prolog and a C compiler (modify the
+Makefile if you are not using GCC).
 
 ## Todo
 
