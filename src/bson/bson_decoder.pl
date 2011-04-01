@@ -201,13 +201,36 @@ value_string(String) -->
     value_utf8_string(ByteList, Length),
     { bytes_to_code_points(ByteList, String) }.
 
-% XXX Works, but should rewrite to avoid creating first atom.
+% A bit of a hack, but in order to interpret raw bytes as UTF-8
+% we use a memory file as a temporary buffer, fill it with the
+% bytes and then read them back, interpreting them as UTF-8.
+% See: <http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3>
 bytes_to_code_points(Bytes, Utf8Atom) :-
-    atom_chars(Atom, Bytes),
-    atom_to_memory_file(Atom, MemFile),
-    memory_file_to_codes(MemFile, Codes, utf8),
+    new_memory_file(MemFile),
+    write_bytes_to_memory_file(Bytes, MemFile),
+    memory_file_to_codes(MemFile, CodePoints, utf8),
     free_memory_file(MemFile),
-    atom_codes(Utf8Atom, Codes).
+    atom_codes(Utf8Atom, CodePoints).
+
+write_bytes_to_memory_file(Bytes, MemFile) :-
+    open_memory_file(MemFile, write, Stream, [encoding(octet)]),
+    put_bytes(Bytes, Stream),
+    close(Stream).
+
+put_bytes([], _Stream).
+put_bytes([Byte|Bs], Stream) :-
+    put_byte(Stream, Byte),
+    put_bytes(Bs, Stream).
+
+/*
+% Old (shorter) version using more atom construction. XXX Benchmark.
+bytes_to_code_points(Bytes, Utf8Atom) :-
+    atom_chars(RawAtom, Bytes),
+    atom_to_memory_file(RawAtom, MemFile),
+    memory_file_to_codes(MemFile, CodePoints, utf8),
+    free_memory_file(MemFile),
+    atom_codes(Utf8Atom, CodePoints).
+*/
 
 value_utf8_string(CharList, Length) -->
     { LengthMinusNul is Length - 1 },
