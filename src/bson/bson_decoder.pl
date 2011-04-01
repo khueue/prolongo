@@ -25,23 +25,7 @@ test('hello: world', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
-test('hello: world, utf8', [true(Got == Expected)]) :-
-    Bson =
-    [
-        0x16,0x00,0x00,0x00, % Doc length.
-        0x02, % String tag.
-            104,101,108,108,111, 0x00, % Ename, "hello\0".
-            0x03,0x00,0x00,0x00, % String's byte length, incl. nul.
-            0xc3,0xa4, 0x00, % String data, "ä\0".
-        0x00 % Doc end.
-    ],
-    Expected =
-    [
-        'hello': 'ä'
-    ],
-    bson_decoder:decode(Bson, Got).
-
-test('hello: world, utf8 2', [true(Got == Expected)]) :-
+test('utf8', [true(Got == Expected)]) :-
     Bson =
     [
         0xFF,0,0,0, % Doc length.
