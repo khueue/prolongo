@@ -26,7 +26,7 @@ pl_bytes8_to_double(
     term_t b4, term_t b5, term_t b6, term_t b7,
     term_t result)
 {
-    double val;
+    double val = 0.0;
     unsigned char *byte = (unsigned char *)&val;
 
     byte[0] = get_int(b0);
