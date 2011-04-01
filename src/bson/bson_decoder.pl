@@ -117,9 +117,10 @@ test('embedded array', [true(Got == Expected)]) :-
 test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     Bson =
     [
-        0xFF,0x00,0x00,0x00,
-        0x10, 104, 101, 108, 108, 111, 0x00,
-        0x20,0x00,0x00,0x00
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x10, % Int32 tag
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0x20,0,0,0 % Int32 data, 32.
         % Missing nul at end-of-doc.
     ],
     bson_decoder:decode(Bson, _Got).
