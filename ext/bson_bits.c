@@ -22,21 +22,21 @@ get_int(term_t t)
  */
 static foreign_t
 pl_bytes8_to_double(
-    term_t byte0, term_t byte1, term_t byte2, term_t byte3,
-    term_t byte4, term_t byte5, term_t byte6, term_t byte7,
+    term_t b0, term_t b1, term_t b2, term_t b3,
+    term_t b4, term_t b5, term_t b6, term_t b7,
     term_t result)
 {
     double val;
     unsigned char *byte = (unsigned char *)&val;
 
-    byte[0] = get_int(byte0);
-    byte[1] = get_int(byte1);
-    byte[2] = get_int(byte2);
-    byte[3] = get_int(byte3);
-    byte[4] = get_int(byte4);
-    byte[5] = get_int(byte5);
-    byte[6] = get_int(byte6);
-    byte[7] = get_int(byte7);
+    byte[0] = get_int(b0);
+    byte[1] = get_int(b1);
+    byte[2] = get_int(b2);
+    byte[3] = get_int(b3);
+    byte[4] = get_int(b4);
+    byte[5] = get_int(b5);
+    byte[6] = get_int(b6);
+    byte[7] = get_int(b7);
 
     return PL_unify_float(result, val);
 }
@@ -46,16 +46,16 @@ pl_bytes8_to_double(
  */
 static foreign_t
 pl_bytes4_to_int32(
-    term_t byte0, term_t byte1, term_t byte2, term_t byte3,
+    term_t b0, term_t b1, term_t b2, term_t b3,
     term_t result)
 {
     long val = 0;
     unsigned char *byte = (unsigned char *)&val;
 
-    byte[0] = get_int(byte0);
-    byte[1] = get_int(byte1);
-    byte[2] = get_int(byte2);
-    byte[3] = get_int(byte3);
+    byte[0] = get_int(b0);
+    byte[1] = get_int(b1);
+    byte[2] = get_int(b2);
+    byte[3] = get_int(b3);
 
     return PL_unify_integer(result, val);
 }
@@ -65,21 +65,21 @@ pl_bytes4_to_int32(
  */
 static foreign_t
 pl_bytes8_to_int64(
-    term_t byte0, term_t byte1, term_t byte2, term_t byte3,
-    term_t byte4, term_t byte5, term_t byte6, term_t byte7,
+    term_t b0, term_t b1, term_t b2, term_t b3,
+    term_t b4, term_t b5, term_t b6, term_t b7,
     term_t result)
 {
     int64_t val = 0;
     unsigned char *byte = (unsigned char *)&val;
 
-    byte[0] = get_int(byte0);
-    byte[1] = get_int(byte1);
-    byte[2] = get_int(byte2);
-    byte[3] = get_int(byte3);
-    byte[4] = get_int(byte4);
-    byte[5] = get_int(byte5);
-    byte[6] = get_int(byte6);
-    byte[7] = get_int(byte7);
+    byte[0] = get_int(b0);
+    byte[1] = get_int(b1);
+    byte[2] = get_int(b2);
+    byte[3] = get_int(b3);
+    byte[4] = get_int(b4);
+    byte[5] = get_int(b5);
+    byte[6] = get_int(b6);
+    byte[7] = get_int(b7);
 
     return PL_unify_int64(result, val);
 }

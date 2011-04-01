@@ -37,6 +37,21 @@ test('hello: 32', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
+test('hello: 32, 64-bit', [true(Got == Expected)]) :-
+    Bson =
+    [
+        0xFF,0x00,0x00,0x00,
+        0x12,
+        104, 101, 108, 108, 111, 0x00,
+        0x20,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00
+    ],
+    Expected =
+    [
+        'hello': 32
+    ],
+    bson_decoder:decode(Bson, Got).
+
 test('hello: 5.05', [true(Got == Expected)]) :-
     Bson =
     [
@@ -99,7 +114,7 @@ decode(Bson, Term) :-
     phrase(decode(Term), Bson),
     !.
 decode(_Bson, _Term) :-
-    throw(bson_error('Invalid BSON.')).
+    throw(bson_error('Invalid BSON')).
 
 decode(Term) -->
     document(Term).
@@ -131,6 +146,10 @@ element(Element) -->
     [0x10],
     !,
     element_int32(Element).
+element(Element) -->
+    [0x12],
+    !,
+    element_int64(Element).
 
 element_document(Pair) -->
     e_name(Ename),
@@ -152,14 +171,12 @@ element_int32(Pair) -->
     int32(Integer),
     { key_value_pair(Ename, Integer, Pair) }.
 
-key_value_pair(Key, Value, Key:Value).
+element_int64(Pair) -->
+    e_name(Ename),
+    int64(Integer),
+    { key_value_pair(Ename, Integer, Pair) }.
 
-double(Double) -->
-    [Byte0,Byte1,Byte2,Byte3,Byte4,Byte5,Byte6,Byte7],
-    { bson_bits:bytes_to_float(
-        Byte0, Byte1, Byte2, Byte3,
-        Byte4, Byte5, Byte6, Byte7,
-        Double) }.
+key_value_pair(Key, Value, Key:Value).
 
 % XXX: Handle unicode (do not use cstring). Count.
 string(String) -->
@@ -170,9 +187,17 @@ string(String) -->
 length(Length) -->
     int32(Length).
 
+double(Double) -->
+    [B0,B1,B2,B3,B4,B5,B6,B7],
+    { bson_bits:bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Double) }.
+
 int32(Integer) -->
-    [Byte0,Byte1,Byte2,Byte3],
-    { bson_bits:bytes_to_integer(Byte0, Byte1, Byte2, Byte3, Integer) }.
+    [B0,B1,B2,B3],
+    { bson_bits:bytes_to_integer(B0, B1, B2, B3, Integer) }.
+
+int64(Integer) -->
+    [B0,B1,B2,B3,B4,B5,B6,B7],
+    { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
 e_name(Ename) -->
     cstring(CharList),
