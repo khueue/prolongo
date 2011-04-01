@@ -11,8 +11,9 @@ and run the test suite. Requires a C compiler and SWI-Prolog.
  * Write more decoder tests.
  * Research exception handling in Prolog.
 
-## Issues
+## Thoughts
 
+ * SWI Association Lists?
  * Implement BSON in Prolog or use existing C lib? Prolog is more fun.
    C would be better for efficiency, and probably also easier since the lib
    already exists... **Solution:** Mostly Prolog, some bithacking in C.

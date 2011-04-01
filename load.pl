@@ -4,6 +4,7 @@
 % We need this, since the default is to skip tests when compiling with -O.
 :- set_test_options([load(always)]).
 
+% Try to make everything as UTF-8 as possible.
 :- encoding(utf8).
 :- set_prolog_flag(encoding, utf8).
 
