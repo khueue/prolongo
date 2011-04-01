@@ -117,6 +117,7 @@ April 1.
  Implemented a variation that might be more efficient.
  Might.
  Cleaned up the tests.
+ Implementing the rest of the decoder should be straight-forward now.
 \end_layout
 
 \begin_layout Section
