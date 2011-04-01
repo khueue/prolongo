@@ -131,13 +131,13 @@ decode(Bson, Term) :-
     phrase(decode(Term), Bson),
     !.
 decode(_Bson, _Term) :-
-    throw(bson_error('Invalid BSON')).
+    throw(bson_error('Invalid BSON document.')).
 
 decode(Term) -->
     document(Term).
 
 document(Elements) -->
-    length(_Length), % XXX Ignored?
+    length(_Length), % XXX Ignored for now. Validate how much?
     element_list(Elements),
     end.
 
@@ -193,6 +193,10 @@ element_int64(Pair) -->
     value_int64(Integer),
     { key_value_pair(Ename, Integer, Pair) }.
 
+key_name(Ename) -->
+    cstring(CharList),
+    { bytes_to_utf8_atom(CharList, Ename) }.
+
 key_value_pair(Key, Value, Key:Value).
 
 value_document(Doc) -->
@@ -200,20 +204,20 @@ value_document(Doc) -->
 
 value_string(String) -->
     length(Length),
-    value_utf8_string(ByteList, Length),
-    { bytes_to_code_points(ByteList, String) }.
+    utf8_string(ByteList, Length),
+    { bytes_to_utf8_atom(ByteList, String) }.
 
-value_utf8_string(CharList, Length) -->
+utf8_string(ByteList, Length) -->
     { LengthMinusNul is Length - 1 },
-    value_utf8_string(CharList, 0, LengthMinusNul).
+    utf8_string(ByteList, 0, LengthMinusNul).
 
-value_utf8_string([Byte|Bs], Length0, Length) -->
+utf8_string([Byte|Bs], Length0, Length) -->
     { Length0 < Length },
     !,
     [Byte], % May be nul.
     { Length1 is Length0 + 1 },
-    value_utf8_string(Bs, Length1, Length).
-value_utf8_string([], Length, Length) --> [0x00].
+    utf8_string(Bs, Length1, Length).
+utf8_string([], Length, Length) --> [0x00].
 
 value_double(Double) -->
     double(Double).
@@ -236,22 +240,24 @@ int64(Integer) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
     { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
-key_name(Ename) -->
-    cstring(CharList),
-    { bytes_to_code_points(CharList, Ename) }.
-
+% Fixme, maybe.
+%
 % A bit of a hack, but in order to interpret raw bytes as UTF-8
 % we use a memory file as a temporary buffer, fill it with the
-% bytes and then read them back, interpreting them as UTF-8.
+% bytes and then read them back, treating them as UTF-8.
 % See: <http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3>
-bytes_to_code_points(Bytes, Utf8Atom) :-
-    new_memory_file(MemFile),
-    bytes_to_memory_file(Bytes, MemFile),
-    memory_file_to_codes(MemFile, CodePoints, utf8),
-    free_memory_file(MemFile),
+%
+bytes_to_utf8_atom(Bytes, Utf8Atom) :-
+    bytes_to_code_points(Bytes, CodePoints),
     atom_codes(Utf8Atom, CodePoints).
 
-bytes_to_memory_file(Bytes, MemFile) :-
+bytes_to_code_points(Bytes, CodePoints) :-
+    new_memory_file(MemFile),
+    copy_bytes_to_memory_file(Bytes, MemFile),
+    memory_file_to_codes(MemFile, CodePoints, utf8),
+    free_memory_file(MemFile).
+
+copy_bytes_to_memory_file(Bytes, MemFile) :-
     open_memory_file(MemFile, write, Stream, [encoding(octet)]),
     put_bytes(Bytes, Stream),
     close(Stream).
