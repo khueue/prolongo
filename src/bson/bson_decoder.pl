@@ -252,20 +252,31 @@ bytes_to_utf8_atom(Bytes, Utf8Atom) :-
     atom_codes(Utf8Atom, CodePoints).
 
 bytes_to_code_points(Bytes, CodePoints) :-
-    new_memory_file(MemFile),
-    copy_bytes_to_memory_file(Bytes, MemFile),
-    memory_file_to_codes(MemFile, CodePoints, utf8),
-    free_memory_file(MemFile).
+    setup_call_cleanup(
+        new_memory_file(MemFile),
+        bytes_to_memory_file_to_code_points(Bytes, MemFile, CodePoints),
+        free_memory_file(MemFile)).
 
-copy_bytes_to_memory_file(Bytes, MemFile) :-
-    open_memory_file(MemFile, write, Stream, [encoding(octet)]),
-    put_bytes(Bytes, Stream),
-    close(Stream).
+bytes_to_memory_file_to_code_points(Bytes, MemFile, CodePoints) :-
+    put_bytes_to_memory_file(Bytes, MemFile),
+    memory_file_to_code_points(MemFile, CodePoints).
 
-put_bytes([], _Stream).
-put_bytes([Byte|Bs], Stream) :-
-    put_byte(Stream, Byte),
-    put_bytes(Bs, Stream).
+memory_file_to_code_points(MemFile, CodePoints) :-
+    memory_file_to_codes(MemFile, CodePoints, utf8).
+
+put_bytes_to_memory_file(Bytes, MemFile) :-
+    setup_call_cleanup(
+        open_memory_file_for_putting_bytes(MemFile, PutStream),
+        put_bytes(Bytes, PutStream),
+        close(PutStream)).
+
+open_memory_file_for_putting_bytes(MemFile, PutStream) :-
+    open_memory_file(MemFile, write, PutStream, [encoding(octet)]).
+
+put_bytes([], _PutStream).
+put_bytes([Byte|Bs], PutStream) :-
+    put_byte(PutStream, Byte),
+    put_bytes(Bs, PutStream).
 
 /*
 % Old (shorter) version using more atom construction. XXX Benchmark.

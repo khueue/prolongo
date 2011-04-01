@@ -9,6 +9,7 @@ all: trim compile test
 # Remove trailing whitespace and such. Not important.
 .PHONY: trim
 trim:
+	clear
 	@- trim *.md *.pl src/*.pl src/bson/*.pl src/mongo/*.pl ext/*.c
 
 .PHONY: test
