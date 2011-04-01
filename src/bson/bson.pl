@@ -4,3 +4,5 @@
 
 :- reexport(bson_decoder, [decode/2]).
 :- reexport(bson_encoder, [encode/2]).
+
+:- encoding(utf8).

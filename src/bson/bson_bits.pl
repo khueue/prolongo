@@ -6,6 +6,8 @@
 ]).
 :- use_foreign_library(foreign(bson_bits)).
 
+:- encoding(utf8).
+
 :- begin_tests(bson_bits).
 
 test('bytes to float, 1', [true(Got == Expected)]) :-

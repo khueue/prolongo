@@ -4,6 +4,9 @@
 % We need this, since the default is to skip tests when compiling with -O.
 :- set_test_options([load(always)]).
 
+:- encoding(utf8).
+:- set_prolog_flag(encoding, utf8).
+
 % Enable this to see how modules and such are located.
 % :- set_prolog_flag(verbose_file_search, true).
 
@@ -17,10 +20,16 @@
     atom_concat(RootDir, '/lib', Lib),
     asserta(user:file_search_path(foreign, Lib)).
 
+do_term(Term, In, Tail) :-
+        with_output_to(codes(In, Tail), write(Term)).
+% ?- phrase(do_term(hello), X).
 test :-
     load_all_modules,
-    io:format('~n% Running tests~n'),
-    run_tests.
+    run_test_suite.
 
 load_all_modules :-
     use_module(['src/**/*.pl']).
+
+run_test_suite :-
+    io:format('~n% Running tests~n'),
+    run_tests.

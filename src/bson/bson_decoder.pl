@@ -6,6 +6,8 @@
 
 :- use_module(bson_bits).
 
+:- encoding(utf8).
+
 :- begin_tests(bson_decoder).
 
 test('hello: world', [true(Got == Expected)]) :-
@@ -19,7 +21,39 @@ test('hello: world', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': world
+        'hello': 'world'
+    ],
+    bson_decoder:decode(Bson, Got).
+
+test('hello: world, utf8', [true(Got == Expected)]) :-
+    Bson =
+    [
+        0x16,0x00,0x00,0x00, % Doc length.
+        0x02, % String tag.
+            104,101,108,108,111, 0x00, % Ename, "hello\0".
+            0x03,0x00,0x00,0x00, % String's byte length, incl. nul.
+            0xc3,0xa4, 0x00, % String data, "ä\0".
+        0x00 % Doc end.
+    ],
+    Expected =
+    [
+        'hello': 'ä'
+    ],
+    bson_decoder:decode(Bson, Got).
+
+test('hello: world, utf8 2', [true(Got == Expected)]) :-
+    Bson =
+    [
+        0xFF,0,0,0, % Doc length.
+        0x02, % String tag.
+            0xc3,0xa4, 0, % Ename, "ä\0".
+            0x03,0,0,0, % String's byte length, incl. nul.
+            0xc3,0xa4, 0, % String data, "ä\0".
+        0 % Doc end.
+    ],
+    Expected =
+    [
+        'ä': 'ä'
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -120,7 +154,7 @@ decode(Term) -->
     document(Term).
 
 document(Elements) -->
-    length(_Length),
+    length(_Length), % XXX Ignored?
     element_list(Elements),
     end.
 
@@ -152,40 +186,63 @@ element(Element) -->
     element_int64(Element).
 
 element_document(Pair) -->
-    e_name(Ename),
+    key_name(Ename),
     document(Doc),
     { key_value_pair(Ename, Doc, Pair) }.
 
 element_double(Pair) -->
-    e_name(Ename),
-    double(Double),
+    key_name(Ename),
+    value_double(Double),
     { key_value_pair(Ename, Double, Pair) }.
 
 element_utf8_string(Pair) -->
-    e_name(Ename),
-    string(String),
+    key_name(Ename),
+    value_string(String),
     { key_value_pair(Ename, String, Pair) }.
 
 element_int32(Pair) -->
-    e_name(Ename),
-    int32(Integer),
+    key_name(Ename),
+    value_int32(Integer),
     { key_value_pair(Ename, Integer, Pair) }.
 
 element_int64(Pair) -->
-    e_name(Ename),
-    int64(Integer),
+    key_name(Ename),
+    value_int64(Integer),
     { key_value_pair(Ename, Integer, Pair) }.
 
 key_value_pair(Key, Value, Key:Value).
 
-% XXX: Handle unicode (do not use cstring). Count.
-string(String) -->
-    length(_Integer),
-    cstring(CharList),
-    { atom_codes(String, CharList) }.
+value_string(String) -->
+    length(Length),
+    value_utf8_string(ByteList, Length),
+    { bytes_to_code_points(ByteList, String) }.
 
-length(Length) -->
-    int32(Length).
+% XXX Works, but should rewrite to avoid creating first atom.
+bytes_to_code_points(Bytes, Utf8Atom) :-
+    atom_chars(Atom, Bytes),
+    atom_to_memory_file(Atom, MemFile),
+    memory_file_to_codes(MemFile, Codes, utf8),
+    free_memory_file(MemFile),
+    atom_codes(Utf8Atom, Codes).
+
+value_utf8_string(CharList, Length) -->
+    { LengthMinusNul is Length - 1 },
+    value_utf8_string(CharList, 0, LengthMinusNul).
+
+value_utf8_string([], Length, Length) --> [0x00], !.
+value_utf8_string([Byte|Bs], Length0, Length) -->
+    [Byte],
+    { Length1 is Length0 + 1 },
+    value_utf8_string(Bs, Length1, Length).
+
+value_double(Double) -->
+    double(Double).
+
+value_int32(Integer) -->
+    int32(Integer).
+
+value_int64(Integer) -->
+    int64(Integer).
 
 double(Double) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
@@ -199,9 +256,12 @@ int64(Integer) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
     { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
-e_name(Ename) -->
+key_name(Ename) -->
     cstring(CharList),
-    { atom_codes(Ename, CharList) }.
+    { bytes_to_code_points(CharList, Ename) }.
+
+length(Length) -->
+    int32(Length).
 
 cstring([]) --> [0x00], !.
 cstring([Char|Cs]) -->

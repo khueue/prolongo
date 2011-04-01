@@ -108,6 +108,14 @@ March 31.
  Added make test, for instance.
 \end_layout
 
+\begin_layout Itemize
+April 1.
+ When trying to fix proper decoding of strings I ran into issues with Unicode.
+ Finally found SWI-Prolog's memory files, which can be written to and then
+ read back using a different encoding.
+ Five line fix.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout

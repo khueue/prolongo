@@ -7,7 +7,7 @@ and run the test suite. Requires a C compiler and SWI-Prolog.
 
 ## Todo
 
- * Proper decoding of UTF-8 strings, and finish the decoder.
+ * Finish the decoder.
  * Write more decoder tests.
  * Research exception handling in Prolog.
 
