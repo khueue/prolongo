@@ -114,7 +114,7 @@ April 1.
  Finally found SWI-Prolog's memory files, which can be written to and then
  read back using a different encoding.
  Five line fix.
- Implemented a variation that might be more efficient.
+ Implemented a variant that might be more efficient.
  Might.
  (And like five times longer, but clean though.) Cleaned up the tests.
  Implementing the rest of the decoder should be straight-forward now.
