@@ -293,7 +293,7 @@ length(Length) -->
 
 cstring([]) --> [0x00], !.
 cstring([Char|Cs]) -->
-    [Char],
+    [Char], % May not be nul (caught by base case).
     cstring(Cs).
 
 end --> [0x00].

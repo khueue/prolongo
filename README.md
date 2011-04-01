@@ -3,8 +3,13 @@
 ## Usage
 
 Clone the repository and run `make` to compile the necessary C libraries
-and run the test suite. Requires SWI-Prolog and a C compiler (modify the
-Makefile if you are not using GCC).
+and run the test suite.
+
+## Dependencies
+
+ * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
+    * foreign(memfile) (should be included with SWI)
+ * C compiler (modify the Makefile if you aren't using GCC)
 
 ## Todo
 
@@ -17,7 +22,7 @@ Makefile if you are not using GCC).
  * SWI Association Lists?
  * Implement BSON in Prolog or use existing C lib? Prolog is more fun.
    C would be better for efficiency, and probably also easier since the lib
-   already exists... **Solution:** Mostly Prolog, some bithacking in C.
+   already exists... **Solution:** Mostly Prolog, some bit-hacking in C.
  * Interleave tests with code or keep separate test files? I like
    interleaving... **Solution:** Looks like no interleaving, but tests
    go at the top of each module.
