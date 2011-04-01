@@ -258,10 +258,10 @@ bytes_to_code_points(Bytes, CodePoints) :-
         free_memory_file(MemFile)).
 
 bytes_to_memory_file_to_code_points(Bytes, MemFile, CodePoints) :-
-    put_bytes_to_memory_file(Bytes, MemFile),
+    bytes_to_memory_file(Bytes, MemFile),
     memory_file_to_code_points(MemFile, CodePoints).
 
-put_bytes_to_memory_file(Bytes, MemFile) :-
+bytes_to_memory_file(Bytes, MemFile) :-
     setup_call_cleanup(
         open_memory_file_for_putting_bytes(MemFile, PutStream),
         put_bytes(Bytes, PutStream),
