@@ -20,9 +20,6 @@
     atom_concat(RootDir, '/lib', Lib),
     asserta(user:file_search_path(foreign, Lib)).
 
-do_term(Term, In, Tail) :-
-        with_output_to(codes(In, Tail), write(Term)).
-% ?- phrase(do_term(hello), X).
 test :-
     load_all_modules,
     run_test_suite.
