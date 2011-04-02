@@ -125,6 +125,41 @@ April 1.
  Awesome.
 \end_layout
 
+\begin_layout Itemize
+April 2 (weekend).
+ Looked into the Prolog module system again and started adding prefixes
+ (
+\begin_inset Quotes eld
+\end_inset
+
+memory_file:
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+builtin:
+\begin_inset Quotes erd
+\end_inset
+
+) to SWI predicate calls.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+builtin
+\begin_inset Quotes erd
+\end_inset
+
+ isn't an actual module, but since it works anyway (you enter the module
+ builtin and call the predicate from there) I decided to use it.
+ Documented predicates in bson_bits.
+ Fixed a bug with bytes_to_integer/5 because it wasn't using a 32-bit integer.
+ Now it uses int32_t.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout
