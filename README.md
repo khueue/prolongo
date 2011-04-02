@@ -8,7 +8,8 @@ and run the test suite.
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
-    * foreign(memfile) (should be included and autoloaded with SWI)
+    * foreign(memfile) (should be autoloaded)
+    * foreign(apply_macros) (should be autoloaded, can be safely removed)
  * C compiler (modify the Makefile if you aren't using GCC)
 
 ## Todo
