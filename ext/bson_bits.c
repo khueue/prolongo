@@ -26,7 +26,7 @@ pl_bytes8_to_double(
     term_t b4, term_t b5, term_t b6, term_t b7,
     term_t result)
 {
-    double val = 0.0;
+    double val;
     unsigned char *byte = (unsigned char *)&val;
 
     byte[0] = get_int(b0);
@@ -49,7 +49,7 @@ pl_bytes4_to_int32(
     term_t b0, term_t b1, term_t b2, term_t b3,
     term_t result)
 {
-    long val = 0;
+    int32_t val;
     unsigned char *byte = (unsigned char *)&val;
 
     byte[0] = get_int(b0);
@@ -69,7 +69,7 @@ pl_bytes8_to_int64(
     term_t b4, term_t b5, term_t b6, term_t b7,
     term_t result)
 {
-    int64_t val = 0;
+    int64_t val;
     unsigned char *byte = (unsigned char *)&val;
 
     byte[0] = get_int(b0);

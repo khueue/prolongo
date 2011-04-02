@@ -8,7 +8,7 @@ and run the test suite.
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
-    * foreign(memfile) (should be included with SWI)
+    * foreign(memfile) (should be included and autoloaded with SWI)
  * C compiler (modify the Makefile if you aren't using GCC)
 
 ## Todo

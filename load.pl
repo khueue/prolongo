@@ -1,3 +1,6 @@
+% Acts as an interface to the system. Sets up load paths and provides
+% a predicate for running the test suite.
+
 % This makes listing/1 problematic. Avoid for now.
 % :- set_prolog_flag(iso, true).
 
@@ -5,8 +8,11 @@
 :- set_test_options([load(always)]).
 
 % Try to make everything as UTF-8 as possible.
-:- encoding(utf8).
-:- set_prolog_flag(encoding, utf8).
+:- encoding(utf8). % For the rest of the text in this file.
+:- set_prolog_flag(encoding, utf8). % When using streams, global setting.
+
+% It is helpful to track dependencies when autoload is false.
+% :- set_prolog_flag(autoload, false).
 
 % Enable this to see how modules and such are located.
 % :- set_prolog_flag(verbose_file_search, true).
@@ -30,4 +36,4 @@ load_all_modules :-
 
 run_test_suite :-
     io:format('~n% Running tests~n'),
-    run_tests.
+    plunit:run_tests.

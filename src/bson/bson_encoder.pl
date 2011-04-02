@@ -1,6 +1,4 @@
-/**
- * BSON encoder.
- */
+% BSON encoder.
 
 :- module(_, [encode/2]).
 
