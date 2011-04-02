@@ -32,7 +32,7 @@ test :-
     run_test_suite.
 
 load_all_modules :-
-    use_module(['src/**/*.pl']).
+    use_module(['src/bson/bson.pl']).
 
 run_test_suite :-
     io:format('~n% Running tests~n'),

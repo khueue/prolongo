@@ -1,7 +1,10 @@
 % BSON decoder.
 
-:- module(_, [decode/2]).
-
+:- module(_,
+[
+    decode/2
+]).
+%
 :- use_module(bson_bits).
 
 :- encoding(utf8).
@@ -134,7 +137,7 @@ decode(Bson, Term) :-
     phrase(decode(Term), Bson),
     !.
 decode(_Bson, _Term) :-
-    throw(bson_error('Invalid BSON document.')).
+    throw(bson_error(invalid)).
 
 decode(Term) -->
     document(Term).
@@ -278,10 +281,8 @@ open_memory_file_for_putting_bytes(MemFile, PutStream) :-
     Options = [encoding(octet)],
     memory_file:open_memory_file(MemFile, write, PutStream, Options).
 
-put_bytes([], _PutStream).
-put_bytes([Byte|Bs], PutStream) :-
-    builtin:put_byte(PutStream, Byte),
-    put_bytes(Bs, PutStream).
+put_bytes(Bytes, PutStream) :-
+    apply:maplist(builtin:put_byte(PutStream), Bytes).
 
 /*
 % Old (shorter) version using more atom construction. XXX Benchmark.
