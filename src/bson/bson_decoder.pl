@@ -1,13 +1,13 @@
 % BSON decoder.
 
 :- module(_,
-[
-    decode/2
-]).
-%
-:- use_module(bson_bits).
+    [
+        decode/2
+    ]).
 
-:- encoding(utf8).
+:- use_module(bson_bits, []).
+
+:- include(misc(common)).
 
 %%  decode(+Bson:list, -Term) is semidet.
 %
@@ -30,7 +30,7 @@ test('valid utf8', [true(Got == Expected)]) :-
     [
         'ä': 'ä\0ä'
     ],
-    bson_decoder:decode(Bson, Got).
+    decode(Bson, Got).
 
 test('nuls not allowed in ename', [throws(bson_error(_))]) :-
     Bson =
@@ -42,7 +42,7 @@ test('nuls not allowed in ename', [throws(bson_error(_))]) :-
             0xc3,0xa4, 0, % String data, "ä\0".
         0 % End of top doc.
     ],
-    bson_decoder:decode(Bson, _Got).
+    decode(Bson, _Got).
 
 test('int32', [true(Got == Expected)]) :-
     Bson =
@@ -57,7 +57,7 @@ test('int32', [true(Got == Expected)]) :-
     [
         'hello': 32
     ],
-    bson_decoder:decode(Bson, Got).
+    decode(Bson, Got).
 
 test('int64', [true(Got == Expected)]) :-
     Bson =
@@ -72,7 +72,7 @@ test('int64', [true(Got == Expected)]) :-
     [
         'hello': 32
     ],
-    bson_decoder:decode(Bson, Got).
+    decode(Bson, Got).
 
 test('float', [true(Got == Expected)]) :-
     Bson =
@@ -87,7 +87,7 @@ test('float', [true(Got == Expected)]) :-
     [
         'hello': 5.05
     ],
-    bson_decoder:decode(Bson, Got).
+    decode(Bson, Got).
 
 test('embedded array', [true(Got == Expected)]) :-
     Bson =
@@ -118,7 +118,7 @@ test('embedded array', [true(Got == Expected)]) :-
                 '2': 1986
             ]
     ],
-    bson_decoder:decode(Bson, Got).
+    decode(Bson, Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     Bson =
@@ -129,7 +129,7 @@ test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
             32,0,0,0 % Int32 data, 32.
         % Missing nul at end-of-doc.
     ],
-    bson_decoder:decode(Bson, _Got).
+    decode(Bson, _Got).
 
 :- end_tests('bson_decoder:decode/2').
 
@@ -217,9 +217,10 @@ utf8_string(ByteList, Length) -->
     { LengthMinusNul is Length - 1 },
     utf8_string(ByteList, 0, LengthMinusNul).
 
-utf8_string([], Length, Length) --> [0x00], !.
+utf8_string([], Length, Length) -->
+    [0x00],
+    !.
 utf8_string([Byte|Bs], Length0, Length) -->
-    { Length0 < Length },
     [Byte], % May be nul.
     { Length1 is Length0 + 1 },
     utf8_string(Bs, Length1, Length).
@@ -296,7 +297,9 @@ bytes_to_code_points(Bytes, Utf8Atom) :-
 length(Length) -->
     int32(Length).
 
-cstring([]) --> [0x00], !.
+cstring([]) -->
+    [0x00],
+    !.
 cstring([Char|Cs]) -->
     [Char], % May not be nul (caught by base case).
     cstring(Cs).

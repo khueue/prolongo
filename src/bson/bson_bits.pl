@@ -1,15 +1,15 @@
-% Primitive byte-to-number conversions.
+% Low-level bytes-to-number conversions.
 
 :- module(_,
-[
-    bytes_to_float/9,
-    bytes_to_integer/5,
-    bytes_to_integer/9
-]).
+    [
+        bytes_to_float/9,
+        bytes_to_integer/5,
+        bytes_to_integer/9
+    ]).
 
 :- use_foreign_library(foreign(bson_bits)).
 
-:- encoding(utf8).
+:- include(misc(common)).
 
 %%  bytes_to_float(
 %       +B0:byte, +B1:byte, +B2:byte, +B3:byte,

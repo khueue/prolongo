@@ -158,6 +158,9 @@ builtin
  Documented predicates in bson_bits.
  Fixed a bug with bytes_to_integer/5 because it wasn't using a 32-bit integer.
  Now it uses int32_t.
+ Started using maplist/2.
+ Found a library(apply_macros) that claims to speed up maplist etc.
+ simply by loading it.
 \end_layout
 
 \begin_layout Section

@@ -1,38 +1,41 @@
 % Acts as an interface to the system. Sets up load paths and provides
 % a predicate for running the test suite.
 
-% This makes listing/1 problematic. Avoid for now.
-% :- set_prolog_flag(iso, true).
+setup_globals :-
+    % For optimized compiles, tests are by default ignored.
+    set_test_options([load(always)]),
+    % Try to make everything as UTF-8 as possible.
+    set_prolog_flag(encoding, utf8). % When using streams, global setting.
+    % Hunting implicit dependencies is easier without autoload.
+    % set_prolog_flag(autoload, false),
+    % Displays how modules and such are located.
+    % set_prolog_flag(verbose_file_search, true).
 
-% We need this, since the default is to skip tests when compiling with -O.
-:- set_test_options([load(always)]).
+setup_load_paths :-
+    prolog_load_context(directory, Root), % Available during compilation.
+    setup_path(Root, '/lib', foreign),
+    setup_path(Root, '/src', misc),
+    setup_path(Root, '/src/bson', bson),
+    setup_path(Root, '/src/mongo', mongo).
 
-% Try to make everything as UTF-8 as possible.
-:- encoding(utf8). % For the rest of the text in this file.
-:- set_prolog_flag(encoding, utf8). % When using streams, global setting.
+setup_path(PathPrefix, PathSuffix, Name) :-
+    atom_concat(PathPrefix, PathSuffix, Path),
+    asserta(user:file_search_path(Name, Path)).
 
-% It is helpful to track dependencies when autoload is false.
-% :- set_prolog_flag(autoload, false).
+:- setup_globals.
+:- setup_load_paths.
 
-% Enable this to see how modules and such are located.
-% :- set_prolog_flag(verbose_file_search, true).
+% Simply loading this speeds up phrase, maplist, etc. Can be safely removed.
+:- use_module(library(apply_macros)).
 
-% Set up paths for module loading.
-:-
-    prolog_load_context(directory, RootDir), % Dir of this file.
-    atom_concat(RootDir, '/src/bson', Bson),
-    asserta(user:file_search_path(bson, Bson)),
-    atom_concat(RootDir, '/src/mongo', Mongo),
-    asserta(user:file_search_path(mongo, Mongo)),
-    atom_concat(RootDir, '/lib', Lib),
-    asserta(user:file_search_path(foreign, Lib)).
+:- include(misc(common)).
 
 test :-
     load_all_modules,
     run_test_suite.
 
 load_all_modules :-
-    use_module(['src/bson/bson.pl']).
+    use_module(bson(bson), []).
 
 run_test_suite :-
     io:format('~n% Running tests~n'),

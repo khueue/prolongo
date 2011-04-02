@@ -1,13 +1,13 @@
 % BSON encoder.
 
 :- module(_,
-[
-    encode/2
-]).
+    [
+        encode/2
+    ]).
 
-:- use_module(bson_bits).
+:- use_module(bson_bits, []).
 
-:- encoding(utf8).
+:- include(misc(common)).
 
 encode(Term, Bson) :-
     Term = Bson.
