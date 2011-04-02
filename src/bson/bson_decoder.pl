@@ -217,13 +217,12 @@ utf8_string(ByteList, Length) -->
     { LengthMinusNul is Length - 1 },
     utf8_string(ByteList, 0, LengthMinusNul).
 
+utf8_string([], Length, Length) --> [0x00], !.
 utf8_string([Byte|Bs], Length0, Length) -->
     { Length0 < Length },
-    !,
     [Byte], % May be nul.
     { Length1 is Length0 + 1 },
     utf8_string(Bs, Length1, Length).
-utf8_string([], Length, Length) --> [0x00].
 
 value_double(Double) -->
     double(Double).
