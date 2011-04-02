@@ -6,12 +6,12 @@
 
 :- encoding(utf8).
 
-:- begin_tests(bson_decoder).
-
 %%  decode(+Bson:list, -Term) is semidet.
 %
 %   True if Term is the BSON document represented by the list
 %   of bytes (0..255) in Bson.
+
+:- begin_tests('bson_decoder:decode/2').
 
 test('valid utf8', [true(Got == Expected)]) :-
     Bson =
@@ -128,7 +128,7 @@ test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     ],
     bson_decoder:decode(Bson, _Got).
 
-:- end_tests(bson_decoder).
+:- end_tests('bson_decoder:decode/2').
 
 decode(Bson, Term) :-
     phrase(decode(Term), Bson),
