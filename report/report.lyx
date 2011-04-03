@@ -169,6 +169,13 @@ April 3 (weekend).
  All use_module directives now use an empty list in order to ensure that
  the module is loaded, but nothing is imported.
  This forces me to add the appropriate module prefixes to calls.
+ Benchmarked the unicode converter and the old shorter code outperformed
+ the new longer code with more than a factor of three.
+ I guess this is due to more stuff being done by the C library and not Prolog.
+ Anyway, the old code is faster and much shorter -- win-win.
+ Also replaced a crappy to-codes-and-then-to-atom conversion with a straight-to-
+utf8-atom library routine, which made it even faster.
+ Pretty nice now.
 \end_layout
 
 \begin_layout Section
