@@ -26,7 +26,8 @@ and run the test suite.
    already exists... **Solution:** Mostly Prolog, some bit-hacking in C.
  * Interleave tests with code or keep separate test files? I like
    interleaving... **Solution:** Looks like no interleaving, but tests
-   go at the top of each module.
+   go at the top of each module. **Update:** Interleaving is neat! I like
+   the idea of "doc comment, tests, implementation" for predicates.
 
 ## Links
 
