@@ -12,7 +12,7 @@ setup_globals :-
     % set_prolog_flag(verbose_file_search, true).
 
 setup_load_paths :-
-    prolog_load_context(directory, Root), % Available during compilation.
+    prolog_load_context(directory, Root), % Available only during compilation.
     setup_path(Root, '/lib', foreign),
     setup_path(Root, '/src', misc),
     setup_path(Root, '/src/bson', bson),
