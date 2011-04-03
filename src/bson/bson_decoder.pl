@@ -246,53 +246,17 @@ int64(Integer) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
     { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
-% Fixme, maybe.
-%
 % A bit of a hack, but in order to interpret raw bytes as UTF-8
 % we use a memory file as a temporary buffer, fill it with the
 % bytes and then read them back, treating them as UTF-8.
-% See: <http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3>
+% See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
 
 bytes_to_utf8_atom(Bytes, Utf8Atom) :-
-    bytes_to_code_points(Bytes, CodePoints),
-    builtin:atom_codes(Utf8Atom, CodePoints).
-
-bytes_to_code_points(Bytes, CodePoints) :-
-    setup_call_cleanup(
-        memory_file:new_memory_file(MemFile),
-        bytes_to_memory_file_to_code_points(Bytes, MemFile, CodePoints),
-        memory_file:free_memory_file(MemFile)).
-
-bytes_to_memory_file_to_code_points(Bytes, MemFile, CodePoints) :-
-    bytes_to_memory_file(Bytes, MemFile),
-    memory_file_to_code_points(MemFile, CodePoints).
-
-bytes_to_memory_file(Bytes, MemFile) :-
-    setup_call_cleanup(
-        open_memory_file_for_putting_bytes(MemFile, PutStream),
-        put_bytes(Bytes, PutStream),
-        builtin:close(PutStream)).
-
-memory_file_to_code_points(MemFile, CodePoints) :-
-    Encoding = utf8,
-    memory_file:memory_file_to_codes(MemFile, CodePoints, Encoding).
-
-open_memory_file_for_putting_bytes(MemFile, PutStream) :-
-    Options = [encoding(octet)],
-    memory_file:open_memory_file(MemFile, write, PutStream, Options).
-
-put_bytes(Bytes, PutStream) :-
-    apply:maplist(builtin:put_byte(PutStream), Bytes).
-
-/*
-% Old (shorter) version using more atom construction. XXX Benchmark.
-bytes_to_code_points(Bytes, Utf8Atom) :-
     builtin:atom_chars(RawAtom, Bytes),
-    memory_file:atom_to_memory_file(RawAtom, MemFile),
-    memory_file:memory_file_to_codes(MemFile, CodePoints, utf8),
-    memory_file:free_memory_file(MemFile),
-    builtin:atom_codes(Utf8Atom, CodePoints).
-*/
+    setup_call_cleanup(
+        memory_file:atom_to_memory_file(RawAtom, MemFile),
+        memory_file:memory_file_to_atom(MemFile, Utf8Atom, utf8),
+        memory_file:free_memory_file(MemFile)).
 
 length(Length) -->
     int32(Length).
