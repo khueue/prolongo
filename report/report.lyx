@@ -25,6 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing onehalf
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -153,14 +154,21 @@ builtin
 \begin_inset Quotes erd
 \end_inset
 
- isn't an actual module, but since it works anyway (you enter the module
- builtin and call the predicate from there) I decided to use it.
+ isn't an actual module, but since it works anyway (it enters the module
+ builtin and calls the predicate from there) I decided to use it.
  Documented predicates in bson_bits.
  Fixed a bug with bytes_to_integer/5 because it wasn't using a 32-bit integer.
  Now it uses int32_t.
  Started using maplist/2.
  Found a library(apply_macros) that claims to speed up maplist etc.
  simply by loading it.
+\end_layout
+
+\begin_layout Itemize
+April 3 (weekend).
+ All use_module directives now use an empty list in order to ensure that
+ the module is loaded, but nothing is imported.
+ This forces me to add the appropriate module prefixes to calls.
 \end_layout
 
 \begin_layout Section

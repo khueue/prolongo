@@ -9,13 +9,18 @@
 
 :- include(misc(common)).
 
+%%  encode(+Term, ?Bson:list) is semidet.
+%
+%   True if xxx.
+
 :- begin_tests('bson_encoder:encode/2').
 
-% Todo.
+test('xxx', [true(Got == Expected)]) :-
+    Expected = xxx,
+    encode(xxx, Got).
 
 :- end_tests('bson_encoder:encode/2').
 
-% Todo.
+% XXX Todo.
 encode(Term, Bson) :-
-    bson_bits:bytes_to_integer(0,0,0,0, _),
     Term = Bson.
