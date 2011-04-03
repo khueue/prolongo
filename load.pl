@@ -38,5 +38,5 @@ load_all_modules :-
     use_module(bson(bson), []).
 
 run_test_suite :-
-    builtin:format('~n% Running tests~n'),
+    builtin:format('~n% Running tests ...~n'),
     plunit:run_tests.

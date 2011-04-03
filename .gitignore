@@ -9,3 +9,5 @@ Icon?
 
 lib/*
 *.txt
+*.pl
+!load.pl
