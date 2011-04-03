@@ -175,7 +175,7 @@ April 3 (weekend).
  Anyway, the old code is faster and much shorter -- win-win.
  Also replaced a crappy to-codes-and-then-to-atom conversion with a straight-to-
 utf8-atom library routine, which made it even faster.
- Pretty nice now.
+ A keeper.
 \end_layout
 
 \begin_layout Section
