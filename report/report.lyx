@@ -251,6 +251,11 @@ Some parts written in C.
 \end_layout
 
 \begin_layout Itemize
+Discuss data structures, term [key:value] maps to bytelist [4,1,7,9,3,...]
+ etc.
+\end_layout
+
+\begin_layout Itemize
 Design choices: text as 
 \begin_inset Quotes eld
 \end_inset
