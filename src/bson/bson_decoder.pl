@@ -253,6 +253,28 @@ test('binary, user defined', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
+test('js with scope', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0F, % JS with scope tag.
+            106,115, 0, % Ename "js\0".
+            6,6,6,6, % int xxx
+            5,0,0,0, % String's byte length, incl. nul.
+            99,111,100,101, 0, % String data, "code\0".
+                xxx_not_impl,0,0,0, % Length of embedded doc.
+                0x10, % Int32 tag
+                    104,101,108,108,111, 0, % Ename "hello\0".
+                    32,0,0,0, % Int32 data, 32.
+                0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        'js': js_with_scope('code', ['hello':32])
+    ],
+    decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     Bson =
     [
@@ -317,6 +339,12 @@ element(Element) -->
     value_binary(Value),
     { key_value_pair(Name, Value, Element) }.
 element(Element) -->
+    [0x0F],
+    !,
+    key_name(Name),
+    value_js_with_scope(Value),
+    { key_value_pair(Name, Value, Element) }.
+element(Element) -->
     [0x10],
     !,
     key_name(Name),
@@ -347,6 +375,11 @@ value_binary(binary(Subtype,ByteList)) -->
     length(Length),
     subtype(Subtype),
     bytes(ByteList, Length).
+
+value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
+    length(_LengthEntireJsWithScope), % XXX Unused for now.
+    value_string(Code),
+    value_document(MappingsDoc).
 
 value_double(Double) -->
     double(Double).
