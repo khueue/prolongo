@@ -14,8 +14,7 @@ and run the test suite.
 
 ## Todo
 
- * Finish the decoder.
- * Write more decoder tests.
+ * Clean up the decoder. What is and what isn't a value_xxx? Extract preds?
  * Research exception handling in Prolog.
 
 ## Thoughts
