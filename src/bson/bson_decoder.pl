@@ -334,10 +334,9 @@ document(Elements) -->
     element_list(Elements),
     end.
 
-element_list([Element|Elements]) -->
+element_list([Name:Value|Elements]) -->
     element(Name, Value),
     !,
-    { key_value_pair(Name, Value, Element) },
     element_list(Elements).
 element_list([]) --> [].
 
@@ -396,8 +395,6 @@ key_name(Ename) -->
     cstring(CharList),
     { bytes_to_utf8_atom(CharList, Ename) }.
 
-key_value_pair(Key, Value, Key:Value).
-
 value_document(Doc) -->
     document(Doc).
 
@@ -419,10 +416,13 @@ value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
 value_undefined(undefined) -->
     [].
 
-% XXX. Not sure if this works properly. And is format/3 the best we got?
 value_object_id(object_id(ObjectID)) -->
     value_object_id_aux(IntegerObjectID, 0, 12),
-    { builtin:format(atom(ObjectID), '~16r', [IntegerObjectID]) }.
+    { number_hexatom(IntegerObjectID, ObjectID) }.
+
+% XXX Is there something more appropriate than format/3?
+number_hexatom(Number, Atom) :-
+    builtin:format(atom(Atom), '~16r', [Number]).
 
 value_object_id_aux(Num, Num, 0) -->
     [], !.
