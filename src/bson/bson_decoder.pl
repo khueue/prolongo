@@ -275,6 +275,20 @@ test('js with scope', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
+test('undefined', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x06, % Undefined tag.
+            66,83,79,78, 0, % Ename "BSON\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        'BSON': undefined
+    ],
+    decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
     Bson =
     [
@@ -339,6 +353,12 @@ element(Element) -->
     value_binary(Value),
     { key_value_pair(Name, Value, Element) }.
 element(Element) -->
+    [0x06], % Deprecated in BSON 1.0.
+    !,
+    key_name(Name),
+    value_undefined(Value),
+    { key_value_pair(Name, Value, Element) }.
+element(Element) -->
     [0x0F],
     !,
     key_name(Name),
@@ -380,6 +400,9 @@ value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
     length(_LengthEntireJsWithScope), % XXX Unused for now.
     value_string(Code),
     value_document(MappingsDoc).
+
+value_undefined(undefined) -->
+    [].
 
 value_double(Double) -->
     double(Double).
