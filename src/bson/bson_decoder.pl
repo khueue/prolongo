@@ -28,7 +28,7 @@ test('valid utf8', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'ä': 'ä\0ä'
+        'ä': "ä\0ä"
     ],
     decode(Bson, Got).
 
@@ -55,7 +55,7 @@ test('int32', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': 32
+        hello: 32
     ],
     decode(Bson, Got).
 
@@ -70,7 +70,7 @@ test('int64', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': 32
+        hello: 32
     ],
     decode(Bson, Got).
 
@@ -85,7 +85,7 @@ test('float', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': 5.05
+        hello: 5.05
     ],
     decode(Bson, Got).
 
@@ -113,7 +113,7 @@ test('embedded doc', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': 'awesome',
+                '0': "awesome",
                 '1': 5.05,
                 '2': 1986
             ]
@@ -144,7 +144,7 @@ test('embedded array', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': 'awesome',
+                '0': "awesome",
                 '1': 5.05,
                 '2': 1986
             ]
@@ -278,8 +278,8 @@ test('js with scope', [true(Got == Expected)]) :-
         0x0F, % JS with scope tag.
             106,115, 0, % Ename "js\0".
             6,6,6,6, % int xxx
-            5,0,0,0, % String's byte length, incl. nul.
-            99,111,100,101, 0, % String data, "code\0".
+            9,0,0,0, % String's byte length, incl. nul.
+            99,111,100,101,32,46,46,46, 0, % String data, "code ...\0".
                 xxx_not_impl,0,0,0, % Length of embedded doc.
                 0x10, % Int32 tag
                     104,101,108,108,111, 0, % Ename "hello\0".
@@ -289,7 +289,7 @@ test('js with scope', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'js': js_with_scope('code', ['hello':32])
+        js: js_with_scope("code ...", ['hello':32])
     ],
     decode(Bson, Got).
 
@@ -318,7 +318,7 @@ test('boolean true', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': true
+        hello: true
     ],
     decode(Bson, Got).
 
@@ -333,7 +333,22 @@ test('boolean false', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'hello': false
+        hello: false
+    ],
+    decode(Bson, Got).
+
+test('utc datetime', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x09, % UTC datetime tag
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0,0,0,0, 0,0,0,0, % UTC datetime data, 0. XXX better
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: utc(0)
     ],
     decode(Bson, Got).
 
@@ -376,64 +391,56 @@ document(Elements) -->
     end.
 
 element_list([Name:Value|Elements]) -->
-    element(Name, Value),
-    !,
+    element(Name, Value), !,
     element_list(Elements).
 element_list([]) --> [].
 
 element(Name, Value) -->
-    [0x01],
-    !,
+    [0x01], !,
     key_name(Name),
     value_double(Value).
 element(Name, Value) -->
-    [0x02],
-    !,
+    [0x02], !,
     key_name(Name),
     value_string(Value).
 element(Name, Value) -->
-    [0x03],
-    !,
+    [0x03], !,
     key_name(Name),
     value_document(Value).
 element(Name, Value) -->
-    [0x04],
-    !,
+    [0x04], !,
     key_name(Name),
     value_document(Value).
 element(Name, Value) -->
-    [0x05],
-    !,
+    [0x05], !,
     key_name(Name),
     value_binary(Value).
 element(Name, Value) -->
-    [0x06], % Deprecated in BSON 1.0.
-    !,
+    [0x06], !, % Deprecated in BSON 1.0.
     key_name(Name),
     value_undefined(Value).
 element(Name, Value) -->
-    [0x07],
-    !,
+    [0x07], !,
     key_name(Name),
     value_object_id(Value).
 element(Name, Value) -->
-    [0x08],
-    !,
+    [0x08], !,
     key_name(Name),
     value_boolean(Value).
 element(Name, Value) -->
-    [0x0F],
-    !,
+    [0x09], !,
+    key_name(Name),
+    value_utc(Value).
+element(Name, Value) -->
+    [0x0F], !,
     key_name(Name),
     value_js_with_scope(Value).
 element(Name, Value) -->
-    [0x10],
-    !,
+    [0x10], !,
     key_name(Name),
     value_int32(Value).
 element(Name, Value) -->
-    [0x12],
-    !,
+    [0x12], !,
     key_name(Name),
     value_int64(Value).
 
@@ -447,7 +454,10 @@ value_document(Doc) -->
 value_string(Atom) -->
     length(Length),
     utf8_bytes(ByteList, Length),
-    { bytes_to_utf8_atom(ByteList, Atom) }.
+    { bytes_to_utf8_codes(ByteList, Atom) }.
+
+value_utc(utc(Timestamp)) -->
+    int64(Timestamp).
 
 value_binary(binary(Subtype,ByteList)) -->
     length(Length),
@@ -495,8 +505,7 @@ subtype(md5)          --> [0x05], !.
 subtype(user_defined) --> [0x80], !.
 
 cstring([]) -->
-    [0x00],
-    !.
+    [0x00], !.
 cstring([Char|Cs]) -->
     [Char], % May not be nul (caught by base case).
     cstring(Cs).
@@ -507,8 +516,7 @@ utf8_bytes(ByteList, Length) -->
     [0x00].
 
 bytes([], 0) -->
-    [],
-    !.
+    [], !.
 bytes([Byte|Bs], Length0) -->
     [Byte],
     { Length1 is Length0 - 1 },
@@ -540,9 +548,16 @@ number_hexatom(Number, Atom) :-
 % bytes and then read them back, treating them as UTF-8.
 % See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
 
-bytes_to_utf8_atom(Bytes, Utf8Atom) :-
+bytes_to_utf8_atom(Bytes, Atom) :-
     builtin:atom_chars(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
-        memory_file:memory_file_to_atom(MemFile, Utf8Atom, utf8),
+        memory_file:memory_file_to_atom(MemFile, Atom, utf8),
+        memory_file:free_memory_file(MemFile)).
+
+bytes_to_utf8_codes(Bytes, Codes) :-
+    builtin:atom_chars(RawAtom, Bytes),
+    setup_call_cleanup(
+        memory_file:atom_to_memory_file(RawAtom, MemFile),
+        memory_file:memory_file_to_codes(MemFile, Codes, utf8),
         memory_file:free_memory_file(MemFile)).

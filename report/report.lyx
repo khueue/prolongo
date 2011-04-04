@@ -236,6 +236,18 @@ Some parts written in C.
  Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.)
 \end_layout
 
+\begin_layout Itemize
+Design choices: text as 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ and symbol as atom
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 Network communication
