@@ -82,6 +82,10 @@ element(Name, Value) -->
     key_name(Name),
     value_db_pointer(Value).
 element(Name, Value) -->
+    [0x0D], !,
+    key_name(Name),
+    value_js(Value).
+element(Name, Value) -->
     [0x0F], !,
     key_name(Name),
     value_js_with_scope(Value).
@@ -128,7 +132,10 @@ value_binary(binary(Subtype,ByteList)) -->
     subtype(Subtype),
     bytes(ByteList, Length).
 
-value_js_with_scope(js_with_scope(JsCode,MappingsDoc)) -->
+value_js(js(JsCode)) -->
+    value_string(JsCode).
+
+value_js_with_scope(js(JsCode,MappingsDoc)) -->
     length(_LengthEntireJsWithScope), % XXX Unused for now.
     value_string(JsCode),
     value_document(MappingsDoc).

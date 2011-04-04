@@ -257,6 +257,22 @@ test('binary, user defined', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
+test('js', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0D, % JS tag.
+            106,115, 0, % Ename "js\0".
+            9,0,0,0, % String's byte length, incl. nul.
+            99,111,100,101,32,46,46,46, 0, % String data, "code ...\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        js: js("code ...")
+    ],
+    bson_decoder:decode(Bson, Got).
+
 test('js with scope', [true(Got == Expected)]) :-
     Bson =
     [
@@ -275,7 +291,7 @@ test('js with scope', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        js: js_with_scope("code ...", ['hello':32])
+        js: js("code ...", ['hello':32])
     ],
     bson_decoder:decode(Bson, Got).
 
