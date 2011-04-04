@@ -393,6 +393,26 @@ test('regex', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
+test('db pointer', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0C, % DBPointer tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            2,0,0,0, % String's byte length, incl. nul.
+            97, 0, % String data, "a\0".
+            0x47,0xcc,0x67,0x09, % ObjectID, time.
+            0x34,0x75,0x06,      % ObjectID, machine.
+            0x1e,0x3d,           % ObjectID, pid.
+            0x95,0x36,0x9d,      % ObjectID, inc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: db_pointer("a", '47cc67093475061e3d95369d')
+    ],
+    decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
     [
@@ -470,6 +490,10 @@ element(Name, Value) -->
     key_name(Name),
     value_regex(Value).
 element(Name, Value) -->
+    [0x0C], !, % Deprecated in BSON 1.0.
+    key_name(Name),
+    value_db_pointer(Value).
+element(Name, Value) -->
     [0x0F], !,
     key_name(Name),
     value_js_with_scope(Value).
@@ -500,6 +524,11 @@ value_regex(regex(Pattern,Options)) -->
     cstring(OptionsBytes),
     { bytes_to_utf8_codes(OptionsBytes, Options) }.
 
+value_db_pointer(db_pointer(String,ObjectID)) -->
+    value_string(String),
+    value_object_id_aux(IntegerObjectID, 0, 12),
+    { number_hexatom(IntegerObjectID, ObjectID) }.
+
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
 
@@ -511,9 +540,9 @@ value_binary(binary(Subtype,ByteList)) -->
     subtype(Subtype),
     bytes(ByteList, Length).
 
-value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
+value_js_with_scope(js_with_scope(JsCode,MappingsDoc)) -->
     length(_LengthEntireJsWithScope), % XXX Unused for now.
-    value_string(Code),
+    value_string(JsCode),
     value_document(MappingsDoc).
 
 value_undefined(undefined) -->

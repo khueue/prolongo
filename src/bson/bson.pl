@@ -10,10 +10,12 @@
 
 :- include(misc(common)).
 
-%%  term_bson(+Term:list, ?Bson:list(bytes)) is semidet.
-%%  term_bson(?Term:list, +Bson:list(bytes)) is semidet.
+%%  term_bson(+Term:list(pair), ?Bson:list(byte)) is semidet.
+%%  term_bson(?Term:list(pair), +Bson:list(byte)) is semidet.
 %
-%   True if XXX ...
+%   A pair is a structure atom:term. A byte is an integer in 0..255.
+%
+%   True if Bson is the BSON byte-encoding of Term.
 
 term_bson(Term, Bson) :-
     nonvar(Term),
