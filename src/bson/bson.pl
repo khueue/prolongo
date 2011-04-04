@@ -1,7 +1,10 @@
-%%% Implements BSON 1.0. <http://bsonspec.org/>
+% BSON encoder/decoder.
+% <http://bsonspec.org/>
 
 :- module(_,
     [
+        version/1,
+        bson_version/1,
         term_bson/2
     ]).
 
@@ -9,6 +12,20 @@
 :- use_module(bson_encoder, []).
 
 :- include(misc(common)).
+
+%%  version(?Version:list) is det.
+%
+%   True if Version is a list representing the major, minor
+%   and patch version numbers of this library.
+
+version([0,0,0]).
+
+%%  bson_version(?Version:list) is det.
+%
+%   True if Version is a list representing the major and minor
+%   version numbers of the implemented BSON format.
+
+bson_version([1,0]).
 
 %%  term_bson(+Term:list(pair), ?Bson:list(byte)) is semidet.
 %%  term_bson(?Term:list(pair), +Bson:list(byte)) is semidet.

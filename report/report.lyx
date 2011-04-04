@@ -190,6 +190,7 @@ April 4.
  It does minimal error checking, but it should be able to parse all element
  types.
  It might still need some cleaning though.
+ Added version predicates to bson.
 \end_layout
 
 \begin_layout Section
