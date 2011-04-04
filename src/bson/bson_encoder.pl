@@ -1,9 +1,9 @@
-% BSON encoder.
-
 :- module(_,
     [
         encode/2
     ]).
+
+% <module> BSON encoder.
 
 :- use_module(bson_bits, []).
 

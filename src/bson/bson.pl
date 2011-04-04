@@ -1,12 +1,13 @@
-% BSON encoder/decoder.
-% <http://bsonspec.org/>
-
 :- module(_,
     [
         version/1,
         bson_version/1,
         term_bson/2
     ]).
+
+% <module> BSON encoder/decoder.
+%
+% Specification: http://bsonspec.org/
 
 :- use_module(bson_decoder, []).
 :- use_module(bson_encoder, []).

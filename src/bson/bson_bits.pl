@@ -1,11 +1,13 @@
-% Low-level bytes-to-number conversions.
-
 :- module(_,
     [
         bytes_to_float/9,
         bytes_to_integer/5,
         bytes_to_integer/9
     ]).
+
+% <module> Low-level bytes-to-number conversions.
+%
+% Implemented in C.
 
 :- use_foreign_library(foreign(bson_bits)).
 
