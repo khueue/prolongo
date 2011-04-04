@@ -10,8 +10,7 @@ all: trim compile test
 .PHONY: trim
 trim:
 	clear
-	@- trim *.md *.pl src/*.pl ext/*.c \
-		src/bson/*.pl src/bson/*.plt src/mongo/*.pl src/mongo/*.plt
+	@- trim *.md *.pl* src/*.pl* ext/*.c src/bson/*.pl* src/mongo/*.pl*
 
 .PHONY: test
 test: compile
