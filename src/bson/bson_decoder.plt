@@ -415,6 +415,22 @@ test('db pointer', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
+test('symbol', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0E, % Symbol tag.
+            106,115, 0, % Ename "js\0".
+            5,0,0,0, % String's byte length, incl. nul.
+            97,116,111,109, 0, % String data, "atom\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        js: symbol(atom)
+    ],
+    bson_decoder:decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
     [
