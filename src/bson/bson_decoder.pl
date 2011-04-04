@@ -419,6 +419,7 @@ value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
 value_undefined(undefined) -->
     [].
 
+% XXX. Not sure if this works properly. And is format/3 the best we got?
 value_object_id(object_id(ObjectID)) -->
     value_object_id_aux(IntegerObjectID, 0, 12),
     { builtin:format(atom(ObjectID), '~16r', [IntegerObjectID]) }.
