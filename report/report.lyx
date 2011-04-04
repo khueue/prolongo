@@ -191,6 +191,7 @@ April 4.
  types.
  It might still need some cleaning though.
  Added version predicates to bson.
+ Made comments more in line with PlDoc.
 \end_layout
 
 \begin_layout Section
