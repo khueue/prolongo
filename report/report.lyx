@@ -178,6 +178,20 @@ utf8-atom library routine, which made it even faster.
  A keeper.
 \end_layout
 
+\begin_layout Itemize
+April 4.
+ Refactored decoder slightly.
+ Added relation term_bson/2 to bson, which calls necessary subpredicate.
+ Moved tests into separate files: they were getting too long, and separating
+ them makes it easier to write them simultaneously.
+ As long as tests and implementation are close to each other, I am okay.
+ (Impl in .pl and tests in .plt next to each other.) The decoder should now
+ be feature complete.
+ It does minimal error checking, but it should be able to parse all element
+ types.
+ It might still need some cleaning though.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout
