@@ -34,7 +34,7 @@ test('int32', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x10, % Int32 tag
+        0x10, % Int32 tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             32,0,0,0, % Int32 data, 32.
         0 % End of top doc.
@@ -49,7 +49,7 @@ test('int64', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x12, % Int64 tag
+        0x12, % Int64 tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             32,0,0,0, 0,0,0,0, % Int64 data, 32.
         0 % End of top doc.
@@ -358,7 +358,7 @@ test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x08, % Boolean tag
+        0x08, % Boolean tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             2, % Boolean data, INVALID.
         0 % End of top doc.
@@ -428,6 +428,21 @@ test('symbol', [true(Got == Expected)]) :-
     Expected =
     [
         js: symbol(atom)
+    ],
+    bson_decoder:decode(Bson, Got).
+
+test('timestamp', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x11, % Timestamp tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0,0,0,0, 0,0,0,0, % Int64 timestamp data, 0.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: timestamp(0)
     ],
     bson_decoder:decode(Bson, Got).
 

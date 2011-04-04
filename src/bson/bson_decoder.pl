@@ -98,6 +98,10 @@ element(Name, Value) -->
     key_name(Name),
     value_int32(Value).
 element(Name, Value) -->
+    [0x11], !,
+    key_name(Name),
+    value_timestamp(Value).
+element(Name, Value) -->
     [0x12], !,
     key_name(Name),
     value_int64(Value).
@@ -126,6 +130,9 @@ value_db_pointer(db_pointer(String,ObjectID)) -->
     { number_hexatom(IntegerObjectID, ObjectID) }.
 
 value_utc(utc(Timestamp)) -->
+    int64(Timestamp).
+
+value_timestamp(timestamp(Timestamp)) -->
     int64(Timestamp).
 
 value_null(nil) -->
