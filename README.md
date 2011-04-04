@@ -1,5 +1,12 @@
 # Design and Implementation of a MongoDB Driver for Prolog
 
+## Todo
+
+ * Clean up the decoder. What is and what isn't a value_xxx? Extract preds?
+ * More validation in decoder?
+ * Think about and start to implement encoder.
+ * Research exception handling in Prolog.
+
 ## Usage
 
 Clone the repository and run `make` to compile the necessary C libraries
@@ -11,11 +18,6 @@ and run the test suite.
     * foreign(memfile) (should be autoloaded)
     * foreign(apply_macros) (loaded by load.pl, can be safely removed)
  * C compiler (modify the Makefile if you aren't using GCC)
-
-## Todo
-
- * Clean up the decoder. What is and what isn't a value_xxx? Extract preds?
- * Research exception handling in Prolog.
 
 ## Thoughts
 
