@@ -21,14 +21,8 @@ and run the test suite.
 
 ## Thoughts
 
- * SWI Association Lists?
- * Implement BSON in Prolog or use existing C lib? Prolog is more fun.
-   C would be better for efficiency, and probably also easier since the lib
-   already exists... **Solution:** Mostly Prolog, some bit-hacking in C.
- * Interleave tests with code or keep separate test files? I like
-   interleaving... **Solution:** Looks like no interleaving, but tests
-   go at the top of each module. **Update:** Interleaving is neat! I like
-   the idea of "doc comment, tests, implementation" for predicates.
+ * SWI Association Lists? Probably not. Should stick with stuff that is
+   common to most Prologs.
 
 ## Links
 
