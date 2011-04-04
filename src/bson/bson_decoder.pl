@@ -317,65 +317,57 @@ document(Elements) -->
     end.
 
 element_list([Element|Elements]) -->
-    element(Element),
+    element(Name, Value),
     !,
+    { key_value_pair(Name, Value, Element) },
     element_list(Elements).
 element_list([]) --> [].
 
-element(Element) -->
+element(Name, Value) -->
     [0x01],
     !,
-    key_name(Ename),
-    value_double(Value),
-    { key_value_pair(Ename, Value, Element) }.
-element(Element) -->
+    key_name(Name),
+    value_double(Value).
+element(Name, Value) -->
     [0x02],
     !,
     key_name(Name),
-    value_string(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_string(Value).
+element(Name, Value) -->
     [0x03],
     !,
     key_name(Name),
-    value_document(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_document(Value).
+element(Name, Value) -->
     [0x04],
     !,
     key_name(Name),
-    value_document(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_document(Value).
+element(Name, Value) -->
     [0x05],
     !,
     key_name(Name),
-    value_binary(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_binary(Value).
+element(Name, Value) -->
     [0x06], % Deprecated in BSON 1.0.
     !,
     key_name(Name),
-    value_undefined(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_undefined(Value).
+element(Name, Value) -->
     [0x0F],
     !,
     key_name(Name),
-    value_js_with_scope(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_js_with_scope(Value).
+element(Name, Value) -->
     [0x10],
     !,
     key_name(Name),
-    value_int32(Value),
-    { key_value_pair(Name, Value, Element) }.
-element(Element) -->
+    value_int32(Value).
+element(Name, Value) -->
     [0x12],
     !,
     key_name(Name),
-    value_int64(Value),
-    { key_value_pair(Name, Value, Element) }.
+    value_int64(Value).
 
 key_name(Ename) -->
     cstring(CharList),
