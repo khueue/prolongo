@@ -311,7 +311,7 @@ test('boolean true', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x08, % Boolean tag
+        0x08, % Boolean tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             1, % Boolean data, true.
         0 % End of top doc.
@@ -326,7 +326,7 @@ test('boolean false', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x08, % Boolean tag
+        0x08, % Boolean tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             0, % Boolean data, false.
         0 % End of top doc.
@@ -341,7 +341,7 @@ test('utc datetime', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x09, % UTC datetime tag
+        0x09, % UTC datetime tag.
             104,101,108,108,111, 0, % Ename "hello\0".
             0,0,0,0, 0,0,0,0, % UTC datetime data, 0. XXX better
         0 % End of top doc.
@@ -362,6 +362,20 @@ test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
         0 % End of top doc.
     ],
     decode(Bson, _Got).
+
+test('null', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0A, % Null tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: nil
+    ],
+    decode(Bson, Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
@@ -432,6 +446,10 @@ element(Name, Value) -->
     key_name(Name),
     value_utc(Value).
 element(Name, Value) -->
+    [0x0A], !,
+    key_name(Name),
+    value_null(Value).
+element(Name, Value) -->
     [0x0F], !,
     key_name(Name),
     value_js_with_scope(Value).
@@ -458,6 +476,9 @@ value_string(Atom) -->
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
+
+value_null(nil) -->
+    [].
 
 value_binary(binary(Subtype,ByteList)) -->
     length(Length),
