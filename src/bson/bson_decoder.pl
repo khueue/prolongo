@@ -377,6 +377,22 @@ test('null', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
+test('regex', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x0B, % Regex tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            97, 0,  % Regex pattern, "a\0".
+            105, 0, % Regex options, "i\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: regex("a","i")
+    ],
+    decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
     [
@@ -450,6 +466,10 @@ element(Name, Value) -->
     key_name(Name),
     value_null(Value).
 element(Name, Value) -->
+    [0x0B], !,
+    key_name(Name),
+    value_regex(Value).
+element(Name, Value) -->
     [0x0F], !,
     key_name(Name),
     value_js_with_scope(Value).
@@ -473,6 +493,12 @@ value_string(Atom) -->
     length(Length),
     utf8_bytes(ByteList, Length),
     { bytes_to_utf8_codes(ByteList, Atom) }.
+
+value_regex(regex(Pattern,Options)) -->
+    cstring(PatternBytes),
+    { bytes_to_utf8_codes(PatternBytes, Pattern) },
+    cstring(OptionsBytes),
+    { bytes_to_utf8_codes(OptionsBytes, Options) }.
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
