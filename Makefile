@@ -16,12 +16,12 @@ trim:
 .PHONY: test
 test: compile
 	@ echo "--- Running tests and exiting ..."
-	$(PROLOG) -g "[load], test" -t halt
+	$(PROLOG) -s load -g test -t halt
 
 .PHONY: stay
 stay: compile
 	@ echo "--- Running tests ..."
-	$(PROLOG) -g "[load], test"
+	$(PROLOG) -s load -g test
 
 .PHONY: compile
 compile: setup lib/bson_bits
