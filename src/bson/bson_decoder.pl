@@ -307,7 +307,48 @@ test('undefined', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
-test('invalid bson, missing terminating nul', [throws(bson_error(_))]) :-
+test('boolean true', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x08, % Boolean tag
+            104,101,108,108,111, 0, % Ename "hello\0".
+            1, % Boolean data, true.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        'hello': true
+    ],
+    decode(Bson, Got).
+
+test('boolean false', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x08, % Boolean tag
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0, % Boolean data, false.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        'hello': false
+    ],
+    decode(Bson, Got).
+
+test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x08, % Boolean tag
+            104,101,108,108,111, 0, % Ename "hello\0".
+            2, % Boolean data, INVALID.
+        0 % End of top doc.
+    ],
+    decode(Bson, Got).
+
+test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
@@ -376,6 +417,11 @@ element(Name, Value) -->
     key_name(Name),
     value_object_id(Value).
 element(Name, Value) -->
+    [0x08],
+    !,
+    key_name(Name),
+    value_boolean(Value).
+element(Name, Value) -->
     [0x0F],
     !,
     key_name(Name),
@@ -427,6 +473,10 @@ value_object_id_aux(Num, Num0, Length0) -->
     { Num1 is (Num0 << 8) \/ Byte },
     { Length1 is Length0 - 1 },
     value_object_id_aux(Num, Num1, Length1).
+
+value_boolean(false) --> [0], !.
+value_boolean(true)  --> [1], !.
+value_boolean(_)     --> { throw(bson_error(invalid_boolean)) }.
 
 value_double(Double) -->
     double(Double).
