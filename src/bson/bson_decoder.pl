@@ -346,7 +346,7 @@ test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
             2, % Boolean data, INVALID.
         0 % End of top doc.
     ],
-    decode(Bson, Got).
+    decode(Bson, _Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
