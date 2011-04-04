@@ -253,6 +253,24 @@ test('binary, user defined', [true(Got == Expected)]) :-
     ],
     decode(Bson, Got).
 
+test('binary, user defined', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x07, % ObjectID tag.
+            66,83,79,78, 0, % Ename "BSON\0".
+            0x47,0xcc,0x67,0x09, % ObjectID, time.
+            0x34,0x75,0x06,      % ObjectID, machine.
+            0x1e,0x3d,           % ObjectID, pid.
+            0x95,0x36,0x9d,      % ObjectID, inc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        'BSON': object_id('47cc67093475061e3d95369d')
+    ],
+    decode(Bson, Got).
+
 test('js with scope', [true(Got == Expected)]) :-
     Bson =
     [
@@ -354,6 +372,11 @@ element(Name, Value) -->
     key_name(Name),
     value_undefined(Value).
 element(Name, Value) -->
+    [0x07],
+    !,
+    key_name(Name),
+    value_object_id(Value).
+element(Name, Value) -->
     [0x0F],
     !,
     key_name(Name),
@@ -395,6 +418,18 @@ value_js_with_scope(js_with_scope(Code,MappingsDoc)) -->
 
 value_undefined(undefined) -->
     [].
+
+value_object_id(object_id(ObjectID)) -->
+    value_object_id_aux(IntegerObjectID, 0, 12),
+    { builtin:format(atom(ObjectID), '~16r', [IntegerObjectID]) }.
+
+value_object_id_aux(Num, Num, 0) -->
+    [], !.
+value_object_id_aux(Num, Num0, Length0) -->
+    [Byte],
+    { Num1 is (Num0 << 8) \/ Byte },
+    { Length1 is Length0 - 1 },
+    value_object_id_aux(Num, Num1, Length1).
 
 value_double(Double) -->
     double(Double).
