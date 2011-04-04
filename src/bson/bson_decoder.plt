@@ -446,6 +446,34 @@ test('timestamp', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
+test('min', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0xFF, % Min key tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: min
+    ],
+    bson_decoder:decode(Bson, Got).
+
+test('max', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x7F, % Max key tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: max
+    ],
+    bson_decoder:decode(Bson, Got).
+
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
     [

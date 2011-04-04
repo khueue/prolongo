@@ -105,6 +105,14 @@ element(Name, Value) -->
     [0x12], !,
     key_name(Name),
     value_int64(Value).
+element(Name, Value) -->
+    [0xFF], !,
+    key_name(Name),
+    value_min(Value).
+element(Name, Value) -->
+    [0x7F], !,
+    key_name(Name),
+    value_max(Value).
 
 key_name(Ename) -->
     cstring(CharList),
@@ -136,6 +144,12 @@ value_timestamp(timestamp(Timestamp)) -->
     int64(Timestamp).
 
 value_null(nil) -->
+    [].
+
+value_min(min) -->
+    [].
+
+value_max(max) -->
     [].
 
 value_binary(binary(Subtype,ByteList)) -->
