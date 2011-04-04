@@ -32,10 +32,14 @@ setup_path(PathPrefix, PathSuffix, Name) :-
 
 test :-
     load_all_modules,
+    load_all_tests,
     run_test_suite.
 
 load_all_modules :-
     use_module(bson(bson), []).
+
+load_all_tests :-
+    plunit:load_test_files([]).
 
 run_test_suite :-
     builtin:format('~n% Running tests ...~n'),
