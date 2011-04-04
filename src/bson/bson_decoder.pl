@@ -420,10 +420,6 @@ value_object_id(object_id(ObjectID)) -->
     value_object_id_aux(IntegerObjectID, 0, 12),
     { number_hexatom(IntegerObjectID, ObjectID) }.
 
-% XXX Is there something more appropriate than format/3?
-number_hexatom(Number, Atom) :-
-    builtin:format(atom(Atom), '~16r', [Number]).
-
 value_object_id_aux(Num, Num, 0) -->
     [], !.
 value_object_id_aux(Num, Num0, Length0) -->
@@ -484,6 +480,10 @@ int64(Integer) -->
     { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
 end --> [0x00].
+
+% XXX Is there something more appropriate than format/3?
+number_hexatom(Number, Atom) :-
+    builtin:format(atom(Atom), '~16r', [Number]).
 
 % A bit of a hack, but in order to interpret raw bytes as UTF-8
 % we use a memory file as a temporary buffer, fill it with the
