@@ -257,8 +257,10 @@ bytes_to_utf8(Bytes, AtomOrCodes) :-
         memory_file:free_memory_file(MemFile)).
 
 memory_file_to_atom_or_codes(MemFile, atom(Text), Encoding) :-
+    !,
     memory_file:memory_file_to_atom(MemFile, Text, Encoding).
 memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
+    !,
     memory_file:memory_file_to_codes(MemFile, Text, Encoding).
 memory_file_to_atom_or_codes(_, _Unknown, _) :-
     throw(bson_error(invalid_atom_or_codes)).
