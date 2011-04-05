@@ -2,7 +2,6 @@
 
 ## Todo
 
- * Clean up the decoder. What is and what isn't a value_xxx? Extract preds?
  * More validation in decoder?
  * Think about and start to implement encoder.
  * Research exception handling in Prolog.
