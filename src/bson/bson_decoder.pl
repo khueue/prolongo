@@ -100,7 +100,7 @@ element(Name, Value) -->
 element(Name, Value) -->
     [0x11], !,
     key(Name),
-    value_timestamp(Value).
+    value_mongostamp(Value).
 element(Name, Value) -->
     [0x12], !,
     key(Name),
@@ -115,7 +115,7 @@ element(Name, Value) -->
     value_max(Value).
 
 key(Name) -->
-    c_string_atom(Name).
+    c_string(atom(Name)).
 
 value_array(Doc) -->
     document(Doc).
@@ -124,22 +124,22 @@ value_document(Doc) -->
     document(Doc).
 
 value_string(Text) -->
-    string(Text).
+    string(atom(Text)).
 
 value_regex(regex(Pattern,Options)) -->
-    c_string_atom(Pattern),
-    c_string_atom(Options).
+    c_string(atom(Pattern)),
+    c_string(atom(Options)).
 
 value_db_pointer(db_pointer(Text,ObjectID)) -->
-    string(Text),
+    string(atom(Text)),
     value_object_id_aux(IntegerObjectID, 0, 12),
     { number_hexatom(IntegerObjectID, ObjectID) }.
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
 
-value_timestamp(timestamp(Timestamp)) -->
-    int64(Timestamp).
+value_mongostamp(mongostamp(Mongostamp)) -->
+    int64(Mongostamp).
 
 value_null(null) --> [].
 
@@ -153,15 +153,15 @@ value_binary(binary(Subtype,Bytes)) -->
     n_bytes(Bytes, Length).
 
 value_js(js(JsCode)) -->
-    string(JsCode).
+    string(atom(JsCode)).
 
 value_js_with_scope(js(JsCode,MappingsDoc)) -->
     int32(_LengthEntireJsWithScope), % XXX Unused for now.
-    string(JsCode),
+    string(atom(JsCode)),
     document(MappingsDoc).
 
-value_symbol(symbol(Atom)) -->
-    string(Atom).
+value_symbol(symbol(Symbol)) -->
+    string(atom(Symbol)).
 
 value_undefined(undefined) --> [].
 
@@ -196,27 +196,17 @@ subtype(uuid)         --> [0x03], !.
 subtype(md5)          --> [0x05], !.
 subtype(user_defined) --> [0x80], !.
 
-string(Text) -->
+string(AtomOrCodes) -->
     int32(Length),
-    string_atom(Text, Length).
+    string(AtomOrCodes, Length).
 
-c_string_atom(Atom) -->
+c_string(AtomOrCodes) -->
     bytes_stop_with_nul(Bytes),
-    { bytes_to_utf8_atom(Bytes, Atom) }.
+    { bytes_to_utf8(Bytes, AtomOrCodes) }.
 
-% Unused.
-c_string_codes(Codes) -->
-    bytes_stop_with_nul(Bytes),
-    { bytes_to_utf8_codes(Bytes, Codes) }.
-
-string_atom(Atom, Length) -->
+string(AtomOrCodes, Length) -->
     n_bytes_including_nul(Bytes, Length),
-    { bytes_to_utf8_atom(Bytes, Atom) }.
-
-% Unused.
-string_codes(Codes, Length) -->
-    n_bytes_including_nul(Bytes, Length),
-    { bytes_to_utf8_codes(Bytes, Codes) }.
+    { bytes_to_utf8(Bytes, AtomOrCodes) }.
 
 bytes_stop_with_nul([]) --> [0], !.
 bytes_stop_with_nul([Byte|Bytes]) -->
@@ -256,17 +246,14 @@ number_hexatom(Number, Atom) :-
 % bytes and then read them back, treating them as UTF-8.
 % See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
 
-bytes_to_utf8_atom(Bytes, Atom) :-
+bytes_to_utf8(Bytes, AtomOrCodes) :-
     builtin:atom_chars(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
-        memory_file:memory_file_to_atom(MemFile, Atom, utf8),
+        memory_file_to_atom_or_codes(MemFile, AtomOrCodes, utf8),
         memory_file:free_memory_file(MemFile)).
 
-% Unused.
-bytes_to_utf8_codes(Bytes, Codes) :-
-    builtin:atom_chars(RawAtom, Bytes),
-    setup_call_cleanup(
-        memory_file:atom_to_memory_file(RawAtom, MemFile),
-        memory_file:memory_file_to_codes(MemFile, Codes, utf8),
-        memory_file:free_memory_file(MemFile)).
+memory_file_to_atom_or_codes(MemFile, atom(Atom), Encoding) :-
+    memory_file:memory_file_to_atom(MemFile, Atom, Encoding).
+memory_file_to_atom_or_codes(MemFile, codes(Codes), Encoding) :-
+    memory_file:memory_file_to_codes(MemFile, Codes, Encoding).

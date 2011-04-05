@@ -2,6 +2,17 @@
 
 :- begin_tests('bson_decoder:decode/2').
 
+test('empty doc', [true(Got == Expected)]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+    ],
+    bson_decoder:decode(Bson, Got).
+
 test('valid utf8', [true(Got == Expected)]) :-
     Bson =
     [
@@ -300,12 +311,12 @@ test('undefined', [true(Got == Expected)]) :-
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x06, % Undefined tag.
-            66,83,79,78, 0, % Ename "BSON\0".
+            104,101,108,108,111, 0, % Ename "hello\0".
         0 % End of top doc.
     ],
     Expected =
     [
-        'BSON': undefined
+        hello: undefined
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -431,18 +442,18 @@ test('symbol', [true(Got == Expected)]) :-
     ],
     bson_decoder:decode(Bson, Got).
 
-test('timestamp', [true(Got == Expected)]) :-
+test('mongostamp', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x11, % Timestamp tag.
+        0x11, % Mongostamp tag.
             104,101,108,108,111, 0, % Ename "hello\0".
-            0,0,0,0, 0,0,0,0, % Int64 timestamp data, 0.
+            0,0,0,0, 0,0,0,0, % Int64 mongostamp data, 0.
         0 % End of top doc.
     ],
     Expected =
     [
-        hello: timestamp(0)
+        hello: mongostamp(0)
     ],
     bson_decoder:decode(Bson, Got).
 
