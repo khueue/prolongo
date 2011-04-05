@@ -132,8 +132,7 @@ value_regex(regex(Pattern,Options)) -->
 
 value_db_pointer(db_pointer(Text,ObjectID)) -->
     string(atom(Text)),
-    value_object_id_aux(IntegerObjectID, 0, 12),
-    { number_hexatom(IntegerObjectID, ObjectID) }.
+    object_id(atom(ObjectID)).
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
@@ -166,15 +165,7 @@ value_symbol(symbol(Symbol)) -->
 value_undefined(undefined) --> [].
 
 value_object_id(object_id(ObjectID)) -->
-    value_object_id_aux(IntegerObjectID, 0, 12),
-    { number_hexatom(IntegerObjectID, ObjectID) }.
-
-value_object_id_aux(Num, Num, 0) --> [], !.
-value_object_id_aux(Num, Num0, Length0) -->
-    [Byte],
-    { Num1 is (Num0 << 8) \/ Byte },
-    { Length1 is Length0 - 1 },
-    value_object_id_aux(Num, Num1, Length1).
+    object_id(atom(ObjectID)).
 
 value_boolean(false) --> [0], !.
 value_boolean(true)  --> [1], !.
@@ -188,6 +179,20 @@ value_int32(Integer) -->
 
 value_int64(Integer) -->
     int64(Integer).
+
+object_id(AtomOrCodes) -->
+    n_bytes_as_unsigned_integer(Integer, 12),
+    { number_to_hex(Integer, AtomOrCodes) }.
+
+n_bytes_as_unsigned_integer(Integer, Length) -->
+    n_bytes_as_unsigned_integer(Integer, 0, Length).
+
+n_bytes_as_unsigned_integer(Int, Int, 0) --> [], !.
+n_bytes_as_unsigned_integer(Int, Int0, Length0) -->
+    [Byte],
+    { Int1 is (Int0 << 8) \/ Byte },
+    { Length1 is Length0 - 1 },
+    n_bytes_as_unsigned_integer(Int, Int1, Length1).
 
 subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.
@@ -236,10 +241,8 @@ int64(Integer) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
     { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
 
-% XXX Is there something more appropriate than format/3?
-number_hexatom(Number, Atom) :-
-    HexInLowercase = '~16r',
-    builtin:format(atom(Atom), HexInLowercase, [Number]).
+number_to_hex(Number, AtomOrCodes) :-
+    builtin:format(AtomOrCodes, '~16r', [Number]).
 
 % A bit of a hack, but in order to interpret raw bytes as UTF-8
 % we use a memory file as a temporary buffer, fill it with the
@@ -253,7 +256,7 @@ bytes_to_utf8(Bytes, AtomOrCodes) :-
         memory_file_to_atom_or_codes(MemFile, AtomOrCodes, utf8),
         memory_file:free_memory_file(MemFile)).
 
-memory_file_to_atom_or_codes(MemFile, atom(Atom), Encoding) :-
-    memory_file:memory_file_to_atom(MemFile, Atom, Encoding).
-memory_file_to_atom_or_codes(MemFile, codes(Codes), Encoding) :-
-    memory_file:memory_file_to_codes(MemFile, Codes, Encoding).
+memory_file_to_atom_or_codes(MemFile, atom(Text), Encoding) :-
+    memory_file:memory_file_to_atom(MemFile, Text, Encoding).
+memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
+    memory_file:memory_file_to_codes(MemFile, Text, Encoding).
