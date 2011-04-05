@@ -13,6 +13,15 @@
 %
 %   True if xxx.
 
-% XXX Todo.
 encode(Term, Bson) :-
-    Term = Bson.
+    Bson = [Length|_BsonElements],
+    phrase(elements(Term,Length), Bson, [0]),
+    !.
+encode(_Term, _Bson) :-
+    throw(bson_error(invalid)).
+
+elements([], 0) --> !, [].
+elements([key:value|Elements], Length) -->
+    [Length,k,e,y,v,a,l,u,e],
+    elements(Elements, Length0),
+    {Length is Length0 + 8}.
