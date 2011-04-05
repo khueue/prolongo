@@ -25,13 +25,13 @@ decode(Term) -->
 
 document(Elements) -->
     int32(_Length), % XXX Ignored for now. Validate how much?
-    element_list(Elements),
-    [0].
+    elements(Elements),
+    end.
 
-element_list([Name:Value|Elements]) -->
-    element(Name, Value), !,
-    element_list(Elements).
-element_list([]) --> [].
+elements([]) --> [].
+elements([Name:Value|Elements]) -->
+    element(Name, Value),
+    elements(Elements).
 
 element(Name, Value) -->
     [0x01], !,
@@ -184,15 +184,7 @@ object_id(AtomOrCodes) -->
     n_bytes_as_unsigned_integer(Integer, 12),
     { number_to_hex(Integer, AtomOrCodes) }.
 
-n_bytes_as_unsigned_integer(Integer, Length) -->
-    n_bytes_as_unsigned_integer(Integer, 0, Length).
-
-n_bytes_as_unsigned_integer(Int, Int, 0) --> [], !.
-n_bytes_as_unsigned_integer(Int, Int0, Length0) -->
-    [Byte],
-    { Int1 is (Int0 << 8) \/ Byte },
-    { Length1 is Length0 - 1 },
-    n_bytes_as_unsigned_integer(Int, Int1, Length1).
+end --> [0].
 
 subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.
@@ -214,8 +206,8 @@ string(AtomOrCodes, Length) -->
     { bytes_to_utf8(Bytes, AtomOrCodes) }.
 
 bytes_stop_with_nul([]) --> [0], !.
-bytes_stop_with_nul([Byte|Bytes]) -->
-    [Byte], % May NOT be nul (caught by base case).
+bytes_stop_with_nul([NotNul|Bytes]) -->
+    [NotNul],
     bytes_stop_with_nul(Bytes).
 
 n_bytes_including_nul(Bytes, Length) -->
@@ -228,6 +220,16 @@ n_bytes([Byte|Bytes], Length0) -->
     [Byte], % May be anything.
     { Length1 is Length0 - 1 },
     n_bytes(Bytes, Length1).
+
+n_bytes_as_unsigned_integer(Integer, Length) -->
+    n_bytes_as_unsigned_integer(Integer, 0, Length).
+
+n_bytes_as_unsigned_integer(Int, Int, 0) --> [], !.
+n_bytes_as_unsigned_integer(Int, Int0, Length0) -->
+    [Byte],
+    { Int1 is (Int0 << 8) \/ Byte },
+    { Length1 is Length0 - 1 },
+    n_bytes_as_unsigned_integer(Int, Int1, Length1).
 
 double(Double) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
