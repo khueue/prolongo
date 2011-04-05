@@ -14,7 +14,7 @@ test('valid utf8', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        'ä': "ä\0ä"
+        'ä': 'ä\0ä'
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -99,7 +99,7 @@ test('embedded doc', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': "awesome",
+                '0': 'awesome',
                 '1': 5.05,
                 '2': 1986
             ]
@@ -130,7 +130,7 @@ test('embedded array', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': "awesome",
+                '0': 'awesome',
                 '1': 5.05,
                 '2': 1986
             ]
@@ -269,7 +269,7 @@ test('js', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        js: js("code ...")
+        js: js('code ...')
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -291,7 +291,7 @@ test('js with scope', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        js: js("code ...", ['hello':32])
+        js: js('code ...', ['hello':32])
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -375,7 +375,7 @@ test('null', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: nil
+        hello: null
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -391,7 +391,7 @@ test('regex', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: regex("a","i")
+        hello: regex('a','i')
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -411,7 +411,7 @@ test('db pointer', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: db_pointer("a", '47cc67093475061e3d95369d')
+        hello: db_pointer('a', '47cc67093475061e3d95369d')
     ],
     bson_decoder:decode(Bson, Got).
 
@@ -420,14 +420,14 @@ test('symbol', [true(Got == Expected)]) :-
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0E, % Symbol tag.
-            106,115, 0, % Ename "js\0".
+            104,101,108,108,111, 0, % Ename "hello\0".
             5,0,0,0, % String's byte length, incl. nul.
             97,116,111,109, 0, % String data, "atom\0".
         0 % End of top doc.
     ],
     Expected =
     [
-        js: symbol(atom)
+        hello: symbol(atom)
     ],
     bson_decoder:decode(Bson, Got).
 
