@@ -224,12 +224,12 @@ n_bytes([Byte|Bytes], Length0) -->
 n_bytes_as_unsigned_integer(Integer, Length) -->
     n_bytes_as_unsigned_integer(Integer, 0, Length).
 
-n_bytes_as_unsigned_integer(Int, Int, 0) --> [], !.
-n_bytes_as_unsigned_integer(Int, Int0, Length0) -->
+n_bytes_as_unsigned_integer(Integer, Integer, 0) --> [], !.
+n_bytes_as_unsigned_integer(Integer, Integer0, Length0) -->
     [Byte],
-    { Int1 is (Int0 << 8) \/ Byte },
+    { Integer1 is (Integer0 << 8) \/ Byte },
     { Length1 is Length0 - 1 },
-    n_bytes_as_unsigned_integer(Int, Int1, Length1).
+    n_bytes_as_unsigned_integer(Integer, Integer1, Length1).
 
 double(Double) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
