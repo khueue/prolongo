@@ -264,4 +264,4 @@ memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
     memory_file:memory_file_to_codes(MemFile, Text, Encoding).
 memory_file_to_atom_or_codes(_MemFile, Unknown, _Encoding) :-
     builtin:format(atom(Message), 'Unknown output term: ~w', [Unknown]),
-    throw(Message).
+    throw(internal(Message)).
