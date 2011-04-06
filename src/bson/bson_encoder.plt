@@ -44,6 +44,21 @@ test('string', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('int32', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: 32
+    ],
+    Expected =
+    [
+        16,0,0,0, % Length of top doc.
+        0x10, % Int32 tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            32,0,0,0, % Int32 data, 32.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid,
     bson_encoder:term_to_bson(Term, _Got).

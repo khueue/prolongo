@@ -60,10 +60,18 @@ value(Value, 0x02, Len) -->
     { builtin:atom(Value) },
     !,
     value_string(Value, Len).
+value(Value, 0x10, Len) -->
+    { builtin:integer(Value) }, % XXX Check range?
+    !,
+    value_int32(Value, Len).
 
 value_double(Float, 8) -->
-    { bson_bits:float_to_bytes(Float, D0, D1, D2, D3, D4, D5, D6, D7) },
-    [D0,D1,D2,D3,D4,D5,D6,D7].
+    { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
+    [B0,B1,B2,B3,B4,B5,B6,B7].
+
+value_int32(Integer, 4) -->
+    { int32_to_bytes(Integer, B0, B1, B2, B3) },
+    [B0,B1,B2,B3].
 
 value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
