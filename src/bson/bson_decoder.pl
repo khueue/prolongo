@@ -15,13 +15,10 @@
 %   of bytes (0..255) in Bson.
 
 decode(Bson, Term) :-
-    phrase(decode(Term), Bson),
+    phrase(document(Term), Bson),
     !.
 decode(_Bson, _Term) :-
     throw(bson_error(invalid)).
-
-decode(Term) -->
-    document(Term).
 
 document(Elements) -->
     int32(_Length), % XXX Ignored for now. Validate how much?

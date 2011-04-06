@@ -200,6 +200,13 @@ April 5.
  Took a slow day.
 \end_layout
 
+\begin_layout Itemize
+April 6.
+ Started on the encoder.
+ Unicode issues again.
+ Solved it after an hour or so, using even more library predicates.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout
