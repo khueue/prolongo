@@ -41,7 +41,7 @@ test('nuls not allowed in ename', [throws(bson_error(_))]) :-
     ],
     bson_decoder:bson_to_term(Bson, _Got).
 
-test('int32', [true(Got == Expected)]) :-
+test('int32 positive', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
@@ -56,7 +56,22 @@ test('int32', [true(Got == Expected)]) :-
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
-test('int64', [true(Got == Expected)]) :-
+test('int32 negative', [true(Got == Expected)]) :-
+    Bson =
+    [
+        16,0,0,0, % Length of top doc.
+        0x10, % Int32 tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0xE0,0xFF,0xFF,0xFF, % Int32 data, -32.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: -32
+    ],
+    bson_decoder:bson_to_term(Bson, Got).
+
+test('int64 positive', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
@@ -68,6 +83,21 @@ test('int64', [true(Got == Expected)]) :-
     Expected =
     [
         hello: 32
+    ],
+    bson_decoder:bson_to_term(Bson, Got).
+
+test('int64 negative', [true(Got == Expected)]) :-
+    Bson =
+    [
+        20,0,0,0, % Length of top doc.
+        0x12, % Int64 tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0xE0,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, % Int64 data, -32.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello: -32
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
