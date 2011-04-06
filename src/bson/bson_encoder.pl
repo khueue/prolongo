@@ -77,8 +77,8 @@ value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
     { lists:length(Bytes, StrLen) },
     { StrLenNul is StrLen + 1 },
-    { Len is 4 + StrLenNul },
     { int32_to_bytes(StrLenNul, L0, L1, L2, L3) },
+    { Len is 4 + StrLenNul },
     [L0,L1,L2,L3],
     Bytes,
     [0].
