@@ -68,25 +68,19 @@ int32_to_bytes(Integer, L0, L1, L2, L3) :-
     L3 = 0.
 
 utf8_to_bytes(Text, Bytes) :-
-    atom(Text),
+    builtin:atom(Text),
     !,
-    atom_codes(Text, Codes),
+    builtin:atom_codes(Text, Codes),
     utf8_codes_to_bytes(Codes, Bytes).
 utf8_to_bytes(Codes, Bytes) :-
     utf8_codes_to_bytes(Codes, Bytes).
 
 utf8_codes_to_bytes(Codes, Bytes) :-
-    charsio:open_chars_stream(Codes, ReadStream),
-    builtin:set_stream(ReadStream, encoding(octet)),
-    read_util:read_stream_to_codes(ReadStream, Bytes),
-    close(ReadStream).
+    setup_call_cleanup(
+        charsio:open_chars_stream(Codes, ReadStream),
+        stream_to_bytes(ReadStream, Bytes),
+        builtin:close(ReadStream)).
 
-memory_file_to_atom_or_codes(MemFile, atom(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_atom(MemFile, Text, Encoding).
-memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_codes(MemFile, Text, Encoding).
-memory_file_to_atom_or_codes(_MemFile, Unknown, _Encoding) :-
-    builtin:format(atom(Message), 'Unknown output term: ~w', [Unknown]),
-    throw(internal(Message)).
+stream_to_bytes(ReadStream, Bytes) :-
+    builtin:set_stream(ReadStream, encoding(octet)),
+    readutil:read_stream_to_codes(ReadStream, Bytes).
