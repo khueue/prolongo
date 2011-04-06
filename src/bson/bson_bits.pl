@@ -2,7 +2,8 @@
     [
         bytes_to_float/9,
         bytes_to_integer/5,
-        bytes_to_integer/9
+        bytes_to_integer/9,
+        float_to_bytes/9
     ]).
 
 % <module> Low-level bytes-to-number conversions.

@@ -52,10 +52,18 @@ c_string(Text, Len) -->
     Bytes,
     [0].
 
+value(Value, 0x01, Len) -->
+    { builtin:float(Value) },
+    !,
+    value_double(Value, Len).
 value(Value, 0x02, Len) -->
     { builtin:atom(Value) },
     !,
     value_string(Value, Len).
+
+value_double(Float, 8) -->
+    { bson_bits:float_to_bytes(Float, D0, D1, D2, D3, D4, D5, D6, D7) },
+    [D0,D1,D2,D3,D4,D5,D6,D7].
 
 value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
@@ -67,18 +75,20 @@ value_string(Text, Len) -->
     Bytes,
     [0].
 
-int32_to_bytes(Int32, L0, L1, L2, L3) :-
-    L0 is (Int32 >> (0*8)) /\ 0xFF,
-    L1 is (Int32 >> (1*8)) /\ 0xFF,
-    L2 is (Int32 >> (2*8)) /\ 0xFF,
-    L3 is (Int32 >> (3*8)) /\ 0xFF.
+% Todo: What happens when given a too large (unbounded) integer?
+int32_to_bytes(Int32, B0, B1, B2, B3) :-
+    B0 is (Int32 >> (0*8)) /\ 0xFF,
+    B1 is (Int32 >> (1*8)) /\ 0xFF,
+    B2 is (Int32 >> (2*8)) /\ 0xFF,
+    B3 is (Int32 >> (3*8)) /\ 0xFF.
 
-int64_to_bytes(Int64, L0, L1, L2, L3, L4, L5, L6, L7) :-
-    L0 is (Int64 >> (0*8)) /\ 0xFF,
-    L1 is (Int64 >> (1*8)) /\ 0xFF,
-    L2 is (Int64 >> (2*8)) /\ 0xFF,
-    L3 is (Int64 >> (3*8)) /\ 0xFF,
-    L4 is (Int64 >> (4*8)) /\ 0xFF,
-    L5 is (Int64 >> (5*8)) /\ 0xFF,
-    L6 is (Int64 >> (6*8)) /\ 0xFF,
-    L7 is (Int64 >> (7*8)) /\ 0xFF.
+% Todo: What happens when given a too large (unbounded) integer?
+int64_to_bytes(Int64, B0, B1, B2, B3, B4, B5, B6, B7) :-
+    B0 is (Int64 >> (0*8)) /\ 0xFF,
+    B1 is (Int64 >> (1*8)) /\ 0xFF,
+    B2 is (Int64 >> (2*8)) /\ 0xFF,
+    B3 is (Int64 >> (3*8)) /\ 0xFF,
+    B4 is (Int64 >> (4*8)) /\ 0xFF,
+    B5 is (Int64 >> (5*8)) /\ 0xFF,
+    B6 is (Int64 >> (6*8)) /\ 0xFF,
+    B7 is (Int64 >> (7*8)) /\ 0xFF.
