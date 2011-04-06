@@ -38,8 +38,8 @@ bson_version([1,0]).
 term_bson(Term, Bson) :-
     nonvar(Term),
     !,
-    bson_encoder:encode(Term, Bson).
+    bson_encoder:term_to_bson(Term, Bson).
 term_bson(Term, Bson) :-
     nonvar(Bson),
     !,
-    bson_decoder:decode(Bson, Term).
+    bson_decoder:bson_to_term(Bson, Term).

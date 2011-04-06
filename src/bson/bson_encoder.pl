@@ -1,6 +1,6 @@
 :- module(bson_encoder,
     [
-        encode/2
+        term_to_bson/2
     ]).
 
 % <module> BSON encoder.
@@ -10,14 +10,14 @@
 
 :- include(misc(common)).
 
-%%  encode(+Term, ?Bson:list) is semidet.
+%%  term_to_bson(+Term, ?Bson:list) is semidet.
 %
 %   True if xxx.
 
-encode(Term, Bson) :-
+term_to_bson(Term, Bson) :-
     phrase(document(Term), Bson),
     !.
-encode(_Term, _Bson) :-
+term_to_bson(_Term, _Bson) :-
     throw(bson_error(invalid)).
 
 document(Elements) -->
@@ -30,7 +30,7 @@ document(Elements) -->
 elements(Elements, Len) -->
     elements(Elements, 0, Len).
 
-elements([], Len, Len) --> !, [].
+elements([], Len, Len) --> [].
 elements([Key:Value|Elements], Len0, Len) -->
     element(Key, Value, LenElement),
     { Len1 is Len0 + LenElement },
@@ -67,9 +67,18 @@ value_string(Text, Len) -->
     Bytes,
     [0].
 
-% XXX Implement in foreign library.
-int32_to_bytes(Integer, L0, L1, L2, L3) :-
-    L0 = Integer,
-    L1 = 0,
-    L2 = 0,
-    L3 = 0.
+int32_to_bytes(Int32, L0, L1, L2, L3) :-
+    L0 is (Int32 >> (0*8)) /\ 0xFF,
+    L1 is (Int32 >> (1*8)) /\ 0xFF,
+    L2 is (Int32 >> (2*8)) /\ 0xFF,
+    L3 is (Int32 >> (3*8)) /\ 0xFF.
+
+int64_to_bytes(Int64, L0, L1, L2, L3, L4, L5, L6, L7) :-
+    L0 is (Int64 >> (0*8)) /\ 0xFF,
+    L1 is (Int64 >> (1*8)) /\ 0xFF,
+    L2 is (Int64 >> (2*8)) /\ 0xFF,
+    L3 is (Int64 >> (3*8)) /\ 0xFF,
+    L4 is (Int64 >> (4*8)) /\ 0xFF,
+    L5 is (Int64 >> (5*8)) /\ 0xFF,
+    L6 is (Int64 >> (6*8)) /\ 0xFF,
+    L7 is (Int64 >> (7*8)) /\ 0xFF.

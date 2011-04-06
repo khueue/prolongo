@@ -1,6 +1,6 @@
 :- module(bson_decoder,
     [
-        decode/2
+        bson_to_term/2
     ]).
 
 % <module> BSON decoder.
@@ -10,15 +10,15 @@
 
 :- include(misc(common)).
 
-%%  decode(+Bson:list, -Term) is semidet.
+%%  bson_to_term(+Bson:list, -Term) is semidet.
 %
 %   True if Term is the BSON document represented by the list
 %   of bytes (0..255) in Bson.
 
-decode(Bson, Term) :-
+bson_to_term(Bson, Term) :-
     phrase(document(Term), Bson),
     !.
-decode(_Bson, _Term) :-
+bson_to_term(_Bson, _Term) :-
     throw(bson_error(invalid)).
 
 document(Elements) -->

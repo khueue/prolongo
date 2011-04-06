@@ -1,6 +1,6 @@
 :- include(misc(common)).
 
-:- begin_tests('bson_encoder:encode/2').
+:- begin_tests('bson_encoder:term_to_bson/2').
 
 test('empty doc', [true(Got == Expected)]) :-
     Term =
@@ -11,7 +11,7 @@ test('empty doc', [true(Got == Expected)]) :-
         5,0,0,0, % Length of top doc.
         0 % End of top doc.
     ],
-    bson_encoder:encode(Term, Got).
+    bson_encoder:term_to_bson(Term, Got).
 
 test('string', [true(Got == Expected)]) :-
     Term =
@@ -29,7 +29,7 @@ test('string', [true(Got == Expected)]) :-
 
         0 % End of top doc.
     ],
-    bson_encoder:encode(Term, Got).
+    bson_encoder:term_to_bson(Term, Got).
 
 test('string utf8', [true(Got == Expected)]) :-
     Term =
@@ -47,10 +47,10 @@ test('string utf8', [true(Got == Expected)]) :-
 
         0 % End of top doc.
     ],
-    bson_encoder:encode(Term, Got).
+    bson_encoder:term_to_bson(Term, Got).
 
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid,
-    bson_encoder:encode(Term, _Got).
+    bson_encoder:term_to_bson(Term, _Got).
 
-:- end_tests('bson_encoder:encode/2').
+:- end_tests('bson_encoder:term_to_bson/2').

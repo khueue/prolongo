@@ -1,6 +1,6 @@
 :- include(misc(common)).
 
-:- begin_tests('bson_decoder:decode/2').
+:- begin_tests('bson_decoder:bson_to_term/2').
 
 test('empty doc', [true(Got == Expected)]) :-
     Bson =
@@ -11,7 +11,7 @@ test('empty doc', [true(Got == Expected)]) :-
     Expected =
     [
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('valid utf8', [true(Got == Expected)]) :-
     Bson =
@@ -27,7 +27,7 @@ test('valid utf8', [true(Got == Expected)]) :-
     [
         'ä': 'ä\0ä'
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('nuls not allowed in ename', [throws(bson_error(_))]) :-
     Bson =
@@ -39,7 +39,7 @@ test('nuls not allowed in ename', [throws(bson_error(_))]) :-
             0xc3,0xa4, 0, % String data, "ä\0".
         0 % End of top doc.
     ],
-    bson_decoder:decode(Bson, _Got).
+    bson_decoder:bson_to_term(Bson, _Got).
 
 test('int32', [true(Got == Expected)]) :-
     Bson =
@@ -54,7 +54,7 @@ test('int32', [true(Got == Expected)]) :-
     [
         hello: 32
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('int64', [true(Got == Expected)]) :-
     Bson =
@@ -69,7 +69,7 @@ test('int64', [true(Got == Expected)]) :-
     [
         hello: 32
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('float', [true(Got == Expected)]) :-
     Bson =
@@ -84,7 +84,7 @@ test('float', [true(Got == Expected)]) :-
     [
         hello: 5.05
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('embedded doc', [true(Got == Expected)]) :-
     Bson =
@@ -115,7 +115,7 @@ test('embedded doc', [true(Got == Expected)]) :-
                 '2': 1986
             ]
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('embedded array', [true(Got == Expected)]) :-
     Bson =
@@ -146,7 +146,7 @@ test('embedded array', [true(Got == Expected)]) :-
                 '2': 1986
             ]
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, generic', [true(Got == Expected)]) :-
     Bson =
@@ -163,7 +163,7 @@ test('binary, generic', [true(Got == Expected)]) :-
     [
         'BSON': binary(generic, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, function', [true(Got == Expected)]) :-
     Bson =
@@ -180,7 +180,7 @@ test('binary, function', [true(Got == Expected)]) :-
     [
         'BSON': binary(function, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, old generic', [true(Got == Expected)]) :-
     Bson =
@@ -197,7 +197,7 @@ test('binary, old generic', [true(Got == Expected)]) :-
     [
         'BSON': binary(old_generic, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, uuid', [true(Got == Expected)]) :-
     Bson =
@@ -214,7 +214,7 @@ test('binary, uuid', [true(Got == Expected)]) :-
     [
         'BSON': binary(uuid, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, md5', [true(Got == Expected)]) :-
     Bson =
@@ -231,7 +231,7 @@ test('binary, md5', [true(Got == Expected)]) :-
     [
         'BSON': binary(md5, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, user defined', [true(Got == Expected)]) :-
     Bson =
@@ -248,7 +248,7 @@ test('binary, user defined', [true(Got == Expected)]) :-
     [
         'BSON': binary(user_defined, [0,1,2,1,0])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('binary, user defined', [true(Got == Expected)]) :-
     Bson =
@@ -266,7 +266,7 @@ test('binary, user defined', [true(Got == Expected)]) :-
     [
         'BSON': object_id('47cc67093475061e3d95369d')
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('js', [true(Got == Expected)]) :-
     Bson =
@@ -282,7 +282,7 @@ test('js', [true(Got == Expected)]) :-
     [
         js: js('code ...')
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('js with scope', [true(Got == Expected)]) :-
     Bson =
@@ -304,7 +304,7 @@ test('js with scope', [true(Got == Expected)]) :-
     [
         js: js('code ...', ['hello':32])
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('undefined', [true(Got == Expected)]) :-
     Bson =
@@ -318,7 +318,7 @@ test('undefined', [true(Got == Expected)]) :-
     [
         hello: undefined
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('boolean true', [true(Got == Expected)]) :-
     Bson =
@@ -333,7 +333,7 @@ test('boolean true', [true(Got == Expected)]) :-
     [
         hello: true
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('boolean false', [true(Got == Expected)]) :-
     Bson =
@@ -348,7 +348,7 @@ test('boolean false', [true(Got == Expected)]) :-
     [
         hello: false
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('utc datetime', [true(Got == Expected)]) :-
     Bson =
@@ -363,7 +363,7 @@ test('utc datetime', [true(Got == Expected)]) :-
     [
         hello: utc(0)
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
     Bson =
@@ -374,7 +374,7 @@ test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
             2, % Boolean data, INVALID.
         0 % End of top doc.
     ],
-    bson_decoder:decode(Bson, _Got).
+    bson_decoder:bson_to_term(Bson, _Got).
 
 test('null', [true(Got == Expected)]) :-
     Bson =
@@ -388,7 +388,7 @@ test('null', [true(Got == Expected)]) :-
     [
         hello: null
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('regex', [true(Got == Expected)]) :-
     Bson =
@@ -404,7 +404,7 @@ test('regex', [true(Got == Expected)]) :-
     [
         hello: regex('a','i')
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('db pointer', [true(Got == Expected)]) :-
     Bson =
@@ -424,7 +424,7 @@ test('db pointer', [true(Got == Expected)]) :-
     [
         hello: db_pointer('a', '47cc67093475061e3d95369d')
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('symbol', [true(Got == Expected)]) :-
     Bson =
@@ -440,7 +440,7 @@ test('symbol', [true(Got == Expected)]) :-
     [
         hello: symbol(atom)
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('mongostamp', [true(Got == Expected)]) :-
     Bson =
@@ -455,7 +455,7 @@ test('mongostamp', [true(Got == Expected)]) :-
     [
         hello: mongostamp(0)
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('min', [true(Got == Expected)]) :-
     Bson =
@@ -469,7 +469,7 @@ test('min', [true(Got == Expected)]) :-
     [
         hello: min
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('max', [true(Got == Expected)]) :-
     Bson =
@@ -483,7 +483,7 @@ test('max', [true(Got == Expected)]) :-
     [
         hello: max
     ],
-    bson_decoder:decode(Bson, Got).
+    bson_decoder:bson_to_term(Bson, Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bson =
@@ -494,6 +494,6 @@ test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
             32,0,0,0 % Int32 data, 32.
         % Missing nul at end-of-doc.
     ],
-    bson_decoder:decode(Bson, _Got).
+    bson_decoder:bson_to_term(Bson, _Got).
 
-:- end_tests('bson_decoder:decode/2').
+:- end_tests('bson_decoder:bson_to_term/2').
