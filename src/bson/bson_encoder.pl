@@ -61,7 +61,8 @@ value(Value, 0x02, Len) -->
     !,
     value_string(Value, Len).
 value(Value, 0x10, Len) -->
-    { builtin:integer(Value) }, % XXX Check range?
+    { builtin:integer(Value) },
+    { fits_int32(Value) },
     !,
     value_int32(Value, Len).
 
@@ -82,6 +83,12 @@ value_string(Text, Len) -->
     [L0,L1,L2,L3],
     Bytes,
     [0].
+
+fits_int32(Int) :-
+    -(2**(32-1)) =< Int, Int =< (2**(32-1))-1.
+
+fits_int64(Int) :-
+    -(2**(64-1)) =< Int, Int =< (2**(64-1))-1.
 
 % Todo: What happens when given a too large (unbounded) integer?
 int32_to_bytes(Int32, B0, B1, B2, B3) :-
