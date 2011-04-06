@@ -37,23 +37,28 @@ elements([Key:Value|Elements], Len0, Len) -->
     elements(Elements, Len1, Len).
 
 element(Key, Value, Len) -->
-    tag(Value, TagLen),
+    [Tag],
     key(Key, KeyLen),
-    value(Value, ValueLen),
-    { Len is TagLen + KeyLen + ValueLen }.
-
-tag(_Atom, 1) -->
-    [0x02].
+    value(Value, Tag, ValueLen),
+    { Len is 1 + KeyLen + ValueLen }.
 
 key(Key, Len) -->
-    { bson_unicode:utf8_bytes(Key, Bytes) },
+    c_string(Key, Len).
+
+c_string(Text, Len) -->
+    { bson_unicode:utf8_bytes(Text, Bytes) },
     { lists:length(Bytes, Len0) },
     { Len is Len0 + 1 },
     Bytes,
     [0].
 
-value(Value, Len) -->
-    { bson_unicode:utf8_bytes(Value, Bytes) },
+value(Value, 0x02, Len) -->
+    { builtin:atom(Value) },
+    !,
+    value_string(Value, Len).
+
+value_string(Text, Len) -->
+    { bson_unicode:utf8_bytes(Text, Bytes) },
     { lists:length(Bytes, StrLen) },
     { StrLenNul is StrLen + 1 },
     { Len is 4 + StrLenNul },
@@ -62,6 +67,7 @@ value(Value, Len) -->
     Bytes,
     [0].
 
+% XXX Implement in foreign library.
 int32_to_bytes(Integer, L0, L1, L2, L3) :-
     L0 = Integer,
     L1 = 0,
