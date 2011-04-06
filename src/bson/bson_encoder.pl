@@ -61,10 +61,13 @@ value(Value, 0x02, Len) -->
     !,
     value_string(Value, Len).
 value(Value, 0x10, Len) -->
-    { builtin:integer(Value) },
-    { fits_int32(Value) },
+    { looks_like_int32(Value) },
     !,
     value_int32(Value, Len).
+value(Value, 0x12, Len) -->
+    { looks_like_int64(Value) },
+    !,
+    value_int64(Value, Len).
 
 value_double(Float, 8) -->
     { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
@@ -73,6 +76,10 @@ value_double(Float, 8) -->
 value_int32(Integer, 4) -->
     { int32_to_bytes(Integer, B0, B1, B2, B3) },
     [B0,B1,B2,B3].
+
+value_int64(Integer, 8) -->
+    { int64_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
+    [B0,B1,B2,B3,B4,B5,B6,B7].
 
 value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
@@ -84,10 +91,18 @@ value_string(Text, Len) -->
     Bytes,
     [0].
 
-fits_int32(Int) :-
+looks_like_int32(Value) :-
+    builtin:integer(Value),
+    fits_in_32_bits(Value).
+
+looks_like_int64(Value) :-
+    builtin:integer(Value),
+    fits_in_64_bits(Value).
+
+fits_in_32_bits(Int) :-
     -(2**(32-1)) =< Int, Int =< (2**(32-1))-1.
 
-fits_int64(Int) :-
+fits_in_64_bits(Int) :-
     -(2**(64-1)) =< Int, Int =< (2**(64-1))-1.
 
 % Todo: What happens when given a too large (unbounded) integer?
