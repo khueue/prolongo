@@ -1,4 +1,4 @@
-:- module(_,
+:- module(bson_decoder,
     [
         decode/2
     ]).
@@ -6,6 +6,7 @@
 % <module> BSON decoder.
 
 :- use_module(bson_bits, []).
+:- use_module(bson_unicode, []).
 
 :- include(misc(common)).
 
@@ -196,11 +197,11 @@ string(AtomOrCodes) -->
 
 c_string(AtomOrCodes) -->
     bytes_stop_with_nul(Bytes),
-    { bytes_to_utf8(Bytes, AtomOrCodes) }.
+    { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
 
 string(AtomOrCodes, Length) -->
     n_bytes_including_nul(Bytes, Length),
-    { bytes_to_utf8(Bytes, AtomOrCodes) }.
+    { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
 
 bytes_stop_with_nul([]) --> [0], !.
 bytes_stop_with_nul([NotNul|Bytes]) -->
@@ -242,25 +243,3 @@ int64(Integer) -->
 
 number_to_hex(Number, AtomOrCodes) :-
     builtin:format(AtomOrCodes, '~16r', [Number]).
-
-% A bit of a hack, but in order to interpret raw bytes as UTF-8
-% we use a memory file as a temporary buffer, fill it with the
-% bytes and then read them back, treating them as UTF-8.
-% See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
-
-bytes_to_utf8(Bytes, AtomOrCodes) :-
-    builtin:atom_chars(RawAtom, Bytes),
-    setup_call_cleanup(
-        memory_file:atom_to_memory_file(RawAtom, MemFile),
-        memory_file_to_atom_or_codes(MemFile, AtomOrCodes, utf8),
-        memory_file:free_memory_file(MemFile)).
-
-memory_file_to_atom_or_codes(MemFile, atom(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_atom(MemFile, Text, Encoding).
-memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_codes(MemFile, Text, Encoding).
-memory_file_to_atom_or_codes(_MemFile, Unknown, _Encoding) :-
-    builtin:format(atom(Message), 'Unknown output term: ~w', [Unknown]),
-    throw(internal(Message)).

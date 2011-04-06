@@ -1,4 +1,4 @@
-:- module(_,
+:- module(bson_bits,
     [
         bytes_to_float/9,
         bytes_to_integer/5,

@@ -1,8 +1,8 @@
-:- module(_,
+:- module(bson,
     [
+        term_bson/2,
         version/1,
-        bson_version/1,
-        term_bson/2
+        bson_version/1
     ]).
 
 % <module> BSON encoder/decoder.
@@ -37,14 +37,9 @@ bson_version([1,0]).
 
 term_bson(Term, Bson) :-
     nonvar(Term),
-    nonvar(Bson),
     !,
-    bson_decoder:decode(Bson, Term). % XXX Go with the fastest one.
+    bson_encoder:encode(Term, Bson).
 term_bson(Term, Bson) :-
     nonvar(Bson),
     !,
     bson_decoder:decode(Bson, Term).
-term_bson(Term, Bson) :-
-    nonvar(Term),
-    !,
-    bson_encoder:encode(Term, Bson).

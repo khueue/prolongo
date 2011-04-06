@@ -2,6 +2,7 @@
 
 :- begin_tests('bson:term_bson/2').
 
+/* xxxxxxxxxxxxx
 test('nonvar, nonvar') :-
     Term =
     [
@@ -16,6 +17,7 @@ test('nonvar, nonvar') :-
         0 % End of top doc.
     ],
     bson:term_bson(Term, Bson).
+*/
 
 /* XXX Fix when implemented encoder.
 test('nonvar, var', [true(Got == Expected)]) :-

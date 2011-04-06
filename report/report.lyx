@@ -205,6 +205,8 @@ April 6.
  Started on the encoder.
  Unicode issues again.
  Solved it after an hour or so, using even more library predicates.
+ Factored out Unicode handling to separate module, used by both encoder
+ and decoder.
 \end_layout
 
 \begin_layout Section
