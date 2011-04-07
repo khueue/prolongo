@@ -65,13 +65,19 @@ value(Value, Tag, Len) -->
     value_compound(Value, Tag, Len).
 
 value_compound(utc(Timestamp), 0x09, 8) -->
-    int64(Timestamp), !.
+    int64(Timestamp).
 value_compound(js(JsText), 0x0D, Len) -->
-    string(JsText, Len), !.
+    string(JsText, Len).
+value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
+    [L0,L1,L2,L3],
+    string(JsText, StrLen),
+    document(MappingsDoc, DocLen),
+    { Len is 4 + StrLen + DocLen },
+    { bson_bits:integer_to_bytes(Len, L0, L1, L2, L3) }.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
-    int64(Timestamp), !.
+    int64(Timestamp).
 value_compound(symbol(Atom), 0x0E, Len) -->
-    string(Atom, Len), !.
+    string(Atom, Len).
 value_compound(Compound, _Tag, _Len) -->
     { throw(bson_error(invalid(Compound))) }.
 

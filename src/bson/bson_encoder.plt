@@ -284,6 +284,28 @@ test('js', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('js with scope', [true(Got == Expected)]) :-
+    Term =
+    [
+        js: js('code ...', ['hello':32])
+    ],
+    Expected =
+    [
+        42,0,0,0, % Length of top doc.
+        0x0F, % Tag.
+            106,115, 0, % Ename.
+            33,0,0,0, % Length of entire JS with scope.
+            9,0,0,0, % String's byte length, incl. nul.
+            99,111,100,101,32,46,46,46, 0, % String data.
+                16,0,0,0, % Length of embedded doc.
+                0x10, % Tag.
+                    104,101,108,108,111, 0, % Ename.
+                    32,0,0,0, % Int32 data.
+                0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('utc datetime', [true(Got == Expected)]) :-
     Term =
     [
