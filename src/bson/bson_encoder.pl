@@ -59,16 +59,13 @@ value(Value, 0x01, Len) -->
     { builtin:float(Value) },
     !,
     value_double(Value, Len).
-value(Value, 0x02, Len) -->
+value(Value, Tag, Len) -->
     { builtin:atom(Value) },
     !,
-    value_string(Value, Len).
-value(Value, 0x03, Len) -->
+    value_atom(Value, Tag, Len).
+value(Value, Tag, Len) -->
     { list_shaped(Value) },
-    value_document(Value, Len).
-value(Value, 0x04, Len) -->
-    { list_shaped(Value) },
-    value_array(Value, Len).
+    value_list(Value, Tag, Len).
 value(Value, 0x10, Len) -->
     { looks_like_int32(Value) },
     !,
@@ -78,10 +75,10 @@ value(Value, 0x12, Len) -->
     !,
     value_int64(Value, Len).
 
-value_document(Pairs, Len) -->
+value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len).
 
-value_array(List, Len) -->
+value_list(List, 0x04, Len) -->
     { add_array_keys(List, Pairs) },
     document(Pairs, Len).
 
@@ -105,6 +102,15 @@ value_int32(Integer, 4) -->
 value_int64(Integer, 8) -->
     { int64_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
     [B0,B1,B2,B3,B4,B5,B6,B7].
+
+value_atom(undefined, 0x06, 0)   --> [].
+value_atom(false,     0x08, 1)   --> [0].
+value_atom(true,      0x08, 1)   --> [1].
+value_atom(null,      0x0A, 0)   --> [].
+value_atom(min,       0xFF, 0)   --> [].
+value_atom(max,       0x7F, 0)   --> [].
+value_atom(Atom,      0x02, Len) -->
+    value_string(Atom, Len).
 
 value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },

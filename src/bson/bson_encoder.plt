@@ -136,6 +136,92 @@ test('embedded array', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('null', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: null
+    ],
+    Expected =
+    [
+        12,0,0,0, % Length of top doc.
+        0x0A, % Null tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('boolean false', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: false
+    ],
+    Expected =
+    [
+        13,0,0,0, % Length of top doc.
+        0x08, % Boolean tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            0, % Boolean data, false.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('boolean true', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: true
+    ],
+    Expected =
+    [
+        13,0,0,0, % Length of top doc.
+        0x08, % Boolean tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+            1, % Boolean data, true.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('undefined', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: undefined
+    ],
+    Expected =
+    [
+        12,0,0,0, % Length of top doc.
+        0x06, % Undefined tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('min', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: min
+    ],
+    Expected =
+    [
+        12,0,0,0, % Length of top doc.
+        0xFF, % Min tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('max', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: max
+    ],
+    Expected =
+    [
+        12,0,0,0, % Length of top doc.
+        0x7F, % Max tag.
+            104,101,108,108,111, 0, % Ename "hello\0".
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid,
     bson_encoder:term_to_bson(Term, _Got).
