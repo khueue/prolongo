@@ -4,7 +4,7 @@
 
  * Finish encoder.
  * Properly document predicates. Some are only stubs.
- * More validation in decoder?
+ * Decide on (and implement) amount of validation in encode/decode.
 
 ## Usage
 
@@ -17,7 +17,7 @@ and run the test suite.
     * foreign(memfile) (should be autoloaded)
     * foreign(apply_macros) (loaded by load.pl, can be safely removed)
     * library(readutil) (uses foreign library if it exists)
- * ANSI C compiler (modify the Makefile if you aren't using GCC)
+ * ANSI C compiler (modify the Makefile if other than GCC)
  * _Not yet._ MongoDB (tested on Mac OS X using MongoDB 1.8.0)
 
 ## Thoughts
