@@ -28,6 +28,7 @@ compile: setup lib/bson_bits
 # Generic name (not sure what file extensions different systems use).
 lib/bson_bits: ext/bson_bits.c Makefile
 	@ echo "--- Compiling foreign library 'bson_bits' ..."
+	rm -f $@
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	mv $@.dylib $@
 
