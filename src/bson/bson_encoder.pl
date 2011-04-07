@@ -45,6 +45,9 @@ element(Key, Value, Len) -->
 key(Key, Len) -->
     c_string(Key, Len).
 
+list_shaped([]).
+list_shaped([_|_]).
+
 value(Value, Tag, Len) -->
     { builtin:integer(Value) }, !,
     value_integer(Value, Tag, Len).
@@ -55,27 +58,32 @@ value(Value, Tag, Len) -->
     { builtin:atom(Value) }, !,
     value_atom(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { Value = [] ; Value = [_|_] }, !,
+    { list_shaped(Value) }, !,
     value_list(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { builtin:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
-value_list(Pairs, 0x03, Len) -->
-    document(Pairs, Len).
+value_compound(utc(Timestamp), 0x09, 8) -->
+    int64(Timestamp),
+    !.
 
+value_list(Pairs, 0x03, Len) -->
+    document(Pairs, Len),
+    !.
 value_list(List, 0x04, Len) -->
     { add_array_keys(List, Pairs) },
-    document(Pairs, Len).
+    document(Pairs, Len),
+    !.
 
 add_array_keys(List, Array) :-
     add_array_keys(List, 0, Array).
 
-add_array_keys([], _IndexInt, []).
-add_array_keys([Value|Values], IndexInt, [Key:Value|Pairs]) :-
-    builtin:atom_number(Key, IndexInt),
-    IndexInt1 is IndexInt + 1,
-    add_array_keys(Values, IndexInt1, Pairs).
+add_array_keys([], _Index, []).
+add_array_keys([Value|Values], Index, [Key:Value|Pairs]) :-
+    builtin:atom_number(Key, Index),
+    Index1 is Index + 1,
+    add_array_keys(Values, Index1, Pairs).
 
 value_float(Float, 0x01, 8) -->
     { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },

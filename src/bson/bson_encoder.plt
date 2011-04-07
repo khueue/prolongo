@@ -252,6 +252,21 @@ test('max', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('utc datetime', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: utc(0)
+    ],
+    Expected =
+    [
+        20,0,0,0, % Length of top doc.
+        0x09, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0,0,0,0, 0,0,0,0, % UTC datetime data. XXX better ex. data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid_bson,
     bson_encoder:term_to_bson(Term, _Got).
