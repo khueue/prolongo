@@ -74,6 +74,36 @@ test('int32 negative', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('int64 positive', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: 9223372036854775807
+    ],
+    Expected =
+    [
+        20,0,0,0, % Length of top doc.
+        0x12, % Int32 tag.
+            104,101,108,108,111, 0, % Ename.
+            0xFF,0xFF,0xFF,0xFF, 0xFF,0xFF,0xFF,0x7F, % Int64 data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('int64 negative', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: -9223372036854775808
+    ],
+    Expected =
+    [
+        20,0,0,0, % Length of top doc.
+        0x12, % Int64 tag.
+            104,101,108,108,111, 0, % Ename.
+            0,0,0,0, 0,0,0,0x80, % Int64 data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('embedded doc', [true(Got == Expected)]) :-
     Term =
     [

@@ -55,6 +55,10 @@ c_string(Text, Len) -->
 list_shaped([]).
 list_shaped([_|_]).
 
+value(Value, Tag, Len) -->
+    { builtin:integer(Value) },
+    !,
+    value_integer(Value, Tag, Len).
 value(Value, 0x01, Len) -->
     { builtin:float(Value) },
     !,
@@ -66,14 +70,6 @@ value(Value, Tag, Len) -->
 value(Value, Tag, Len) -->
     { list_shaped(Value) },
     value_list(Value, Tag, Len).
-value(Value, 0x10, Len) -->
-    { looks_like_int32(Value) },
-    !,
-    value_int32(Value, Len).
-value(Value, 0x12, Len) -->
-    { looks_like_int64(Value) },
-    !,
-    value_int64(Value, Len).
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len).
@@ -95,11 +91,20 @@ value_double(Float, 8) -->
     { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
     [B0,B1,B2,B3,B4,B5,B6,B7].
 
-value_int32(Integer, 4) -->
+value_integer(Integer, 0x10, 4) -->
+    { fits_in_32_bits(Integer) },
+    !,
+    value_int32(Integer).
+value_integer(Integer, 0x12, 8) -->
+    { fits_in_64_bits(Integer) },
+    !,
+    value_int64(Integer).
+
+value_int32(Integer) -->
     { int32_to_bytes(Integer, B0, B1, B2, B3) },
     [B0,B1,B2,B3].
 
-value_int64(Integer, 8) -->
+value_int64(Integer) -->
     { int64_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
     [B0,B1,B2,B3,B4,B5,B6,B7].
 
@@ -121,14 +126,6 @@ value_string(Text, Len) -->
     [L0,L1,L2,L3],
     Bytes,
     [0].
-
-looks_like_int32(Value) :-
-    builtin:integer(Value),
-    fits_in_32_bits(Value).
-
-looks_like_int64(Value) :-
-    builtin:integer(Value),
-    fits_in_64_bits(Value).
 
 fits_in_32_bits(Int) :-
     -(2**(32-1)) =< Int, Int =< (2**(32-1))-1.
