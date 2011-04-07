@@ -2,7 +2,7 @@
 
 ## Todo
 
- * Finish encoder.
+ * Finish encoder (research ObjectID some more).
  * Clean up todos in source.
  * Properly document predicates. Some are only stubs.
  * Decide on (and implement) amount of validation in encode/decode.
