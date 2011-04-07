@@ -280,7 +280,7 @@ test('binary, user defined', [true(Got == Expected)]) :-
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
-test('binary, user defined', [true(Got == Expected)]) :-
+test('object id', [true(Got == Expected)]) :-
     Bson =
     [
         xxx_not_impl,0,0,0, % Length of top doc.

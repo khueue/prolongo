@@ -129,9 +129,9 @@ value_regex(regex(Pattern,Options)) -->
     c_string(atom(Pattern)),
     c_string(atom(Options)).
 
-value_db_pointer(db_pointer(Text,ObjectID)) -->
+value_db_pointer(db_pointer(Text,ObjectId)) -->
     string(atom(Text)),
-    object_id(atom(ObjectID)).
+    object_id(atom(ObjectId)).
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
@@ -163,8 +163,8 @@ value_symbol(symbol(Symbol)) -->
 
 value_undefined(undefined) --> [].
 
-value_object_id(object_id(ObjectID)) -->
-    object_id(atom(ObjectID)).
+value_object_id(object_id(ObjectId)) -->
+    object_id(atom(ObjectId)).
 
 value_boolean(false) --> [0], !.
 value_boolean(true)  --> [1], !.

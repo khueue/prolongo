@@ -1,13 +1,16 @@
 :- module(bson_bits,
     [
         bytes_to_float/9,
+        float_to_bytes/9,
+
         bytes_to_integer/5,
         bytes_to_integer/9,
-        float_to_bytes/9,
-        fits_in_32_bits/1,
-        fits_in_64_bits/1,
         integer_to_bytes/5,
-        integer_to_bytes/9
+        integer_to_bytes/9,
+        integer_to_n_bytes/3,
+
+        fits_in_32_bits/1,
+        fits_in_64_bits/1
     ]).
 
 % <module> Low-level bytes-to-number conversions.
@@ -87,3 +90,17 @@ integer_to_bytes(Int64, B0, B1, B2, B3, B4, B5, B6, B7) :-
     B5 is (Int64 >> (5*8)) /\ 0xFF,
     B6 is (Int64 >> (6*8)) /\ 0xFF,
     B7 is (Int64 >> (7*8)) /\ 0xFF.
+
+%%  integer_to_n_bytes
+%
+%   XXX
+
+integer_to_n_bytes(Int, N, Bytes) :-
+    N > 0,
+    integer_to_n_bytes(Int, 0, N, Bytes).
+
+integer_to_n_bytes(_Int, N, N, []) :- !.
+integer_to_n_bytes(Int, N0, N, [Byte|Bytes]) :-
+    Byte is (Int >> (N0*8)) /\ 0xFF,
+    N1 is N0 + 1,
+    integer_to_n_bytes(Int, N1, N, Bytes).

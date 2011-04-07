@@ -64,6 +64,9 @@ value(Value, Tag, Len) -->
     { builtin:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
+value_compound(object_id(ObjectId), 0x07, 12) -->
+    { object_id_atom_to_bytes(ObjectId, Bytes) },
+    Bytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
 value_compound(js(JsText), 0x0D, Len) -->
@@ -142,3 +145,11 @@ string(Utf8, Len) -->
     [L0,L1,L2,L3],
     Bytes,
     [0].
+
+object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
+    builtin:atom_concat('0x', ObjectIdAtom, HexAtom),
+    builtin:atom_number(HexAtom, Integer),
+    % XXX This is probably wrong.
+    % Machine and inc parts are big-endian. Look into this.
+    bson_bits:integer_to_n_bytes(Integer, 12, BytesLE),
+    lists:reverse(BytesLE, Bytes).
