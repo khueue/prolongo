@@ -115,11 +115,12 @@ element(Name, Value) -->
 key(Name) -->
     c_string(atom(Name)).
 
-value_array(Doc) -->
-    document(Doc).
+value_array(Values) -->
+    document(Document),
+    { pairs_keys_values(Document, _Keys, Values) }.
 
-value_document(Doc) -->
-    document(Doc).
+value_document(Document) -->
+    document(Document).
 
 value_string(Text) -->
     string(atom(Text)).
@@ -177,6 +178,10 @@ value_int32(Integer) -->
 
 value_int64(Integer) -->
     int64(Integer).
+
+pairs_keys_values([], [], []).
+pairs_keys_values([Key:Value|Pairs], [Key|Keys], [Value|Values]) :-
+    pairs_keys_values(Pairs, Keys, Values).
 
 object_id(AtomOrCodes) -->
     n_bytes_as_unsigned_integer(Integer, 12),

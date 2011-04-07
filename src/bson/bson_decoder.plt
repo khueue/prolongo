@@ -124,14 +124,14 @@ test('embedded doc', [true(Got == Expected)]) :-
             66,83,79,78, 0, % Ename "BSON\0".
             38,0,0,0, % Length of embedded doc (array).
             0x02, % String tag.
-                48, 0, % Ename, index 0 ("0\0").
+                97, 0, % Ename ("a\0").
                 8,0,0,0, % String's byte length, incl. nul.
                 97,119,101,115,111,109,101, 0, % String data, "awesome\0".
             0x01, % Double tag.
-                49, 0, % Ename, index 1 ("1\0").
+                98, 0, % Ename ("b\0").
                 51,51,51,51,51,51,20,64, % Double 8-byte data, 5.05.
             0x10, % Int32 tag.
-                50, 0, % Ename, index 2 ("2\0").
+                99, 0, % Ename ("c\0").
                 194,7,0,0, % Int32 data, 1986.
             0, % End of embedded doc (array).
         0 % End of top doc.
@@ -140,9 +140,9 @@ test('embedded doc', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': 'awesome',
-                '1': 5.05,
-                '2': 1986
+                'a': 'awesome',
+                'b': 5.05,
+                'c': 1986
             ]
     ],
     bson_decoder:bson_to_term(Bson, Got).
@@ -171,9 +171,9 @@ test('embedded array', [true(Got == Expected)]) :-
     [
         'BSON':
             [
-                '0': 'awesome',
-                '1': 5.05,
-                '2': 1986
+                'awesome',
+                5.05,
+                1986
             ]
     ],
     bson_decoder:bson_to_term(Bson, Got).
