@@ -2,9 +2,9 @@
 
 ## Todo
 
+ * Finish encoder.
+ * Properly document predicates. Some are only stubs.
  * More validation in decoder?
- * Think about and start to implement encoder.
- * Research exception handling in Prolog.
 
 ## Usage
 
