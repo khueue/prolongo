@@ -65,8 +65,10 @@ value(Value, 0x02, Len) -->
     value_string(Value, Len).
 value(Value, 0x03, Len) -->
     { list_shaped(Value) },
-    !,
     value_document(Value, Len).
+value(Value, 0x04, Len) -->
+    { list_shaped(Value) },
+    value_array(Value, Len).
 value(Value, 0x10, Len) -->
     { looks_like_int32(Value) },
     !,
@@ -76,8 +78,21 @@ value(Value, 0x12, Len) -->
     !,
     value_int64(Value, Len).
 
-value_document(Document, Len) -->
-    document(Document, Len).
+value_document(Pairs, Len) -->
+    document(Pairs, Len).
+
+value_array(List, Len) -->
+    { add_array_keys(List, Pairs) },
+    document(Pairs, Len).
+
+add_array_keys(List, Array) :-
+    add_array_keys(List, 0, Array).
+
+add_array_keys([], _IndexInt, []).
+add_array_keys([Value|Values], IndexInt, [Key:Value|Pairs]) :-
+    builtin:atom_number(Key, IndexInt),
+    IndexInt1 is IndexInt + 1,
+    add_array_keys(Values, IndexInt1, Pairs).
 
 value_double(Float, 8) -->
     { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
