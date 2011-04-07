@@ -25,7 +25,7 @@ document(Elements, Len) -->
     elements(Elements, LenElements),
     [0],
     { Len is 4 + LenElements + 1 },
-    { bson_bits:int32_to_bytes(Len, L0, L1, L2, L3) }.
+    { bson_bits:integer_to_bytes(Len, L0, L1, L2, L3) }.
 
 elements(Elements, Len) -->
     elements(Elements, 0, Len).
@@ -45,31 +45,21 @@ element(Key, Value, Len) -->
 key(Key, Len) -->
     c_string(Key, Len).
 
-c_string(Text, Len) -->
-    { bson_unicode:utf8_bytes(Text, Bytes) },
-    { lists:length(Bytes, Len0) },
-    { Len is Len0 + 1 },
-    Bytes,
-    [0].
-
-list_shaped([]).
-list_shaped([_|_]).
-
 value(Value, Tag, Len) -->
-    { builtin:integer(Value) },
-    !,
+    { builtin:integer(Value) }, !,
     value_integer(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { builtin:float(Value) },
-    !,
+    { builtin:float(Value) }, !,
     value_float(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { builtin:atom(Value) },
-    !,
+    { builtin:atom(Value) }, !,
     value_atom(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { list_shaped(Value) },
+    { Value = [] ; Value = [_|_] }, !,
     value_list(Value, Tag, Len).
+value(Value, Tag, Len) -->
+    { builtin:compound(Value) }, !,
+    value_compound(Value, Tag, Len).
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len).
@@ -94,18 +84,18 @@ value_float(Float, 0x01, 8) -->
 value_integer(Integer, 0x10, 4) -->
     { bson_bits:fits_in_32_bits(Integer) },
     !,
-    value_int32(Integer).
+    int32(Integer).
 value_integer(Integer, 0x12, 8) -->
     { bson_bits:fits_in_64_bits(Integer) },
     !,
-    value_int64(Integer).
+    int64(Integer).
 
-value_int32(Integer) -->
-    { bson_bits:int32_to_bytes(Integer, B0, B1, B2, B3) },
+int32(Integer) -->
+    { bson_bits:integer_to_bytes(Integer, B0, B1, B2, B3) },
     [B0,B1,B2,B3].
 
-value_int64(Integer) -->
-    { bson_bits:int64_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
+int64(Integer) -->
+    { bson_bits:integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
     [B0,B1,B2,B3,B4,B5,B6,B7].
 
 value_atom(undefined, 0x06, 0)   --> []. % Deprecated in BSON 1.0.
@@ -117,11 +107,18 @@ value_atom(max,       0x7F, 0)   --> [].
 value_atom(Atom,      0x02, Len) -->
     value_string(Atom, Len).
 
+c_string(Text, Len) -->
+    { bson_unicode:utf8_bytes(Text, Bytes) },
+    { lists:length(Bytes, Len0) },
+    { Len is Len0 + 1 },
+    Bytes,
+    [0].
+
 value_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
     { lists:length(Bytes, StrLen) },
     { StrLenNul is StrLen + 1 },
-    { bson_bits:int32_to_bytes(StrLenNul, L0, L1, L2, L3) },
+    { bson_bits:integer_to_bytes(StrLenNul, L0, L1, L2, L3) },
     { Len is 4 + StrLenNul },
     [L0,L1,L2,L3],
     Bytes,

@@ -3,7 +3,11 @@
         bytes_to_float/9,
         bytes_to_integer/5,
         bytes_to_integer/9,
-        float_to_bytes/9
+        float_to_bytes/9,
+        fits_in_32_bits/1,
+        fits_in_64_bits/1,
+        integer_to_bytes/5,
+        integer_to_bytes/9
     ]).
 
 % <module> Low-level bytes-to-number conversions.
@@ -63,7 +67,7 @@ fits_in_64_bits(Int) :-
 %   XXX
 
 % Todo: What happens when given a too large (unbounded) integer?
-int32_to_bytes(Int32, B0, B1, B2, B3) :-
+integer_to_bytes(Int32, B0, B1, B2, B3) :-
     B0 is (Int32 >> (0*8)) /\ 0xFF,
     B1 is (Int32 >> (1*8)) /\ 0xFF,
     B2 is (Int32 >> (2*8)) /\ 0xFF,
@@ -74,7 +78,7 @@ int32_to_bytes(Int32, B0, B1, B2, B3) :-
 %   XXX
 
 % Todo: What happens when given a too large (unbounded) integer?
-int64_to_bytes(Int64, B0, B1, B2, B3, B4, B5, B6, B7) :-
+integer_to_bytes(Int64, B0, B1, B2, B3, B4, B5, B6, B7) :-
     B0 is (Int64 >> (0*8)) /\ 0xFF,
     B1 is (Int64 >> (1*8)) /\ 0xFF,
     B2 is (Int64 >> (2*8)) /\ 0xFF,
