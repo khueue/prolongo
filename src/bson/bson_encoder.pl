@@ -121,20 +121,16 @@ value_atom(Atom,      0x02, Len) -->
     string(Atom, Len).
 
 c_string(Utf8, Len) -->
-    { utf8_to_n_bytes(Utf8, BytesLen, Bytes) },
-    { Len is BytesLen + 1 },
+    { bson_unicode:utf8_bytes(Utf8, Bytes, NumBytes) },
+    { Len is NumBytes + 1 },
     Bytes,
     [0].
 
 string(Utf8, Len) -->
-    { utf8_to_n_bytes(Utf8, BytesLen, Bytes) },
-    { BytesLenWithNul is BytesLen + 1 },
-    { bson_bits:integer_to_bytes(BytesLenWithNul, L0, L1, L2, L3) },
-    { Len is 4 + BytesLenWithNul },
+    { bson_unicode:utf8_bytes(Utf8, Bytes, NumBytes) },
+    { NumBytesWithNul is NumBytes + 1 },
+    { bson_bits:integer_to_bytes(NumBytesWithNul, L0, L1, L2, L3) },
+    { Len is 4 + NumBytesWithNul },
     [L0,L1,L2,L3],
     Bytes,
     [0].
-
-utf8_to_n_bytes(Utf8, NumBytes, Bytes) :-
-    bson_unicode:utf8_bytes(Utf8, Bytes),
-    lists:length(Bytes, NumBytes).

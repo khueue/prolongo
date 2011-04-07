@@ -1,6 +1,7 @@
 :- module(bson_unicode,
     [
-        utf8_bytes/2
+        utf8_bytes/2,
+        utf8_bytes/3
     ]).
 
 :- include(misc(common)).
@@ -33,6 +34,14 @@ seems_like_input_bytes(Bytes) :-
 
 seems_like_list([]).
 seems_like_list([_|_]).
+
+%%  utf8_bytes
+%
+%   XXX
+
+utf8_bytes(Utf8, Bytes, NumBytes) :-
+    utf8_bytes(Utf8, Bytes),
+    lists:length(Bytes, NumBytes).
 
 %%  utf8_to_bytes
 %
