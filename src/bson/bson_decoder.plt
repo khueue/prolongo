@@ -380,6 +380,17 @@ test('boolean false', [true(Got == Expected)]) :-
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
+test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
+    Bson =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x08, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            2, % Boolean data, INVALID value.
+        0 % End of top doc.
+    ],
+    bson_decoder:bson_to_term(Bson, _Got).
+
 test('utc datetime', [true(Got == Expected)]) :-
     Bson =
     [
@@ -394,17 +405,6 @@ test('utc datetime', [true(Got == Expected)]) :-
         hello: utc(0)
     ],
     bson_decoder:bson_to_term(Bson, Got).
-
-test('boolean invalid', [throws(bson_error(invalid_boolean))]) :-
-    Bson =
-    [
-        xxx_not_impl,0,0,0, % Length of top doc.
-        0x08, % Tag.
-            104,101,108,108,111, 0, % Ename.
-            2, % Boolean data, INVALID value.
-        0 % End of top doc.
-    ],
-    bson_decoder:bson_to_term(Bson, _Got).
 
 test('null', [true(Got == Expected)]) :-
     Bson =

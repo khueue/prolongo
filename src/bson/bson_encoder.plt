@@ -267,6 +267,21 @@ test('utc datetime', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('mongostamp', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: mongostamp(0)
+    ],
+    Expected =
+    [
+        20,0,0,0, % Length of top doc.
+        0x11, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0,0,0,0, 0,0,0,0, % Int64 mongostamp data. XXX Better ex. data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid_bson,
     bson_encoder:term_to_bson(Term, _Got).

@@ -3,6 +3,7 @@
 ## Todo
 
  * Finish encoder.
+ * Clean up todos in source.
  * Properly document predicates. Some are only stubs.
  * Decide on (and implement) amount of validation in encode/decode.
 

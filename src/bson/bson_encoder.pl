@@ -65,8 +65,11 @@ value(Value, Tag, Len) -->
     value_compound(Value, Tag, Len).
 
 value_compound(utc(Timestamp), 0x09, 8) -->
-    int64(Timestamp),
-    !.
+    int64(Timestamp), !.
+value_compound(mongostamp(Timestamp), 0x11, 8) -->
+    int64(Timestamp), !.
+value_compound(Compound, _Tag, _Len) -->
+    { throw(bson_error(invalid(Compound))) }.
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len),
