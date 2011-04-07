@@ -15,12 +15,12 @@
 %   True if xxx.
 
 term_to_bson(Term, Bson) :-
-    phrase(document(Term), Bson),
+    phrase(document(Term, _Len), Bson),
     !.
 term_to_bson(_Term, _Bson) :-
     throw(bson_error(invalid)).
 
-document(Elements) -->
+document(Elements, Len) -->
     [L0,L1,L2,L3],
     elements(Elements, LenElements),
     [0],
@@ -52,6 +52,9 @@ c_string(Text, Len) -->
     Bytes,
     [0].
 
+list_shaped([]).
+list_shaped([_|_]).
+
 value(Value, 0x01, Len) -->
     { builtin:float(Value) },
     !,
@@ -60,6 +63,10 @@ value(Value, 0x02, Len) -->
     { builtin:atom(Value) },
     !,
     value_string(Value, Len).
+value(Value, 0x03, Len) -->
+    { list_shaped(Value) },
+    !,
+    value_document(Value, Len).
 value(Value, 0x10, Len) -->
     { looks_like_int32(Value) },
     !,
@@ -68,6 +75,9 @@ value(Value, 0x12, Len) -->
     { looks_like_int64(Value) },
     !,
     value_int64(Value, Len).
+
+value_document(Document, Len) -->
+    document(Document, Len).
 
 value_double(Float, 8) -->
     { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
