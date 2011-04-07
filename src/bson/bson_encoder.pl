@@ -66,6 +66,8 @@ value(Value, Tag, Len) -->
 
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp), !.
+value_compound(js(JsText), 0x0D, Len) -->
+    string(JsText, Len), !.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp), !.
 value_compound(symbol(Atom), 0x0E, Len) -->

@@ -268,6 +268,22 @@ test('symbol', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('js', [true(Got == Expected)]) :-
+    Term =
+    [
+        js: js('code ...')
+    ],
+    Expected =
+    [
+        22,0,0,0, % Length of top doc.
+        0x0D, % Tag.
+            106,115, 0, % Ename.
+            9,0,0,0, % String's byte length, incl. nul.
+            99,111,100,101,32,46,46,46, 0, % String data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('utc datetime', [true(Got == Expected)]) :-
     Term =
     [
