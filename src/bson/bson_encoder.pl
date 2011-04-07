@@ -68,6 +68,8 @@ value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp), !.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp), !.
+value_compound(symbol(Atom), 0x0E, Len) -->
+    string(Atom, Len), !.
 value_compound(Compound, _Tag, _Len) -->
     { throw(bson_error(invalid(Compound))) }.
 
@@ -116,7 +118,7 @@ value_atom(null,      0x0A, 0)   --> [].
 value_atom(min,       0xFF, 0)   --> [].
 value_atom(max,       0x7F, 0)   --> [].
 value_atom(Atom,      0x02, Len) -->
-    value_string(Atom, Len).
+    string(Atom, Len).
 
 c_string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
@@ -125,7 +127,7 @@ c_string(Text, Len) -->
     Bytes,
     [0].
 
-value_string(Text, Len) -->
+string(Text, Len) -->
     { bson_unicode:utf8_bytes(Text, Bytes) },
     { lists:length(Bytes, StrLen) },
     { StrLenNul is StrLen + 1 },

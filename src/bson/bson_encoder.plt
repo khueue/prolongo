@@ -252,6 +252,22 @@ test('max', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('symbol', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: symbol(atom)
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x0E, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % String's byte length, incl. nul.
+            97,116,111,109, 0, % String data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('utc datetime', [true(Got == Expected)]) :-
     Term =
     [
