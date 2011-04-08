@@ -346,7 +346,7 @@ test('undefined', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: undefined
+        hello: @(undefined)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -361,7 +361,7 @@ test('boolean true', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: true
+        hello: @(true)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -376,7 +376,7 @@ test('boolean false', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: false
+        hello: @(false)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -416,7 +416,7 @@ test('null', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: null
+        hello: @(null)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -497,7 +497,7 @@ test('min', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: min
+        hello: @(min)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -511,7 +511,7 @@ test('max', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello: max
+        hello: @(max)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 

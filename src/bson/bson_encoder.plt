@@ -169,7 +169,7 @@ test('embedded array', [true(Got == Expected)]) :-
 test('null', [true(Got == Expected)]) :-
     Term =
     [
-        hello: null
+        hello: @(null)
     ],
     Expected =
     [
@@ -183,7 +183,7 @@ test('null', [true(Got == Expected)]) :-
 test('boolean false', [true(Got == Expected)]) :-
     Term =
     [
-        hello: false
+        hello: @(false)
     ],
     Expected =
     [
@@ -198,7 +198,7 @@ test('boolean false', [true(Got == Expected)]) :-
 test('boolean true', [true(Got == Expected)]) :-
     Term =
     [
-        hello: true
+        hello: @(true)
     ],
     Expected =
     [
@@ -213,7 +213,7 @@ test('boolean true', [true(Got == Expected)]) :-
 test('undefined', [true(Got == Expected)]) :-
     Term =
     [
-        hello: undefined
+        hello: @(undefined)
     ],
     Expected =
     [
@@ -227,7 +227,7 @@ test('undefined', [true(Got == Expected)]) :-
 test('min', [true(Got == Expected)]) :-
     Term =
     [
-        hello: min
+        hello: @(min)
     ],
     Expected =
     [
@@ -241,7 +241,7 @@ test('min', [true(Got == Expected)]) :-
 test('max', [true(Got == Expected)]) :-
     Term =
     [
-        hello: max
+        hello: @(max)
     ],
     Expected =
     [

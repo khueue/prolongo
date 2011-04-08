@@ -45,9 +45,6 @@ element(Key, Value, Len) -->
 key(Key, Len) -->
     c_string(Key, Len).
 
-list_shaped([]).
-list_shaped([_|_]).
-
 value(Value, Tag, Len) -->
     { inbuilt:integer(Value) }, !,
     value_integer(Value, Tag, Len).
@@ -64,6 +61,8 @@ value(Value, Tag, Len) -->
     { inbuilt:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
+value_compound(@(Constant), Tag, Len) -->
+    value_constant(Constant, Tag, Len).
 value_compound(object_id(ObjectId), 0x07, 12) -->
     { object_id_atom_to_bytes(ObjectId, Bytes) },
     Bytes.
@@ -130,13 +129,14 @@ int_size(Integer, N) -->
     { bson_bits:littlebytes_n_integer(Bytes, N, Integer) },
     Bytes.
 
-value_atom(undefined, 0x06, 0)   --> []. % Deprecated in BSON 1.0.
-value_atom(false,     0x08, 1)   --> [0].
-value_atom(true,      0x08, 1)   --> [1].
-value_atom(null,      0x0A, 0)   --> [].
-value_atom(min,       0xFF, 0)   --> [].
-value_atom(max,       0x7F, 0)   --> [].
-value_atom(Atom,      0x02, Len) -->
+value_constant(undefined, 0x06, 0) --> []. % Deprecated in BSON 1.0.
+value_constant(false,     0x08, 1) --> [0].
+value_constant(true,      0x08, 1) --> [1].
+value_constant(null,      0x0A, 0) --> [].
+value_constant(min,       0xFF, 0) --> [].
+value_constant(max,       0x7F, 0) --> [].
+
+value_atom(Atom, 0x02, Len) -->
     string(Atom, Len).
 
 c_string(Utf8, Len) -->
@@ -153,10 +153,15 @@ string(Utf8, Len) -->
     Bytes,
     [0].
 
+list_shaped([]).
+list_shaped([_|_]).
+
 object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
     inbuilt:atom_concat('0x', ObjectIdAtom, HexAtom),
     inbuilt:atom_number(HexAtom, Integer),
     % XXX This is probably wrong.
     % Machine and inc parts are big-endian. Look into this.
+    % But, on the other hand, maybe the proper byte-order is
+    % already established (elsewhere) when we get this far?
     bson_bits:littlebytes_n_integer(BytesLE, 12, Integer),
     lists:reverse(BytesLE, Bytes).

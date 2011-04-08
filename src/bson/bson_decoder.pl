@@ -24,7 +24,7 @@ bson_to_term(_Bson, _Term) :-
 document(Elements) -->
     int32(_Length), % XXX Ignored for now. Validate how much?
     elements(Elements),
-    end.
+    [0].
 
 elements([]) --> [].
 elements([Name:Value|Elements]) -->
@@ -139,11 +139,17 @@ value_utc(utc(Timestamp)) -->
 value_mongostamp(mongostamp(Mongostamp)) -->
     int64(Mongostamp).
 
-value_null(null) --> [].
+value_null(@null) --> [].
 
-value_min(min) --> [].
+value_min(@min) --> [].
 
-value_max(max) --> [].
+value_max(@max) --> [].
+
+value_undefined(@undefined) --> [].
+
+value_boolean(@false) --> [0], !.
+value_boolean(@true)  --> [1], !.
+value_boolean(_)      --> { throw(bson_error(invalid_boolean)) }.
 
 value_binary(binary(Subtype,Bytes)) -->
     int32(Length),
@@ -161,14 +167,8 @@ value_js_with_scope(js(JsCode,MappingsDoc)) -->
 value_symbol(symbol(Symbol)) -->
     string(atom(Symbol)).
 
-value_undefined(undefined) --> [].
-
 value_object_id(object_id(ObjectId)) -->
     object_id(atom(ObjectId)).
-
-value_boolean(false) --> [0], !.
-value_boolean(true)  --> [1], !.
-value_boolean(_)     --> { throw(bson_error(invalid_boolean)) }.
 
 value_double(Double) -->
     double(Double).
@@ -186,8 +186,6 @@ pairs_keys_values([Key:Value|Pairs], [Key|Keys], [Value|Values]) :-
 object_id(AtomOrCodes) -->
     n_bytes_as_unsigned_integer(Integer, 12),
     { number_to_hex(Integer, AtomOrCodes) }.
-
-end --> [0].
 
 subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.

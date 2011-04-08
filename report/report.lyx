@@ -221,6 +221,23 @@ April 8.
  Clean up a lot of bit-hacking in Prolog.
  Made entry-predicates into true relations and made the actual conversions
  into more general list predicates.
+ Changed 
+\begin_inset Quotes eld
+\end_inset
+
+builtin:
+\begin_inset Quotes erd
+\end_inset
+
+ prefix to 
+\begin_inset Quotes eld
+\end_inset
+
+inbuilt:
+\begin_inset Quotes erd
+\end_inset
+
+, which looks nicer and is more of a single word.
 \end_layout
 
 \begin_layout Section
