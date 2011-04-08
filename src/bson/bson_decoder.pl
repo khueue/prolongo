@@ -240,11 +240,11 @@ int64(Integer) -->
 
 int_size(Integer, N) -->
     bytes_n(Bytes, N),
-    { bson_bits:littlebytes_n_integer(Bytes, N, Integer) }.
+    { bson_bits:integer_bytes(Integer, N, little, Bytes) }.
 
 double(Double) -->
     bytes_n(Bytes, 8),
-    { bson_bits:bytes_float(Bytes, Double) }.
+    { bson_bits:float_bytes(Double, Bytes) }.
 
 number_to_hex(Number, AtomOrCodes) :-
     inbuilt:format(AtomOrCodes, '~16r', [Number]).

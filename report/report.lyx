@@ -238,6 +238,35 @@ inbuilt:
 \end_inset
 
 , which looks nicer and is more of a single word.
+ Real cleanup in all the bit-hacking.
+ It sure took must of the day, but things should be pretty solid and clean
+ now, and the strategy is flexible but straight-forward: all integer conversions
+ back-and-forth between signed big/little 32/64-bit and bytes is done in
+ C.
+ If those routines cannot be used, it fails if a negative integer is being
+ encoded, otherwise it is treated as an unbounded unsigned, making for instance
+ ObjectID simple.
+ Everything goes through either the relation 
+\noun on
+float_bytes(Float, Bytes)
+\noun default
+ which is just mappings to C, or the more intricate relation 
+\noun on
+integer_bytes(Integer, NumBytes, Endian, Bytes)
+\noun default
+ which can be called like: (+,+,+,?) or (?,+,+,+).
+ E.g.
+ (1, 4, little, Bytes) gives Bytes = [1,0,0,0], or (Integer, 4, big, [0,0,0,1])
+ gives Integer = 1.
+ The first example can be read like 
+\begin_inset Quotes eld
+\end_inset
+
+the integer 1 in 4 little(-endian) bytes.
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

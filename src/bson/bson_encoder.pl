@@ -25,7 +25,7 @@ document(Elements, Len) -->
     elements(Elements, LenElements),
     [0],
     { Len is 4 + LenElements + 1 },
-    { bson_bits:littlebytes_n_integer(BytesForLen, 4, Len) }.
+    { bson_bits:integer_bytes(Len, 4, little, BytesForLen) }.
 
 elements(Elements, Len) -->
     elements(Elements, 0, Len).
@@ -75,7 +75,7 @@ value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
     string(JsText, StrLen),
     document(MappingsDoc, DocLen),
     { Len is 4 + StrLen + DocLen },
-    { bson_bits:littlebytes_n_integer(BytesForLen, 4, Len) }.
+    { bson_bits:integer_bytes(Len, 4, little, BytesForLen) }.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp).
 value_compound(symbol(Atom), 0x0E, Len) -->
@@ -101,7 +101,7 @@ add_array_keys([Value|Values], Index, [Key:Value|Pairs]) :-
     add_array_keys(Values, Index1, Pairs).
 
 value_float(Float, 0x01, 8) -->
-    { bson_bits:bytes_float(Bytes, Float) },
+    { bson_bits:float_bytes(Float, Bytes) },
     Bytes.
 
 value_integer(Integer, 0x10, 4) -->
@@ -112,6 +112,8 @@ value_integer(Integer, 0x12, 8) -->
     { bson_bits:fits_in_64_bits(Integer) },
     !,
     int64(Integer).
+value_integer(Integer, _, _) -->
+    { throw(bson_error(too_large, Integer)) }.
 
 bytes_n([], 0) --> [], !.
 bytes_n([Byte|Bytes], Len0) -->
@@ -126,15 +128,17 @@ int64(Integer) -->
     int_size(Integer, 8).
 
 int_size(Integer, N) -->
-    { bson_bits:littlebytes_n_integer(Bytes, N, Integer) },
+    { bson_bits:integer_bytes(Integer, N, little, Bytes) },
     Bytes.
 
-value_constant(undefined, 0x06, 0) --> []. % Deprecated in BSON 1.0.
-value_constant(false,     0x08, 1) --> [0].
-value_constant(true,      0x08, 1) --> [1].
-value_constant(null,      0x0A, 0) --> [].
-value_constant(min,       0xFF, 0) --> [].
-value_constant(max,       0x7F, 0) --> [].
+value_constant(undefined, 0x06, 0) --> [], !. % Deprecated in BSON 1.0.
+value_constant(false,     0x08, 1) --> [0], !.
+value_constant(true,      0x08, 1) --> [1], !.
+value_constant(null,      0x0A, 0) --> [], !.
+value_constant(min,       0xFF, 0) --> [], !.
+value_constant(max,       0x7F, 0) --> [], !.
+value_constant(Constant,  _,    _) -->
+    { throw(bson_error(unknown_constant, @Constant)) }.
 
 value_atom(Atom, 0x02, Len) -->
     string(Atom, Len).
@@ -163,5 +167,4 @@ object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
     % Machine and inc parts are big-endian. Look into this.
     % But, on the other hand, maybe the proper byte-order is
     % already established (elsewhere) when we get this far?
-    bson_bits:littlebytes_n_integer(BytesLE, 12, Integer),
-    lists:reverse(BytesLE, Bytes).
+    bson_bits:integer_bytes(Integer, 12, big, Bytes).

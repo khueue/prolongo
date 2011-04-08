@@ -26,7 +26,8 @@ setup_path(PathPrefix, PathSuffix, Name) :-
 :- setup_load_paths.
 
 % Simply loading this speeds up phrase, maplist, etc. Can be safely removed.
-:- use_module(library(apply_macros)).
+% Or does it?
+% :- use_module(library(apply_macros)).
 
 :- include(misc(common)).
 
@@ -44,4 +45,4 @@ load_all_tests :-
 run_test_suite :-
     inbuilt:format('~n% Running tests ...~n'),
     plunit:run_tests.
-    %show_coverage(plunit:run_tests).
+    % show_coverage(plunit:run_tests).

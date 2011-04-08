@@ -18,13 +18,44 @@ get_int(term_t t)
 }
 
 /**
- * Convert 8 bytes into a double (64-bit IEEE 754 floating point).
+ * Fill a term with a byte.
  */
+static void
+set_int(term_t t, unsigned char byte)
+{
+    int rc;
+    rc = PL_unify_integer(t, byte);
+}
+
 static foreign_t
-pl_bytes8_to_double(
+double_to_bytes8(
+    term_t float_in,
+    term_t b0, term_t b1, term_t b2, term_t b3,
+    term_t b4, term_t b5, term_t b6, term_t b7)
+{
+    double val;
+    unsigned char *byte = (unsigned char *)&val;
+    int rc;
+
+    rc = PL_get_float(float_in, &val);
+
+    set_int(b0, byte[0]);
+    set_int(b1, byte[1]);
+    set_int(b2, byte[2]);
+    set_int(b3, byte[3]);
+    set_int(b4, byte[4]);
+    set_int(b5, byte[5]);
+    set_int(b6, byte[6]);
+    set_int(b7, byte[7]);
+
+    PL_succeed;
+}
+
+static foreign_t
+bytes8_to_double(
     term_t b0, term_t b1, term_t b2, term_t b3,
     term_t b4, term_t b5, term_t b6, term_t b7,
-    term_t result)
+    term_t float_out)
 {
     double val;
     unsigned char *byte = (unsigned char *)&val;
@@ -38,16 +69,32 @@ pl_bytes8_to_double(
     byte[6] = get_int(b6);
     byte[7] = get_int(b7);
 
-    return PL_unify_float(result, val);
+    return PL_unify_float(float_out, val);
 }
 
-/**
- * Convert 4 bytes into a long (32-bit). Byte-order is little-endian.
- */
 static foreign_t
-pl_bytes4_to_int32(
+int32_to_bytes4(
+    term_t int32_in,
+    term_t b0, term_t b1, term_t b2, term_t b3)
+{
+    int32_t val;
+    unsigned char *byte = (unsigned char *)&val;
+    int rc;
+
+    rc = PL_get_integer(int32_in, &val);
+
+    set_int(b0, byte[0]);
+    set_int(b1, byte[1]);
+    set_int(b2, byte[2]);
+    set_int(b3, byte[3]);
+
+    PL_succeed;
+}
+
+static foreign_t
+bytes4_to_int32(
     term_t b0, term_t b1, term_t b2, term_t b3,
-    term_t result)
+    term_t int32_out)
 {
     int32_t val;
     unsigned char *byte = (unsigned char *)&val;
@@ -57,17 +104,38 @@ pl_bytes4_to_int32(
     byte[2] = get_int(b2);
     byte[3] = get_int(b3);
 
-    return PL_unify_integer(result, val);
+    return PL_unify_integer(int32_out, val);
 }
 
-/**
- * Convert 8 bytes into an int64_t (64-bit). Byte-order is little-endian.
- */
 static foreign_t
-pl_bytes8_to_int64(
+int64_to_bytes8(
+    term_t int64_in,
+    term_t b0, term_t b1, term_t b2, term_t b3,
+    term_t b4, term_t b5, term_t b6, term_t b7)
+{
+    int64_t val;
+    unsigned char *byte = (unsigned char *)&val;
+    int rc;
+
+    rc = PL_get_int64(int64_in, &val);
+
+    set_int(b0, byte[0]);
+    set_int(b1, byte[1]);
+    set_int(b2, byte[2]);
+    set_int(b3, byte[3]);
+    set_int(b4, byte[4]);
+    set_int(b5, byte[5]);
+    set_int(b6, byte[6]);
+    set_int(b7, byte[7]);
+
+    PL_succeed;
+}
+
+static foreign_t
+bytes8_to_int64(
     term_t b0, term_t b1, term_t b2, term_t b3,
     term_t b4, term_t b5, term_t b6, term_t b7,
-    term_t result)
+    term_t int64_out)
 {
     int64_t val;
     unsigned char *byte = (unsigned char *)&val;
@@ -81,34 +149,7 @@ pl_bytes8_to_int64(
     byte[6] = get_int(b6);
     byte[7] = get_int(b7);
 
-    return PL_unify_int64(result, val);
-}
-
-/**
- * XXX
- */
-static foreign_t
-pl_double_to_bytes8(
-    term_t float_in,
-    term_t b0, term_t b1, term_t b2, term_t b3,
-    term_t b4, term_t b5, term_t b6, term_t b7)
-{
-    double val;
-    unsigned char *byte = (unsigned char *)&val;
-    int rc;
-
-    rc = PL_get_float(float_in, &val);
-
-    rc = PL_unify_integer(b0, byte[0] & 0xFF);
-    rc = PL_unify_integer(b1, byte[1] & 0xFF);
-    rc = PL_unify_integer(b2, byte[2] & 0xFF);
-    rc = PL_unify_integer(b3, byte[3] & 0xFF);
-    rc = PL_unify_integer(b4, byte[4] & 0xFF);
-    rc = PL_unify_integer(b5, byte[5] & 0xFF);
-    rc = PL_unify_integer(b6, byte[6] & 0xFF);
-    rc = PL_unify_integer(b7, byte[7] & 0xFF);
-
-    PL_succeed;
+    return PL_unify_int64(int64_out, val);
 }
 
 /**
@@ -118,8 +159,12 @@ pl_double_to_bytes8(
 install_t
 install_bson_bits(void)
 {
-    PL_register_foreign("bytes_to_float",   9, pl_bytes8_to_double, 0);
-    PL_register_foreign("bytes_to_integer", 5, pl_bytes4_to_int32,  0);
-    PL_register_foreign("bytes_to_integer", 9, pl_bytes8_to_int64,  0);
-    PL_register_foreign("float_to_bytes",   9, pl_double_to_bytes8, 0);
+    PL_register_foreign("integer_to_bytes", 5, int32_to_bytes4,  0);
+    PL_register_foreign("bytes_to_integer", 5, bytes4_to_int32,  0);
+
+    PL_register_foreign("integer_to_bytes", 9, int64_to_bytes8,  0);
+    PL_register_foreign("bytes_to_integer", 9, bytes8_to_int64,  0);
+
+    PL_register_foreign("float_to_bytes",   9, double_to_bytes8, 0);
+    PL_register_foreign("bytes_to_float",   9, bytes8_to_double, 0);
 }
