@@ -79,16 +79,16 @@ littlebytes_n_integer(Bytes, N, Integer) :-
 %
 %   Implemented in foreign library.
 
-%%  fits_in_32_bits
+%%  fits_in_32_bits(+Integer) is semidet.
 %
-%   XXX
+%   True if Integer can be stored as a 32-bit signed int.
 
 fits_in_32_bits(Int) :-
     -(2**(32-1)) =< Int, Int =< (2**(32-1))-1.
 
-%%  fits_in_64_bits
+%%  fits_in_64_bits(+Integer) is semidet.
 %
-%   XXX
+%   True if Integer can be stored as a 64-bit signed int.
 
 fits_in_64_bits(Int) :-
     -(2**(64-1)) =< Int, Int =< (2**(64-1))-1.

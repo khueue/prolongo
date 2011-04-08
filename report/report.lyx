@@ -216,6 +216,13 @@ April 7.
  More to come!
 \end_layout
 
+\begin_layout Itemize
+April 8.
+ Clean up a lot of bit-hacking in Prolog.
+ Made entry-predicates into true relations and made the actual conversions
+ into more general list predicates.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout

@@ -20,18 +20,12 @@ term_to_bson(Term, Bson) :-
 term_to_bson(_Term, _Bson) :-
     throw(bson_error(invalid)).
 
-bytes_n([], 0) --> [], !.
-bytes_n([Byte|Bytes], Len0) -->
-    [Byte], % May be anything.
-    { Len1 is Len0 - 1 },
-    bytes_n(Bytes, Len1).
-
 document(Elements, Len) -->
-    bytes_n(BytesLen, 4),
+    bytes_n(BytesForLen, 4),
     elements(Elements, LenElements),
     [0],
     { Len is 4 + LenElements + 1 },
-    { bson_bits:littlebytes_n_integer(BytesLen, 4, Len) }.
+    { bson_bits:littlebytes_n_integer(BytesForLen, 4, Len) }.
 
 elements(Elements, Len) -->
     elements(Elements, 0, Len).
@@ -119,6 +113,12 @@ value_integer(Integer, 0x12, 8) -->
     { bson_bits:fits_in_64_bits(Integer) },
     !,
     int64(Integer).
+
+bytes_n([], 0) --> [], !.
+bytes_n([Byte|Bytes], Len0) -->
+    [Byte], % May be anything.
+    { Len1 is Len0 - 1 },
+    bytes_n(Bytes, Len1).
 
 int32(Integer) -->
     int_size(Integer, 4).
