@@ -20,12 +20,18 @@ term_to_bson(Term, Bson) :-
 term_to_bson(_Term, _Bson) :-
     throw(bson_error(invalid)).
 
+bytes_n([], 0) --> [], !.
+bytes_n([Byte|Bytes], Len0) -->
+    [Byte], % May be anything.
+    { Len1 is Len0 - 1 },
+    bytes_n(Bytes, Len1).
+
 document(Elements, Len) -->
-    [L0,L1,L2,L3],
+    bytes_n(BytesLen, 4),
     elements(Elements, LenElements),
     [0],
     { Len is 4 + LenElements + 1 },
-    { bson_bits:integer_to_bytes(Len, L0, L1, L2, L3) }.
+    { bson_bits:littlebytes_n_integer(BytesLen, 4, Len) }.
 
 elements(Elements, Len) -->
     elements(Elements, 0, Len).
@@ -49,19 +55,19 @@ list_shaped([]).
 list_shaped([_|_]).
 
 value(Value, Tag, Len) -->
-    { builtin:integer(Value) }, !,
+    { inbuilt:integer(Value) }, !,
     value_integer(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { builtin:float(Value) }, !,
+    { inbuilt:float(Value) }, !,
     value_float(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { builtin:atom(Value) }, !,
+    { inbuilt:atom(Value) }, !,
     value_atom(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { list_shaped(Value) }, !,
     value_list(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { builtin:compound(Value) }, !,
+    { inbuilt:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
 value_compound(object_id(ObjectId), 0x07, 12) -->
@@ -72,11 +78,11 @@ value_compound(utc(Timestamp), 0x09, 8) -->
 value_compound(js(JsText), 0x0D, Len) -->
     string(JsText, Len).
 value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
-    [L0,L1,L2,L3],
+    bytes_n(BytesForLen, 4),
     string(JsText, StrLen),
     document(MappingsDoc, DocLen),
     { Len is 4 + StrLen + DocLen },
-    { bson_bits:integer_to_bytes(Len, L0, L1, L2, L3) }.
+    { bson_bits:littlebytes_n_integer(BytesForLen, 4, Len) }.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp).
 value_compound(symbol(Atom), 0x0E, Len) -->
@@ -97,13 +103,13 @@ add_array_keys(List, Array) :-
 
 add_array_keys([], _Index, []).
 add_array_keys([Value|Values], Index, [Key:Value|Pairs]) :-
-    builtin:atom_number(Key, Index),
+    inbuilt:atom_number(Key, Index),
     Index1 is Index + 1,
     add_array_keys(Values, Index1, Pairs).
 
 value_float(Float, 0x01, 8) -->
-    { bson_bits:float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7) },
-    [B0,B1,B2,B3,B4,B5,B6,B7].
+    { bson_bits:bytes_float(Bytes, Float) },
+    Bytes.
 
 value_integer(Integer, 0x10, 4) -->
     { bson_bits:fits_in_32_bits(Integer) },
@@ -115,12 +121,14 @@ value_integer(Integer, 0x12, 8) -->
     int64(Integer).
 
 int32(Integer) -->
-    { bson_bits:integer_to_bytes(Integer, B0, B1, B2, B3) },
-    [B0,B1,B2,B3].
+    int_size(Integer, 4).
 
 int64(Integer) -->
-    { bson_bits:integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7) },
-    [B0,B1,B2,B3,B4,B5,B6,B7].
+    int_size(Integer, 8).
+
+int_size(Integer, N) -->
+    { bson_bits:littlebytes_n_integer(Bytes, N, Integer) },
+    Bytes.
 
 value_atom(undefined, 0x06, 0)   --> []. % Deprecated in BSON 1.0.
 value_atom(false,     0x08, 1)   --> [0].
@@ -140,16 +148,15 @@ c_string(Utf8, Len) -->
 string(Utf8, Len) -->
     { bson_unicode:utf8_bytes(Utf8, Bytes, NumBytes) },
     { NumBytesWithNul is NumBytes + 1 },
-    { bson_bits:integer_to_bytes(NumBytesWithNul, L0, L1, L2, L3) },
     { Len is 4 + NumBytesWithNul },
-    [L0,L1,L2,L3],
+    int32(NumBytesWithNul),
     Bytes,
     [0].
 
 object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
-    builtin:atom_concat('0x', ObjectIdAtom, HexAtom),
-    builtin:atom_number(HexAtom, Integer),
+    inbuilt:atom_concat('0x', ObjectIdAtom, HexAtom),
+    inbuilt:atom_number(HexAtom, Integer),
     % XXX This is probably wrong.
     % Machine and inc parts are big-endian. Look into this.
-    bson_bits:integer_to_n_bytes(Integer, 12, BytesLE),
+    bson_bits:littlebytes_n_integer(BytesLE, 12, Integer),
     lists:reverse(BytesLE, Bytes).

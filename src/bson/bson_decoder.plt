@@ -34,7 +34,7 @@ test('nuls not allowed in ename', [throws(bson_error(_))]) :-
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x02, % Tag.
-            0xc3,0xa4, 0, 0xc3,0xa4, 0, % Ename.
+            0xc3,0xa4, 0, 0xc3,0xa4, 0, % Ename, INVALID.
             3,0,0,0, % String's byte length, incl. nul.
             0xc3,0xa4, 0, % String data.
         0 % End of top doc.

@@ -42,5 +42,6 @@ load_all_tests :-
     plunit:load_test_files([]).
 
 run_test_suite :-
-    builtin:format('~n% Running tests ...~n'),
+    inbuilt:format('~n% Running tests ...~n'),
     plunit:run_tests.
+    %show_coverage(plunit:run_tests).

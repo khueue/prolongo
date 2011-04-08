@@ -14,19 +14,19 @@
 %   XXX
 
 utf8_bytes(Utf8, Bytes) :-
-    builtin:nonvar(Utf8),
+    inbuilt:nonvar(Utf8),
     seems_like_input_utf8(Utf8),
     !,
     utf8_to_bytes(Utf8, Bytes).
 utf8_bytes(Utf8, Bytes) :-
-    builtin:nonvar(Bytes),
+    inbuilt:nonvar(Bytes),
     seems_like_input_bytes(Bytes),
     !,
     bytes_to_utf8(Bytes, Utf8).
 
-seems_like_input_utf8(atom(Atom))   :- builtin:atom(Atom).
+seems_like_input_utf8(atom(Atom))   :- inbuilt:atom(Atom).
 seems_like_input_utf8(codes(Codes)) :- seems_like_list(Codes).
-seems_like_input_utf8(Atom)         :- builtin:atom(Atom).
+seems_like_input_utf8(Atom)         :- inbuilt:atom(Atom).
 seems_like_input_utf8(Codes)        :- seems_like_list(Codes).
 
 seems_like_input_bytes(Bytes) :-
@@ -54,24 +54,24 @@ utf8_to_bytes(codes(Codes), Bytes) :-
     !,
     utf8_codes_to_bytes(Codes, Bytes).
 utf8_to_bytes(Atom, Bytes) :-
-    builtin:atom(Atom),
+    inbuilt:atom(Atom),
     !,
     utf8_atom_to_bytes(Atom, Bytes).
 utf8_to_bytes(Codes, Bytes) :-
     utf8_codes_to_bytes(Codes, Bytes).
 
 utf8_atom_to_bytes(Atom, Bytes) :-
-    builtin:atom_codes(Atom, Codes),
+    inbuilt:atom_codes(Atom, Codes),
     utf8_codes_to_bytes(Codes, Bytes).
 
 utf8_codes_to_bytes(Codes, Bytes) :-
     setup_call_cleanup(
         charsio:open_chars_stream(Codes, ReadStream),
         stream_to_bytes(ReadStream, Bytes),
-        builtin:close(ReadStream)).
+        inbuilt:close(ReadStream)).
 
 stream_to_bytes(ReadStream, Bytes) :-
-    builtin:set_stream(ReadStream, encoding(octet)),
+    inbuilt:set_stream(ReadStream, encoding(octet)),
     readutil:read_stream_to_codes(ReadStream, Bytes).
 
 %%  bytes_to_utf8
@@ -84,7 +84,7 @@ stream_to_bytes(ReadStream, Bytes) :-
 %   See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
 
 bytes_to_utf8(Bytes, AtomOrCodes) :-
-    builtin:atom_chars(RawAtom, Bytes),
+    inbuilt:atom_chars(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
         memory_file_to_atom_or_codes(MemFile, AtomOrCodes, utf8),

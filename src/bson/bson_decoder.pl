@@ -148,7 +148,7 @@ value_max(max) --> [].
 value_binary(binary(Subtype,Bytes)) -->
     int32(Length),
     subtype(Subtype),
-    n_bytes(Bytes, Length).
+    bytes_n(Bytes, Length).
 
 value_js(js(JsCode)) -->
     string(atom(JsCode)).
@@ -201,28 +201,28 @@ string(AtomOrCodes) -->
     string(AtomOrCodes, Length).
 
 c_string(AtomOrCodes) -->
-    bytes_stop_with_nul(Bytes),
+    bytes_stop_on_nul(Bytes),
     { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
 
 string(AtomOrCodes, Length) -->
     n_bytes_including_nul(Bytes, Length),
     { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
 
-bytes_stop_with_nul([]) --> [0], !.
-bytes_stop_with_nul([NotNul|Bytes]) -->
+bytes_stop_on_nul([]) --> [0], !.
+bytes_stop_on_nul([NotNul|Bytes]) -->
     [NotNul],
-    bytes_stop_with_nul(Bytes).
+    bytes_stop_on_nul(Bytes).
 
 n_bytes_including_nul(Bytes, Length) -->
     { LengthMinusNul is Length - 1 },
-    n_bytes(Bytes, LengthMinusNul),
+    bytes_n(Bytes, LengthMinusNul),
     [0].
 
-n_bytes([], 0) --> [], !.
-n_bytes([Byte|Bytes], Length0) -->
+bytes_n([], 0) --> [], !.
+bytes_n([Byte|Bytes], Length0) -->
     [Byte], % May be anything.
     { Length1 is Length0 - 1 },
-    n_bytes(Bytes, Length1).
+    bytes_n(Bytes, Length1).
 
 n_bytes_as_unsigned_integer(Integer, Length) -->
     n_bytes_as_unsigned_integer(Integer, 0, Length).
@@ -234,17 +234,19 @@ n_bytes_as_unsigned_integer(Integer, Integer0, Length0) -->
     { Length1 is Length0 - 1 },
     n_bytes_as_unsigned_integer(Integer, Integer1, Length1).
 
-double(Double) -->
-    [B0,B1,B2,B3,B4,B5,B6,B7],
-    { bson_bits:bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Double) }.
-
 int32(Integer) -->
-    [B0,B1,B2,B3],
-    { bson_bits:bytes_to_integer(B0, B1, B2, B3, Integer) }.
+    int_size(Integer, 4).
 
 int64(Integer) -->
-    [B0,B1,B2,B3,B4,B5,B6,B7],
-    { bson_bits:bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer) }.
+    int_size(Integer, 8).
+
+int_size(Integer, N) -->
+    bytes_n(Bytes, N),
+    { bson_bits:littlebytes_n_integer(Bytes, N, Integer) }.
+
+double(Double) -->
+    bytes_n(Bytes, 8),
+    { bson_bits:bytes_float(Bytes, Double) }.
 
 number_to_hex(Number, AtomOrCodes) :-
-    builtin:format(AtomOrCodes, '~16r', [Number]).
+    inbuilt:format(AtomOrCodes, '~16r', [Number]).

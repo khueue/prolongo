@@ -1,14 +1,7 @@
 :- module(bson_bits,
     [
-        bytes_to_float/9,
-        float_to_bytes/9,
-
-        bytes_to_integer/5,
-        bytes_to_integer/9,
-        integer_to_bytes/5,
-        integer_to_bytes/9,
-        integer_to_n_bytes/3,
-
+        bytes_float/2,
+        littlebytes_n_integer/3,
         fits_in_32_bits/1,
         fits_in_64_bits/1
     ]).
@@ -20,6 +13,41 @@
 :- use_foreign_library(foreign(bson_bits)).
 
 :- include(misc(common)).
+
+%%  bytes_float
+%
+%   XXX
+
+bytes_float(Bytes, Float) :-
+    inbuilt:ground(Bytes),
+    Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
+    !,
+    bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Float).
+bytes_float(Bytes, Float) :-
+    inbuilt:float(Float),
+    !,
+    Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
+    float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7).
+
+%%  littlebytes_n_integer
+%
+%   XXX
+
+littlebytes_n_integer(Bytes, 4, Integer) :-
+    inbuilt:ground(Bytes),
+    Bytes = [B0,B1,B2,B3],
+    !,
+    bytes_to_integer(B0, B1, B2, B3, Integer).
+littlebytes_n_integer(Bytes, 8, Integer) :-
+    inbuilt:ground(Bytes),
+    Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
+    !,
+    bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer).
+littlebytes_n_integer(Bytes, N, Integer) :-
+    inbuilt:integer(Integer),
+    inbuilt:integer(N),
+    !,
+    integer_to_n_bytes(Integer, N, Bytes).
 
 %%  bytes_to_float(
 %       +B0:byte, +B1:byte, +B2:byte, +B3:byte,
@@ -64,32 +92,6 @@ fits_in_32_bits(Int) :-
 
 fits_in_64_bits(Int) :-
     -(2**(64-1)) =< Int, Int =< (2**(64-1))-1.
-
-%%  int32_to_bytes
-%
-%   XXX
-
-% Todo: What happens when given a too large (unbounded) integer?
-integer_to_bytes(Int32, B0, B1, B2, B3) :-
-    B0 is (Int32 >> (0*8)) /\ 0xFF,
-    B1 is (Int32 >> (1*8)) /\ 0xFF,
-    B2 is (Int32 >> (2*8)) /\ 0xFF,
-    B3 is (Int32 >> (3*8)) /\ 0xFF.
-
-%%  int64_to_bytes
-%
-%   XXX
-
-% Todo: What happens when given a too large (unbounded) integer?
-integer_to_bytes(Int64, B0, B1, B2, B3, B4, B5, B6, B7) :-
-    B0 is (Int64 >> (0*8)) /\ 0xFF,
-    B1 is (Int64 >> (1*8)) /\ 0xFF,
-    B2 is (Int64 >> (2*8)) /\ 0xFF,
-    B3 is (Int64 >> (3*8)) /\ 0xFF,
-    B4 is (Int64 >> (4*8)) /\ 0xFF,
-    B5 is (Int64 >> (5*8)) /\ 0xFF,
-    B6 is (Int64 >> (6*8)) /\ 0xFF,
-    B7 is (Int64 >> (7*8)) /\ 0xFF.
 
 %%  integer_to_n_bytes
 %
