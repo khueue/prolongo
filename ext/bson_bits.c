@@ -27,6 +27,9 @@ set_int(term_t t, unsigned char byte)
     rc = PL_unify_integer(t, byte);
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 double_to_bytes8(
     term_t float_in,
@@ -51,6 +54,9 @@ double_to_bytes8(
     PL_succeed;
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 bytes8_to_double(
     term_t b0, term_t b1, term_t b2, term_t b3,
@@ -72,6 +78,9 @@ bytes8_to_double(
     return PL_unify_float(float_out, val);
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 int32_to_bytes4(
     term_t int32_in,
@@ -91,6 +100,9 @@ int32_to_bytes4(
     PL_succeed;
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 bytes4_to_int32(
     term_t b0, term_t b1, term_t b2, term_t b3,
@@ -107,6 +119,9 @@ bytes4_to_int32(
     return PL_unify_integer(int32_out, val);
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 int64_to_bytes8(
     term_t int64_in,
@@ -131,6 +146,9 @@ int64_to_bytes8(
     PL_succeed;
 }
 
+/**
+ * Documented in Prolog wrapper module.
+ */
 static foreign_t
 bytes8_to_int64(
     term_t b0, term_t b1, term_t b2, term_t b3,

@@ -281,6 +281,7 @@ unsigned_bytes(Unsigned, NumBytes, Endian, Bytes)
  float_bytes/2 handles doubles, integer_bytes/4 handles all signed 32/64-bit
  integers and unsigned_bytes/4 handles all unbounded unsigneds.
  Simple.
+ Also documented the predicates.
 \end_layout
 
 \begin_layout Section
