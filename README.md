@@ -2,10 +2,8 @@
 
 ## Todo
 
- * Add tests for floats.
  * Finish encoder (research ObjectID some more).
- * Clean up todos in source.
- * Properly document predicates. Some are only stubs.
+ * Properly document and decide on UTF-8 predicates.
  * Decide on (and implement) amount of validation in encode/decode.
 
 ## Usage

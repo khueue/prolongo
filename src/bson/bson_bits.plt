@@ -1,5 +1,34 @@
 :- include(misc(common)).
 
+:- begin_tests('bson_bits:float_bytes/2').
+
+test('float, zero', [true(Got == Expected)]) :-
+    Expected = 0.0,
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
+test('float, -5.05', [true(Got == Expected)]) :-
+    Expected = -5.05,
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
+test('float, 5.05', [true(Got == Expected)]) :-
+    Expected = 5.05,
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
+test('float, pi', [true(Got == Expected)]) :-
+    Expected is pi,
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
+test('float, e', [true(Got == Expected)]) :-
+    Expected is e,
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
+:- end_tests('bson_bits:float_bytes/2').
+
 :- begin_tests('bson_bits:integer_bytes/4').
 
 test('32-bit big-endian, zero', [true(Got == Expected)]) :-
@@ -148,7 +177,9 @@ test('64-bit little-endian, max+1', [true(Got =\= Expected)]) :-
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
 
-% --------------------------------------------------------------------------
+:- end_tests('bson_bits:integer_bytes/4').
+
+:- begin_tests('bson_bits:unsigned_bytes/4').
 
 test('unbounded unsigned little-endian, zero', [true(Got == Expected)]) :-
     Expected = 0,
@@ -192,4 +223,4 @@ test('unbounded unsigned big-endian, huge', [true(Got == Expected)]) :-
     bson_bits:unsigned_bytes(Expected, 42, big, Bytes),
     bson_bits:unsigned_bytes(Got,      42, big, Bytes).
 
-:- end_tests('bson_bits:integer_bytes/4').
+:- end_tests('bson_bits:unsigned_bytes/4').
