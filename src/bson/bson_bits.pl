@@ -23,12 +23,12 @@ float_bytes(Float, Bytes) :-
     inbuilt:nonvar(Bytes),
     Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
     !,
-    bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Float).
+    foreign_bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Float).
 float_bytes(Float, Bytes) :-
     inbuilt:nonvar(Float),
     !,
     Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
-    float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7).
+    foreign_float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7).
 
 %%  integer_bytes(+Integer, +NumBytes, +Endian, ?Bytes) is semidet.
 %%  integer_bytes(?Integer, +NumBytes, +Endian, +Bytes) is semidet.
@@ -55,20 +55,20 @@ integer_bytes(Integer, _NumBytes, Endian, Bytes) :-
     bytes_to_integer(Endian, Bytes, Integer).
 
 integer_to_bytes(Integer, 4, little, [B0,B1,B2,B3]) :- !,
-    integer_to_bytes(Integer, B0, B1, B2, B3).
+    foreign_integer_to_bytes(Integer, B0, B1, B2, B3).
 
 integer_to_bytes(Integer, 8, little, [B0,B1,B2,B3,B4,B5,B6,B7]) :- !,
-    integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7).
+    foreign_integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7).
 
 integer_to_bytes(Integer, N, big, Bytes) :- !,
     integer_to_bytes(Integer, N, little, BytesLittle),
     lists:reverse(BytesLittle, Bytes).
 
 bytes_to_integer(little, [B0,B1,B2,B3], Integer) :- !,
-    bytes_to_integer(B0, B1, B2, B3, Integer).
+    foreign_bytes_to_integer(B0, B1, B2, B3, Integer).
 
 bytes_to_integer(little, [B0,B1,B2,B3,B4,B5,B6,B7], Integer) :- !,
-    bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer).
+    foreign_bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer).
 
 bytes_to_integer(big, Bytes, Integer) :- !,
     lists:reverse(Bytes, BytesLittle),

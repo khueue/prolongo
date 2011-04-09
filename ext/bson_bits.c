@@ -159,12 +159,12 @@ bytes8_to_int64(
 install_t
 install_bson_bits(void)
 {
-    PL_register_foreign("integer_to_bytes", 5, int32_to_bytes4,  0);
-    PL_register_foreign("bytes_to_integer", 5, bytes4_to_int32,  0);
+    PL_register_foreign("foreign_integer_to_bytes", 5, int32_to_bytes4,  0);
+    PL_register_foreign("foreign_bytes_to_integer", 5, bytes4_to_int32,  0);
 
-    PL_register_foreign("integer_to_bytes", 9, int64_to_bytes8,  0);
-    PL_register_foreign("bytes_to_integer", 9, bytes8_to_int64,  0);
+    PL_register_foreign("foreign_integer_to_bytes", 9, int64_to_bytes8,  0);
+    PL_register_foreign("foreign_bytes_to_integer", 9, bytes8_to_int64,  0);
 
-    PL_register_foreign("float_to_bytes",   9, double_to_bytes8, 0);
-    PL_register_foreign("bytes_to_float",   9, bytes8_to_double, 0);
+    PL_register_foreign("foreign_float_to_bytes",   9, double_to_bytes8, 0);
+    PL_register_foreign("foreign_bytes_to_float",   9, bytes8_to_double, 0);
 }
