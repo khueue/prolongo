@@ -269,6 +269,20 @@ the integer 1 in 4 little(-endian) bytes.
 
 \end_layout
 
+\begin_layout Itemize
+April 9.
+ Factored out the unbounded unsigned handling into a separate predicate
+ 
+\noun on
+unsigned_bytes(Unsigned, NumBytes, Endian, Bytes)
+\noun default
+.
+ Now things are starting to look really good.
+ float_bytes/2 handles doubles, integer_bytes/4 handles all signed 32/64-bit
+ integers and unsigned_bytes/4 handles all unbounded unsigneds.
+ Simple.
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout

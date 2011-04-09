@@ -2,6 +2,7 @@
     [
         float_bytes/2,
         integer_bytes/4,
+        unsigned_bytes/4,
         fits_in_32_bits/1,
         fits_in_64_bits/1
     ]).
@@ -67,16 +68,6 @@ integer_to_bytes(Integer, 4, little, [B0,B1,B2,B3]) :- !,
 integer_to_bytes(Integer, 8, little, [B0,B1,B2,B3,B4,B5,B6,B7]) :- !,
     integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7).
 
-integer_to_bytes(Unsigned, N, little, Bytes) :- !,
-    Unsigned >= 0,
-    unsigned_to_bytes(Unsigned, 0, N, Bytes).
-
-unsigned_to_bytes(_Unsigned, N, N, []) :- !.
-unsigned_to_bytes(Unsigned, N0, N, [Byte|Bytes]) :-
-    Byte is (Unsigned >> (N0*8)) /\ 0xFF,
-    N1 is N0 + 1,
-    unsigned_to_bytes(Unsigned, N1, N, Bytes).
-
 %%  bytes_to_integer
 %
 %   XXX
@@ -91,14 +82,52 @@ bytes_to_integer(little, [B0,B1,B2,B3], Integer) :- !,
 bytes_to_integer(little, [B0,B1,B2,B3,B4,B5,B6,B7], Integer) :- !,
     bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer).
 
-bytes_to_integer(little, Bytes, Unsigned) :- !,
-    bytes_to_unsigned(Bytes, 0, 0, Unsigned).
+%%  unsigned_bytes
+%
+%   XXX
 
-bytes_to_unsigned([], _N, Unsigned, Unsigned).
-bytes_to_unsigned([Byte|Bytes], N, Unsigned0, Unsigned) :-
+unsigned_bytes(Unsigned, NumBytes, Endian, Bytes) :-
+    inbuilt:nonvar(Unsigned),
+    !,
+    unsigned_to_bytes(Unsigned, NumBytes, Endian, Bytes).
+unsigned_bytes(Unsigned, _NumBytes, Endian, Bytes) :-
+    inbuilt:nonvar(Bytes),
+    !,
+    bytes_to_unsigned(Endian, Bytes, Unsigned).
+
+%%  unsigned_to_bytes
+%
+%   XXX
+
+unsigned_to_bytes(Unsigned, N, big, Bytes) :- !,
+    unsigned_to_bytes(Unsigned, N, little, BytesLittle),
+    lists:reverse(BytesLittle, Bytes).
+
+unsigned_to_bytes(Unsigned, N, little, Bytes) :-
+    unsigned_to_bytes_aux(Unsigned, 0, N, Bytes).
+
+unsigned_to_bytes_aux(_Unsigned, N, N, []) :- !.
+unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
+    Byte is (Unsigned >> (N0*8)) /\ 0xFF,
+    N1 is N0 + 1,
+    unsigned_to_bytes_aux(Unsigned, N1, N, Bytes).
+
+%%  bytes_to_unsigned
+%
+%   XXX
+
+bytes_to_unsigned(big, Bytes, Unsigned) :- !,
+    lists:reverse(Bytes, BytesLittle),
+    bytes_to_unsigned(little, BytesLittle, Unsigned).
+
+bytes_to_unsigned(little, Bytes, Unsigned) :- !,
+    bytes_to_unsigned_aux(Bytes, 0, 0, Unsigned).
+
+bytes_to_unsigned_aux([], _N, Unsigned, Unsigned).
+bytes_to_unsigned_aux([Byte|Bytes], N, Unsigned0, Unsigned) :-
     Unsigned1 is (Byte << (N*8)) \/ Unsigned0,
     N1 is N + 1,
-    bytes_to_unsigned(Bytes, N1, Unsigned1, Unsigned).
+    bytes_to_unsigned_aux(Bytes, N1, Unsigned1, Unsigned).
 
 %%  fits_in_32_bits(+Integer) is semidet.
 %

@@ -162,9 +162,9 @@ list_shaped([_|_]).
 
 object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
     inbuilt:atom_concat('0x', ObjectIdAtom, HexAtom),
-    inbuilt:atom_number(HexAtom, Integer),
+    inbuilt:atom_number(HexAtom, Unsigned),
     % XXX This is probably wrong.
     % Machine and inc parts are big-endian. Look into this.
     % But, on the other hand, maybe the proper byte-order is
     % already established (elsewhere) when we get this far?
-    bson_bits:integer_bytes(Integer, 12, big, Bytes).
+    bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes).
