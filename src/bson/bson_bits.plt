@@ -66,7 +66,7 @@ test('32-bit big-endian, max+1', [true(Got =\= Expected)]) :-
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
-% --------------------------------------------------------------------------
+% ------------------------------------
 
 test('32-bit little-endian, zero', [true(Got == Expected)]) :-
     Expected = 0,
@@ -103,7 +103,7 @@ test('32-bit little-endian, max+1', [true(Got =\= Expected)]) :-
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
-% --------------------------------------------------------------------------
+% ------------------------------------
 
 test('64-bit big-endian, zero', [true(Got == Expected)]) :-
     Expected = 0,
@@ -140,7 +140,7 @@ test('64-bit big-endian, max+1', [true(Got =\= Expected)]) :-
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
-% --------------------------------------------------------------------------
+% ------------------------------------
 
 test('64-bit little-endian, zero', [true(Got == Expected)]) :-
     Expected = 0,
@@ -201,7 +201,7 @@ test('unbounded unsigned little-endian, huge', [true(Got == Expected)]) :-
     bson_bits:unsigned_bytes(Expected, 42, little, Bytes),
     bson_bits:unsigned_bytes(Got,      42, little, Bytes).
 
-% --------------------------------------------------------------------------
+% ------------------------------------
 
 test('unbounded unsigned big-endian, zero', [true(Got == Expected)]) :-
     Expected = 0,
