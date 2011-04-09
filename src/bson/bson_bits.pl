@@ -54,10 +54,6 @@ integer_bytes(Integer, _NumBytes, Endian, Bytes) :-
     !,
     bytes_to_integer(Endian, Bytes, Integer).
 
-%%  integer_to_bytes
-%
-%   XXX
-
 integer_to_bytes(Integer, 4, little, [B0,B1,B2,B3]) :- !,
     integer_to_bytes(Integer, B0, B1, B2, B3).
 
@@ -67,10 +63,6 @@ integer_to_bytes(Integer, 8, little, [B0,B1,B2,B3,B4,B5,B6,B7]) :- !,
 integer_to_bytes(Integer, N, big, Bytes) :- !,
     integer_to_bytes(Integer, N, little, BytesLittle),
     lists:reverse(BytesLittle, Bytes).
-
-%%  bytes_to_integer
-%
-%   XXX
 
 bytes_to_integer(little, [B0,B1,B2,B3], Integer) :- !,
     bytes_to_integer(B0, B1, B2, B3, Integer).
@@ -95,10 +87,6 @@ unsigned_bytes(Unsigned, _NumBytes, Endian, Bytes) :-
     !,
     bytes_to_unsigned(Endian, Bytes, Unsigned).
 
-%%  unsigned_to_bytes
-%
-%   XXX
-
 unsigned_to_bytes(Unsigned, N, little, Bytes) :- !,
     unsigned_to_bytes_aux(Unsigned, 0, N, Bytes).
 
@@ -111,10 +99,6 @@ unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
     Byte is (Unsigned >> (N0*8)) /\ 0xFF,
     N1 is N0 + 1,
     unsigned_to_bytes_aux(Unsigned, N1, N, Bytes).
-
-%%  bytes_to_unsigned
-%
-%   XXX
 
 bytes_to_unsigned(little, Bytes, Unsigned) :- !,
     bytes_to_unsigned_aux(Bytes, 0, 0, Unsigned).
