@@ -36,7 +36,16 @@ test :-
     load_all_tests,
     run_test_suite.
 
+gen_doc :-
+    load_all_modules,
+    use_module(library(doc_latex)),
+    doc_latex(
+        bson(bson),
+        'doc/bson.tex',
+        []).
+
 load_all_modules :-
+    use_module(library(pldoc)),
     use_module(bson(bson), []).
 
 load_all_tests :-

@@ -22,6 +22,14 @@ stay: compile
 	@ echo "--- Running tests ..."
 	$(PROLOG) -s load -g test
 
+.PHONY: doc
+doc: compile
+	@ echo "--- Generating docs ..."
+	$(PROLOG) -s load -g gen_doc -t halt
+	latex -output-directory=doc -output-format=pdf doc/bson
+# latex will ask for:
+# /usr/local/Cellar/swi-prolog/5.10.2/lib/swipl-5.10.2/library/pldoc/pldoc.sty
+
 .PHONY: compile
 compile: setup lib/bson_bits
 

@@ -6,12 +6,18 @@
 
 :- include(misc(common)).
 
+/*
+
+% XXX PlDoc complains about this. Look into this.
+
 %%  utf8_bytes(+Utf8,        +Bytes:list) is semidet.
 %%  utf8_bytes(+Utf8,        ?Bytes:list) is semidet.
 %%  utf8_bytes(?atom(Utf8),  +Bytes:list) is semidet.
 %%  utf8_bytes(?codes(Utf8), +Bytes:list) is semidet.
 %
 %   XXX
+
+*/
 
 utf8_bytes(Utf8, Bytes) :-
     inbuilt:nonvar(Utf8),

@@ -129,6 +129,10 @@ fits_in_64_bits(Integer) :-
 
 :- use_foreign_library(foreign(bson_bits)).
 
+/*
+
+% XXX PlDoc complains about these. Look into this.
+
 %%  foreign_float_to_bytes(
 %       +Float,
 %       ?Byte0, ?Byte1, ?Byte2, ?Byte3,
@@ -180,3 +184,5 @@ fits_in_64_bits(Integer) :-
 %   True if Integer is the integer represented by the consecutive
 %   bytes Byte0..Byte7 interpreted as a signed 64-bit
 %   little-endian integer.
+
+*/
