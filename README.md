@@ -2,6 +2,7 @@
 
 ## Todo
 
+ * Add tests for floats.
  * Finish encoder (research ObjectID some more).
  * Clean up todos in source.
  * Properly document predicates. Some are only stubs.

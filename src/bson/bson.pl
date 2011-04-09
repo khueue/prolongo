@@ -31,8 +31,6 @@ bson_version([1,0]).
 %%  term_bson(+Term:list(pair), ?Bson:list(byte)) is semidet.
 %%  term_bson(?Term:list(pair), +Bson:list(byte)) is semidet.
 %
-%   A pair is a structure atom:term. A byte is an integer in 0..255.
-%
 %   True if Bson is the BSON byte-encoding of Term.
 
 term_bson(Term, Bson) :-

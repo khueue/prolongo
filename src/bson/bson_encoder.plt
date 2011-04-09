@@ -327,14 +327,14 @@ test('js with scope', [true(Got == Expected)]) :-
 test('utc datetime', [true(Got == Expected)]) :-
     Term =
     [
-        hello: utc(0)
+        hello: utc(1302354660284) % date(2011, 4, 9, ...)
     ],
     Expected =
     [
         20,0,0,0, % Length of top doc.
         0x09, % Tag.
             104,101,108,108,111, 0, % Ename.
-            0,0,0,0, 0,0,0,0, % UTC datetime data. XXX better ex. data.
+            188,11,99,58,47,1,0,0, % UTC datetime data.
         0 % End of top doc.
     ],
     bson_encoder:term_to_bson(Term, Got).
@@ -349,7 +349,7 @@ test('mongostamp', [true(Got == Expected)]) :-
         20,0,0,0, % Length of top doc.
         0x11, % Tag.
             104,101,108,108,111, 0, % Ename.
-            0,0,0,0, 0,0,0,0, % Int64 mongostamp data. XXX Better ex. data.
+            0,0,0,0, 0,0,0,0, % Int64 mongostamp data.
         0 % End of top doc.
     ],
     bson_encoder:term_to_bson(Term, Got).

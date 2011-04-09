@@ -320,7 +320,7 @@ test('js with scope', [true(Got == Expected)]) :-
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0F, % Tag.
             106,115, 0, % Ename.
-            6,6,6,6, % int XXX
+            xxx_not_impl,0,0,0, % Length of entire JS with scope.
             9,0,0,0, % String's byte length, incl. nul.
             99,111,100,101,32,46,46,46, 0, % String data.
                 xxx_not_impl,0,0,0, % Length of embedded doc.
@@ -397,12 +397,12 @@ test('utc datetime', [true(Got == Expected)]) :-
         xxx_not_impl,0,0,0, % Length of top doc.
         0x09, % Tag.
             104,101,108,108,111, 0, % Ename.
-            0,0,0,0, 0,0,0,0, % UTC datetime data. XXX better ex. data.
+            188,11,99,58,47,1,0,0, % UTC datetime data.
         0 % End of top doc.
     ],
     Expected =
     [
-        hello: utc(0)
+        hello: utc(1302354660284) % date(2011, 4, 9, ...)
     ],
     bson_decoder:bson_to_term(Bson, Got).
 
@@ -478,7 +478,7 @@ test('mongostamp', [true(Got == Expected)]) :-
         xxx_not_impl,0,0,0, % Length of top doc.
         0x11, % Tag.
             104,101,108,108,111, 0, % Ename.
-            0,0,0,0, 0,0,0,0, % Int64 mongostamp data. XXX Better ex. data.
+            0,0,0,0, 0,0,0,0, % Int64 mongostamp data.
         0 % End of top doc.
     ],
     Expected =

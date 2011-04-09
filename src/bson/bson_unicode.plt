@@ -25,7 +25,6 @@ test('naked codes to bytes', [true(Got == Expected)]) :-
     Expected = [0xc3,0xa4],
     bson_unicode:utf8_bytes(Utf8, Got).
 
-% xxx
 test('atom structure to bytes', [true(Got == Expected)]) :-
     Utf8 = atom('ä'),
     Expected = [0xc3,0xa4],

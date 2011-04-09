@@ -10,10 +10,9 @@
 
 :- include(misc(common)).
 
-%%  bson_to_term(+Bson:list, -Term) is semidet.
+%%  bson_to_term(+Bson:list(byte), ?Term:list(pair)) is semidet.
 %
-%   True if Term is the BSON document represented by the list
-%   of bytes (0..255) in Bson.
+%   True if Bson is the BSON byte-encoding of Term.
 
 bson_to_term(Bson, Term) :-
     phrase(document(Term), Bson),

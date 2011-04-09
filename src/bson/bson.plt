@@ -10,9 +10,9 @@ test('nonvar, nonvar') :-
     Bson =
     [
         16,0,0,0, % Length of top doc.
-        0x10, % Int32 tag
-            104,101,108,108,111, 0, % Ename "hello\0".
-            0,1,0,0, % Int32 data, 256.
+        0x10, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0,1,0,0, % Int32 data.
         0 % End of top doc.
     ],
     bson:term_bson(Term, Bson).
@@ -25,9 +25,9 @@ test('nonvar, var', [true(Got == Expected)]) :-
     Expected =
     [
         16,0,0,0, % Length of top doc.
-        0x10, % Int32 tag
-            104,101,108,108,111, 0, % Ename "hello\0".
-            0,1,0,0, % Int32 data, 256.
+        0x10, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0,1,0,0, % Int32 data.
         0 % End of top doc.
     ],
     bson:term_bson(Term, Got).
@@ -39,10 +39,10 @@ test('var, nonvar', [true(Got == Expected)]) :-
     ],
     Bson =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
-        0x10, % Int32 tag
-            104,101,108,108,111, 0, % Ename "hello\0".
-            0,1,0,0, % Int32 data, 256.
+        16,0,0,0, % Length of top doc.
+        0x10, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0,1,0,0, % Int32 data.
         0 % End of top doc.
     ],
     bson:term_bson(Got, Bson).

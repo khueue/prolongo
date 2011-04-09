@@ -74,14 +74,16 @@ stream_to_bytes(ReadStream, Bytes) :-
     inbuilt:set_stream(ReadStream, encoding(octet)),
     readutil:read_stream_to_codes(ReadStream, Bytes).
 
-%%  bytes_to_utf8
+%%  bytes_to_utf8(+Bytes, ?AtomOrCodes) is semidet.
 %
-%   XXX
-
+%   True if AtomOrCodes is the structure atom(Atom) where Atom is the
+%   UTF-8 atom represented by Bytes, or if AtomOrCodes is the structure
+%   codes(Codes) where Codes is the list of UTF-8 code points
+%   represented by Bytes.
+%
 %   A bit of a hack, but in order to interpret raw bytes as UTF-8
 %   we use a memory file as a temporary buffer, fill it with the
 %   bytes and then read them back, treating them as UTF-8.
-%   See: http://www.swi-prolog.org/pldoc/doc_for?object=memory_file_to_atom/3
 
 bytes_to_utf8(Bytes, AtomOrCodes) :-
     inbuilt:atom_chars(RawAtom, Bytes),
