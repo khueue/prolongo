@@ -8,16 +8,19 @@
     ]).
 
 % <module> Low-level bytes-to-number conversions.
-%
-% Some predicates are implemented in C.
 
 :- use_foreign_library(foreign(bson_bits)).
 
 :- include(misc(common)).
 
-%%  float_bytes XXX
+%%  float_bytes(+Float, ?Bytes) is semidet.
+%%  float_bytes(?Float, +Bytes) is semidet.
 %
-%   XXX
+%   True if Float is the floating point number represented by
+%   the consecutive bytes in Bytes interpreted as a 64-bit
+%   IEEE 754 double.
+%
+%   Uses C library for actual conversions.
 
 float_bytes(Float, Bytes) :-
     inbuilt:nonvar(Bytes),
@@ -33,17 +36,11 @@ float_bytes(Float, Bytes) :-
 %%  integer_bytes(+Integer, +NumBytes, +Endian, ?Bytes) is semidet.
 %%  integer_bytes(?Integer, +NumBytes, +Endian, +Bytes) is semidet.
 %
-%   Used to convert back-and-forth between 32/64-bit signed
-%   integers and their byte representations.
-%   May also be used to convert large (>8 bytes) NON-negative
-%   integers to bytes, b XXXXXXXXXXXXXXXXXXXXXXXX
-%   True if Bytes is the byte representation of Integer in
-%   the given number of bytes and endianness. Endian must be either
-%   little or big. If Integer is bound and negative, NumBytes must
-%   be either 4 or 8. Integer must fit in NumBytes bytes.
+%   True if Integer is the signed integer represented by the bytes
+%   in Bytes, given NumBytes 4 or 8 and Endian little or big.
+%   Results are undefined if Integer cannot fit in NumBytes bytes.
 %
-%   Results are undefined if Integer cannot fit in NumBytes bytes,
-%   or if Integer is negative when NumBytes is other than 4 or 8.
+%   Uses C library for actual conversions.
 
 integer_bytes(Integer, NumBytes, Endian, Bytes) :-
     inbuilt:nonvar(Integer),
@@ -74,9 +71,12 @@ bytes_to_integer(big, Bytes, Integer) :- !,
     lists:reverse(Bytes, BytesLittle),
     bytes_to_integer(little, BytesLittle, Integer).
 
-%%  unsigned_bytes
+%%  unsigned_bytes(+Unsigned, +NumBytes, +Endian, ?Bytes) is semidet.
+%%  unsigned_bytes(?Unsigned, +NumBytes, +Endian, +Bytes) is semidet.
 %
-%   XXX
+%   True if Unsigned is the unsigned (possibly unbounded) integer
+%   represented by the bytes in Bytes, given NumBytes > 0 and
+%   Endian little or big.
 
 unsigned_bytes(Unsigned, NumBytes, Endian, Bytes) :-
     inbuilt:nonvar(Unsigned),
