@@ -58,29 +58,29 @@ integer_bytes(Integer, _NumBytes, Endian, Bytes) :-
 %
 %   XXX
 
-integer_to_bytes(Integer, N, big, Bytes) :- !,
-    integer_to_bytes(Integer, N, little, BytesLittle),
-    lists:reverse(BytesLittle, Bytes).
-
 integer_to_bytes(Integer, 4, little, [B0,B1,B2,B3]) :- !,
     integer_to_bytes(Integer, B0, B1, B2, B3).
 
 integer_to_bytes(Integer, 8, little, [B0,B1,B2,B3,B4,B5,B6,B7]) :- !,
     integer_to_bytes(Integer, B0, B1, B2, B3, B4, B5, B6, B7).
 
+integer_to_bytes(Integer, N, big, Bytes) :- !,
+    integer_to_bytes(Integer, N, little, BytesLittle),
+    lists:reverse(BytesLittle, Bytes).
+
 %%  bytes_to_integer
 %
 %   XXX
-
-bytes_to_integer(big, Bytes, Integer) :- !,
-    lists:reverse(Bytes, BytesLittle),
-    bytes_to_integer(little, BytesLittle, Integer).
 
 bytes_to_integer(little, [B0,B1,B2,B3], Integer) :- !,
     bytes_to_integer(B0, B1, B2, B3, Integer).
 
 bytes_to_integer(little, [B0,B1,B2,B3,B4,B5,B6,B7], Integer) :- !,
     bytes_to_integer(B0, B1, B2, B3, B4, B5, B6, B7, Integer).
+
+bytes_to_integer(big, Bytes, Integer) :- !,
+    lists:reverse(Bytes, BytesLittle),
+    bytes_to_integer(little, BytesLittle, Integer).
 
 %%  unsigned_bytes
 %
@@ -99,12 +99,12 @@ unsigned_bytes(Unsigned, _NumBytes, Endian, Bytes) :-
 %
 %   XXX
 
+unsigned_to_bytes(Unsigned, N, little, Bytes) :- !,
+    unsigned_to_bytes_aux(Unsigned, 0, N, Bytes).
+
 unsigned_to_bytes(Unsigned, N, big, Bytes) :- !,
     unsigned_to_bytes(Unsigned, N, little, BytesLittle),
     lists:reverse(BytesLittle, Bytes).
-
-unsigned_to_bytes(Unsigned, N, little, Bytes) :-
-    unsigned_to_bytes_aux(Unsigned, 0, N, Bytes).
 
 unsigned_to_bytes_aux(_Unsigned, N, N, []) :- !.
 unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
@@ -116,12 +116,12 @@ unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
 %
 %   XXX
 
+bytes_to_unsigned(little, Bytes, Unsigned) :- !,
+    bytes_to_unsigned_aux(Bytes, 0, 0, Unsigned).
+
 bytes_to_unsigned(big, Bytes, Unsigned) :- !,
     lists:reverse(Bytes, BytesLittle),
     bytes_to_unsigned(little, BytesLittle, Unsigned).
-
-bytes_to_unsigned(little, Bytes, Unsigned) :- !,
-    bytes_to_unsigned_aux(Bytes, 0, 0, Unsigned).
 
 bytes_to_unsigned_aux([], _N, Unsigned, Unsigned).
 bytes_to_unsigned_aux([Byte|Bytes], N, Unsigned0, Unsigned) :-
