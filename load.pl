@@ -44,7 +44,7 @@ cov :-
 doc :-
     load_all_modules,
     use_module('doc/doc_files'),
-    doc_save('src/', [recursive(true),doc_root('doc/')]).
+    pldoc_files:doc_save('src/', [recursive(true),doc_root('doc/')]).
 
 % Unused.
 doc_latex :-

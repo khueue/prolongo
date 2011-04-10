@@ -7,7 +7,6 @@
 :- include(misc(common)).
 
 /*
-
 % XXX PlDoc complains about this. Look into this.
 
 %%  utf8_bytes(+Utf8,        +Bytes:list) is semidet.
@@ -16,7 +15,52 @@
 %%  utf8_bytes(?codes(Utf8), +Bytes:list) is semidet.
 %
 %   XXX
+*/
 
+/*
+:- use_module(library(utf8), []).
+
+% Investigate this: using the library predicate utf8:utf8_codes/2
+% seems to be faster when the length is < 30 bytes, give or take
+% (I guess the overhead of memory files etc. is too high when the
+% string is so short anyway).
+% It might be interesting to choose this predicate if the string
+% is short enough. This might be worthwhile, since most keys and
+% probably many text values are shorter than 30 bytes.
+
+utf8_bytes(atom(Utf8), Bytes) :-
+    inbuilt:atom(Utf8),
+    !,
+    atom_codes(Utf8, Codes),
+    phrase(utf8:utf8_codes(Codes), Bytes).
+utf8_bytes(codes(Utf8), Bytes) :-
+    !,
+    phrase(utf8:utf8_codes(Utf8), Bytes).
+utf8_bytes(Utf8, Bytes) :-
+    inbuilt:atom(Utf8),
+    seems_like_input_utf8(Utf8),
+    !,
+    atom_codes(Utf8, Codes),
+    phrase(utf8:utf8_codes(Codes), Bytes).
+utf8_bytes(Utf8, Bytes) :-
+    seems_like_input_utf8(Utf8),
+    !,
+    phrase(utf8:utf8_codes(Utf8), Bytes).
+
+utf8_bytes(atom(Utf8), Bytes) :-
+    inbuilt:nonvar(Bytes),
+    !,
+    phrase(utf8:utf8_codes(Codes), Bytes),
+    atom_codes(Utf8, Codes).
+utf8_bytes(codes(Codes), Bytes) :-
+    inbuilt:nonvar(Bytes),
+    !,
+    phrase(utf8:utf8_codes(Codes), Bytes).
+utf8_bytes(Utf8, Bytes) :-
+    inbuilt:nonvar(Bytes),
+    !,
+    phrase(utf8:utf8_codes(Codes), Bytes),
+    atom_codes(Utf8, Codes).
 */
 
 utf8_bytes(Utf8, Bytes) :-
