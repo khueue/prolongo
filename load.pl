@@ -43,19 +43,10 @@ cov :-
 
 doc :-
     load_all_modules,
-    use_module(pldoc(doc_html)),
-    _Modules =
-    [
-        bson(bson),
-        bson(bson_bits),
-        bson(bson_decoder),
-        bson(bson_encoder),
-        bson(bson_unicode)
-    ],
-    tell('doc/html.html'),
-        doc_for_file(bson(bson), []),
-    told.
+    use_module('doc/doc_files'),
+    doc_save('src/', [recursive(true),doc_root('doc/')]).
 
+% Unused.
 doc_latex :-
     load_all_modules,
     use_module(library(doc_latex)),
@@ -67,7 +58,7 @@ doc_latex :-
         bson(bson_encoder),
         bson(bson_unicode)
     ],
-    doc_latex:doc_latex(Modules, 'doc/prolongo.tex', [public_only(false)]).
+    doc_latex(Modules, 'doc/prolongo.tex', []).
 
 load_all_modules :-
     use_module(library(pldoc), []), % Load first to process all doc comments.

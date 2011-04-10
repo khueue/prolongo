@@ -1,0 +1,42 @@
+Content-type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>bson_bits.pl</title>
+
+<link rel="stylesheet" type="text/css" href="/res/pldoc.css">
+<script type="text/javascript" src="/res/pldoc.js">
+</script>
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>bson_bits.pl</h1>
+
+<dl>
+<dt class="pubdef"><span style="float:right"></span><a name="float_bytes/2"><b class="pred">float_bytes</b><var class="arglist">(+Float, ?Bytes)</var></a> is <b class="det">semidet</b>
+<dt class="pubdef"><b class="pred">float_bytes</b><var class="arglist">(?Float, +Bytes)</var> is <b class="det">semidet</b><dd class="defbody">True if <var>Float</var> is the floating point number represented by
+the consecutive bytes in <var>Bytes</var> interpreted as a 64-bit
+IEEE 754 double.
+
+<p>
+Uses C library for actual conversions.
+<dt class="pubdef"><span style="float:right"></span><a name="integer_bytes/4"><b class="pred">integer_bytes</b><var class="arglist">(+Integer, +NumBytes, +Endian, ?Bytes)</var></a> is <b class="det">semidet</b>
+<dt class="pubdef"><b class="pred">integer_bytes</b><var class="arglist">(?Integer, +NumBytes, +Endian, +Bytes)</var> is <b class="det">semidet</b><dd class="defbody">True if <var>Integer</var> is the signed integer represented by the bytes
+in <var>Bytes</var>, given <var>NumBytes</var> 4 or 8 and <var>Endian</var> little or big.
+Results are undefined if <var>Integer</var> cannot fit in <var>NumBytes</var> bytes.
+
+<p>
+Uses C library for actual conversions.
+<dt class="pubdef"><span style="float:right"></span><a name="unsigned_bytes/4"><b class="pred">unsigned_bytes</b><var class="arglist">(+Unsigned, +NumBytes, +Endian, ?Bytes)</var></a> is <b class="det">semidet</b>
+<dt class="pubdef"><b class="pred">unsigned_bytes</b><var class="arglist">(?Unsigned, +NumBytes, +Endian, +Bytes)</var> is <b class="det">semidet</b><dd class="defbody">True if <var>Unsigned</var> is the unsigned (possibly unbounded) integer
+represented by the bytes in <var>Bytes</var>, given <var>NumBytes</var> &gt; 0 and
+<var>Endian</var> little or big.
+<dt class="pubdef"><span style="float:right"></span><a name="fits_in_32_bits/1"><b class="pred">fits_in_32_bits</b><var class="arglist">(+Integer)</var></a> is <b class="det">semidet</b><dd class="defbody">True if <var>Integer</var> can be stored as a signed 32-bit int.
+<dt class="pubdef"><span style="float:right"></span><a name="fits_in_64_bits/1"><b class="pred">fits_in_64_bits</b><var class="arglist">(+Integer)</var></a> is <b class="det">semidet</b><dd class="defbody">True if <var>Integer</var> can be stored as a signed 64-bit int.
+</dl>
+
+</body>
+</html>
