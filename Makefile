@@ -31,7 +31,7 @@ stay: compile
 doc: compile
 	@ echo "--- Generate docs ..."
 	$(PROLOG) -s load -g doc -t halt
-	latex -output-directory=doc -output-format=pdf doc/*.tex
+	#latex -output-directory=doc -output-format=pdf doc/*.tex
 
 .PHONY: compile
 compile: setup lib/bson_bits

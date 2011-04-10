@@ -43,6 +43,21 @@ cov :-
 
 doc :-
     load_all_modules,
+    use_module(pldoc(doc_html)),
+    _Modules =
+    [
+        bson(bson),
+        bson(bson_bits),
+        bson(bson_decoder),
+        bson(bson_encoder),
+        bson(bson_unicode)
+    ],
+    tell('doc/html.html'),
+        doc_for_file(bson(bson), []),
+    told.
+
+doc_latex :-
+    load_all_modules,
     use_module(library(doc_latex)),
     Modules =
     [

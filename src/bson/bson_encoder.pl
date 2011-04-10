@@ -13,6 +13,8 @@
 %%  term_to_bson(+Term:list(pair), ?Bson:list(byte)) is semidet.
 %
 %   True if Bson is the BSON byte-encoding of Term.
+%
+%   @throws bson_error(Reason)
 
 term_to_bson(Term, Bson) :-
     phrase(document(Term, _Len), Bson),

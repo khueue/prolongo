@@ -32,6 +32,8 @@ bson_version([1,0]).
 %%  term_bson(?Term:list(pair), +Bson:list(byte)) is semidet.
 %
 %   True if Bson is the BSON byte-encoding of Term.
+%
+%   @throws bson_error(Reason)
 
 term_bson(Term, Bson) :-
     nonvar(Term),
