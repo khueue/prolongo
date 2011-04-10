@@ -14,9 +14,6 @@ and run the test suite.
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
-    * foreign(memfile) (should be autoloaded)
-    * foreign(apply_macros) (loaded by load.pl (or?), can be safely removed)
-    * library(readutil) (uses foreign library if it exists)
  * ANSI C compiler (modify the Makefile if other than GCC)
  * _Not yet._ MongoDB (tested on Mac OS X using MongoDB 1.8.1)
 
