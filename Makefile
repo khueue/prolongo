@@ -17,20 +17,20 @@ test: compile
 	@ echo "--- Run tests and exit ..."
 	$(PROLOG) -s load -g test -t halt
 
-.PHONY: test_cov
-test_cov: compile
+.PHONY: cov
+cov: compile
 	@ echo "--- Run tests, print test coverage and exit ..."
 	$(PROLOG) -s load -g cov -t halt
 
 .PHONY: stay
 stay: compile
 	@ echo "--- Run tests ..."
-	$(PROLOG) -s load -g test
+	$(PROLOG) -s load -g load_all_modules
 
 .PHONY: doc
 doc: compile
 	@ echo "--- Generate docs ..."
-	$(PROLOG) -s load -g gen_doc -t halt
+	$(PROLOG) -s load -g doc -t halt
 	latex -output-directory=doc -output-format=pdf doc/*.tex
 
 .PHONY: compile

@@ -41,7 +41,7 @@ cov :-
     load_all_tests,
     run_test_suite_with_coverage.
 
-gen_doc :-
+doc :-
     load_all_modules,
     use_module(library(doc_latex)),
     Modules =
