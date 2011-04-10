@@ -14,28 +14,31 @@ trim:
 
 .PHONY: test
 test: compile
-	@ echo "--- Running tests and exiting ..."
+	@ echo "--- Run tests and exit ..."
 	$(PROLOG) -s load -g test -t halt
+
+.PHONY: test_cov
+test_cov: compile
+	@ echo "--- Run tests, print test coverage and exit ..."
+	$(PROLOG) -s load -g cov -t halt
 
 .PHONY: stay
 stay: compile
-	@ echo "--- Running tests ..."
+	@ echo "--- Run tests ..."
 	$(PROLOG) -s load -g test
 
 .PHONY: doc
 doc: compile
-	@ echo "--- Generating docs ..."
+	@ echo "--- Generate docs ..."
 	$(PROLOG) -s load -g gen_doc -t halt
-	latex -output-directory=doc -output-format=pdf doc/bson
-# latex will ask for:
-# /usr/local/Cellar/swi-prolog/5.10.2/lib/swipl-5.10.2/library/pldoc/pldoc.sty
+	latex -output-directory=doc -output-format=pdf doc/*.tex
 
 .PHONY: compile
 compile: setup lib/bson_bits
 
 # Generic name (not sure what file extensions different systems use).
 lib/bson_bits: ext/bson_bits.c Makefile
-	@ echo "--- Compiling foreign library 'bson_bits' ..."
+	@ echo "--- Compile foreign library 'bson_bits' ..."
 	rm -f $@
 	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
 	mv $@.dylib $@
@@ -49,3 +52,4 @@ lib:
 .PHONY: clean
 clean:
 	rm -rf lib/*
+	rm -rf doc/*.aux doc/*.idx doc/*.log doc/*.out

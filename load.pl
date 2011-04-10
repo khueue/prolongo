@@ -36,19 +36,35 @@ test :-
     load_all_tests,
     run_test_suite.
 
+cov :-
+    load_all_modules,
+    load_all_tests,
+    run_test_suite_with_coverage.
+
 gen_doc :-
     load_all_modules,
     use_module(library(doc_latex)),
-    doc_latex(bson(bson), 'doc/bson.tex', []).
+    Modules =
+    [
+        bson(bson),
+        bson(bson_bits),
+        bson(bson_decoder),
+        bson(bson_encoder),
+        bson(bson_unicode)
+    ],
+    doc_latex:doc_latex(Modules, 'doc/prolongo.tex', [public_only(false)]).
 
 load_all_modules :-
-    use_module(library(pldoc)), % Load first.
+    use_module(library(pldoc), []), % Load first to process all doc comments.
     use_module(bson(bson), []).
 
 load_all_tests :-
     plunit:load_test_files([]).
 
 run_test_suite :-
-    inbuilt:format('~n% Running tests ...~n'),
+    inbuilt:format('~n% Run tests ...~n'),
     plunit:run_tests.
-    % show_coverage(plunit:run_tests).
+
+run_test_suite_with_coverage :-
+    inbuilt:format('~n% Run tests ...~n'),
+    show_coverage(plunit:run_tests).
