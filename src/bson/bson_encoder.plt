@@ -286,6 +286,26 @@ test('object id', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('db pointer', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: db_pointer('a', '47cc67093475061e3d95369d')
+    ],
+    Expected =
+    [
+        30,0,0,0, % Length of top doc.
+        0x0C, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            2,0,0,0, % String's byte length, incl. nul.
+            97, 0, % String data.
+            0x47,0xcc,0x67,0x09, % ObjectID, time.
+            0x34,0x75,0x06,      % ObjectID, machine.
+            0x1e,0x3d,           % ObjectID, pid.
+            0x95,0x36,0x9d,      % ObjectID, inc.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('js', [true(Got == Expected)]) :-
     Term =
     [

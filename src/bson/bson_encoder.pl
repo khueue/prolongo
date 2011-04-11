@@ -70,6 +70,11 @@ value_compound(object_id(ObjectId), 0x07, 12) -->
     Bytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
+value_compound(db_pointer(Text,ObjectId), 0x0C, Len) -->
+    string(Text, StrLen),
+    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes) },
+    ObjectIdBytes,
+    { Len is StrLen + 12 }.
 value_compound(js(JsText), 0x0D, Len) -->
     string(JsText, Len).
 value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
