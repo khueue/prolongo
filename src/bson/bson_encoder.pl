@@ -146,13 +146,13 @@ value_atom(Atom, 0x02, Len) -->
     string(Atom, Len).
 
 c_string(Utf8, Len) -->
-    { bson_unicode:utf8_bytes(Utf8, Bytes, NumBytes) },
+    { bson_unicode:utf8_bytes_size(Utf8, Bytes, NumBytes) },
     { Len is NumBytes + 1 },
     Bytes,
     [0].
 
 string(Utf8, Len) -->
-    { bson_unicode:utf8_bytes(Utf8, Bytes, NumBytes) },
+    { bson_unicode:utf8_bytes_size(Utf8, Bytes, NumBytes) },
     { NumBytesWithNul is NumBytes + 1 },
     { Len is 4 + NumBytesWithNul },
     int32(NumBytesWithNul),

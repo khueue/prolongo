@@ -114,7 +114,7 @@ element(Name, Value) -->
     value_max(Value).
 
 key(Name) -->
-    c_string(atom(Name)).
+    c_string(Name).
 
 value_array(Values) -->
     document(Document),
@@ -124,15 +124,15 @@ value_document(Document) -->
     document(Document).
 
 value_string(Text) -->
-    string(atom(Text)).
+    string(Text).
 
 value_regex(regex(Pattern,Options)) -->
-    c_string(atom(Pattern)),
-    c_string(atom(Options)).
+    c_string(Pattern),
+    c_string(Options).
 
 value_db_pointer(db_pointer(Text,ObjectId)) -->
-    string(atom(Text)),
-    object_id(atom(ObjectId)).
+    string(Text),
+    object_id(ObjectId).
 
 value_utc(utc(Timestamp)) -->
     int64(Timestamp).
@@ -158,18 +158,18 @@ value_binary(binary(Subtype,Bytes)) -->
     bytes_n(Bytes, Length).
 
 value_js(js(JsCode)) -->
-    string(atom(JsCode)).
+    string(JsCode).
 
 value_js_with_scope(js(JsCode,MappingsDoc)) -->
     int32(_LengthEntireJsWithScope), % XXX Unused for now.
-    string(atom(JsCode)),
+    string(JsCode),
     document(MappingsDoc).
 
 value_symbol(symbol(Symbol)) -->
-    string(atom(Symbol)).
+    string(Symbol).
 
 value_object_id(object_id(ObjectId)) -->
-    object_id(atom(ObjectId)).
+    object_id(ObjectId).
 
 value_double(Double) -->
     double(Double).
@@ -247,5 +247,5 @@ double(Double) -->
     bytes_n(Bytes, 8),
     { bson_bits:float_bytes(Double, Bytes) }.
 
-number_to_hex(Number, AtomOrCodes) :-
-    inbuilt:format(AtomOrCodes, '~16r', [Number]).
+number_to_hex(Number, Atom) :-
+    inbuilt:format(atom(Atom), '~16r', [Number]).

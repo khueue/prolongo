@@ -2,6 +2,11 @@
 
 :- begin_tests('bson_bits:float_bytes/2').
 
+test('float, bad zero', [true(Got \== Expected)]) :-
+    Expected = 0, % Not a float.
+    bson_bits:float_bytes(Expected, Bytes),
+    bson_bits:float_bytes(Got,      Bytes).
+
 test('float, zero', [true(Got == Expected)]) :-
     Expected = 0.0,
     bson_bits:float_bytes(Expected, Bytes),
@@ -18,12 +23,7 @@ test('float, 5.05', [true(Got == Expected)]) :-
     bson_bits:float_bytes(Got,      Bytes).
 
 test('float, pi', [true(Got == Expected)]) :-
-    Expected is pi,
-    bson_bits:float_bytes(Expected, Bytes),
-    bson_bits:float_bytes(Got,      Bytes).
-
-test('float, e', [true(Got == Expected)]) :-
-    Expected is e,
+    Expected is 3.14159,
     bson_bits:float_bytes(Expected, Bytes),
     bson_bits:float_bytes(Got,      Bytes).
 
@@ -45,6 +45,10 @@ test('32-bit big-endian, 1', [true(Got == Expected)]) :-
     Expected = 1,
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
+
+test('32-bit big-endian, verify endian', [true(Got == Expected)]) :-
+    Expected = [0,0,0,1],
+    bson_bits:integer_bytes(1, 4, big, Got).
 
 test('32-bit big-endian, min', [true(Got == Expected)]) :-
     Expected = -2147483648,
@@ -83,6 +87,10 @@ test('32-bit little-endian, 1', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
+test('32-bit little-endian, verify endian', [true(Got == Expected)]) :-
+    Expected = [1,0,0,0],
+    bson_bits:integer_bytes(1, 4, little, Got).
+
 test('32-bit little-endian, min', [true(Got == Expected)]) :-
     Expected = -2147483648,
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
@@ -120,6 +128,10 @@ test('64-bit big-endian, 1', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
+test('64-bit big-endian, verify endian', [true(Got == Expected)]) :-
+    Expected = [0,0,0,0,0,0,0,1],
+    bson_bits:integer_bytes(1, 8, big, Got).
+
 test('64-bit big-endian, min', [true(Got == Expected)]) :-
     Expected = -9223372036854775808,
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
@@ -156,6 +168,10 @@ test('64-bit little-endian, 1', [true(Got == Expected)]) :-
     Expected = 1,
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
+
+test('64-bit little-endian, verify endian', [true(Got == Expected)]) :-
+    Expected = [1,0,0,0,0,0,0,0],
+    bson_bits:integer_bytes(1, 8, little, Got).
 
 test('64-bit little-endian, min', [true(Got == Expected)]) :-
     Expected = -9223372036854775808,

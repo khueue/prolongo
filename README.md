@@ -3,7 +3,6 @@
 ## Todo
 
  * Finish encoder (research ObjectID some more).
- * Properly document and decide on UTF-8 predicates.
  * Decide on (and implement) amount of validation in encode/decode.
 
 ## Usage

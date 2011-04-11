@@ -127,7 +127,7 @@ April 1.
 \end_layout
 
 \begin_layout Itemize
-April 2 (weekend).
+April 2.
  Looked into the Prolog module system again and started adding prefixes
  (
 \begin_inset Quotes eld
@@ -165,7 +165,7 @@ builtin
 \end_layout
 
 \begin_layout Itemize
-April 3 (weekend).
+April 3.
  All use_module directives now use an empty list in order to ensure that
  the module is loaded, but nothing is imported.
  This forces me to add the appropriate module prefixes to calls.
@@ -282,6 +282,23 @@ unsigned_bytes(Unsigned, NumBytes, Endian, Bytes)
  integers and unsigned_bytes/4 handles all unbounded unsigneds.
  Simple.
  Also documented the predicates.
+\end_layout
+
+\begin_layout Itemize
+April 10.
+ Made all Unicode handling atom-only.
+ The code become much less confusing, and using code lists for text would
+ be bad anyway because it can be ambiguous (is [97,98,99] a list of numbers
+ or 'abc'?).
+ Yet another implementation of utf_to_bytes/2.
+ Uses less weird predicates (no open_chars_stream any more) and seems a
+ tiny bit faster.
+ The code is a bit longer though (but arguably more straight-forward).
+\end_layout
+
+\begin_layout Itemize
+April 11.
+ 
 \end_layout
 
 \begin_layout Section

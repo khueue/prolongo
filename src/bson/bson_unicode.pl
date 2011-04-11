@@ -1,60 +1,33 @@
 :- module(bson_unicode,
     [
         utf8_bytes/2,
-        utf8_bytes/3
+        utf8_bytes_size/3
     ]).
 
-:- include(misc(common)).
-
-/*
-% XXX PlDoc complains about this. Look into this.
-
-%%  utf8_bytes(+Utf8,        +Bytes:list) is semidet.
-%%  utf8_bytes(+Utf8,        ?Bytes:list) is semidet.
-%%  utf8_bytes(?atom(Utf8),  +Bytes:list) is semidet.
-%%  utf8_bytes(?codes(Utf8), +Bytes:list) is semidet.
+% <module> Unicode conversions between atom and bytes.
 %
-%   XXX
-*/
+% A bit of a hack, but in order to interpret raw bytes as UTF-8
+% we use a memory file as a temporary buffer, fill it with the
+% bytes and then read them back, treating them as UTF-8.
+
+:- include(misc(common)).
 
 /*
 :- use_module(library(utf8), []).
 
 % Investigate this: using the library predicate utf8:utf8_codes/2
-% seems to be faster when the length is < 30 bytes, give or take
+% seems to be faster when the length is approx < 30 bytes.
 % (I guess the overhead of memory files etc. is too high when the
-% string is so short anyway).
+% string is so short anyway.)
 % It might be interesting to choose this predicate if the string
-% is short enough. This might be worthwhile, since most keys and
+% is short enough. This might be worthwhile (if we already know
+% the length beforehand!), since most keys and
 % probably many text values are shorter than 30 bytes.
 
-utf8_bytes(atom(Utf8), Bytes) :-
-    inbuilt:atom(Utf8),
+utf8_bytes(Utf8, Bytes) :-
+    inbuilt:nonvar(Utf8),
     !,
     atom_codes(Utf8, Codes),
-    phrase(utf8:utf8_codes(Codes), Bytes).
-utf8_bytes(codes(Utf8), Bytes) :-
-    !,
-    phrase(utf8:utf8_codes(Utf8), Bytes).
-utf8_bytes(Utf8, Bytes) :-
-    inbuilt:atom(Utf8),
-    seems_like_input_utf8(Utf8),
-    !,
-    atom_codes(Utf8, Codes),
-    phrase(utf8:utf8_codes(Codes), Bytes).
-utf8_bytes(Utf8, Bytes) :-
-    seems_like_input_utf8(Utf8),
-    !,
-    phrase(utf8:utf8_codes(Utf8), Bytes).
-
-utf8_bytes(atom(Utf8), Bytes) :-
-    inbuilt:nonvar(Bytes),
-    !,
-    phrase(utf8:utf8_codes(Codes), Bytes),
-    atom_codes(Utf8, Codes).
-utf8_bytes(codes(Codes), Bytes) :-
-    inbuilt:nonvar(Bytes),
-    !,
     phrase(utf8:utf8_codes(Codes), Bytes).
 utf8_bytes(Utf8, Bytes) :-
     inbuilt:nonvar(Bytes),
@@ -63,58 +36,59 @@ utf8_bytes(Utf8, Bytes) :-
     atom_codes(Utf8, Codes).
 */
 
+%%  utf8_bytes(+Utf8, ?Bytes) is semidet.
+%%  utf8_bytes(?Utf8, +Bytes) is semidet.
+%
+%   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
+
 utf8_bytes(Utf8, Bytes) :-
     inbuilt:nonvar(Utf8),
-    seems_like_input_utf8(Utf8),
     !,
     utf8_to_bytes(Utf8, Bytes).
 utf8_bytes(Utf8, Bytes) :-
     inbuilt:nonvar(Bytes),
-    seems_like_input_bytes(Bytes),
     !,
     bytes_to_utf8(Bytes, Utf8).
 
-seems_like_input_utf8(atom(Atom))   :- inbuilt:atom(Atom).
-seems_like_input_utf8(codes(Codes)) :- seems_like_list(Codes).
-seems_like_input_utf8(Atom)         :- inbuilt:atom(Atom).
-seems_like_input_utf8(Codes)        :- seems_like_list(Codes).
-
-seems_like_input_bytes(Bytes) :-
-    seems_like_list(Bytes).
-
-seems_like_list([]).
-seems_like_list([_|_]).
-
-%%  utf8_bytes
+%%  utf8_bytes_size(+Utf8, ?Bytes, ?Size) is semidet.
 %
-%   XXX
+%   True if Utf8 is the atom represented by the UTF-8 encoded Bytes,
+%   and Size is the length of Bytes (not the number of code points).
 
-utf8_bytes(Utf8, Bytes, NumBytes) :-
+utf8_bytes_size(Utf8, Bytes, NumBytes) :-
     utf8_bytes(Utf8, Bytes),
     lists:length(Bytes, NumBytes).
 
-%%  utf8_to_bytes
+%%  utf8_to_bytes(+Utf8, ?Bytes) is semidet.
 %
-%   XXX
+%   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
-utf8_to_bytes(atom(Atom), Bytes) :-
-    !,
-    utf8_atom_to_bytes(Atom, Bytes).
-utf8_to_bytes(codes(Codes), Bytes) :-
-    !,
-    utf8_codes_to_bytes(Codes, Bytes).
-utf8_to_bytes(Atom, Bytes) :-
-    inbuilt:atom(Atom),
-    !,
-    utf8_atom_to_bytes(Atom, Bytes).
-utf8_to_bytes(Codes, Bytes) :-
-    utf8_codes_to_bytes(Codes, Bytes).
+utf8_to_bytes(Utf8, Bytes) :-
+    setup_call_cleanup(
+        memory_file:new_memory_file(MemFile),
+        utf8_to_memory_file_to_bytes(Utf8, MemFile, Bytes),
+        memory_file:free_memory_file(MemFile)).
 
-utf8_atom_to_bytes(Atom, Bytes) :-
-    inbuilt:atom_codes(Atom, Codes),
-    utf8_codes_to_bytes(Codes, Bytes).
+utf8_to_memory_file_to_bytes(Utf8, MemFile, Bytes) :-
+    utf8_to_memory_file(Utf8, MemFile),
+    memory_file_to_bytes(MemFile, Bytes).
 
-utf8_codes_to_bytes(Codes, Bytes) :-
+utf8_to_memory_file(Utf8, MemFile) :-
+    setup_call_cleanup(
+        memory_file:open_memory_file(MemFile, write, Write, [encoding(utf8)]),
+        inbuilt:format(Write, '~w', [Utf8]),
+        inbuilt:close(Write)).
+
+memory_file_to_bytes(MemFile, Bytes) :-
+    setup_call_cleanup(
+        memory_file:open_memory_file(MemFile, read, Read, [encoding(octet)]),
+        readutil:read_stream_to_codes(Read, Bytes),
+        inbuilt:close(Read)).
+
+/*
+% Previous version, seems a bit slower (probably due to atom_codes).
+utf8_to_bytes(Utf8, Bytes) :-
+    inbuilt:atom_codes(Utf8, Codes),
     setup_call_cleanup(
         charsio:open_chars_stream(Codes, ReadStream),
         stream_to_bytes(ReadStream, Bytes),
@@ -123,28 +97,41 @@ utf8_codes_to_bytes(Codes, Bytes) :-
 stream_to_bytes(ReadStream, Bytes) :-
     inbuilt:set_stream(ReadStream, encoding(octet)),
     readutil:read_stream_to_codes(ReadStream, Bytes).
+*/
 
-%%  bytes_to_utf8(+Bytes, ?AtomOrCodes) is semidet.
+%%  bytes_to_utf8(+Bytes:list, ?Utf8:atom) is semidet.
 %
-%   True if AtomOrCodes is the structure atom(Atom) where Atom is the
-%   UTF-8 atom represented by Bytes, or if AtomOrCodes is the structure
-%   codes(Codes) where Codes is the list of UTF-8 code points
-%   represented by Bytes.
-%
-%   A bit of a hack, but in order to interpret raw bytes as UTF-8
-%   we use a memory file as a temporary buffer, fill it with the
-%   bytes and then read them back, treating them as UTF-8.
+%   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
-bytes_to_utf8(Bytes, AtomOrCodes) :-
+bytes_to_utf8(Bytes, Utf8) :-
     inbuilt:atom_chars(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
-        memory_file_to_atom_or_codes(MemFile, AtomOrCodes, utf8),
+        memory_file:memory_file_to_atom(MemFile, Utf8, utf8),
         memory_file:free_memory_file(MemFile)).
 
-memory_file_to_atom_or_codes(MemFile, atom(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_atom(MemFile, Text, Encoding).
-memory_file_to_atom_or_codes(MemFile, codes(Text), Encoding) :-
-    !,
-    memory_file:memory_file_to_codes(MemFile, Text, Encoding).
+%%%%%%%%%%%%%%%%%%%%%%
+% Benchmarking:
+
+list_bytes(0, []) :- !.
+list_bytes(N, [0xc3,0xa4|List]) :-
+    N > 0,
+    N1 is N - 1,
+    list_bytes(N1, List).
+
+bmark :-
+    list_bytes(10000, Bytes),
+    bson_unicode:utf8_bytes(Utf8, Bytes),
+    benchmark(5000, bson_unicode:utf8_bytes(Utf8, _Bytes)).
+
+benchmark(N, Goal) :-
+    format('Benchmark ...~n'),
+    call(Goal), % Exercise it once first.
+    time(n_times_do(N, Goal)).
+
+n_times_do(N, Goal) :-
+    M is integer(N), % So that we can pass 10**6.
+    between(1, M, _),
+    call(Goal),
+    fail.
+n_times_do(_, _).

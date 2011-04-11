@@ -41,6 +41,10 @@ cov :-
     load_all_tests,
     run_test_suite_with_coverage.
 
+bench :-
+    load_all_modules,
+    bson_unicode:bmark.
+
 doc :-
     load_all_modules,
     use_module('doc/doc_files'),
