@@ -2,7 +2,7 @@
 
 ## Todo
 
- * Start thinking about how to write the report. 
+ * Start thinking about how to write the report.
  * (Decide on (and implement) amount of validation in encode/decode.)
 
 ## Usage
@@ -13,12 +13,13 @@ and run the test suite.
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
+    * Autoloading must be turned on.
  * ANSI C compiler (modify the Makefile if other than GCC)
  * _Not yet._ MongoDB (tested on Mac OS X using MongoDB 1.8.1)
 
 ## Thoughts
 
- * Caveat: Depends on library autoloading.
+ * Nothing.
 
 ## Links
 
