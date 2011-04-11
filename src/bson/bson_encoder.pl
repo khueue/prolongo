@@ -71,8 +71,8 @@ value_compound(binary(Subtype,Bytes), 0x05, Len) -->
     subtype(Subtype),
     Bytes,
     { Len is 4 + 1 + BytesLen }.
-value_compound(object_id(ObjectId), 0x07, 12) -->
-    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes) },
+value_compound(object_id(ObjectId), 0x07, Len) -->
+    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, Len) },
     ObjectIdBytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
@@ -82,9 +82,9 @@ value_compound(regex(Pattern,Options), 0x0B, Len) -->
     { Len is PatternLen + OptionsLen }.
 value_compound(db_pointer(Text,ObjectId), 0x0C, Len) -->
     string(Text, StrLen),
-    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes) },
+    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, ObjectIdLen) },
     ObjectIdBytes,
-    { Len is StrLen + 12 }.
+    { Len is StrLen + ObjectIdLen }.
 value_compound(js(JsText), 0x0D, Len) -->
     string(JsText, Len).
 value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
@@ -184,11 +184,8 @@ string(Utf8, Len) -->
 list_shaped([]).
 list_shaped([_|_]).
 
-object_id_atom_to_bytes(ObjectIdAtom, Bytes) :-
+object_id_atom_to_bytes(ObjectIdAtom, Bytes, Len) :-
+    Len = 12,
     inbuilt:atom_concat('0x', ObjectIdAtom, HexAtom),
     inbuilt:atom_number(HexAtom, Unsigned),
-    % XXX This is probably wrong.
-    % Machine and inc parts are big-endian. Look into this.
-    % But, on the other hand, maybe the proper byte-order is
-    % already established (elsewhere) when we get this far?
-    bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes).
+    bson_bits:unsigned_bytes(Unsigned, Len, big, Bytes).
