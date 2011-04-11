@@ -76,6 +76,10 @@ value_compound(object_id(ObjectId), 0x07, 12) -->
     ObjectIdBytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
+value_compound(regex(Pattern,Options), 0x0B, Len) -->
+    c_string(Pattern, PatternLen),
+    c_string(Options, OptionsLen),
+    { Len is PatternLen + OptionsLen }.
 value_compound(db_pointer(Text,ObjectId), 0x0C, Len) -->
     string(Text, StrLen),
     { object_id_atom_to_bytes(ObjectId, ObjectIdBytes) },

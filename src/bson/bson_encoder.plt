@@ -446,6 +446,22 @@ test('js with scope', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('regex', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello: regex('a','i')
+    ],
+    Expected =
+    [
+        16,0,0,0, % Length of top doc.
+        0x0B, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            97, 0,  % Regex pattern.
+            105, 0, % Regex options.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('utc datetime', [true(Got == Expected)]) :-
     Term =
     [
