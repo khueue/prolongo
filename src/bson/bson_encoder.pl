@@ -65,40 +65,10 @@ value(Value, Tag, Len) -->
 
 value_compound(@(Constant), Tag, Len) -->
     value_constant(Constant, Tag, Len).
-value_compound(binary(generic,Bytes), 0x05, Len) -->
+value_compound(binary(Subtype,Bytes), 0x05, Len) -->
     { lists:length(Bytes, BytesLen) },
     int32(BytesLen),
-    [0x00],
-    Bytes,
-    { Len is 4 + 1 + BytesLen }.
-value_compound(binary(function,Bytes), 0x05, Len) -->
-    { lists:length(Bytes, BytesLen) },
-    int32(BytesLen),
-    [0x01],
-    Bytes,
-    { Len is 4 + 1 + BytesLen }.
-value_compound(binary(old_generic,Bytes), 0x05, Len) -->
-    { lists:length(Bytes, BytesLen) },
-    int32(BytesLen),
-    [0x02],
-    Bytes,
-    { Len is 4 + 1 + BytesLen }.
-value_compound(binary(uuid,Bytes), 0x05, Len) -->
-    { lists:length(Bytes, BytesLen) },
-    int32(BytesLen),
-    [0x03],
-    Bytes,
-    { Len is 4 + 1 + BytesLen }.
-value_compound(binary(md5,Bytes), 0x05, Len) -->
-    { lists:length(Bytes, BytesLen) },
-    int32(BytesLen),
-    [0x05],
-    Bytes,
-    { Len is 4 + 1 + BytesLen }.
-value_compound(binary(user_defined,Bytes), 0x05, Len) -->
-    { lists:length(Bytes, BytesLen) },
-    int32(BytesLen),
-    [0x80],
+    subtype(Subtype),
     Bytes,
     { Len is 4 + 1 + BytesLen }.
 value_compound(object_id(ObjectId), 0x07, 12) -->
@@ -125,6 +95,13 @@ value_compound(symbol(Atom), 0x0E, Len) -->
     string(Atom, Len).
 value_compound(Compound, _Tag, _Len) -->
     { throw(bson_error(invalid(Compound))) }.
+
+subtype(generic)      --> !, [0x00].
+subtype(function)     --> !, [0x01].
+subtype(old_generic)  --> !, [0x02].
+subtype(uuid)         --> !, [0x03].
+subtype(md5)          --> !, [0x05].
+subtype(user_defined) --> !, [0x80].
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len),
