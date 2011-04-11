@@ -2,7 +2,6 @@
 
 ## Todo
 
- * Finish encoder (research ObjectID some more).
  * Decide on (and implement) amount of validation in encode/decode.
 
 ## Usage
