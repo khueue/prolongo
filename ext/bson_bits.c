@@ -28,7 +28,14 @@ set_int(term_t t, unsigned char byte)
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_float_to_bytes(
+ *      +Float,
+ *      ?Byte0, ?Byte1, ?Byte2, ?Byte3,
+ *      ?Byte4, ?Byte5, ?Byte6, ?Byte7) is semidet.
+ *
+ *  True if Float is the floating point number represented by the
+ *  consecutive bytes Byte0..Byte7 interpreted as a 64-bit
+ *  IEEE 754 double.
  */
 static foreign_t
 double_to_bytes8(
@@ -55,7 +62,14 @@ double_to_bytes8(
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_bytes_to_float(
+ *      +Byte0, +Byte1, +Byte2, +Byte3,
+ *      +Byte4, +Byte5, +Byte6, +Byte7,
+ *      ?Float) is semidet.
+ *
+ *  True if Float is the floating point number represented by the
+ *  consecutive bytes Byte0..Byte7 interpreted as a 64-bit
+ *  IEEE 754 double.
  */
 static foreign_t
 bytes8_to_double(
@@ -79,7 +93,13 @@ bytes8_to_double(
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_integer_to_bytes(
+ *      +Integer,
+ *      ?Byte0, ?Byte1, ?Byte2, ?Byte3) is semidet.
+ *
+ *  True if Integer is the integer represented by the consecutive
+ *  bytes Byte0..Byte3 interpreted as a signed 32-bit
+ *  little-endian integer.
  */
 static foreign_t
 int32_to_bytes4(
@@ -101,7 +121,13 @@ int32_to_bytes4(
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_bytes_to_integer(
+ *      +Byte0, +Byte1, +Byte2, +Byte3,
+ *      ?Integer) is semidet.
+ *
+ *  True if Integer is the integer represented by the consecutive
+ *  bytes Byte0..Byte3 interpreted as a signed 32-bit
+ *  little-endian integer.
  */
 static foreign_t
 bytes4_to_int32(
@@ -120,7 +146,14 @@ bytes4_to_int32(
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_integer_to_bytes(
+ *      +Integer,
+ *      ?Byte0, ?Byte1, ?Byte2, ?Byte3,
+ *      ?Byte4, ?Byte5, ?Byte6, ?Byte7) is semidet.
+ *
+ *  True if Integer is the integer represented by the consecutive
+ *  bytes Byte0..Byte7 interpreted as a signed 64-bit
+ *  little-endian integer.
  */
 static foreign_t
 int64_to_bytes8(
@@ -147,7 +180,14 @@ int64_to_bytes8(
 }
 
 /**
- * Documented in Prolog wrapper module.
+ *  foreign_bytes_to_integer(
+ *      +Byte0, +Byte1, +Byte2, +Byte3,
+ *      +Byte4, +Byte5, +Byte6, +Byte7,
+ *      ?Integer) is semidet.
+ *
+ *  True if Integer is the integer represented by the consecutive
+ *  bytes Byte0..Byte7 interpreted as a signed 64-bit
+ *  little-endian integer.
  */
 static foreign_t
 bytes8_to_int64(

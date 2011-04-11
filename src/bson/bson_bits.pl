@@ -11,6 +11,8 @@
 
 :- include(misc(common)).
 
+:- use_foreign_library(foreign(bson_bits)).
+
 %%  float_bytes(+Float, ?Bytes) is semidet.
 %%  float_bytes(?Float, +Bytes) is semidet.
 %
@@ -124,65 +126,3 @@ fits_in_32_bits(Integer) :-
 
 fits_in_64_bits(Integer) :-
     -(2**(64-1)) =< Integer, Integer =< (2**(64-1))-1.
-
-% Documentation for predicates in foreign library.
-
-:- use_foreign_library(foreign(bson_bits)).
-
-/*
-
-% XXX PlDoc complains about these. Look into this.
-
-%%  foreign_float_to_bytes(
-%       +Float,
-%       ?Byte0, ?Byte1, ?Byte2, ?Byte3,
-%       ?Byte4, ?Byte5, ?Byte6, ?Byte7) is semidet.
-%
-%   True if Float is the floating point number represented by the
-%   consecutive bytes Byte0..Byte7 interpreted as a 64-bit
-%   IEEE 754 double.
-
-%%  foreign_bytes_to_float(
-%       +Byte0, +Byte1, +Byte2, +Byte3,
-%       +Byte4, +Byte5, +Byte6, +Byte7,
-%       ?Float) is semidet.
-%
-%   True if Float is the floating point number represented by the
-%   consecutive bytes Byte0..Byte7 interpreted as a 64-bit
-%   IEEE 754 double.
-
-%%  foreign_integer_to_bytes(
-%       +Integer,
-%       ?Byte0, ?Byte1, ?Byte2, ?Byte3) is semidet.
-%
-%   True if Integer is the integer represented by the consecutive
-%   bytes Byte0..Byte3 interpreted as a signed 32-bit
-%   little-endian integer.
-
-%%  foreign_bytes_to_integer(
-%       +Byte0, +Byte1, +Byte2, +Byte3,
-%       ?Integer) is semidet.
-%
-%   True if Integer is the integer represented by the consecutive
-%   bytes Byte0..Byte3 interpreted as a signed 32-bit
-%   little-endian integer.
-
-%%  foreign_integer_to_bytes(
-%       +Integer,
-%       ?Byte0, ?Byte1, ?Byte2, ?Byte3,
-%       ?Byte4, ?Byte5, ?Byte6, ?Byte7) is semidet.
-%
-%   True if Integer is the integer represented by the consecutive
-%   bytes Byte0..Byte7 interpreted as a signed 64-bit
-%   little-endian integer.
-
-%%  foreign_bytes_to_integer(
-%       +Byte0, +Byte1, +Byte2, +Byte3,
-%       +Byte4, +Byte5, +Byte6, +Byte7,
-%       ?Integer) is semidet.
-%
-%   True if Integer is the integer represented by the consecutive
-%   bytes Byte0..Byte7 interpreted as a signed 64-bit
-%   little-endian integer.
-
-*/
