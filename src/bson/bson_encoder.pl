@@ -65,9 +65,45 @@ value(Value, Tag, Len) -->
 
 value_compound(@(Constant), Tag, Len) -->
     value_constant(Constant, Tag, Len).
+value_compound(binary(generic,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x00],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
+value_compound(binary(function,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x01],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
+value_compound(binary(old_generic,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x02],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
+value_compound(binary(uuid,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x03],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
+value_compound(binary(md5,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x05],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
+value_compound(binary(user_defined,Bytes), 0x05, Len) -->
+    { lists:length(Bytes, BytesLen) },
+    int32(BytesLen),
+    [0x80],
+    Bytes,
+    { Len is 4 + 1 + BytesLen }.
 value_compound(object_id(ObjectId), 0x07, 12) -->
-    { object_id_atom_to_bytes(ObjectId, Bytes) },
-    Bytes.
+    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes) },
+    ObjectIdBytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
 value_compound(db_pointer(Text,ObjectId), 0x0C, Len) -->

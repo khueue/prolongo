@@ -306,6 +306,108 @@ test('db pointer', [true(Got == Expected)]) :-
     ],
     bson_encoder:term_to_bson(Term, Got).
 
+test('binary, generic', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(generic, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x00, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('binary, function', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(function, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x01, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('binary, old generic', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(old_generic, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x02, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('binary, uuid', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(uuid, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x03, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('binary, md5', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(md5, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x05, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
+test('binary, user defined', [true(Got == Expected)]) :-
+    Term =
+    [
+        'BSON': binary(user_defined, [0,1,2,1,0])
+    ],
+    Expected =
+    [
+        21,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            66,83,79,78, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x80, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    bson_encoder:term_to_bson(Term, Got).
+
 test('js', [true(Got == Expected)]) :-
     Term =
     [
