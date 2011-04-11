@@ -18,7 +18,7 @@ and run the test suite.
 
 ## Thoughts
 
- * Nothing right now.
+ * Caveat: Depends on library autoloading.
 
 ## Links
 

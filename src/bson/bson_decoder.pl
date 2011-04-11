@@ -5,10 +5,10 @@
 
 % <module> BSON decoder.
 
+:- include(misc(common)).
+
 :- use_module(bson_bits, []).
 :- use_module(bson_unicode, []).
-
-:- include(misc(common)).
 
 %%  bson_to_term(+Bson:list(byte), ?Term:list(pair)) is semidet.
 %
@@ -17,7 +17,7 @@
 %   @throws bson_error(Reason)
 
 bson_to_term(Bson, Term) :-
-    phrase(document(Term), Bson),
+    phrase(document(Term), Bson), %inbuilt
     !.
 bson_to_term(_Bson, _Term) :-
     throw(bson_error(invalid)).

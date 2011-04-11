@@ -9,10 +9,10 @@
 %
 % Specification: http://bsonspec.org/
 
+:- include(misc(common)).
+
 :- use_module(bson_decoder, []).
 :- use_module(bson_encoder, []).
-
-:- include(misc(common)).
 
 %%  version(?Version:list) is det.
 %
@@ -36,10 +36,10 @@ bson_version([1,0]).
 %   @throws bson_error(Reason)
 
 term_bson(Term, Bson) :-
-    nonvar(Term),
+    inbuilt:nonvar(Term),
     !,
     bson_encoder:term_to_bson(Term, Bson).
 term_bson(Term, Bson) :-
-    nonvar(Bson),
+    inbuilt:nonvar(Bson),
     !,
     bson_decoder:bson_to_term(Bson, Term).

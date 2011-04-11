@@ -5,10 +5,10 @@
 
 % <module> BSON encoder.
 
+:- include(misc(common)).
+
 :- use_module(bson_bits, []).
 :- use_module(bson_unicode, []).
-
-:- include(misc(common)).
 
 %%  term_to_bson(+Term:list(pair), ?Bson:list(byte)) is semidet.
 %
