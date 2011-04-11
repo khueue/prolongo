@@ -2,7 +2,8 @@
 
 ## Todo
 
- * Decide on (and implement) amount of validation in encode/decode.
+ * Start thinking about how to write the report. 
+ * (Decide on (and implement) amount of validation in encode/decode.)
 
 ## Usage
 

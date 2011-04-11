@@ -53,7 +53,7 @@ element(Name, Value) -->
     key(Name),
     value_binary(Value).
 element(Name, Value) -->
-    [0x06], !, % Deprecated in BSON 1.0.
+    [0x06], !, % Deprecated.
     key(Name),
     value_undefined(Value).
 element(Name, Value) -->
@@ -77,7 +77,7 @@ element(Name, Value) -->
     key(Name),
     value_regex(Value).
 element(Name, Value) -->
-    [0x0C], !, % Deprecated in BSON 1.0.
+    [0x0C], !, % Deprecated.
     key(Name),
     value_db_pointer(Value).
 element(Name, Value) -->

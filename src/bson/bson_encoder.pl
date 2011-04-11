@@ -80,7 +80,7 @@ value_compound(regex(Pattern,Options), 0x0B, Len) -->
     c_string(Pattern, PatternLen),
     c_string(Options, OptionsLen),
     { Len is PatternLen + OptionsLen }.
-value_compound(db_pointer(Text,ObjectId), 0x0C, Len) -->
+value_compound(db_pointer(Text,ObjectId), 0x0C, Len) --> % Deprecated.
     string(Text, StrLen),
     { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, ObjectIdLen) },
     ObjectIdBytes,
@@ -155,7 +155,7 @@ int_size(Integer, N) -->
     { bson_bits:integer_bytes(Integer, N, little, Bytes) },
     Bytes.
 
-value_constant(undefined, 0x06, 0) --> [], !. % Deprecated in BSON 1.0.
+value_constant(undefined, 0x06, 0) --> [], !. % Deprecated.
 value_constant(false,     0x08, 1) --> [0], !.
 value_constant(true,      0x08, 1) --> [1], !.
 value_constant(null,      0x0A, 0) --> [], !.
