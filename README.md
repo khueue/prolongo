@@ -3,7 +3,7 @@
 ## Todo
 
  * Start thinking about how to write the report.
- * (Decide on (and implement) amount of validation in encode/decode.)
+ * (Decide on amount of (and implement) validation in encoder/decoder.)
 
 ## Usage
 
