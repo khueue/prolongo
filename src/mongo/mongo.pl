@@ -50,7 +50,22 @@ tryit :-
             100,101,118,101,108,111,112,109,101,
             110,116,46,117,115,101,114,115,0 % sample_app_development.users\0
     ], % ... followed by 1+ docs.
-    bson:term_bson([hello: utc(0)], Doc),
+    Bson =
+    [
+        hello:
+            [
+                key1: myatom,
+                key2: 42,
+                key3: -255.0,
+                key4: [utc(0)],
+                key5: binary(generic,[1,2,3,4])
+            ],
+        goodbye:
+            [
+                åäö
+            ]
+    ],
+    bson:term_bson(Bson, Doc),
     append(Message0, Doc, Message1),
     length(Message1, LenWithout4),
     RealLen is LenWithout4 + 4,
