@@ -38,9 +38,9 @@ send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
 
 tryit :-
-    Message =
+    % prepend mess length 4 bytes! ...
+    Message0 =
     [
-        69,0,0,0,        % mess length
         123,0,0,0,
         0,0,0,0,
         210,7,0,0,       % 2002 : op insert
@@ -48,14 +48,14 @@ tryit :-
         0,0,0,0,
         115,97,109,112,108,101,95,97,112,112,95,
             100,101,118,101,108,111,112,109,101,
-            110,116,46,117,115,101,114,115,0, % sample_app_development.users\0
-
-        20,0,0,0, % Length of top doc.
-        0x12, % Tag.
-            104,101,108,108,111, 0, % Ename.
-            0xE0,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, % Int64 data.
-        0 % End of top doc.
-    ],
+            110,116,46,117,115,101,114,115,0 % sample_app_development.users\0
+    ], % ... followed by 0+ docs.
+    bson:term_bson([hello: utc(0)], Doc),
+    append(Message0, Doc, Message1),
+    length(Message1, LenWithout4),
+    RealLen is LenWithout4 + 4,
+    bson_bits:integer_bytes(RealLen, 4, little, BytesForLen),
+    append(BytesForLen, Message1, Message),
     Mongo = mongo(Read,Write),
     new_mongo(Mongo),
     send_bytes(Message, Write),
