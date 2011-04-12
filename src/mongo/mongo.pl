@@ -54,11 +54,11 @@ tryit :-
     [
         hello:
             [
-                key1: myatom,
-                key2: 42,
-                key3: -255.0,
-                key4: [utc(0)],
-                key5: binary(generic,[1,2,3,4])
+                key1:myatom,
+                key2:42,
+                key3:-255.3,
+                key4:[utc(0)],
+                key5:binary(generic,[1,2,3,4])
             ],
         goodbye:
             [

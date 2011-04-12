@@ -3,6 +3,7 @@
 ## Todo
 
  * Think about whether ':' might be a bad choice for key/value separator.
+   Bad, simple reason: [hello:-5.05] becomes a clause (:-). Use '=' instead.
  * Start to write proper socket communication.
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
@@ -17,7 +18,7 @@ and run the test suite.
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
     * Autoloading must be turned on (default).
  * ANSI C compiler (modify the Makefile if other than GCC)
- * _Not yet._ MongoDB (tested on Mac OS X using MongoDB 1.8.1)
+ * MongoDB (tested on Mac OS X using MongoDB 1.8.1)
 
 ## Thoughts
 
