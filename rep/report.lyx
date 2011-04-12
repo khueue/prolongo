@@ -68,8 +68,21 @@ Design and Implementation of a MongoDB Driver for Prolog
 Sebastian Lundström
 \end_layout
 
+\begin_layout Abstract
+Prolog is good stuff, and MongoDB ...
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Diary
+Diary (not part of the report)
 \end_layout
 
 \begin_layout Itemize
@@ -287,11 +300,11 @@ unsigned_bytes(Unsigned, NumBytes, Endian, Bytes)
 \begin_layout Itemize
 April 10.
  Made all Unicode handling atom-only.
- The code become much less confusing, and using code lists for text would
+ The code became much less confusing, and using code lists for text would
  be bad anyway because it can be ambiguous (is [97,98,99] a list of numbers
  or 'abc'?).
  Yet another implementation of utf_to_bytes/2.
- Uses less weird predicates (no open_chars_stream any more) and seems a
+ Uses fewer weird predicates (no open_chars_stream any more) and seems a
  tiny bit faster.
  The code is a bit longer though (but arguably more straight-forward).
 \end_layout
@@ -299,12 +312,35 @@ April 10.
 \begin_layout Itemize
 April 11.
  Encoder is now feature complete.
- Tomorrow I will start thinking about the report and maybe start investigating
- sockets.
+ Tomorrow I will start to think about the report and maybe, just slightly,
+ investigate sockets.
+\end_layout
+
+\begin_layout Itemize
+April 12.
+ Started hacking a little on the report structure.
+ Once again renamed 
+\begin_inset Quotes eld
+\end_inset
+
+inbuilt:
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+core:
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Nicer and shorter.
 \end_layout
 
 \begin_layout Section
-Background
+Introduction
 \end_layout
 
 \begin_layout Standard
@@ -336,7 +372,27 @@ DB from various programming languages.
 \end_layout
 
 \begin_layout Section
-Method
+Scope
+\end_layout
+
+\begin_layout Standard
+From spec:
+\end_layout
+
+\begin_layout Standard
+[Creating a driver that is usable with, or at least easily portable to,
+ other Prolog environments is desirable, but development and testing will
+ focus on SWI-Prolog.
+\end_layout
+
+\begin_layout Standard
+More complex features of Mongo\SpecialChar \-
+DB, such as advanced connection management
+ and GridFS, will not be implemented.]
+\end_layout
+
+\begin_layout Section
+Method (necessary?)
 \end_layout
 
 \begin_layout Standard
@@ -348,7 +404,20 @@ Test-driven development.
 \end_layout
 
 \begin_layout Section
-Result
+Requirements
+\end_layout
+
+\begin_layout Standard
+Various requirements on the implementation.
+ See for example
+\end_layout
+
+\begin_layout Standard
+http://www.mongodb.org/display/DOCS/Writing+Drivers+and+Tools
+\end_layout
+
+\begin_layout Section
+Design
 \end_layout
 
 \begin_layout Itemize
@@ -358,7 +427,8 @@ BSON encoder/decoder
 \begin_deeper
 \begin_layout Itemize
 Some parts written in C.
- Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.)
+ Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.
+ And perhaps some efficiency.)
 \end_layout
 
 \begin_layout Itemize
@@ -367,15 +437,9 @@ Discuss data structures, term [key:value] maps to bytelist [4,1,7,9,3,...]
 \end_layout
 
 \begin_layout Itemize
-Design choices: text as 
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset Quotes erd
-\end_inset
-
- and symbol as atom
+Design choices: text as atoms (why not list of codes, [97,98,99]?) Inspired
+ slightly by JSON parser: http://www.swi-prolog.org/pldoc/doc_for?object=section%2
+83,%275.1%27,swi%28%27/doc/packages/http.html%27%29%29
 \end_layout
 
 \end_deeper
@@ -385,7 +449,8 @@ Network communication
 
 \begin_deeper
 \begin_layout Itemize
-How does the communication work? Out of scope?
+How does the communication work? How simplistic is the communication administrat
+ion? Sockets, connections, etc.
 \end_layout
 
 \end_deeper
@@ -397,51 +462,65 @@ MongoDB API
 \begin_layout Itemize
 Thoroughly discuss design of wrapper API, how lists and structures are represent
 ed etc.
+ What algorithms are used etc.
 \end_layout
 
 \end_deeper
 \begin_layout Section
-Discussion
-\end_layout
-
-\begin_layout Itemize
-Portability
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Tested on Mac, SWI, GCC, etc.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Efficiency
-\end_layout
-
-\begin_layout Itemize
-Future
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-BSON implementation in C? Already exists, I think.
-\end_layout
-
-\begin_layout Itemize
-More advanced features
-\end_layout
-
-\end_deeper
-\begin_layout Section
-Conclusion
+Implementation
 \end_layout
 
 \begin_layout Standard
-Difficulties? Did it work? Is it usable?
+How do I solve it?
 \end_layout
 
 \begin_layout Section
-Literature
+Evaluation
+\end_layout
+
+\begin_layout Standard
+Did it work? Is it usable? What should have been done differently?
+\end_layout
+
+\begin_layout Section
+Related Work
+\end_layout
+
+\begin_layout Standard
+Compare to existing drivers? Erlang? And something completely different?
+\end_layout
+
+\begin_layout Section
+Conclusion/Future Work
+\end_layout
+
+\begin_layout Standard
+Not sure how much this section relates to Evaluation above.
+\end_layout
+
+\begin_layout Standard
+Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to improve
+ in the future? Critical parts (BSON) in pure C? Even write a C extension
+ with more/most functionality? Don't know how portable that would be though,
+ but SWI (and probably SICStus also?) has a mature interface to C.
+ What is missing for it to be a 
+\begin_inset Quotes eld
+\end_inset
+
+real
+\begin_inset Quotes erd
+\end_inset
+
+ driver?
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+References for Prolog DCG? References for various stuff used in SWI? At
+ all relevant? How much web references? Most MongoDB driver stuff is web.
 \end_layout
 
 \begin_layout Standard

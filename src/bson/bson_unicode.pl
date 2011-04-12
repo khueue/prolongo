@@ -25,12 +25,12 @@
 % probably many text values are shorter than 30 bytes.
 
 utf8_bytes(Utf8, Bytes) :-
-    inbuilt:nonvar(Utf8),
+    core:nonvar(Utf8),
     !,
     atom_codes(Utf8, Codes),
     phrase(utf8:utf8_codes(Codes), Bytes).
 utf8_bytes(Utf8, Bytes) :-
-    inbuilt:nonvar(Bytes),
+    core:nonvar(Bytes),
     !,
     phrase(utf8:utf8_codes(Codes), Bytes),
     atom_codes(Utf8, Codes).
@@ -42,11 +42,11 @@ utf8_bytes(Utf8, Bytes) :-
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
 utf8_bytes(Utf8, Bytes) :-
-    inbuilt:nonvar(Utf8),
+    core:nonvar(Utf8),
     !,
     utf8_to_bytes(Utf8, Bytes).
 utf8_bytes(Utf8, Bytes) :-
-    inbuilt:nonvar(Bytes),
+    core:nonvar(Bytes),
     !,
     bytes_to_utf8(Bytes, Utf8).
 
@@ -76,26 +76,26 @@ utf8_to_memory_file_to_bytes(Utf8, MemFile, Bytes) :-
 utf8_to_memory_file(Utf8, MemFile) :-
     setup_call_cleanup(
         memory_file:open_memory_file(MemFile, write, Write, [encoding(utf8)]),
-        inbuilt:format(Write, '~w', [Utf8]),
-        inbuilt:close(Write)).
+        core:format(Write, '~w', [Utf8]),
+        core:close(Write)).
 
 memory_file_to_bytes(MemFile, Bytes) :-
     setup_call_cleanup(
         memory_file:open_memory_file(MemFile, read, Read, [encoding(octet)]),
         readutil:read_stream_to_codes(Read, Bytes),
-        inbuilt:close(Read)).
+        core:close(Read)).
 
 /*
 % Previous version, seems a bit slower (probably due to atom_codes).
 utf8_to_bytes(Utf8, Bytes) :-
-    inbuilt:atom_codes(Utf8, Codes),
+    core:atom_codes(Utf8, Codes),
     setup_call_cleanup(
         charsio:open_chars_stream(Codes, ReadStream),
         stream_to_bytes(ReadStream, Bytes),
-        inbuilt:close(ReadStream)).
+        core:close(ReadStream)).
 
 stream_to_bytes(ReadStream, Bytes) :-
-    inbuilt:set_stream(ReadStream, encoding(octet)),
+    core:set_stream(ReadStream, encoding(octet)),
     readutil:read_stream_to_codes(ReadStream, Bytes).
 */
 
@@ -104,7 +104,7 @@ stream_to_bytes(ReadStream, Bytes) :-
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
 bytes_to_utf8(Bytes, Utf8) :-
-    inbuilt:atom_chars(RawAtom, Bytes),
+    core:atom_chars(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
         memory_file:memory_file_to_atom(MemFile, Utf8, utf8),

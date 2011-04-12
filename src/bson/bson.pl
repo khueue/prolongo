@@ -36,10 +36,10 @@ bson_version([1,0]).
 %   @throws bson_error(Reason)
 
 term_bson(Term, Bson) :-
-    inbuilt:nonvar(Term),
+    core:nonvar(Term),
     !,
     bson_encoder:term_to_bson(Term, Bson).
 term_bson(Term, Bson) :-
-    inbuilt:nonvar(Bson),
+    core:nonvar(Bson),
     !,
     bson_decoder:bson_to_term(Bson, Term).

@@ -23,12 +23,12 @@
 %   Uses C library for actual conversions.
 
 float_bytes(Float, Bytes) :-
-    inbuilt:nonvar(Bytes),
+    core:nonvar(Bytes),
     Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
     !,
     foreign_bytes_to_float(B0, B1, B2, B3, B4, B5, B6, B7, Float).
 float_bytes(Float, Bytes) :-
-    inbuilt:nonvar(Float),
+    core:nonvar(Float),
     !,
     Bytes = [B0,B1,B2,B3,B4,B5,B6,B7],
     foreign_float_to_bytes(Float, B0, B1, B2, B3, B4, B5, B6, B7).
@@ -43,11 +43,11 @@ float_bytes(Float, Bytes) :-
 %   Uses C library for actual conversions.
 
 integer_bytes(Integer, NumBytes, Endian, Bytes) :-
-    inbuilt:nonvar(Integer),
+    core:nonvar(Integer),
     !,
     integer_to_bytes(Integer, NumBytes, Endian, Bytes).
 integer_bytes(Integer, _NumBytes, Endian, Bytes) :-
-    inbuilt:nonvar(Bytes),
+    core:nonvar(Bytes),
     !,
     bytes_to_integer(Endian, Bytes, Integer).
 
@@ -79,11 +79,11 @@ bytes_to_integer(big, Bytes, Integer) :- !,
 %   Endian little or big.
 
 unsigned_bytes(Unsigned, NumBytes, Endian, Bytes) :-
-    inbuilt:nonvar(Unsigned),
+    core:nonvar(Unsigned),
     !,
     unsigned_to_bytes(Unsigned, NumBytes, Endian, Bytes).
 unsigned_bytes(Unsigned, _NumBytes, Endian, Bytes) :-
-    inbuilt:nonvar(Bytes),
+    core:nonvar(Bytes),
     !,
     bytes_to_unsigned(Endian, Bytes, Unsigned).
 

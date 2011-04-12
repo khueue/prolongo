@@ -48,19 +48,19 @@ key(Key, Len) -->
     c_string(Key, Len).
 
 value(Value, Tag, Len) -->
-    { inbuilt:integer(Value) }, !,
+    { core:integer(Value) }, !,
     value_integer(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { inbuilt:float(Value) }, !,
+    { core:float(Value) }, !,
     value_float(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { inbuilt:atom(Value) }, !,
+    { core:atom(Value) }, !,
     value_atom(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { list_shaped(Value) }, !,
     value_list(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { inbuilt:compound(Value) }, !,
+    { core:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
 value_compound(@(Constant), Tag, Len) -->
@@ -120,7 +120,7 @@ add_array_keys(List, Array) :-
 
 add_array_keys([], _Index, []).
 add_array_keys([Value|Values], Index, [Key:Value|Pairs]) :-
-    inbuilt:atom_number(Key, Index),
+    core:atom_number(Key, Index),
     Index1 is Index + 1,
     add_array_keys(Values, Index1, Pairs).
 
@@ -186,6 +186,6 @@ list_shaped([_|_]).
 
 object_id_atom_to_bytes(ObjectIdAtom, Bytes, Len) :-
     Len = 12,
-    inbuilt:atom_concat('0x', ObjectIdAtom, HexAtom),
-    inbuilt:atom_number(HexAtom, Unsigned),
+    core:atom_concat('0x', ObjectIdAtom, HexAtom),
+    core:atom_number(HexAtom, Unsigned),
     bson_bits:unsigned_bytes(Unsigned, Len, big, Bytes).

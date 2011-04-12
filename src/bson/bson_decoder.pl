@@ -248,4 +248,4 @@ double(Double) -->
     { bson_bits:float_bytes(Double, Bytes) }.
 
 number_to_hex(Number, Atom) :-
-    inbuilt:format(atom(Atom), '~16r', [Number]).
+    core:format(atom(Atom), '~16r', [Number]).
