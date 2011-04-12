@@ -49,7 +49,7 @@ tryit :-
         115,97,109,112,108,101,95,97,112,112,95,
             100,101,118,101,108,111,112,109,101,
             110,116,46,117,115,101,114,115,0 % sample_app_development.users\0
-    ], % ... followed by 0+ docs.
+    ], % ... followed by 1+ docs.
     bson:term_bson([hello: utc(0)], Doc),
     append(Message0, Doc, Message1),
     length(Message1, LenWithout4),

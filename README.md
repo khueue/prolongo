@@ -2,6 +2,7 @@
 
 ## Todo
 
+ * Start to write proper socket communication.
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
