@@ -99,7 +99,7 @@ stream_to_bytes(ReadStream, Bytes) :-
     readutil:read_stream_to_codes(ReadStream, Bytes).
 */
 
-%%  bytes_to_utf8(+Bytes:list, ?Utf8:atom) is semidet.
+%%  bytes_to_utf8(+Bytes, ?Utf8) is semidet.
 %
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
