@@ -50,23 +50,9 @@ doc :-
     use_module('doc/doc_files'),
     pldoc_files:doc_save('src/', [recursive(true),doc_root('doc/')]).
 
-% Unused.
-doc_latex :-
-    load_all_modules,
-    use_module(library(doc_latex)),
-    Modules =
-    [
-        bson(bson),
-        bson(bson_bits),
-        bson(bson_decoder),
-        bson(bson_encoder),
-        bson(bson_unicode)
-    ],
-    doc_latex(Modules, 'doc/prolongo.tex', []).
-
 load_all_modules :-
     use_module(library(pldoc), []), % Load first to process all doc comments.
-    use_module(bson(bson), []).
+    use_module(mongo(mongo), []).
 
 load_all_tests :-
     plunit:load_test_files([]).
@@ -77,4 +63,4 @@ run_test_suite :-
 
 run_test_suite_with_coverage :-
     core:format('~n% Run tests ...~n'),
-    show_coverage(plunit:run_tests).
+    plunit:show_coverage(plunit:run_tests).

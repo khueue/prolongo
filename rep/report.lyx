@@ -337,6 +337,8 @@ core:
 
 .
  Nicer and shorter.
+ Started looking at sockets.
+ Created mongo module stubs.
 \end_layout
 
 \begin_layout Section
