@@ -104,7 +104,7 @@ stream_to_bytes(ReadStream, Bytes) :-
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
 
 bytes_to_utf8(Bytes, Utf8) :-
-    core:atom_chars(RawAtom, Bytes),
+    core:atom_codes(RawAtom, Bytes),
     setup_call_cleanup(
         memory_file:atom_to_memory_file(RawAtom, MemFile),
         memory_file:memory_file_to_atom(MemFile, Utf8, utf8),
