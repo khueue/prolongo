@@ -40,6 +40,40 @@ send_bytes(Bytes, Write) :-
 tryit :-
     Message =
     [
+        69,0,0,0,        % mess length
+        123,0,0,0,
+        0,0,0,0,
+        210,7,0,0,       % 2002 : op insert
+
+        0,0,0,0,
+        115,97,109,112,108,101,95,97,112,112,95,
+            100,101,118,101,108,111,112,109,101,
+            110,116,46,117,115,101,114,115,0, % sample_app_development.users\0
+
+        20,0,0,0, % Length of top doc.
+        0x12, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            0xE0,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, % Int64 data.
+        0 % End of top doc.
+    ],
+    Mongo = mongo(Read,Write),
+    new_mongo(Mongo),
+    send_bytes(Message, Write),
+    core:flush_output(Write),
+    /*
+    read_response(Read, Bytes),
+    format('Response bytes: ~w~n', [Bytes]),
+    parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]),
+    format('Len: ~w~n', [Len]),
+    format('ReqId: ~w~n', [ReqId]),
+    format('RespTo: ~w~n', [RespTo]),
+    format('OpCode: ~w~n', [OpCode]),*/
+    free_mongo(Mongo).
+
+/*
+tryit :-
+    Message =
+    [
         56,0,0,0,        % mess length
         123,0,0,0,
         0,0,0,0,
@@ -51,6 +85,7 @@ tryit :-
             109,101,110,116, 0, % sample_app_development\0
         0,0,0,0,
         0,0,0,0,
+
         5,0,0,0,
         0
     ],
@@ -66,6 +101,7 @@ tryit :-
     format('RespTo: ~w~n', [RespTo]),
     format('OpCode: ~w~n', [OpCode]),
     free_mongo(Mongo).
+*/
 
 read_response(Read, [B0,B1,B2,B3|Bytes]) :-
     get_byte(Read, B0),
