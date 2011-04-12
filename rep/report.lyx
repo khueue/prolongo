@@ -339,6 +339,8 @@ core:
  Nicer and shorter.
  Started looking at sockets.
  Created mongo module stubs.
+ Managed to setup a basic socket and got a successful response from MongoDB
+ when issuing a query.
 \end_layout
 
 \begin_layout Section
