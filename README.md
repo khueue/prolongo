@@ -13,7 +13,7 @@ and run the test suite.
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
-    * Autoloading must be turned on.
+    * Autoloading must be turned on (default).
  * ANSI C compiler (modify the Makefile if other than GCC)
  * _Not yet._ MongoDB (tested on Mac OS X using MongoDB 1.8.1)
 

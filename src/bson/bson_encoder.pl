@@ -106,6 +106,8 @@ subtype(old_generic)  --> !, [0x02].
 subtype(uuid)         --> !, [0x03].
 subtype(md5)          --> !, [0x05].
 subtype(user_defined) --> !, [0x80].
+subtype(Subtype)      -->
+    { throw(bson_error(unknown_subtype, Subtype)) }.
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len),
