@@ -9,7 +9,7 @@
 
 :- include(misc(common)).
 
-:- use_module(bson(bson)).
+:- use_module(bson(bson), []).
 
 % Defaults.
 mongo_default_host(localhost).
