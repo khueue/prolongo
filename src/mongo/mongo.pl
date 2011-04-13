@@ -10,6 +10,7 @@
 :- include(misc(common)).
 
 :- use_module(bson(bson), []).
+:- use_module(bson(bson_format), []). % Temp XXX.
 
 % Defaults.
 mongo_default_host(localhost).
@@ -97,7 +98,7 @@ command(Mongo, Command, Database) :-
     read_response(Read, Bytes),
     skip_n(Bytes, 36, Bytes1),
     bson:term_bson(RespDoc, Bytes1),
-    core:format('Response: ~w~n', [RespDoc]).
+    bson_format:pp(RespDoc).
 
 insert(Mongo, Document, FullCollName) :-
     c_string(FullCollName, FullCollNameBytes),

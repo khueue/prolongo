@@ -363,6 +363,9 @@ mongo:command(Mongo,CommandDoc,'db')
 \noun default
  that can send arbitrary special commands to a database.
  This is awesome.
+ Wrote an experimental key/value term pretty-printer.
+ Don't really know why, but it works.
+ Might be useful when analyzing response documents returned by the server.
 \end_layout
 
 \begin_layout Section

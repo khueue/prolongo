@@ -2,6 +2,7 @@
 
 ## Todo
 
+ * Add tests that convert back-and-forth between term and bytes.
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
