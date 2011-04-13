@@ -345,6 +345,14 @@ core:
  nicely, and well ahead of schedule.
 \end_layout
 
+\begin_layout Itemize
+April 13.
+ Changed key:value to key=value due to the fact that key:-5.05 is parsed
+ like a rule.
+ This is more in line with the existing JSON parser also.
+ Cleaned up some tests (gave them proper tag numbers).
+\end_layout
+
 \begin_layout Section
 Introduction
 \end_layout
