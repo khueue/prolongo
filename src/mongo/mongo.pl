@@ -90,9 +90,12 @@ command(Mongo, Command, Database) :-
         ],
         Message),
     lists:length(Message, MessageLen),
-    bson_bits:integer_bytes(MessageLen, 4, little, [L0,L1,L2,L3]),
+    length4(MessageLen, [L0,L1,L2,L3]),
     mongo_socket_write(Mongo, Write),
-    send_bytes_and_flush(Message, Write). % xxx dont forget to read
+    send_bytes_and_flush(Message, Write),
+    mongo_socket_read(Mongo, Read),
+    read_response(Read, Bytes),
+    core:format('Response: ~s~n', [Bytes]).
 
 insert(Mongo, Document, FullCollName) :-
     c_string(FullCollName, FullCollNameBytes),
@@ -111,31 +114,13 @@ insert(Mongo, Document, FullCollName) :-
         ],
         Message),
     lists:length(Message, MessageLen),
-    bson_bits:integer_bytes(MessageLen, 4, little, [L0,L1,L2,L3]),
+    length4(MessageLen, [L0,L1,L2,L3]),
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write).
 
 c_string(Atom, Bytes) :-
-    core:atom_codes(Atom, Bytes0),
+    bson_unicode:utf8_bytes(Atom, Bytes0),
     lists:append(Bytes0, [0], Bytes).
-
-test_insert :-
-    Document =
-    [
-        hello = [åäö]
-    ],
-    new_mongo(Mongo),
-    insert(Mongo, Document, 'sample_app_development.users'),
-    free_mongo(Mongo).
-
-test_command :-
-    Command =
-    [
-        drop = users
-    ],
-    new_mongo(Mongo),
-    command(Mongo, Command, 'sample_app_test'),
-    free_mongo(Mongo).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -173,10 +158,7 @@ tryit :-
 */
 
 read_response(Read, [B0,B1,B2,B3|Bytes]) :-
-    get_byte(Read, B0),
-    get_byte(Read, B1),
-    get_byte(Read, B2),
-    get_byte(Read, B3),
+    read_n_bytes(Read, 4, BytesForLen),
     BytesForLen = [B0,B1,B2,B3],
     bson_bits:integer_bytes(Len, 4, little, BytesForLen),
     Len4 is Len - 4,
