@@ -95,7 +95,9 @@ command(Mongo, Command, Database) :-
     send_bytes_and_flush(Message, Write),
     mongo_socket_read(Mongo, Read),
     read_response(Read, Bytes),
-    core:format('Response: ~s~n', [Bytes]).
+    skip_n(Bytes, 36, Bytes1),
+    bson:term_bson(RespDoc, Bytes1),
+    core:format('Response: ~w~n', [RespDoc]).
 
 insert(Mongo, Document, FullCollName) :-
     c_string(FullCollName, FullCollNameBytes),
@@ -122,7 +124,64 @@ c_string(Atom, Bytes) :-
     bson_unicode:utf8_bytes(Atom, Bytes0),
     lists:append(Bytes0, [0], Bytes).
 
+length4(Len, Bytes) :-
+    bson_bits:integer_bytes(Len, 4, little, Bytes).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+skip_n(L, 0, L) :- !.
+skip_n([_|L], N, L2) :-
+    N1 is N - 1,
+    skip_n(L, N1, L2).
+
+read_response(Read, [B0,B1,B2,B3|Bytes]) :-
+    read_n_bytes(Read, 4, BytesForLen),
+    BytesForLen = [B0,B1,B2,B3],
+    length4(Len, BytesForLen),
+    LenBut4 is Len - 4,
+    read_n_bytes(Read, LenBut4, Bytes).
+
+parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]) :-
+    Bytes = [
+        L0,L1,L2,L3,
+        Req0,Req1,Req2,Req3,
+        Res0,Res1,Res2,Res3,
+        Op0,Op1,Op2,Op3
+        |_Rest],
+    length4(Len, [L0,L1,L2,L3]),
+    length4(ReqId, [Req0,Req1,Req2,Req3]),
+    length4(RespTo, [Res0,Res1,Res2,Res3]),
+    length4(OpCode, [Op0,Op1,Op2,Op3]).
+
+read_n_bytes(_Read, 0, []) :- !.
+read_n_bytes(Read, N, [Byte|Bytes]) :-
+    get_byte(Read, Byte),
+    N1 is N - 1,
+    read_n_bytes(Read, N1, Bytes).
+
+/*
+
+struct MsgHeader {
+    int32   messageLength; // total message size, including this
+    int32   requestID;     // identifier for this message
+    int32   responseTo;    // requestID from the original request
+                           //   (used in reponses from db)
+    int32   opCode;        // request type - see table below
+}
+
+struct OP_QUERY {
+    MsgHeader header;                // standard message header
+    int32     flags;                  // bit vector of query options.  See below for details.
+    cstring   fullCollectionName;    // "dbname.collectionname"
+    int32     numberToSkip;          // number of documents to skip
+    int32     numberToReturn;        // number of documents to return
+                                     //  in the first OP_REPLY batch
+    document  query;                 // query object.  See below for details.
+  [ document  returnFieldSelector; ] // Optional. Selector indicating the fields
+                                     //  to return.  See below for details.
+}
+
+*/
 
 /*
 tryit :-
@@ -155,56 +214,4 @@ tryit :-
     format('RespTo: ~w~n', [RespTo]),
     format('OpCode: ~w~n', [OpCode]),
     free_mongo(Mongo).
-*/
-
-read_response(Read, [B0,B1,B2,B3|Bytes]) :-
-    read_n_bytes(Read, 4, BytesForLen),
-    BytesForLen = [B0,B1,B2,B3],
-    bson_bits:integer_bytes(Len, 4, little, BytesForLen),
-    Len4 is Len - 4,
-    read_n_bytes(Read, Len4, Bytes).
-
-parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]) :-
-    Bytes = [
-        L0,L1,L2,L3,
-        Req0,Req1,Req2,Req3,
-        Res0,Res1,Res2,Res3,
-        Op0,Op1,Op2,Op3
-        |_Rest],
-    length4(Len, [L0,L1,L2,L3]),
-    length4(ReqId, [Req0,Req1,Req2,Req3]),
-    length4(RespTo, [Res0,Res1,Res2,Res3]),
-    length4(OpCode, [Op0,Op1,Op2,Op3]).
-
-length4(Len, Bytes) :-
-    bson_bits:integer_bytes(Len, 4, little, Bytes).
-
-read_n_bytes(_Read, 0, []) :- !.
-read_n_bytes(Read, N, [Byte|Bytes]) :-
-    get_byte(Read, Byte),
-    N1 is N - 1,
-    read_n_bytes(Read, N1, Bytes).
-
-/*
-
-struct MsgHeader {
-    int32   messageLength; // total message size, including this
-    int32   requestID;     // identifier for this message
-    int32   responseTo;    // requestID from the original request
-                           //   (used in reponses from db)
-    int32   opCode;        // request type - see table below
-}
-
-struct OP_QUERY {
-    MsgHeader header;                // standard message header
-    int32     flags;                  // bit vector of query options.  See below for details.
-    cstring   fullCollectionName;    // "dbname.collectionname"
-    int32     numberToSkip;          // number of documents to skip
-    int32     numberToReturn;        // number of documents to return
-                                     //  in the first OP_REPLY batch
-    document  query;                 // query object.  See below for details.
-  [ document  returnFieldSelector; ] // Optional. Selector indicating the fields
-                                     //  to return.  See below for details.
-}
-
 */

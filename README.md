@@ -2,7 +2,6 @@
 
 ## Todo
 
- * Read server responses.
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
@@ -21,6 +20,10 @@ and run the test suite.
 ## Thoughts
 
  * Nothing.
+
+## Future
+
+ * Move BSON to separate repository.
 
 ## Links
 
