@@ -11,14 +11,49 @@
 
 :- use_module(bson(bson)).
 
+% Defaults.
 mongo_default_host(localhost).
 mongo_default_port(27017).
+
+%%  new_mongo(-Mongo) is semidet.
+%%  new_mongo(-Mongo, +Host, +Port) is semidet.
+%
+%   True if Mongo represents a handle to a new MongoDB server
+%   connection. Host and Port may be supplied, otherwise the
+%   defaults (host localhost and port 27017) are used.
+
+new_mongo(Mongo) :-
+    mongo_default_host(Host),
+    mongo_default_port(Port),
+    new_mongo(Mongo, Host, Port).
+
+new_mongo(Mongo, Host, Port) :-
+    Mongo = mongo(socket(Read,Write)),
+    setup_call_catcher_cleanup(
+        socket:tcp_socket(Socket),
+        socket:tcp_connect(Socket, Host:Port),
+        exception(_),
+        socket:tcp_close_socket(Socket)),
+    %call_cleanup(
+    socket:tcp_open_socket(Socket, Read, Write).
+    %free_mongo(Mongo)). % Do something on fail to open.
+
+%%  free_mongo(+Mongo) is det.
+%
+%   Frees any resources associated with the Mongo handle,
+%   rendering it unusable.
+
+free_mongo(Mongo) :-
+    mongo_socket_read(Mongo, Read),
+    mongo_socket_write(Mongo, Write),
+    core:close(Read, [force(true)]),
+    core:close(Write, [force(true)]).
 
 % Mongo connection structure:
 % mongo(socket(Read,Write))
 
-mongo_socket(Mongo, Read) :-
-    core:arg(1, Mongo, Read).
+mongo_socket(Mongo, Socket) :-
+    core:arg(1, Mongo, Socket).
 
 mongo_socket_read(Mongo, Read) :-
     mongo_socket(Mongo, Socket),
@@ -28,78 +63,81 @@ mongo_socket_write(Mongo, Write) :-
     mongo_socket(Mongo, Socket),
     core:arg(2, Socket, Write).
 
-new_mongo(Mongo) :-
-    mongo_default_host(Host),
-    mongo_default_port(Port),
-    new_mongo(Host, Port, Mongo).
-
-new_mongo(Host, Port, Mongo) :-
-    Mongo = mongo(socket(Read,Write)),
-    setup_call_catcher_cleanup(
-        socket:tcp_socket(Socket),
-        socket:tcp_connect(Socket, Host:Port),
-        exception(_),
-        socket:tcp_close_socket(Socket)),
-    %call_cleanup(
-    socket:tcp_open_socket(Socket, Read, Write).
-        %free_mongo(Mongo)). % Do something on fail to open.
-
-free_mongo(Mongo) :-
-    mongo_socket_read(Mongo, Read),
-    mongo_socket_write(Mongo, Write),
-    core:close(Read, [force(true)]),
-    core:close(Write, [force(true)]).
+send_bytes_and_flush(Bytes, Write) :-
+    send_bytes(Bytes, Write),
+    core:flush_output(Write).
 
 send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
 
-tryit :-
-    % prepend mess length 4 bytes! ...
-    Message0 =
-    [
-        123,0,0,0,
-        0,0,0,0,
-        210,7,0,0,       % 2002 : op insert
-
-        0,0,0,0,
-        115,97,109,112,108,101,95,97,112,112,95,
-            100,101,118,101,108,111,112,109,101,
-            110,116,46,117,115,101,114,115,0 % sample_app_development.users\0
-    ], % ... followed by 1+ docs.
-    Bson =
-    [
-        hello =
+command(Mongo, Command, Database) :-
+    core:atom_concat(Database, '.$cmd', DbCollection),
+    c_string(DbCollection, DbCollectionBytes),
+    bson:term_bson(Command, BsonCommand),
+    lists:append(
+        [
             [
-                key1 = myatom,
-                key2 = 42,
-                key3 = -255.3,
-                key4 = [utc(0)],
-                key5 = binary(generic,[0,0,0,0,0,1,2,3,4])
+                 L0, L1, L2, L3, % Message length.
+                124,  0,  0,  0, %
+                  0,  0,  0,  0, %
+                212,  7,  0,  0  % 2004: query
             ],
-        goodbye =
-            [
-                åäö
-            ]
-    ],
-    bson:term_bson(Bson, Doc),
-    append(Message0, Doc, Message1),
-    length(Message1, LenWithout4),
-    RealLen is LenWithout4 + 4,
-    bson_bits:integer_bytes(RealLen, 4, little, BytesForLen),
-    append(BytesForLen, Message1, Message),
-    new_mongo(Mongo),
+            [0,0,0,0], % flags
+            DbCollectionBytes,
+            [0,0,0,0], % num skip
+            [1,0,0,0], % num return
+            BsonCommand
+        ],
+        Message),
+    lists:length(Message, MessageLen),
+    bson_bits:integer_bytes(MessageLen, 4, little, [L0,L1,L2,L3]),
     mongo_socket_write(Mongo, Write),
-    send_bytes(Message, Write),
-    core:flush_output(Write),
-    /*
-    read_response(Read, Bytes),
-    format('Response bytes: ~w~n', [Bytes]),
-    parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]),
-    format('Len: ~w~n', [Len]),
-    format('ReqId: ~w~n', [ReqId]),
-    format('RespTo: ~w~n', [RespTo]),
-    format('OpCode: ~w~n', [OpCode]),*/
+    send_bytes_and_flush(Message, Write). % xxx dont forget to read
+
+insert(Mongo, Document, FullCollName) :-
+    c_string(FullCollName, FullCollNameBytes),
+    bson:term_bson(Document, BsonDocument),
+    lists:append(
+        [
+            [
+                 L0, L1, L2, L3, % Message length.
+                123,  0,  0,  0, %
+                  0,  0,  0,  0, %
+                210,  7,  0,  0  % 2002: insert
+            ],
+            [0,0,0,0], % ZERO
+            FullCollNameBytes,
+            BsonDocument
+        ],
+        Message),
+    lists:length(Message, MessageLen),
+    bson_bits:integer_bytes(MessageLen, 4, little, [L0,L1,L2,L3]),
+    mongo_socket_write(Mongo, Write),
+    send_bytes_and_flush(Message, Write).
+
+c_string(Atom, Bytes) :-
+    core:atom_codes(Atom, Bytes0),
+    lists:append(Bytes0, [0], Bytes).
+
+test_insert :-
+    Document =
+    [
+        hello = [åäö]
+    ],
+    new_mongo(Mongo),
+    insert(Mongo, Document, 'sample_app_development.users'),
     free_mongo(Mongo).
+
+test_command :-
+    Command =
+    [
+        drop = users
+    ],
+    new_mongo(Mongo),
+    command(Mongo, Command, 'sample_app_test'),
+    free_mongo(Mongo).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 /*
 tryit :-

@@ -351,6 +351,18 @@ April 13.
  like a rule.
  This is more in line with the existing JSON parser also.
  Cleaned up some tests (gave them proper tag numbers).
+ Started working on the API slightly, experimenting away.
+ Produced a 
+\noun on
+mongo:insert(Mongo,Document,'db.collection')
+\noun default
+ predicate which actually works.
+ Also implemented a 
+\noun on
+mongo:command(Mongo,CommandDoc,'db')
+\noun default
+ that can send arbitrary special commands to a database.
+ This is awesome.
 \end_layout
 
 \begin_layout Section
