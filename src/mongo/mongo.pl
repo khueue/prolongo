@@ -14,13 +14,27 @@
 mongo_default_host(localhost).
 mongo_default_port(27017).
 
+% Mongo connection structure:
+% mongo(socket(Read,Write))
+
+mongo_socket(Mongo, Read) :-
+    core:arg(1, Mongo, Read).
+
+mongo_socket_read(Mongo, Read) :-
+    mongo_socket(Mongo, Socket),
+    core:arg(1, Socket, Read).
+
+mongo_socket_write(Mongo, Write) :-
+    mongo_socket(Mongo, Socket),
+    core:arg(2, Socket, Write).
+
 new_mongo(Mongo) :-
     mongo_default_host(Host),
     mongo_default_port(Port),
     new_mongo(Host, Port, Mongo).
 
 new_mongo(Host, Port, Mongo) :-
-    Mongo = mongo(Read,Write),
+    Mongo = mongo(socket(Read,Write)),
     setup_call_catcher_cleanup(
         socket:tcp_socket(Socket),
         socket:tcp_connect(Socket, Host:Port),
@@ -30,7 +44,9 @@ new_mongo(Host, Port, Mongo) :-
     socket:tcp_open_socket(Socket, Read, Write).
         %free_mongo(Mongo)). % Do something on fail to open.
 
-free_mongo(mongo(Read,Write)) :-
+free_mongo(Mongo) :-
+    mongo_socket_read(Mongo, Read),
+    mongo_socket_write(Mongo, Write),
     core:close(Read, [force(true)]),
     core:close(Write, [force(true)]).
 
@@ -54,11 +70,11 @@ tryit :-
     [
         hello =
             [
-                key1= myatom,
-                key2= 42,
-                key3= -255.3,
-                key4= [utc(0)],
-                key5= binary(generic,[1,2,3,4])
+                key1 = myatom,
+                key2 = 42,
+                key3 = -255.3,
+                key4 = [utc(0)],
+                key5 = binary(generic,[0,0,0,0,0,1,2,3,4])
             ],
         goodbye =
             [
@@ -71,8 +87,8 @@ tryit :-
     RealLen is LenWithout4 + 4,
     bson_bits:integer_bytes(RealLen, 4, little, BytesForLen),
     append(BytesForLen, Message1, Message),
-    Mongo = mongo(_Read,Write),
     new_mongo(Mongo),
+    mongo_socket_write(Mongo, Write),
     send_bytes(Message, Write),
     core:flush_output(Write),
     /*
