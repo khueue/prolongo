@@ -33,7 +33,7 @@ elements(Elements, Len) -->
     elements(Elements, 0, Len).
 
 elements([], Len, Len) --> [].
-elements([Key:Value|Elements], Len0, Len) -->
+elements([Key=Value|Elements], Len0, Len) -->
     element(Key, Value, LenElement),
     { Len1 is Len0 + LenElement },
     elements(Elements, Len1, Len).
@@ -121,7 +121,7 @@ add_array_keys(List, Array) :-
     add_array_keys(List, 0, Array).
 
 add_array_keys([], _Index, []).
-add_array_keys([Value|Values], Index, [Key:Value|Pairs]) :-
+add_array_keys([Value|Values], Index, [Key=Value|Pairs]) :-
     core:atom_number(Key, Index),
     Index1 is Index + 1,
     add_array_keys(Values, Index1, Pairs).

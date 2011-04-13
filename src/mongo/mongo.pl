@@ -52,15 +52,15 @@ tryit :-
     ], % ... followed by 1+ docs.
     Bson =
     [
-        hello:
+        hello =
             [
-                key1:myatom,
-                key2:42,
-                key3:-255.3,
-                key4:[utc(0)],
-                key5:binary(generic,[1,2,3,4])
+                key1= myatom,
+                key2= 42,
+                key3= -255.3,
+                key4= [utc(0)],
+                key5= binary(generic,[1,2,3,4])
             ],
-        goodbye:
+        goodbye =
             [
                 åäö
             ]
@@ -71,7 +71,7 @@ tryit :-
     RealLen is LenWithout4 + 4,
     bson_bits:integer_bytes(RealLen, 4, little, BytesForLen),
     append(BytesForLen, Message1, Message),
-    Mongo = mongo(Read,Write),
+    Mongo = mongo(_Read,Write),
     new_mongo(Mongo),
     send_bytes(Message, Write),
     core:flush_output(Write),

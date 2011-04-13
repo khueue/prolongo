@@ -2,8 +2,6 @@
 
 ## Todo
 
- * Think about whether ':' might be a bad choice for key/value separator.
-   Bad, simple reason: [hello:-5.05] becomes a clause (:-). Use '=' instead.
  * Start to write proper socket communication.
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
