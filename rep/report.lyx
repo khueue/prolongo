@@ -371,9 +371,17 @@ mongo:command(Mongo,CommandDoc,'db')
 \begin_layout Itemize
 April 14.
  Changed key=value to key-value, hoping that this will be final.
- Using a dash is more idiomatic Prolog and goes hand-in-hand with Association
- Lists, should I choose to use them, which seems more and more likely.
- They seem to be well supported by SWI and SICStus, at least.
+ Using a dash is more idiomatic Prolog and goes hand-in-hand with association
+ lists, should I choose to use them, which seems more and more likely (logarithm
+ic worst-case when fetching value by key etc.).
+ They seem to be well supported by SWI and SICStus, at least, and it seems
+ very easy to convert between key-value lists and assoc lists.
+ Renamed bson:term_bson to bson:pairs_bson, and added bson:assoc_bson, enabling
+ you to choose if a simple list of pairs suffices or if you need to do heavy
+ operations on the document and would prefer a stable complexity.
+ The assoc_bson predicate currently just converts to-and-from lists, but
+ the encoder/decoder must of course be changed to deal with association
+ lists from scratch.
 \end_layout
 
 \begin_layout Section

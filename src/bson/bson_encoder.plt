@@ -1,6 +1,6 @@
 :- include(misc(common)).
 
-:- begin_tests('bson_encoder:term_to_bson/2').
+:- begin_tests('bson_encoder:pairs_to_bson/2').
 
 test('empty doc', [true(Got == Expected)]) :-
     Term =
@@ -11,7 +11,7 @@ test('empty doc', [true(Got == Expected)]) :-
         5,0,0,0, % Length of top doc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x01, float', [true(Got == Expected)]) :-
     Term =
@@ -26,7 +26,7 @@ test('0x01, float', [true(Got == Expected)]) :-
             51,51,51,51, 51,51,20,64, % Double data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x02, string', [true(Got == Expected)]) :-
     Term =
@@ -42,7 +42,7 @@ test('0x02, string', [true(Got == Expected)]) :-
             0xc3,0xa4, 0, 0xc3,0xa4, 0, % String data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x03, embedded doc', [true(Got == Expected)]) :-
     Term =
@@ -73,7 +73,7 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
             0, % End of embedded doc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Term =
@@ -99,7 +99,7 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
             0, % End of embedded doc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, generic', [true(Got == Expected)]) :-
     Term =
@@ -116,7 +116,7 @@ test('0x05, binary, generic', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, function', [true(Got == Expected)]) :-
     Term =
@@ -133,7 +133,7 @@ test('0x05, binary, function', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, old generic', [true(Got == Expected)]) :-
     Term =
@@ -150,7 +150,7 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, uuid', [true(Got == Expected)]) :-
     Term =
@@ -167,7 +167,7 @@ test('0x05, binary, uuid', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, md5', [true(Got == Expected)]) :-
     Term =
@@ -184,7 +184,7 @@ test('0x05, binary, md5', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x05, binary, user defined', [true(Got == Expected)]) :-
     Term =
@@ -201,7 +201,7 @@ test('0x05, binary, user defined', [true(Got == Expected)]) :-
             0,1,2,1,0, % Binary data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x06, undefined', [true(Got == Expected)]) :-
     Term =
@@ -215,7 +215,7 @@ test('0x06, undefined', [true(Got == Expected)]) :-
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x07, object id', [true(Got == Expected)]) :-
     Term =
@@ -233,7 +233,7 @@ test('0x07, object id', [true(Got == Expected)]) :-
             0x95,0x36,0x9d,      % ObjectID, inc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x08, boolean false', [true(Got == Expected)]) :-
     Term =
@@ -248,7 +248,7 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
             0, % Boolean data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x08, boolean true', [true(Got == Expected)]) :-
     Term =
@@ -263,7 +263,7 @@ test('0x08, boolean true', [true(Got == Expected)]) :-
             1, % Boolean data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x09, utc datetime', [true(Got == Expected)]) :-
     Term =
@@ -278,7 +278,7 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
             188,11,99,58,47,1,0,0, % UTC datetime data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0A, null', [true(Got == Expected)]) :-
     Term =
@@ -292,7 +292,7 @@ test('0x0A, null', [true(Got == Expected)]) :-
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0B, regex', [true(Got == Expected)]) :-
     Term =
@@ -308,7 +308,7 @@ test('0x0B, regex', [true(Got == Expected)]) :-
             105, 0, % Regex options.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0C, db pointer', [true(Got == Expected)]) :-
     Term =
@@ -328,7 +328,7 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
             0x95,0x36,0x9d,      % ObjectID, inc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0D, js', [true(Got == Expected)]) :-
     Term =
@@ -344,7 +344,7 @@ test('0x0D, js', [true(Got == Expected)]) :-
             99,111,100,101,32,46,46,46, 0, % String data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0E, symbol', [true(Got == Expected)]) :-
     Term =
@@ -360,7 +360,7 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
             97,116,111,109, 0, % String data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x0F, js with scope', [true(Got == Expected)]) :-
     Term =
@@ -382,7 +382,7 @@ test('0x0F, js with scope', [true(Got == Expected)]) :-
                 0, % End of embedded doc.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x10, int32', [true(Got == Expected)]) :-
     Term =
@@ -397,7 +397,7 @@ test('0x10, int32', [true(Got == Expected)]) :-
             32,0,0,0, % Int32 data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x11, mongostamp', [true(Got == Expected)]) :-
     Term =
@@ -412,7 +412,7 @@ test('0x11, mongostamp', [true(Got == Expected)]) :-
             0,0,0,0, 0,0,0,0, % Int64 mongostamp data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x12, int64', [true(Got == Expected)]) :-
     Term =
@@ -427,7 +427,7 @@ test('0x12, int64', [true(Got == Expected)]) :-
             0xFF,0xFF,0xFF,0xFF, 0xFF,0xFF,0xFF,0x7F, % Int64 data.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0xFF, min', [true(Got == Expected)]) :-
     Term =
@@ -441,7 +441,7 @@ test('0xFF, min', [true(Got == Expected)]) :-
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('0x7F, max', [true(Got == Expected)]) :-
     Term =
@@ -455,10 +455,10 @@ test('0x7F, max', [true(Got == Expected)]) :-
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
-    bson_encoder:term_to_bson(Term, Got).
+    bson_encoder:pairs_to_bson(Term, Got).
 
 test('invalid', [throws(bson_error(invalid))]) :-
     Term = invalid_bson,
-    bson_encoder:term_to_bson(Term, _Got).
+    bson_encoder:pairs_to_bson(Term, _Got).
 
-:- end_tests('bson_encoder:term_to_bson/2').
+:- end_tests('bson_encoder:pairs_to_bson/2').

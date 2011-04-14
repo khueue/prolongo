@@ -1,6 +1,6 @@
 :- module(bson_decoder,
     [
-        bson_to_term/2
+        bson_to_pairs/2
     ]).
 
 % <module> BSON decoder.
@@ -10,16 +10,16 @@
 :- use_module(bson_bits, []).
 :- use_module(bson_unicode, []).
 
-%%  bson_to_term(+Bson:list(byte), ?Term:list(pair)) is semidet.
+%%  bson_to_pairs(+Bson:list(byte), ?Term:list(pair)) is semidet.
 %
 %   True if Bson is the BSON byte-encoding of Term.
 %
 %   @throws bson_error(Reason)
 
-bson_to_term(Bson, Term) :-
-    phrase(document(Term), Bson), %inbuilt
+bson_to_pairs(Bson, Term) :-
+    phrase(document(Term), Bson),
     !.
-bson_to_term(_Bson, _Term) :-
+bson_to_pairs(_Bson, _Term) :-
     throw(bson_error(invalid)).
 
 document(Elements) -->
