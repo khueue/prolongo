@@ -3,7 +3,11 @@
         bson_to_pairs/2
     ]).
 
-% <module> BSON decoder.
+/** <module> BSON decoder.
+ *
+ *  This module is not meant to be used directly, but instead
+ *  used through bson.
+ */
 
 :- include(misc(common)).
 
@@ -29,89 +33,31 @@ document(Elements) -->
 
 elements([]) --> [].
 elements([Key-Value|Elements]) -->
-    element(Key, Value),
+    [Tag],
+    key(Key),
+    value(Tag, Value),
     elements(Elements).
 
-element(Name, Value) -->
-    [0x01], !,
-    key(Name),
-    value_double(Value).
-element(Name, Value) -->
-    [0x02], !,
-    key(Name),
-    value_string(Value).
-element(Name, Value) -->
-    [0x03], !,
-    key(Name),
-    value_document(Value).
-element(Name, Value) -->
-    [0x04], !,
-    key(Name),
-    value_array(Value).
-element(Name, Value) -->
-    [0x05], !,
-    key(Name),
-    value_binary(Value).
-element(Name, Value) -->
-    [0x06], !, % Deprecated.
-    key(Name),
-    value_undefined(Value).
-element(Name, Value) -->
-    [0x07], !,
-    key(Name),
-    value_object_id(Value).
-element(Name, Value) -->
-    [0x08], !,
-    key(Name),
-    value_boolean(Value).
-element(Name, Value) -->
-    [0x09], !,
-    key(Name),
-    value_utc(Value).
-element(Name, Value) -->
-    [0x0A], !,
-    key(Name),
-    value_null(Value).
-element(Name, Value) -->
-    [0x0B], !,
-    key(Name),
-    value_regex(Value).
-element(Name, Value) -->
-    [0x0C], !, % Deprecated.
-    key(Name),
-    value_db_pointer(Value).
-element(Name, Value) -->
-    [0x0D], !,
-    key(Name),
-    value_js(Value).
-element(Name, Value) -->
-    [0x0E], !,
-    key(Name),
-    value_symbol(Value).
-element(Name, Value) -->
-    [0x0F], !,
-    key(Name),
-    value_js_with_scope(Value).
-element(Name, Value) -->
-    [0x10], !,
-    key(Name),
-    value_int32(Value).
-element(Name, Value) -->
-    [0x11], !,
-    key(Name),
-    value_mongostamp(Value).
-element(Name, Value) -->
-    [0x12], !,
-    key(Name),
-    value_int64(Value).
-element(Name, Value) -->
-    [0xFF], !,
-    key(Name),
-    value_min(Value).
-element(Name, Value) -->
-    [0x7F], !,
-    key(Name),
-    value_max(Value).
+value(0x01, Value) --> value_double(Value).
+value(0x02, Value) --> value_string(Value).
+value(0x03, Value) --> value_document(Value).
+value(0x04, Value) --> value_array(Value).
+value(0x05, Value) --> value_binary(Value).
+value(0x06, Value) --> value_undefined(Value). % Deprecated.
+value(0x07, Value) --> value_object_id(Value).
+value(0x08, Value) --> value_boolean(Value).
+value(0x09, Value) --> value_utc(Value).
+value(0x0A, Value) --> value_null(Value).
+value(0x0B, Value) --> value_regex(Value).
+value(0x0C, Value) --> value_db_pointer(Value). % Deprecated.
+value(0x0D, Value) --> value_js(Value).
+value(0x0E, Value) --> value_symbol(Value).
+value(0x0F, Value) --> value_js_with_scope(Value).
+value(0x10, Value) --> value_int32(Value).
+value(0x11, Value) --> value_mongostamp(Value).
+value(0x12, Value) --> value_int64(Value).
+value(0xFF, Value) --> value_min(Value).
+value(0x7F, Value) --> value_max(Value).
 
 key(Name) -->
     c_string(Name).
@@ -184,9 +130,10 @@ pairs_keys_values([], [], []).
 pairs_keys_values([Key-Value|Pairs], [Key|Keys], [Value|Values]) :-
     pairs_keys_values(Pairs, Keys, Values).
 
-object_id(AtomOrCodes) -->
-    n_bytes_as_unsigned_integer(Integer, 12),
-    { number_to_hex(Integer, AtomOrCodes) }.
+object_id(ObjectId) -->
+    bytes_n(Bytes, 12),
+    { bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes) },
+    { number_to_hex(Unsigned, ObjectId) }.
 
 subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.
@@ -222,16 +169,6 @@ bytes_n([Byte|Bytes], Length0) -->
     [Byte], % May be anything.
     { Length1 is Length0 - 1 },
     bytes_n(Bytes, Length1).
-
-n_bytes_as_unsigned_integer(Integer, Length) -->
-    n_bytes_as_unsigned_integer(Integer, 0, Length).
-
-n_bytes_as_unsigned_integer(Integer, Integer, 0) --> [], !.
-n_bytes_as_unsigned_integer(Integer, Integer0, Length0) -->
-    [Byte],
-    { Integer1 is (Integer0 << 8) \/ Byte },
-    { Length1 is Length0 - 1 },
-    n_bytes_as_unsigned_integer(Integer, Integer1, Length1).
 
 int32(Integer) -->
     int_size(Integer, 4).

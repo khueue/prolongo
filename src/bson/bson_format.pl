@@ -4,7 +4,8 @@
         pp/3
     ]).
 
-% <module> Pretty-printing for BSON-formatted terms.
+/** <module> Pretty-printing for BSON-formatted terms.
+ */
 
 :- include(misc(common)).
 

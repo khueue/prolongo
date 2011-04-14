@@ -6,9 +6,10 @@
         bson_version/1
     ]).
 
-% <module> BSON encoder/decoder.
-%
-% Specification: http://bsonspec.org/
+/** <module> BSON encoder/decoder.
+ *
+ *  Specification: http://bsonspec.org/
+ */
 
 :- include(misc(common)).
 

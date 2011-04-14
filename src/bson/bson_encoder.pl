@@ -3,7 +3,11 @@
         pairs_to_bson/2
     ]).
 
-% <module> BSON encoder.
+/** <module> BSON encoder.
+ *
+ *  This module is not meant to be used directly, but instead
+ *  used through bson.
+ */
 
 :- include(misc(common)).
 

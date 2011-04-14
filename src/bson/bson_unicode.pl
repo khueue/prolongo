@@ -4,11 +4,12 @@
         utf8_bytes_size/3
     ]).
 
-% <module> Unicode conversions between atom and bytes.
-%
-% A bit of a hack, but in order to interpret raw bytes as UTF-8
-% we use a memory file as a temporary buffer, fill it with the
-% bytes and then read them back, treating them as UTF-8.
+/** <module> Unicode conversions between atom and bytes.
+ *
+ *  A bit of a hack, but in order to interpret raw bytes as UTF-8
+ *  we use a memory file as a temporary buffer, fill it with the
+ *  bytes and then read them back, treating them as UTF-8.
+ */
 
 :- include(misc(common)).
 

@@ -7,7 +7,12 @@
         fits_in_64_bits/1
     ]).
 
-% <module> Low-level bytes-to-number conversions.
+/** <module> Low-level bytes-to-number conversions.
+ *
+ *  Note: This module favors little-endian conversions in such a way
+ *  that big-endian conversions are little-endian with a reverse.
+ *  This should probably be fixed future versions.
+ */
 
 :- include(misc(common)).
 

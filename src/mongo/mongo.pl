@@ -5,7 +5,8 @@
         free_mongo/1
     ]).
 
-% <module> MongoDB driver.
+/** <module> MongoDB driver.
+ */
 
 :- include(misc(common)).
 
