@@ -110,29 +110,3 @@ bytes_to_utf8(Bytes, Utf8) :-
         memory_file:atom_to_memory_file(RawAtom, MemFile),
         memory_file:memory_file_to_atom(MemFile, Utf8, utf8),
         memory_file:free_memory_file(MemFile)).
-
-%%%%%%%%%%%%%%%%%%%%%%
-% Benchmarking:
-
-list_bytes(0, []) :- !.
-list_bytes(N, [0xc3,0xa4|List]) :-
-    N > 0,
-    N1 is N - 1,
-    list_bytes(N1, List).
-
-bmark :-
-    list_bytes(10000, Bytes),
-    bson_unicode:utf8_bytes(Utf8, Bytes),
-    benchmark(5000, bson_unicode:utf8_bytes(Utf8, _Bytes)).
-
-benchmark(N, Goal) :-
-    format('Benchmark ...~n'),
-    call(Goal), % Exercise it once first.
-    time(n_times_do(N, Goal)).
-
-n_times_do(N, Goal) :-
-    M is integer(N), % So that we can pass 10**6.
-    between(1, M, _),
-    call(Goal),
-    fail.
-n_times_do(_, _).

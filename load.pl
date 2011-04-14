@@ -2,8 +2,6 @@
 % a predicate for running the test suite.
 
 setup_globals :-
-    % Maximal compatibility between Prologs.
-    set_prolog_flag(language, iso),
     % For optimized compiles, tests are by default ignored.
     set_test_options([load(always)]).
     % Try to make everything as UTF-8 as possible.
@@ -34,35 +32,31 @@ setup_path(PathPrefix, PathSuffix, Name) :-
 :- include(misc(common)).
 
 test :-
-    load_all_modules,
-    load_all_tests,
+    load_project_modules,
+    load_project_tests,
     run_test_suite.
 
 repl :-
-    load_all_modules,
+    load_project_modules,
     use_module(library(test_wizard), []),
     set_prolog_flag(log_query_file, 'querylog.pl').
 
 cov :-
-    load_all_modules,
-    load_all_tests,
+    load_project_modules,
+    load_project_tests,
     run_test_suite_with_coverage.
 
-bench :-
-    load_all_modules,
-    bson_unicode:bmark.
-
 doc :-
-    load_all_modules,
+    load_project_modules,
     use_module('doc/doc_files'),
     pldoc_files:doc_save('src/', [recursive(true),doc_root('doc/')]).
 
-load_all_modules :-
+load_project_modules :-
     use_module(library(pldoc), []), % Load first to process all doc comments.
     use_module(mongo(mongo), []),
     use_module(bson(bson_format), []). % Just during some dev.
 
-load_all_tests :-
+load_project_tests :-
     plunit:load_test_files([]).
 
 run_test_suite :-
