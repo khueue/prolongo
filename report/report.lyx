@@ -386,6 +386,8 @@ ic worst-case when fetching value by key etc.).
  is great, although it is a bit strict in what it accepts).
  Removed old n_bytes_to_unsigned_integer from decoder -- we have bson_bits
  for that kind of heavy lifting.
+ Fixed a bug with empty embedded arrays.
+ Apparently [] is considered an atom.
 \end_layout
 
 \begin_layout Section
