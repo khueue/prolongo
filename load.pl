@@ -52,7 +52,8 @@ doc :-
 
 load_all_modules :-
     use_module(library(pldoc), []), % Load first to process all doc comments.
-    use_module(mongo(mongo), []).
+    use_module(mongo(mongo), []),
+    use_module(bson(bson_format), []). % Just during some dev.
 
 load_all_tests :-
     plunit:load_test_files([]).

@@ -8,7 +8,7 @@
 
 :- include(misc(common)).
 
-%%  pp(Term) is det.
+%%  pp(+Term) is det.
 %
 %   Pretty-prints the key/value pairs of Term. Indentation starts
 %   at 0 (no indentation), and each level is indented by an extra
@@ -17,7 +17,7 @@
 pp(Term) :-
     pp(Term, 0, '  ').
 
-%%  pp(Term, Level, Tab) is det.
+%%  pp(+Term, +Level, +Tab) is det.
 %
 %   Pretty-prints the key/value pairs of Term. Indentation starts
 %   at Level, and each level is indented by an extra Tab.
