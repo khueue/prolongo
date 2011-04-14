@@ -30,7 +30,7 @@ cov: compile
 .PHONY: repl
 repl: compile
 	@ echo "--- Load and enter REPL ..."
-	$(PROLOG) -s load -g load_all_modules
+	$(PROLOG) -s load -g repl
 
 .PHONY: doc
 doc: compile

@@ -2,6 +2,8 @@
 % a predicate for running the test suite.
 
 setup_globals :-
+    % Maximal compatibility between Prologs.
+    set_prolog_flag(language, iso),
     % For optimized compiles, tests are by default ignored.
     set_test_options([load(always)]).
     % Try to make everything as UTF-8 as possible.
@@ -35,6 +37,11 @@ test :-
     load_all_modules,
     load_all_tests,
     run_test_suite.
+
+repl :-
+    load_all_modules,
+    use_module(library(test_wizard), []),
+    set_prolog_flag(log_query_file, 'querylog.pl').
 
 cov :-
     load_all_modules,
