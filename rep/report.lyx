@@ -378,10 +378,14 @@ ic worst-case when fetching value by key etc.).
  very easy to convert between key-value lists and assoc lists.
  Renamed bson:term_bson to bson:pairs_bson, and added bson:assoc_bson, enabling
  you to choose if a simple list of pairs suffices or if you need to do heavy
- operations on the document and would prefer a stable complexity.
+ operations on the document and would prefer predictable performance.
  The assoc_bson predicate currently just converts to-and-from lists, but
  the encoder/decoder must of course be changed to deal with association
  lists from scratch.
+ Rewrote module comments to be acceptable to PlUnit (documentation compiling
+ is great, although it is a bit strict in what it accepts).
+ Removed old n_bytes_to_unsigned_integer from decoder -- we have bson_bits
+ for that kind of heavy lifting.
 \end_layout
 
 \begin_layout Section

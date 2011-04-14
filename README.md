@@ -3,6 +3,7 @@
 ## Todo
 
  * Add tests that convert back-and-forth between term and bytes.
+ * Properly implement bson:assoc_bson/2. (Now it just wraps the other.)
  * Start thinking about how to write the report.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
@@ -24,7 +25,7 @@ and run the test suite.
 
 ## Future
 
- * Move BSON to separate repository.
+ * Move BSON to separate repository (it is not inherent to MongoDB).
 
 ## Links
 
