@@ -80,8 +80,8 @@ bytes_to_integer(big, Bytes, Integer) :- !,
 %%  unsigned_bytes(?Unsigned, +NumBytes, +Endian, +Bytes) is semidet.
 %
 %   True if Unsigned is the unsigned (possibly unbounded) integer
-%   represented by the bytes in Bytes, given NumBytes > 0 and
-%   Endian little or big.
+%   represented by the bytes in Bytes, given enough NumBytes to hold
+%   Unsigned, and Endian little or big.
 
 unsigned_bytes(Unsigned, NumBytes, Endian, Bytes) :-
     core:nonvar(Unsigned),
