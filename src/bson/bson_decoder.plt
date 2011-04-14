@@ -5,7 +5,7 @@
 test('empty doc', [true(Got == Expected)]) :-
     Bson =
     [
-        5,0,0,0, % Length of top doc.
+        xxx_not_impl,0,0,0, % Length of top doc.
         0 % End of top doc.
     ],
     Expected =
@@ -59,7 +59,7 @@ test('0x02, nuls not allowed in ename', [throws(bson_error(_))]) :-
 test('0x03, embedded doc', [true(Got == Expected)]) :-
     Bson =
     [
-        50,0,0,0, % Length of top doc.
+        xxx_not_impl,0,0,0, % Length of top doc.
         0x03, % Tag.
             104,101,108,108,111, 0, % Ename.
             38,0,0,0, % Length of embedded doc.
@@ -90,7 +90,7 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
 test('0x03, embedded empty doc', [true(Got == Expected)]) :-
     Bson =
     [
-        17,0,0,0, % Length of top doc.
+        xxx_not_impl,0,0,0, % Length of top doc.
         0x03, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of embedded doc.
@@ -106,7 +106,7 @@ test('0x03, embedded empty doc', [true(Got == Expected)]) :-
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Bson =
     [
-        50,0,0,0, % Length of top doc.
+        xxx_not_impl,0,0,0, % Length of top doc.
         0x04, % Tag.
             104,101,108,108,111, 0, % Ename.
             38,0,0,0, % Length of embedded doc.
@@ -132,7 +132,7 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
 test('0x04, embedded empty array', [true(Got == Expected)]) :-
     Bson =
     [
-        17,0,0,0, % Length of top doc.
+        xxx_not_impl,0,0,0, % Length of top doc.
         0x04, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of embedded doc.
