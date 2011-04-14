@@ -75,6 +75,22 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
     ],
     bson_encoder:pairs_to_bson(Term, Got).
 
+test('0x03, embedded empty doc', [true(Got == Expected)]) :-
+    Term =
+    [
+        hello - []
+    ],
+    Expected =
+    [
+        17,0,0,0, % Length of top doc.
+        0x03, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of embedded doc.
+            0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    bson_encoder:pairs_to_bson(Term, Got).
+
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Term =
     [

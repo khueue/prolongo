@@ -87,6 +87,22 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
     ],
     bson_decoder:bson_to_pairs(Bson, Got).
 
+test('0x03, embedded empty doc', [true(Got == Expected)]) :-
+    Bson =
+    [
+        17,0,0,0, % Length of top doc.
+        0x03, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of embedded doc.
+            0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello - []
+    ],
+    bson_decoder:bson_to_pairs(Bson, Got).
+
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Bson =
     [
@@ -110,6 +126,22 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
     Expected =
     [
         hello - ['awesome', 5.05, 1986]
+    ],
+    bson_decoder:bson_to_pairs(Bson, Got).
+
+test('0x04, embedded empty array', [true(Got == Expected)]) :-
+    Bson =
+    [
+        17,0,0,0, % Length of top doc.
+        0x04, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of embedded doc.
+            0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello - []
     ],
     bson_decoder:bson_to_pairs(Bson, Got).
 
