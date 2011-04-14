@@ -27,9 +27,9 @@ cov: compile
 	@ echo "--- Run tests, print test coverage and exit ..."
 	$(PROLOG) -s load -g cov -t halt
 
-.PHONY: stay
-stay: compile
-	@ echo "--- Run tests ..."
+.PHONY: repl
+repl: compile
+	@ echo "--- Load and enter REPL ..."
 	$(PROLOG) -s load -g load_all_modules
 
 .PHONY: doc
