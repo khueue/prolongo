@@ -145,17 +145,17 @@ subtype(uuid)         --> [0x03], !.
 subtype(md5)          --> [0x05], !.
 subtype(user_defined) --> [0x80], !.
 
-string(AtomOrCodes) -->
+string(Atom) -->
     int32(Length),
-    string(AtomOrCodes, Length).
+    string(Atom, Length).
 
-c_string(AtomOrCodes) -->
+c_string(Atom) -->
     bytes_stop_on_nul(Bytes),
-    { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
+    { bson_unicode:utf8_bytes(Atom, Bytes) }.
 
-string(AtomOrCodes, Length) -->
+string(Atom, Length) -->
     n_bytes_including_nul(Bytes, Length),
-    { bson_unicode:utf8_bytes(AtomOrCodes, Bytes) }.
+    { bson_unicode:utf8_bytes(Atom, Bytes) }.
 
 bytes_stop_on_nul([]) --> [0], !.
 bytes_stop_on_nul([NotNul|Bytes]) -->
