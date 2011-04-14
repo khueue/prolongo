@@ -30,7 +30,8 @@ and run the test suite.
 
 ## Future
 
- * Move BSON to separate repository (it is not inherent to MongoDB).
+ * Move BSON to separate repository (BSON is not inherent to MongoDB).
+ * Improve compatibility between Prologs.
 
 ## Links
 
