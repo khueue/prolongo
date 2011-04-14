@@ -9,6 +9,11 @@ ms_since_epoch(MilliSeconds) :-
     FloatMilliSeconds is FloatSeconds * 1000,
     MilliSeconds is floor(FloatMilliSeconds).
 
+doc_value([], _Key, null).
+doc_value([Key-Value|_Pairs], Key, Value) :- !.
+doc_value([_Pair|Pairs], Key, Value) :-
+    doc_value(Pairs, Key, Value).
+
 :- begin_tests('mongo:insert/3').
 
 test('insert',
@@ -19,8 +24,8 @@ test('insert',
     ms_since_epoch(MilliSeconds),
     Document =
     [
-        hello = [åäö,5.05],
-        now   = utc(MilliSeconds)
+        hello - [åäö,5.05],
+        now   - utc(MilliSeconds)
     ],
     database_dot_collection(DbDotColl),
     mongo:insert(Mongo, Document, DbDotColl).
@@ -36,14 +41,15 @@ test('drop collection',
 ]) :-
     Command =
     [
-        drop = Coll
+        drop - Coll
     ],
     collection(Coll),
     database(Db),
-    mongo:command(Mongo, Command, Db).
+    mongo:command(Mongo, Command, Db, Result),
+    doc_value(Result, ok, 1.0).
 
 /*
-% Takes a bit too long when MongoDB realloctes the collection later.
+% Takes a bit too long when MongoDB reallocates the collection later.
 test('drop database',
 [
     setup(mongo:new_mongo(Mongo)),
@@ -51,7 +57,7 @@ test('drop database',
 ]) :-
     Command =
     [
-        dropDatabase = 1
+        dropDatabase - 1
     ],
     database(Db),
     mongo:command(Mongo, Command, Db).

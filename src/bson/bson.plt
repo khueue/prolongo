@@ -5,7 +5,7 @@
 test('nonvar, nonvar') :-
     Term =
     [
-        hello = 256
+        hello - 256
     ],
     Bson =
     [
@@ -20,7 +20,7 @@ test('nonvar, nonvar') :-
 test('nonvar, var', [true(Got == Expected)]) :-
     Term =
     [
-        hello = 256
+        hello - 256
     ],
     Expected =
     [
@@ -35,7 +35,7 @@ test('nonvar, var', [true(Got == Expected)]) :-
 test('var, nonvar', [true(Got == Expected)]) :-
     Expected =
     [
-        hello = 256
+        hello - 256
     ],
     Bson =
     [

@@ -28,8 +28,8 @@ document(Elements) -->
     [0].
 
 elements([]) --> [].
-elements([Name=Value|Elements]) -->
-    element(Name, Value),
+elements([Key-Value|Elements]) -->
+    element(Key, Value),
     elements(Elements).
 
 element(Name, Value) -->
@@ -181,7 +181,7 @@ value_int64(Integer) -->
     int64(Integer).
 
 pairs_keys_values([], [], []).
-pairs_keys_values([Key=Value|Pairs], [Key|Keys], [Value|Values]) :-
+pairs_keys_values([Key-Value|Pairs], [Key|Keys], [Value|Values]) :-
     pairs_keys_values(Pairs, Keys, Values).
 
 object_id(AtomOrCodes) -->

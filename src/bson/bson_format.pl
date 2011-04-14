@@ -31,12 +31,12 @@ pp_list(List, Level, Tab) :-
     pp_pairs(List, Level1, Tab),
     write_indent(Level, Tab), write(']').
 
-pp_pairs([Key=Value], Level, Tab) :-
+pp_pairs([Key-Value], Level, Tab) :-
     !,
-    pp_pair(Key=Value, Level, Tab), nl.
-pp_pairs([Key=Value|Pairs], Level, Tab) :-
+    pp_pair(Key-Value, Level, Tab), nl.
+pp_pairs([Key-Value|Pairs], Level, Tab) :-
     !,
-    pp_pair(Key=Value, Level, Tab), write(','), nl,
+    pp_pair(Key-Value, Level, Tab), write(','), nl,
     pp_pairs(Pairs, Level, Tab).
 pp_pairs([Value], _Level, _Tab) :-
     !,
@@ -45,14 +45,14 @@ pp_pairs([Value|Values], Level, Tab) :-
     write_value(Value), write(','),
     pp_pairs(Values, Level, Tab).
 
-pp_pair(Key=Value, Level, Tab) :-
+pp_pair(Key-Value, Level, Tab) :-
     Value = [_=_|_],
     !,
     Level1 is Level + 1,
-    write_indent(Level, Tab), write_value(Key), write(' = '), nl,
+    write_indent(Level, Tab), write_value(Key), write(' - '), nl,
     pp_list(Value, Level1, Tab).
-pp_pair(Key=Value, Level, Tab) :-
-    write_indent(Level, Tab), write_value(Key), write(' = '), write_value(Value).
+pp_pair(Key-Value, Level, Tab) :-
+    write_indent(Level, Tab), write_value(Key), write(' - '), write_value(Value).
 
 write_value(Atom) :-
     core:atom(Atom),

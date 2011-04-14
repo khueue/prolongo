@@ -16,7 +16,7 @@ test('empty doc', [true(Got == Expected)]) :-
 test('0x01, float', [true(Got == Expected)]) :-
     Term =
     [
-        hello = 5.05
+        hello - 5.05
     ],
     Expected =
     [
@@ -31,7 +31,7 @@ test('0x01, float', [true(Got == Expected)]) :-
 test('0x02, string', [true(Got == Expected)]) :-
     Term =
     [
-        'ä' = 'ä\0ä'
+        'ä' - 'ä\0ä'
     ],
     Expected =
     [
@@ -47,11 +47,11 @@ test('0x02, string', [true(Got == Expected)]) :-
 test('0x03, embedded doc', [true(Got == Expected)]) :-
     Term =
     [
-        hello =
+        hello -
             [
-                'a' = 'awesome',
-                'b' = 5.05,
-                'c' = 1986
+                'a' - 'awesome',
+                'b' - 5.05,
+                'c' - 1986
             ]
     ],
     Expected =
@@ -78,7 +78,7 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Term =
     [
-        hello = ['awesome', 5.05, 1986]
+        hello - ['awesome', 5.05, 1986]
     ],
     Expected =
     [
@@ -104,7 +104,7 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
 test('0x05, binary, generic', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(generic, [0,1,2,1,0])
+        hello - binary(generic, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -121,7 +121,7 @@ test('0x05, binary, generic', [true(Got == Expected)]) :-
 test('0x05, binary, function', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(function, [0,1,2,1,0])
+        hello - binary(function, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -138,7 +138,7 @@ test('0x05, binary, function', [true(Got == Expected)]) :-
 test('0x05, binary, old generic', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(old_generic, [0,1,2,1,0])
+        hello - binary(old_generic, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -155,7 +155,7 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
 test('0x05, binary, uuid', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(uuid, [0,1,2,1,0])
+        hello - binary(uuid, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -172,7 +172,7 @@ test('0x05, binary, uuid', [true(Got == Expected)]) :-
 test('0x05, binary, md5', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(md5, [0,1,2,1,0])
+        hello - binary(md5, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -189,7 +189,7 @@ test('0x05, binary, md5', [true(Got == Expected)]) :-
 test('0x05, binary, user defined', [true(Got == Expected)]) :-
     Term =
     [
-        hello = binary(user_defined, [0,1,2,1,0])
+        hello - binary(user_defined, [0,1,2,1,0])
     ],
     Expected =
     [
@@ -206,7 +206,7 @@ test('0x05, binary, user defined', [true(Got == Expected)]) :-
 test('0x06, undefined', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(undefined)
+        hello - @(undefined)
     ],
     Expected =
     [
@@ -220,7 +220,7 @@ test('0x06, undefined', [true(Got == Expected)]) :-
 test('0x07, object id', [true(Got == Expected)]) :-
     Term =
     [
-        hello = object_id('47cc67093475061e3d95369d')
+        hello - object_id('47cc67093475061e3d95369d')
     ],
     Expected =
     [
@@ -238,7 +238,7 @@ test('0x07, object id', [true(Got == Expected)]) :-
 test('0x08, boolean false', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(false)
+        hello - @(false)
     ],
     Expected =
     [
@@ -253,7 +253,7 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
 test('0x08, boolean true', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(true)
+        hello - @(true)
     ],
     Expected =
     [
@@ -268,7 +268,7 @@ test('0x08, boolean true', [true(Got == Expected)]) :-
 test('0x09, utc datetime', [true(Got == Expected)]) :-
     Term =
     [
-        hello = utc(1302354660284) % date(2011, 4, 9, ...)
+        hello - utc(1302354660284) % date(2011, 4, 9, ...)
     ],
     Expected =
     [
@@ -283,7 +283,7 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
 test('0x0A, null', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(null)
+        hello - @(null)
     ],
     Expected =
     [
@@ -297,7 +297,7 @@ test('0x0A, null', [true(Got == Expected)]) :-
 test('0x0B, regex', [true(Got == Expected)]) :-
     Term =
     [
-        hello = regex('a','i')
+        hello - regex('a','i')
     ],
     Expected =
     [
@@ -313,7 +313,7 @@ test('0x0B, regex', [true(Got == Expected)]) :-
 test('0x0C, db pointer', [true(Got == Expected)]) :-
     Term =
     [
-        hello = db_pointer('a', '47cc67093475061e3d95369d')
+        hello - db_pointer('a', '47cc67093475061e3d95369d')
     ],
     Expected =
     [
@@ -333,7 +333,7 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
 test('0x0D, js', [true(Got == Expected)]) :-
     Term =
     [
-        js = js('code ...')
+        js - js('code ...')
     ],
     Expected =
     [
@@ -349,7 +349,7 @@ test('0x0D, js', [true(Got == Expected)]) :-
 test('0x0E, symbol', [true(Got == Expected)]) :-
     Term =
     [
-        hello = symbol(atom)
+        hello - symbol(atom)
     ],
     Expected =
     [
@@ -365,7 +365,7 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
 test('0x0F, js with scope', [true(Got == Expected)]) :-
     Term =
     [
-        js = js('code ...', [hello=32])
+        js - js('code ...', [hello-32])
     ],
     Expected =
     [
@@ -387,7 +387,7 @@ test('0x0F, js with scope', [true(Got == Expected)]) :-
 test('0x10, int32', [true(Got == Expected)]) :-
     Term =
     [
-        hello = 32
+        hello - 32
     ],
     Expected =
     [
@@ -402,7 +402,7 @@ test('0x10, int32', [true(Got == Expected)]) :-
 test('0x11, mongostamp', [true(Got == Expected)]) :-
     Term =
     [
-        hello = mongostamp(0)
+        hello - mongostamp(0)
     ],
     Expected =
     [
@@ -417,7 +417,7 @@ test('0x11, mongostamp', [true(Got == Expected)]) :-
 test('0x12, int64', [true(Got == Expected)]) :-
     Term =
     [
-        hello = 9223372036854775807
+        hello - 9223372036854775807
     ],
     Expected =
     [
@@ -432,7 +432,7 @@ test('0x12, int64', [true(Got == Expected)]) :-
 test('0xFF, min', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(min)
+        hello - @(min)
     ],
     Expected =
     [
@@ -446,7 +446,7 @@ test('0xFF, min', [true(Got == Expected)]) :-
 test('0x7F, max', [true(Got == Expected)]) :-
     Term =
     [
-        hello = @(max)
+        hello - @(max)
     ],
     Expected =
     [
