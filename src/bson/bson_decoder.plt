@@ -1,9 +1,9 @@
 :- include(misc(common)).
 
-:- begin_tests('bson_decoder:bson_to_pairs/2').
+:- begin_tests('bson_decoder:bytes_to_doc/2').
 
 test('empty doc', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0 % End of top doc.
@@ -11,10 +11,10 @@ test('empty doc', [true(Got == Expected)]) :-
     Expected =
     [
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x01, float', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x01, % Tag.
@@ -26,10 +26,10 @@ test('0x01, float', [true(Got == Expected)]) :-
     [
         hello - 5.05
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x02, string', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x02, % Tag.
@@ -42,10 +42,10 @@ test('0x02, string', [true(Got == Expected)]) :-
     [
         'ä' - 'ä\0ä'
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x02, nuls not allowed in ename', [throws(bson_error(_))]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x02, % Tag.
@@ -54,10 +54,10 @@ test('0x02, nuls not allowed in ename', [throws(bson_error(_))]) :-
             0xc3,0xa4, 0, % String data.
         0 % End of top doc.
     ],
-    bson_decoder:bson_to_pairs(Bson, _Got).
+    bson_decoder:bytes_to_doc(Bytes, _Got).
 
 test('0x03, embedded doc', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x03, % Tag.
@@ -85,10 +85,10 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
                 'c' - 1986
             ]
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x03, embedded empty doc', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x03, % Tag.
@@ -101,10 +101,10 @@ test('0x03, embedded empty doc', [true(Got == Expected)]) :-
     [
         hello - []
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x04, embedded array', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x04, % Tag.
@@ -127,10 +127,10 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
     [
         hello - ['awesome', 5.05, 1986]
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x04, embedded empty array', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x04, % Tag.
@@ -143,10 +143,10 @@ test('0x04, embedded empty array', [true(Got == Expected)]) :-
     [
         hello - []
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, generic', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -160,10 +160,10 @@ test('0x05, binary, generic', [true(Got == Expected)]) :-
     [
         hello - binary(generic, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, function', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -177,10 +177,10 @@ test('0x05, binary, function', [true(Got == Expected)]) :-
     [
         hello - binary(function, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, old generic', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -194,10 +194,10 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
     [
         hello - binary(old_generic, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, uuid', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -211,10 +211,10 @@ test('0x05, binary, uuid', [true(Got == Expected)]) :-
     [
         hello - binary(uuid, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, md5', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -228,10 +228,10 @@ test('0x05, binary, md5', [true(Got == Expected)]) :-
     [
         hello - binary(md5, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x05, binary, user defined', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x05, % Tag.
@@ -245,10 +245,10 @@ test('0x05, binary, user defined', [true(Got == Expected)]) :-
     [
         hello - binary(user_defined, [0,1,2,1,0])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x06, undefined', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x06, % Tag.
@@ -259,10 +259,10 @@ test('0x06, undefined', [true(Got == Expected)]) :-
     [
         hello - @(undefined)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x07, object id', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x07, % Tag.
@@ -277,10 +277,10 @@ test('0x07, object id', [true(Got == Expected)]) :-
     [
         hello - object_id('47cc67093475061e3d95369d')
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x08, boolean true', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x08, % Tag.
@@ -292,10 +292,10 @@ test('0x08, boolean true', [true(Got == Expected)]) :-
     [
         hello - @(true)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x08, boolean false', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x08, % Tag.
@@ -307,10 +307,10 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
     [
         hello - @(false)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x08, boolean invalid', [throws(bson_error(invalid_boolean))]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x08, % Tag.
@@ -318,10 +318,10 @@ test('0x08, boolean invalid', [throws(bson_error(invalid_boolean))]) :-
             2, % Boolean data, INVALID value.
         0 % End of top doc.
     ],
-    bson_decoder:bson_to_pairs(Bson, _Got).
+    bson_decoder:bytes_to_doc(Bytes, _Got).
 
 test('0x09, utc datetime', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x09, % Tag.
@@ -333,10 +333,10 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
     [
         hello - utc(1302354660284) % date(2011, 4, 9, ...)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0A, null', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0A, % Tag.
@@ -347,10 +347,10 @@ test('0x0A, null', [true(Got == Expected)]) :-
     [
         hello - @(null)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0B, regex', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0B, % Tag.
@@ -363,10 +363,10 @@ test('0x0B, regex', [true(Got == Expected)]) :-
     [
         hello - regex('a','i')
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0C, db pointer', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0C, % Tag.
@@ -383,10 +383,10 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
     [
         hello - db_pointer('a', '47cc67093475061e3d95369d')
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0D, js', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0D, % Tag.
@@ -399,10 +399,10 @@ test('0x0D, js', [true(Got == Expected)]) :-
     [
         js - js('code ...')
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0E, symbol', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0E, % Tag.
@@ -415,10 +415,10 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
     [
         hello - symbol(atom)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x0F, js with scope', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x0F, % Tag.
@@ -437,10 +437,10 @@ test('0x0F, js with scope', [true(Got == Expected)]) :-
     [
         js - js('code ...', ['hello'-32])
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x10, int32', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x10, % Tag.
@@ -452,10 +452,10 @@ test('0x10, int32', [true(Got == Expected)]) :-
     [
         hello - 32
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x11, mongostamp', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x11, % Tag.
@@ -467,10 +467,10 @@ test('0x11, mongostamp', [true(Got == Expected)]) :-
     [
         hello - mongostamp(0)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x12, int64', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x12, % Tag.
@@ -482,10 +482,10 @@ test('0x12, int64', [true(Got == Expected)]) :-
     [
         hello - 32
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0xFF, min', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0xFF, % Tag.
@@ -496,10 +496,10 @@ test('0xFF, min', [true(Got == Expected)]) :-
     [
         hello - @(min)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('0x7F, max', [true(Got == Expected)]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x7F, % Tag.
@@ -510,10 +510,10 @@ test('0x7F, max', [true(Got == Expected)]) :-
     [
         hello - @(max)
     ],
-    bson_decoder:bson_to_pairs(Bson, Got).
+    bson_decoder:bytes_to_doc(Bytes, Got).
 
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
-    Bson =
+    Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
         0x10, % Tag.
@@ -521,6 +521,6 @@ test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
             32,0,0,0 % Int32 data.
         % Missing nul at end-of-doc.
     ],
-    bson_decoder:bson_to_pairs(Bson, _Got).
+    bson_decoder:bytes_to_doc(Bytes, _Got).
 
-:- end_tests('bson_decoder:bson_to_pairs/2').
+:- end_tests('bson_decoder:bytes_to_doc/2').

@@ -75,7 +75,7 @@ send_bytes(Bytes, Write) :-
 command(Mongo, Command, Database, Result) :-
     core:atom_concat(Database, '.$cmd', DbCollection),
     c_string(DbCollection, DbCollectionBytes),
-    bson:pairs_bson(Command, BsonCommand),
+    bson:doc_bytes(Command, BytesCommand),
     lists:append(
         [
             [
@@ -88,7 +88,7 @@ command(Mongo, Command, Database, Result) :-
             DbCollectionBytes,
             [0,0,0,0], % num skip
             [1,0,0,0], % num return
-            BsonCommand
+            BytesCommand
         ],
         Message),
     lists:length(Message, MessageLen),
@@ -98,11 +98,11 @@ command(Mongo, Command, Database, Result) :-
     mongo_socket_read(Mongo, Read),
     read_response(Read, Bytes),
     skip_n(Bytes, 36, Bytes1),
-    bson:pairs_bson(Result, Bytes1).
+    bson:doc_bytes(Result, Bytes1).
 
 insert(Mongo, Document, FullCollName) :-
     c_string(FullCollName, FullCollNameBytes),
-    bson:pairs_bson(Document, BsonDocument),
+    bson:doc_bytes(Document, BytesDocument),
     lists:append(
         [
             [
@@ -113,7 +113,7 @@ insert(Mongo, Document, FullCollName) :-
             ],
             [0,0,0,0], % ZERO
             FullCollNameBytes,
-            BsonDocument
+            BytesDocument
         ],
         Message),
     lists:length(Message, MessageLen),

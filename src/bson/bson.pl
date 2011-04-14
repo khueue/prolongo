@@ -1,7 +1,6 @@
 :- module(bson,
     [
-        pairs_bson/2,
-        assoc_bson/2,
+        doc_bytes/2,
         version/1,
         bson_version/1
     ]).
@@ -30,44 +29,21 @@ version([0,0,0]).
 
 bson_version([1,0]).
 
-%%  pairs_bson(+Pairs, ?Bson) is semidet.
-%%  pairs_bson(?Pairs, +Bson) is semidet.
+%%  doc_bytes(+Doc, ?Bytes) is semidet.
+%%  doc_bytes(?Doc, +Bytes) is semidet.
 %
-%   True if Bson is the BSON byte-encoding of Pairs.
+%   True if Bytes is the BSON byte-encoding of Doc.
 %
-%   Pairs is a list of key-value pairs.
-%   Bson is a list of bytes (0..255).
-%
-%   @throws bson_error(Reason)
-
-pairs_bson(Pairs, Bson) :-
-    core:nonvar(Pairs),
-    !,
-    bson_encoder:pairs_to_bson(Pairs, Bson).
-pairs_bson(Pairs, Bson) :-
-    core:nonvar(Bson),
-    !,
-    bson_decoder:bson_to_pairs(Bson, Pairs).
-
-%%  assoc_bson(+Assoc, ?Bson) is semidet.
-%%  assoc_bson(?Assoc, +Bson) is semidet.
-%
-%   True if Bson is the BSON byte-encoding of Assoc.
-%
-%   Assoc is an association list according to library(assoc).
-%   Bson is a list of bytes (0..255).
-%
-%   XXX Should be handled natively by encoder/decoder.
+%   Doc is a list of key-value pairs.
+%   Bytes is a list of bytes (0..255).
 %
 %   @throws bson_error(Reason)
 
-assoc_bson(Assoc, Bson) :-
-    core:nonvar(Assoc),
+doc_bytes(Doc, Bytes) :-
+    core:nonvar(Doc),
     !,
-    assoc:assoc_to_list(Assoc, Pairs),
-    bson_encoder:pairs_to_bson(Pairs, Bson).
-assoc_bson(Assoc, Bson) :-
-    core:nonvar(Bson),
+    bson_encoder:doc_to_bytes(Doc, Bytes).
+doc_bytes(Doc, Bytes) :-
+    core:nonvar(Bytes),
     !,
-    bson_decoder:bson_to_pairs(Bson, Pairs),
-    assoc:list_to_assoc(Pairs, Assoc).
+    bson_decoder:bytes_to_doc(Bytes, Doc).

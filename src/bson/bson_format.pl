@@ -4,27 +4,27 @@
         pp/3
     ]).
 
-/** <module> Pretty-printing for BSON-formatted terms.
+/** <module> Pretty-printing for BSON documents.
  */
 
 :- include(misc(common)).
 
-%%  pp(+Term) is det.
+%%  pp(+Doc) is det.
 %
-%   Pretty-prints the key/value pairs of Term. Indentation starts
+%   Pretty-prints the key/value pairs of Doc. Indentation starts
 %   at 0 (no indentation), and each level is indented by an extra
 %   two spaces.
 
-pp(Term) :-
-    pp(Term, 0, '  ').
+pp(Doc) :-
+    pp(Doc, 0, '  ').
 
-%%  pp(+Term, +Level, +Tab) is det.
+%%  pp(+Doc, +Level, +Tab) is det.
 %
-%   Pretty-prints the key/value pairs of Term. Indentation starts
+%   Pretty-prints the key/value pairs of Doc. Indentation starts
 %   at Level, and each level is indented by an extra Tab.
 
-pp(Term, Level, Tab) :-
-    pp_list(Term, Level, Tab).
+pp(Doc, Level, Tab) :-
+    pp_list(Doc, Level, Tab).
 
 pp_list(List, Level, Tab) :-
     write_indent(Level, Tab), write('['), nl,

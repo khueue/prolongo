@@ -388,6 +388,15 @@ ic worst-case when fetching value by key etc.).
  for that kind of heavy lifting.
  Fixed a bug with empty embedded arrays.
  Apparently [] is considered an atom.
+ After some thought, I will probably remove the assoc_bson stuff.
+ It gets a bit too complex when it comes to recursive documents and so on.
+ It is probably not worth it, at least not now.
+ I'll just keep going with lists of pairs, write a few getters and setters
+ and let that be that.
+ Renaming pairs_bson to doc_bytes though.
+ The precise nature of a document might change and invalidate the word 'pairs',
+ but bytes is more to-the-point than bson.
+ Is bson the document or its bytes?
 \end_layout
 
 \begin_layout Section

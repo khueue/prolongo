@@ -9,8 +9,7 @@
 ### Development
 
  * Investigate and wrap the MongoDB API.
- * Add BSON tests that convert back-and-forth between pairs/assoc and bytes.
- * Properly implement bson:assoc_bson/2. (Now it just wraps pairs.)
+ * Add BSON tests that convert back-and-forth between documents and bytes.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
 ## Usage
