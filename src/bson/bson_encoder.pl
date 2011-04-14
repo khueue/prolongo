@@ -5,8 +5,7 @@
 
 /** <module> BSON encoder.
  *
- *  This module is not meant to be used directly, but instead
- *  used through bson.
+ *  This module is private.
  */
 
 :- include(misc(common)).
