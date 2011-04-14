@@ -33,10 +33,16 @@ document(Elements) -->
 
 elements([]) --> [].
 elements([Key-Value|Elements]) -->
+    element(Key, Value),
+    elements(Elements).
+
+element(Key, Value) -->
     [Tag],
     key(Key),
-    value(Tag, Value),
-    elements(Elements).
+    value(Tag, Value).
+
+key(Name) -->
+    c_string(Name).
 
 value(0x01, Value) --> value_double(Value).
 value(0x02, Value) --> value_string(Value).
@@ -58,9 +64,6 @@ value(0x11, Value) --> value_mongostamp(Value).
 value(0x12, Value) --> value_int64(Value).
 value(0xFF, Value) --> value_min(Value).
 value(0x7F, Value) --> value_max(Value).
-
-key(Name) -->
-    c_string(Name).
 
 value_array(Values) -->
     document(Document),

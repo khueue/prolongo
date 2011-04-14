@@ -190,8 +190,7 @@ string(Utf8, Len) -->
 list_shaped([]).
 list_shaped([_|_]).
 
-object_id_atom_to_bytes(ObjectIdAtom, Bytes, Len) :-
-    Len = 12,
+object_id_atom_to_bytes(ObjectIdAtom, Bytes, 12) :-
     core:atom_concat('0x', ObjectIdAtom, HexAtom),
     core:atom_number(HexAtom, Unsigned),
-    bson_bits:unsigned_bytes(Unsigned, Len, big, Bytes).
+    bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes).
