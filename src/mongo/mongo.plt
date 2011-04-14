@@ -42,6 +42,8 @@ test('drop collection',
     database(Db),
     mongo:command(Mongo, Command, Db).
 
+/*
+% Takes a bit too long when MongoDB realloctes the collection later.
 test('drop database',
 [
     setup(mongo:new_mongo(Mongo)),
@@ -53,5 +55,6 @@ test('drop database',
     ],
     database(Db),
     mongo:command(Mongo, Command, Db).
+*/
 
 :- end_tests('mongo:command/3').
