@@ -410,6 +410,7 @@ April 15.
  Wrote a few missing test cases: one that converts back-and-forth between
  doc and bytes (first interdependent bson test!), and one that throws on
  an integer that is too big.
+ Wrote a first version of document manipulation predicates.
 \end_layout
 
 \begin_layout Section
