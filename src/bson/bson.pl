@@ -47,3 +47,34 @@ doc_bytes(Doc, Bytes) :-
     core:nonvar(Bytes),
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
+
+%%  doc_get(+Doc, +Key, ?Value) is semidet.
+%
+%   True if Value is the value associated with Key in Doc,
+%   or @(null) if the Key cannot be found. This means that there
+%   is no way of knowing if Value actually was @(null) or not found.
+
+doc_get([], _, @(null)).
+doc_get([K-V|_], K, V) :- !.
+doc_get([_|Pairs], K, V) :-
+    doc_get(Pairs, K, V).
+
+%%  doc_put(+Doc, +Key, +Value, ?NewDoc) is semidet.
+%
+%   True if NewDoc is Doc with the addition or update of the pair
+%   Key-Value.
+
+doc_put([], K, V, [K-V]).
+doc_put([K-_|Pairs], K, V, [K-V|Pairs]) :- !.
+doc_put([Other|Pairs], K, V, [Other|Pairs1]) :-
+    doc_put(Pairs, K, V, Pairs1).
+
+%%  doc_delete(+Doc, +Key, ?NewDoc) is semidet.
+%
+%   True if NewDoc is Doc with the first pair with Key as
+%   key removed. No change if Key cannot be found.
+
+doc_delete([], _, []).
+doc_delete([K-_|Pairs], K, Pairs) :- !.
+doc_delete([Other|Pairs], K, [Other|Pairs1]) :-
+    doc_delete(Pairs, K, Pairs1).
