@@ -85,3 +85,86 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
     bson:doc_bytes(Got, Bytes).
 
 :- end_tests('bson:doc_bytes/2').
+
+:- begin_tests('bson:doc_get/3').
+
+test('not found') :-
+    Doc =
+    [
+        key - value
+    ],
+    bson:doc_get(Doc, notfoundkey, @(null)).
+
+test('not found in empty doc') :-
+    Doc = [],
+    bson:doc_get(Doc, notfoundkey, @(null)).
+
+test('found') :-
+    Doc =
+    [
+        key - value
+    ],
+    bson:doc_get(Doc, key, value).
+
+test('found null') :-
+    Doc =
+    [
+        key - @(null)
+    ],
+    bson:doc_get(Doc, key, @(null)).
+
+:- end_tests('bson:doc_get/3').
+
+:- begin_tests('bson:doc_put/4').
+
+test('put in empty') :-
+    Doc = [],
+    bson:doc_get(Doc, key, @(null)),
+    bson:doc_put(Doc, key, value, Doc1),
+    bson:doc_get(Doc1, key, value).
+
+test('put in non-empty') :-
+    Doc =
+    [
+        keyold - valueold
+    ],
+    bson:doc_get(Doc, keyold, valueold),
+    bson:doc_get(Doc, keynew, @(null)),
+    bson:doc_put(Doc, keynew, valuenew, Doc1),
+    bson:doc_get(Doc1, keyold, valueold),
+    bson:doc_get(Doc1, keynew, @(null)).
+
+:- end_tests('bson:doc_put/4').
+
+:- begin_tests('bson:doc_delete/3').
+
+test('delete from empty') :-
+    Doc = [],
+    bson:doc_delete(Doc, notfoundkey, Doc).
+
+test('delete not found') :-
+    Doc =
+    [
+        key - value
+    ],
+    bson:doc_delete(Doc, notfoundkey, Doc).
+
+test('delete only key') :-
+    Doc =
+    [
+        key - value
+    ],
+    bson:doc_delete(Doc, key, Doc1),
+    bson:doc_get(Doc1, key, @(null)).
+
+test('delete one key') :-
+    Doc =
+    [
+        key1 - value1,
+        key2 - value2
+    ],
+    bson:doc_delete(Doc, key2, Doc1),
+    bson:doc_get(Doc1, key1, value1),
+    bson:doc_get(Doc1, key2, @(null)).
+
+:- end_tests('bson:doc_delete/3').
