@@ -31,6 +31,7 @@ and run the test suite.
 
  * Move BSON to separate repository (BSON is not inherent to MongoDB).
  * Improve compatibility between Prologs.
+ * (Implement all the stuff I won't have time to.)
 
 ## Links
 
