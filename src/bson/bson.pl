@@ -1,6 +1,9 @@
 :- module(bson,
     [
         doc_bytes/2,
+        doc_get/3,
+        doc_put/4,
+        doc_delete/3,
         version/1,
         bson_version/1
     ]).
