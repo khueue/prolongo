@@ -8,6 +8,7 @@
 
 ### Development
 
+ * Write a few predicates for document manipulation.
  * Investigate and wrap the MongoDB API.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
