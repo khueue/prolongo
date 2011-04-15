@@ -61,8 +61,8 @@ doc_get([_|Pairs], K, V) :-
 
 %%  doc_put(+Doc, +Key, +Value, ?NewDoc) is semidet.
 %
-%   True if NewDoc is Doc with the addition or update of the pair
-%   Key-Value.
+%   True if NewDoc is Doc with the addition or update of the
+%   association Key-Value.
 
 doc_put([], K, V, [K-V]).
 doc_put([K-_|Pairs], K, V, [K-V|Pairs]) :- !.
@@ -71,8 +71,9 @@ doc_put([Other|Pairs], K, V, [Other|Pairs1]) :-
 
 %%  doc_delete(+Doc, +Key, ?NewDoc) is semidet.
 %
-%   True if NewDoc is Doc with the first pair with Key as
-%   key removed. No change if Key cannot be found.
+%   True if NewDoc is Doc with the association removed that has
+%   Key as key. At most one association is removed. No change if
+%   Key is not found.
 
 doc_delete([], _, []).
 doc_delete([K-_|Pairs], K, Pairs) :- !.
