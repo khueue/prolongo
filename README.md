@@ -9,7 +9,6 @@
 ### Development
 
  * Investigate and wrap the MongoDB API.
- * Add BSON tests that convert back-and-forth between documents and bytes.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
 ## Usage

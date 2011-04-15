@@ -370,6 +370,8 @@ mongo:command(Mongo,CommandDoc,'db')
 
 \begin_layout Itemize
 April 14.
+ Slow day.
+ Did not start properly until lunch-time.
  Changed key=value to key-value, hoping that this will be final.
  Using a dash is more idiomatic Prolog and goes hand-in-hand with association
  lists, should I choose to use them, which seems more and more likely (logarithm
@@ -397,6 +399,17 @@ ic worst-case when fetching value by key etc.).
  The precise nature of a document might change and invalidate the word 'pairs',
  but bytes is more to-the-point than bson.
  Is bson the document or its bytes?
+\end_layout
+
+\begin_layout Itemize
+April 15.
+ Slept for way too long.
+ Let's get going.
+ Have to grade a few exams too, after lunch.
+ Anyway.
+ Wrote a few missing test cases: one that converts back-and-forth between
+ doc and bytes (first interdependent bson test!), and one that throws on
+ an integer that is too big.
 \end_layout
 
 \begin_layout Section

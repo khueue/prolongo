@@ -445,6 +445,13 @@ test('0x12, int64', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
+test('0x12, int64 too large', [throws(bson_error(too_large,_))]) :-
+    Doc =
+    [
+        hello - 9223372036854775808
+    ],
+    bson_encoder:doc_to_bytes(Doc, _Got).
+
 test('0xFF, min', [true(Got == Expected)]) :-
     Doc =
     [
