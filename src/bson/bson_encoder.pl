@@ -56,17 +56,17 @@ key(Key, Len) -->
     c_string(Key, Len).
 
 value(Value, Tag, Len) -->
-    { list_shaped(Value) }, !, % Must be before atom, [] is considered one!
-    value_list(Value, Tag, Len).
-value(Value, Tag, Len) -->
-    { core:atom(Value) }, !,
-    value_atom(Value, Tag, Len).
-value(Value, Tag, Len) -->
     { core:integer(Value) }, !,
     value_integer(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { core:float(Value) }, !,
     value_float(Value, Tag, Len).
+value(Value, Tag, Len) -->
+    { list_shaped(Value) }, !, % Must be before atom, [] is considered one!
+    value_list(Value, Tag, Len).
+value(Value, Tag, Len) -->
+    { core:atom(Value) }, !,
+    value_atom(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { core:compound(Value) }, !,
     value_compound(Value, Tag, Len).
