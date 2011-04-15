@@ -9,10 +9,36 @@ ms_since_epoch(MilliSeconds) :-
     FloatMilliSeconds is FloatSeconds * 1000,
     MilliSeconds is floor(FloatMilliSeconds).
 
-doc_value([], _Key, null).
-doc_value([Key-Value|_Pairs], Key, Value) :- !.
-doc_value([_Pair|Pairs], Key, Value) :-
-    doc_value(Pairs, Key, Value).
+%%  doc_get(+Doc, +Key, ?Value) is semidet.
+%
+%   True if Value is the value associated with Key in Doc,
+%   or @(null) if the Key cannot be found. This means that there
+%   is no way of knowing if it actually was @(null) or not found.
+
+doc_get([], _, @(null)).
+doc_get([K-V|_], K, V) :- !.
+doc_get([_|Pairs], K, V) :-
+    doc_get(Pairs, K, V).
+
+%%  doc_put(+Doc, +Key, +Value, ?NewDoc) is semidet.
+%
+%   True if NewDoc is Doc with the addition or update of the pair
+%   Key-Value.
+
+doc_put([], K, V, [K-V]).
+doc_put([K-_|Pairs], K, V, [K-V|Pairs]) :- !.
+doc_put([Other|Pairs], K, V, [Other|Pairs1]) :-
+    doc_put(Pairs, K, V, Pairs1).
+
+%%  doc_delete(+Doc, +Key, ?NewDoc) is semidet.
+%
+%   True if NewDoc is Doc with the first pair with Key as
+%   key removed. No change if Key cannot be found.
+
+doc_delete([], _, []).
+doc_delete([K-_|Pairs], K, Pairs) :- !.
+doc_delete([Other|Pairs], K, [Other|Pairs1]) :-
+    doc_delete(Pairs, K, Pairs1).
 
 :- begin_tests('mongo:insert/3').
 
@@ -46,7 +72,7 @@ test('drop collection',
     collection(Coll),
     database(Db),
     mongo:command(Mongo, Command, Db, Result),
-    doc_value(Result, ok, 1.0).
+    doc_get(Result, ok, 1.0).
 
 /*
 % Takes a bit too long when MongoDB reallocates the collection later.
