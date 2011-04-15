@@ -411,6 +411,7 @@ April 15.
  doc and bytes (first interdependent bson test!), and one that throws on
  an integer that is too big.
  Wrote a first version of document manipulation predicates.
+ Wrote accompanying tests.
 \end_layout
 
 \begin_layout Section
