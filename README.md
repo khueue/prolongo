@@ -23,6 +23,22 @@ and run the test suite.
  * ANSI C compiler (modify the Makefile if other than GCC)
  * MongoDB (tested on Mac OS X using MongoDB 1.8.1)
 
+## Coding Guidelines (That Might Surprise)
+
+ * Use empty imports (use_module(mymodule, [])) in order to not
+   pollute the namespace.
+ * Always use module prefixes (mymodule:predicate(...)) in order to
+   clarify where things are coming from.
+ * Always use the "made-up" module prefix "core:" when calling
+   built-in predicates. This is completely unnecessary, and maybe
+   a bit weird, but I think it is a good idea as long as it doesn't
+   cause any problems. This decision may need to be revised when
+   compatibility between different Prologs is investigated.
+ * Avoid the if-then-else construct. It just looks ugly.
+ * Use cuts where appropriate. PlUnit is excellent at pointing out
+   when tests succeed but leave choice points.
+ * Try to stick to PlDoc.
+
 ## Thoughts
 
  * Nothing.

@@ -421,6 +421,7 @@ April 18.
  Replaced @ with + for BSON constants because of syntax issues with @ (sometimes
  @constant would parse and sometimes @(constant) was needed).
  And I believe plus should be easier to type on most keyboard layouts.
+ Added a small coding guideline to the readme.
 \end_layout
 
 \begin_layout Section
