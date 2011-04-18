@@ -71,7 +71,7 @@ value(Value, Tag, Len) -->
     { core:compound(Value) }, !,
     value_compound(Value, Tag, Len).
 
-value_compound(@(Constant), Tag, Len) -->
+value_compound(+Constant, Tag, Len) -->
     value_constant(Constant, Tag, Len).
 value_compound(binary(Subtype,Bytes), 0x05, Len) -->
     { lists:length(Bytes, BytesLen) },
@@ -172,7 +172,7 @@ value_constant(null,      0x0A, 0) --> [], !.
 value_constant(min,       0xFF, 0) --> [], !.
 value_constant(max,       0x7F, 0) --> [], !.
 value_constant(Constant,  _,    _) -->
-    { throw(bson_error(unknown_constant, @Constant)) }.
+    { throw(bson_error(unknown_constant, Constant)) }.
 
 value_atom(Atom, 0x02, Len) -->
     string(Atom, Len).

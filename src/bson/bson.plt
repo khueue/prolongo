@@ -64,12 +64,12 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
         k09 - binary(uuid,[1,2,3]),
         k10 - binary(md5,[1,2,3]),
         k11 - binary(user_defined,[1,2,3]),
-        k12 - @(undefined),
+        k12 - +undefined,
         k13 - object_id('47cc67093475061e3d95369d'),
-        k14 - @(false),
-        k15 - @(true),
+        k14 - +false,
+        k15 - +true,
         k16 - utc(1302354660284),
-        k17 - @(null),
+        k17 - +null,
         k18 - regex('pattern','options'),
         k19 - db_pointer('string','47cc67093475061e3d95369d'),
         k20 - js('code'),
@@ -78,13 +78,32 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
         k23 - 32,
         k24 - mongostamp(0),
         k25 - 9223372036854775807,
-        k26 - @(min),
-        k27 - @(max)
+        k26 - +min,
+        k27 - +max
     ],
     bson:doc_bytes(Expected, Bytes),
     bson:doc_bytes(Got, Bytes).
 
 :- end_tests('bson:doc_bytes/2').
+
+:- begin_tests('bson:doc_empty/1').
+
+test('empty') :-
+    bson:doc_empty(Doc),
+    bson:doc_empty(Doc).
+
+test('non-empty', [fail]) :-
+    bson:doc_empty(Doc),
+    bson:doc_put(Doc, key, value, Doc1),
+    bson:doc_empty(Doc1).
+
+test('fill and empty') :-
+    bson:doc_empty(Doc),
+    bson:doc_put(Doc, key, value, Doc1),
+    bson:doc_delete(Doc1, key, Doc2),
+    bson:doc_empty(Doc2).
+
+:- end_tests('bson:doc_empty/1').
 
 :- begin_tests('bson:doc_get/3').
 
@@ -93,11 +112,11 @@ test('not found') :-
     [
         key - value
     ],
-    bson:doc_get(Doc, notfoundkey, @(null)).
+    bson:doc_get(Doc, notfoundkey, +null).
 
 test('not found in empty doc') :-
     Doc = [],
-    bson:doc_get(Doc, notfoundkey, @(null)).
+    bson:doc_get(Doc, notfoundkey, +null).
 
 test('found') :-
     Doc =
@@ -109,9 +128,9 @@ test('found') :-
 test('found null') :-
     Doc =
     [
-        key - @(null)
+        key - +null
     ],
-    bson:doc_get(Doc, key, @(null)).
+    bson:doc_get(Doc, key, +null).
 
 :- end_tests('bson:doc_get/3').
 
@@ -119,7 +138,7 @@ test('found null') :-
 
 test('put in empty') :-
     Doc = [],
-    bson:doc_get(Doc, key, @(null)),
+    bson:doc_get(Doc, key, +null),
     bson:doc_put(Doc, key, value, Doc1),
     bson:doc_get(Doc1, key, value).
 
@@ -129,10 +148,10 @@ test('put in non-empty') :-
         keyold - valueold
     ],
     bson:doc_get(Doc, keyold, valueold),
-    bson:doc_get(Doc, keynew, @(null)),
+    bson:doc_get(Doc, keynew, +null),
     bson:doc_put(Doc, keynew, valuenew, Doc1),
     bson:doc_get(Doc1, keyold, valueold),
-    bson:doc_get(Doc1, keynew, @(null)).
+    bson:doc_get(Doc1, keynew, +null).
 
 :- end_tests('bson:doc_put/4').
 
@@ -155,7 +174,7 @@ test('delete only key') :-
         key - value
     ],
     bson:doc_delete(Doc, key, Doc1),
-    bson:doc_get(Doc1, key, @(null)).
+    bson:doc_get(Doc1, key, +null).
 
 test('delete one key') :-
     Doc =
@@ -165,6 +184,6 @@ test('delete one key') :-
     ],
     bson:doc_delete(Doc, key2, Doc1),
     bson:doc_get(Doc1, key1, value1),
-    bson:doc_get(Doc1, key2, @(null)).
+    bson:doc_get(Doc1, key2, +null).
 
 :- end_tests('bson:doc_delete/3').

@@ -257,7 +257,7 @@ test('0x06, undefined', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(undefined)
+        hello - +undefined
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
@@ -290,7 +290,7 @@ test('0x08, boolean true', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(true)
+        hello - +true
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
@@ -305,7 +305,7 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(false)
+        hello - +false
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
@@ -345,7 +345,7 @@ test('0x0A, null', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(null)
+        hello - +null
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
@@ -494,7 +494,7 @@ test('0xFF, min', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(min)
+        hello - +min
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
@@ -508,7 +508,7 @@ test('0x7F, max', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - @(max)
+        hello - +max
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 

@@ -414,6 +414,15 @@ April 15.
  Wrote accompanying tests.
 \end_layout
 
+\begin_layout Itemize
+April 18.
+ Added doc_empty(-Doc) to completely abstract away the details of BSON document
+ internals.
+ Replaced @ with + for BSON constants because of syntax issues with @ (sometimes
+ @constant would parse and sometimes @(constant) was needed).
+ And I believe plus should be easier to type on most keyboard layouts.
+\end_layout
+
 \begin_layout Section
 Introduction
 \end_layout

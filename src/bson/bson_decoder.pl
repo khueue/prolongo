@@ -88,16 +88,16 @@ value_utc(utc(Timestamp)) -->
 value_mongostamp(mongostamp(Mongostamp)) -->
     int64(Mongostamp).
 
-value_null(@null) --> [].
+value_null(+null) --> [].
 
-value_min(@min) --> [].
+value_min(+min) --> [].
 
-value_max(@max) --> [].
+value_max(+max) --> [].
 
-value_undefined(@undefined) --> [].
+value_undefined(+undefined) --> [].
 
-value_boolean(@false) --> [0], !.
-value_boolean(@true)  --> [1], !.
+value_boolean(+false) --> [0], !.
+value_boolean(+true)  --> [1], !.
 value_boolean(_)      --> { throw(bson_error(invalid_boolean)) }.
 
 value_binary(binary(Subtype,Bytes)) -->

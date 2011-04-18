@@ -51,13 +51,19 @@ doc_bytes(Doc, Bytes) :-
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
 
+%%  doc_empty(-Doc) is semidet.
+%
+%   True if Doc is an empty BSON document.
+
+doc_empty([]).
+
 %%  doc_get(+Doc, +Key, ?Value) is semidet.
 %
 %   True if Value is the value associated with Key in Doc,
-%   or @(null) if the Key cannot be found. This means that there
-%   is no way of knowing if Value actually was @(null) or not found.
+%   or +null if the Key cannot be found. This means that there
+%   is no way of knowing if Value actually was +null or not found.
 
-doc_get([], _, @(null)).
+doc_get([], _, +null).
 doc_get([K-V|_], K, V) :- !.
 doc_get([_|Pairs], K, V) :-
     doc_get(Pairs, K, V).

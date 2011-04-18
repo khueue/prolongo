@@ -222,7 +222,7 @@ test('0x05, binary, user defined', [true(Got == Expected)]) :-
 test('0x06, undefined', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(undefined)
+        hello - +undefined
     ],
     Expected =
     [
@@ -254,7 +254,7 @@ test('0x07, object id', [true(Got == Expected)]) :-
 test('0x08, boolean false', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(false)
+        hello - +false
     ],
     Expected =
     [
@@ -269,7 +269,7 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
 test('0x08, boolean true', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(true)
+        hello - +true
     ],
     Expected =
     [
@@ -299,7 +299,7 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
 test('0x0A, null', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(null)
+        hello - +null
     ],
     Expected =
     [
@@ -455,7 +455,7 @@ test('0x12, int64 too large', [throws(bson_error(too_large,_))]) :-
 test('0xFF, min', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(min)
+        hello - +min
     ],
     Expected =
     [
@@ -469,7 +469,7 @@ test('0xFF, min', [true(Got == Expected)]) :-
 test('0x7F, max', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - @(max)
+        hello - +max
     ],
     Expected =
     [
