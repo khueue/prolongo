@@ -54,7 +54,7 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
     Expected =
     [
         k01 - -5.05,
-        k02 - åäö_string, % Atoms only.
+        k02 - åäö_string, % Atoms only (no code lists).
         k03 - [],
         k04 - [k1-v1, k2-v2],
         k05 - [v1,v2,v3],
