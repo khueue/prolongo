@@ -35,9 +35,14 @@ and run the test suite.
    cause any problems. This decision may need to be revised when
    compatibility between different Prologs is investigated.
  * Avoid the if-then-else construct. It just looks ugly.
- * Use cuts where appropriate. PlUnit is excellent at pointing out
-   when tests succeed but leave choice points.
+ * Avoid disjunctions. They are ugly, and can be replaced by properly
+   written helpers.
+ * Use cuts where appropriate, and try to keep each cut on a line by
+   itself unless its placement is obvious and consistent in each clause.
+   PlUnit is excellent at pointing out when tests succeed but leave
+   choice points.
  * Try to stick to PlDoc.
+ * If in doubt, consult: <http://www.ai.uga.edu/mc/plcoding.pdf>
 
 ## Thoughts
 

@@ -19,14 +19,14 @@
 :- use_module(bson_decoder, []).
 :- use_module(bson_encoder, []).
 
-%%  version(?Version) is det.
+%%  version(?Version) is semidet.
 %
 %   True if Version is a list representing the major, minor
 %   and patch version numbers of this library.
 
 version([0,0,0]).
 
-%%  bson_version(?Version) is det.
+%%  bson_version(?Version) is semidet.
 %
 %   True if Version is a list representing the major and minor
 %   version numbers of the implemented BSON format.
