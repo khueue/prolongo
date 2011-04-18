@@ -40,8 +40,8 @@ bson_version([1,0]).
 %
 %   True if Bytes is the BSON byte-encoding of Doc.
 %
-%   Doc is a list of key-value pairs.
-%   Bytes is a list of bytes (0..255).
+%   @param Doc is a list of key-value pairs.
+%   @param Bytes is a list of bytes (in 0..255).
 %
 %   @throws bson_error(Reason)
 
