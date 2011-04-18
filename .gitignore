@@ -9,5 +9,4 @@ Icon?
 
 lib/*
 *.txt
-*.pl
-!load.pl
+querylog.pl

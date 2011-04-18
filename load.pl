@@ -14,7 +14,7 @@ setup_globals :-
 setup_load_paths :-
     prolog_load_context(directory, Root), % Available only during compilation.
     setup_path(Root, '/lib', foreign),
-    setup_path(Root, '/src', misc),
+    setup_path(Root, '/src/misc', misc),
     setup_path(Root, '/src/bson', bson),
     setup_path(Root, '/src/mongo', mongo).
 

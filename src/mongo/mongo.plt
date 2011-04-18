@@ -1,13 +1,10 @@
 :- include(misc(common)).
 
+:- use_module(misc(util), []).
+
 database('prolongo_test').
 collection('testcoll').
 database_dot_collection('prolongo_test.testcoll').
-
-ms_since_epoch(MilliSeconds) :-
-    core:get_time(FloatSeconds),
-    FloatMilliSeconds is FloatSeconds * 1000,
-    MilliSeconds is floor(FloatMilliSeconds).
 
 :- begin_tests('mongo:insert/3').
 
@@ -16,7 +13,7 @@ test('insert',
     setup(mongo:new_mongo(Mongo)),
     cleanup(mongo:free_mongo(Mongo))
 ]) :-
-    ms_since_epoch(MilliSeconds),
+    util:ms_since_epoch(MilliSeconds),
     Document =
     [
         hello - [åäö,5.05],
