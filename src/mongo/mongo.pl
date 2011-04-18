@@ -6,6 +6,10 @@
     ]).
 
 /** <module> MongoDB driver.
+ *
+ *  Provides connection management and wraps the MongoDB API.
+ *
+ *  @see <http://www.mongodb.org/>
  */
 
 :- include(misc(common)).

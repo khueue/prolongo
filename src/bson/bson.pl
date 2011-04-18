@@ -11,7 +11,9 @@
 
 /** <module> BSON manipulation.
  *
- *  Specification: http://bsonspec.org/
+ *  BSON document manipulation and conversion to-and-from bytes.
+ *
+ *  @see <http://bsonspec.org/>
  */
 
 :- include(misc(common)).
