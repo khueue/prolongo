@@ -41,7 +41,11 @@ and run the test suite.
    itself unless its placement is obvious and consistent in each clause.
    PlUnit is excellent at pointing out when tests succeed but leave
    choice points.
- * Try to stick to PlDoc.
+ * Try to avoid spaces within lists and structures, but always use
+   spaces between arguments.
+ * Predicates, atoms, etc. should use "this_naming_style" while variables
+   should use "ThisNamingStyle".
+ * Try to stick to the PlDoc structure.
  * If in doubt, consult: <http://www.ai.uga.edu/mc/plcoding.pdf>
 
 ## Thoughts
