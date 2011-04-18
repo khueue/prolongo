@@ -16,7 +16,7 @@
 %   two spaces.
 
 pp(Doc) :-
-    pp(Doc, 0, '  ').
+    pp(Doc, 0, '    ').
 
 %%  pp(+Doc, +Level, +Tab) is det.
 %
@@ -32,6 +32,7 @@ pp_list(List, Level, Tab) :-
     pp_pairs(List, Level1, Tab),
     write_indent(Level, Tab), write(']').
 
+pp_pairs([], _, _).
 pp_pairs([Key-Value], Level, Tab) :-
     !,
     pp_pair(Key-Value, Level, Tab), nl.
@@ -47,7 +48,7 @@ pp_pairs([Value|Values], Level, Tab) :-
     pp_pairs(Values, Level, Tab).
 
 pp_pair(Key-Value, Level, Tab) :-
-    Value = [_=_|_],
+    Value = [_-_|_],
     !,
     Level1 is Level + 1,
     write_indent(Level, Tab), write_value(Key), write(' - '), nl,
