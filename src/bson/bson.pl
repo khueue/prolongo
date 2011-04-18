@@ -51,7 +51,7 @@ doc_bytes(Doc, Bytes) :-
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
 
-%%  doc_empty(-Doc) is semidet.
+%%  doc_empty(?Doc) is semidet.
 %
 %   True if Doc is an empty BSON document.
 
