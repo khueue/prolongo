@@ -9,7 +9,7 @@
         bson_version/1
     ]).
 
-/** <module> BSON encoder/decoder.
+/** <module> BSON manipulation.
  *
  *  Specification: http://bsonspec.org/
  */
