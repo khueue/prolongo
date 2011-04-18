@@ -420,8 +420,14 @@ April 18.
  internals.
  Replaced @ with + for BSON constants because of syntax issues with @ (sometimes
  @constant would parse and sometimes @(constant) was needed).
- And I believe plus should be easier to type on most keyboard layouts.
+ And I believe + should be easier to type on most keyboard layouts.
  Added a small coding guideline to the readme.
+ Read a bit about Prolog.
+ Improved some documentation comments.
+ Slow day.
+ Way ahead of schedule though.
+ The rest of the week will be studying for exam.
+ Hopefully a meeting with supervisor also.
 \end_layout
 
 \begin_layout Section
