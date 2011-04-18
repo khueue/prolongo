@@ -36,7 +36,7 @@ and run the test suite.
    compatibility between different Prologs is investigated.
  * Avoid the if-then-else construct. It just looks ugly.
  * Avoid disjunctions. They are ugly, and can be replaced by properly
-   written helpers.
+   written helpers. Think: premises are "and", clauses are "or".
  * Use cuts where appropriate, and try to keep each cut on a line by
    itself unless its placement is obvious and consistent in each clause.
    PlUnit is excellent at pointing out when tests succeed but leave
