@@ -8,12 +8,11 @@
 
 :- include(misc(common)).
 
-%%  ms_since_epoch(-MilliSeconds) is det.
+%%  ms_since_epoch(-Millis) is det.
 %
-%   True if MilliSeconds is the number of milliseconds elapsed
+%   True if Millis is the number of milliseconds elapsed
 %   since the Unix epoch.
 
-ms_since_epoch(MilliSeconds) :-
+ms_since_epoch(Millis) :-
     core:get_time(FloatSeconds),
-    FloatMilliSeconds is FloatSeconds * 1000,
-    MilliSeconds is floor(FloatMilliSeconds).
+    Millis is floor(FloatSeconds * 1000).
