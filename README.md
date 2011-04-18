@@ -48,14 +48,10 @@ and run the test suite.
  * Try to stick to the PlDoc structure.
  * If in doubt, consult: <http://www.ai.uga.edu/mc/plcoding.pdf>
 
-## Thoughts
-
- * Nothing.
-
 ## Future
 
  * Move BSON to separate repository (BSON is not inherent to MongoDB).
- * Improve compatibility between Prologs.
+ * Test and improve compatibility between Prologs.
  * Make sure exception handling is more idiomatic.
  * (Implement all the stuff I won't have time to.)
 
