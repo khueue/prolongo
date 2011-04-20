@@ -17,13 +17,6 @@ Clone the repository and run `make` to compile the necessary C libraries
 and run the test suite. Part of the test suite requires a MongoDB instance
 running on localhost on the default port.
 
-```
-doc_delete([], _, []).
-doc_delete([K-_|Pairs], K, Pairs) :- !.
-doc_delete([Other|Pairs], K, [Other|Pairs1]) :-
-    doc_delete(Pairs, K, Pairs1).
-```
-
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
