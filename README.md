@@ -17,7 +17,7 @@ Clone the repository and run `make` to compile the necessary C libraries
 and run the test suite. Part of the test suite requires a MongoDB instance
 running on localhost on the default port.
 
-    ``` prolog
+    ``` ruby
     member(X, [X|_]).
     ```
 
