@@ -160,3 +160,5 @@
    exam. Hopefully a meeting with supervisor also.
 
  * April 19. Moved diary to separate (.md) file.
+
+ * April 27. Back after Easter and study break.

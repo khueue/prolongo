@@ -1,7 +1,7 @@
 PROLOG    = swipl -O
 PROLOG_LD = swipl-ld
 CC        = gcc
-CFLAGS    = -cc $(CC) -Wall -Wextra -ansi -pedantic -O4 -fPIC
+FLAGS     = -shared -fPIC -O4 -Wall -Wextra -cc-options,-ansi,-pedantic
 
 .PHONY: all
 all: trim compile test
@@ -46,7 +46,7 @@ compile: setup lib/bson_bits
 lib/bson_bits: ext/bson_bits.c Makefile
 	@ echo "--- Compile foreign library 'bson_bits' ..."
 	rm -f $@
-	$(PROLOG_LD) -shared -o $@.dylib ext/bson_bits.c $(CFLAGS)
+	$(PROLOG_LD) -o $@.dylib ext/bson_bits.c $(FLAGS) -cc $(CC)
 	mv $@.dylib $@
 
 .PHONY: setup

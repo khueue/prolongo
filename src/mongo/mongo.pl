@@ -24,9 +24,9 @@ mongo_default_port(27017).
 %%  new_mongo(-Mongo) is semidet.
 %%  new_mongo(-Mongo, +Host, +Port) is semidet.
 %
-%   True if Mongo represents a handle to a new MongoDB server
-%   connection. Host and Port may be supplied, otherwise the
-%   defaults (host localhost and port 27017) are used.
+%   True if Mongo represents an opaque handle to a new MongoDB
+%   server connection. Host and Port may be supplied, otherwise
+%   the defaults (host localhost and port 27017) are used.
 
 new_mongo(Mongo) :-
     mongo_default_host(Host),
