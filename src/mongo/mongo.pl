@@ -153,25 +153,26 @@ full_coll_name(Database, Collection, FullCollName) :-
 insert(Mongo, Collection, Document) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    c_string(FullCollName, FullCollNameBytes),
-    bson:doc_bytes(Document, BytesDocument),
-    lists:append(
-        [
-            [
-                 L0, L1, L2, L3, % Message length.
-                123,  0,  0,  0, %
-                  0,  0,  0,  0, %
-                210,  7,  0,  0  % 2002: insert
-            ],
-            [0,0,0,0], % ZERO
-            FullCollNameBytes,
-            BytesDocument
-        ],
-        Message),
-    lists:length(Message, MessageLen),
-    length4(MessageLen, [L0,L1,L2,L3]),
+    build_insert_bytes(FullCollName, Document, Message),
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write).
+
+build_insert_bytes(FullCollName, Document, Bytes) :-
+    c_string(FullCollName, BytesFullCollName),
+    bson:doc_bytes(Document, BytesDocument),
+    phrase(build_insert_bytes_aux(BytesFullCollName, BytesDocument), Bytes0),
+    lists:length(Bytes0, LengthBut4),
+    Length is LengthBut4 + 4,
+    length4(Length, BytesLength),
+    lists:append(BytesLength, Bytes0, Bytes).
+
+build_insert_bytes_aux(BytesFullCollName, BytesDocument) -->
+    [123,  0,  0,  0], %
+    [  0,  0,  0,  0], %
+    [210,  7,  0,  0], % 2002: insert
+    [  0,  0,  0,  0], % ZERO
+    BytesFullCollName,
+    BytesDocument.
 
 c_string(Atom, Bytes) :-
     bson_unicode:utf8_bytes(Atom, Bytes0),
