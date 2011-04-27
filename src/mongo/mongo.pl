@@ -22,6 +22,8 @@
 mongo_default_host(localhost).
 mongo_default_port(27017).
 
+command_namespace('$cmd').
+
 %%  new_mongo(-Mongo) is semidet.
 %%  new_mongo(-Mongo, +Host, +Port) is semidet.
 %
@@ -105,11 +107,11 @@ list_database_infos(Mongo, DatabaseInfos) :-
     use_database(Mongo, admin, Mongo1),
     command(Mongo1, Command, Result),
     bson:doc_get(Result, databases, DatabaseInfoArray),
-    repack(DatabaseInfoArray, DatabaseInfos).
+    repack_database_infos(DatabaseInfoArray, DatabaseInfos).
 
-repack([], []).
-repack([[name-Name|Info]|Infos], [Name-Info|Names]) :-
-    repack(Infos, Names).
+repack_database_infos([], []).
+repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
+    repack_database_infos(Infos, Names).
 
 list_database_names(Mongo, DatabaseNames) :-
     list_database_infos(Mongo, DatabaseInfos),
@@ -117,7 +119,8 @@ list_database_names(Mongo, DatabaseNames) :-
 
 command(Mongo, Command, Result) :-
     mongo_get_database(Mongo, Database),
-    full_coll_name(Database, '$cmd', DbCollection),
+    command_namespace(CommandNamespace),
+    full_coll_name(Database, CommandNamespace, DbCollection),
     c_string(DbCollection, DbCollectionBytes),
     bson:doc_bytes(Command, BytesCommand),
     lists:append(
