@@ -165,4 +165,6 @@
    structures. The setter should be implemented in some other way, but
    it works and does not have to be fast (manipulating the mongo structure
    does not happen often, and it is tiny). Reformulated some mongo tests
-   and started cleaning. Should wrap more API soon.
+   and started cleaning. Should wrap more API soon. Added doc_keys/2,
+   doc_values/2, doc_keys_values/3 and doc_is_valid/1. Wrote some tests.
+   Can now list database names.
