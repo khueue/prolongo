@@ -62,6 +62,9 @@ use_database(Mongo, Database, Mongo1) :-
 mongo_set_database(Mongo, Database, Mongo1) :-
     util:set_arg(Mongo, 2, Database, Mongo1).
 
+mongo_get_database(Mongo, Database) :-
+    util:get_arg(Mongo, 2, Database).
+
 % Constructor.
 mongo(Socket, Database, Mongo) :-
     Mongo = mongo(Socket,Database).
@@ -84,15 +87,18 @@ send_bytes_and_flush(Bytes, Write) :-
 send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
 
-drop_collection(Mongo, Db, Coll, Result) :-
-    Command =
-    [
-        drop - Coll
-    ],
-    mongo:command(Mongo, Command, Db, Result),
+drop_collection(Mongo, Collection, Result) :-
+    Command = [drop-Collection],
+    command(Mongo, Command, Result),
     bson:doc_get(Result, ok, 1.0).
 
-command(Mongo, Command, Database, Result) :-
+drop_database(Mongo) :-
+    Command = [dropDatabase-1],
+    command(Mongo, Command, Result),
+    bson:doc_get(Result, ok, 1.0).
+
+command(Mongo, Command, Result) :-
+    mongo_get_database(Mongo, Database),
     core:atom_concat(Database, '.$cmd', DbCollection),
     c_string(DbCollection, DbCollectionBytes),
     bson:doc_bytes(Command, BytesCommand),
@@ -120,7 +126,12 @@ command(Mongo, Command, Database, Result) :-
     skip_n(Bytes, 36, Bytes1),
     bson:doc_bytes(Result, Bytes1).
 
-insert(Mongo, Document, FullCollName) :-
+full_coll_name(Database, Collection, FullCollName) :-
+    core:atomic_list_concat([Database,Collection], '.', FullCollName).
+
+insert(Mongo, Collection, Document) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
     c_string(FullCollName, FullCollNameBytes),
     bson:doc_bytes(Document, BytesDocument),
     lists:append(

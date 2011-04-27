@@ -4,47 +4,40 @@
 
 database('prolongo_test').
 collection('testcoll').
-database_dot_collection('prolongo_test.testcoll').
 
-setup(Mongo) :-
+up(Mongo) :-
     mongo:new_mongo(Mongo0),
     database(Database),
     mongo:use_database(Mongo0, Database, Mongo).
 
-cleanup(Mongo) :-
+down(Mongo) :-
     mongo:free_mongo(Mongo).
 
 :- begin_tests('mongo:insert/3').
 
-test('insert', [setup(setup(Mongo)),cleanup(cleanup(Mongo))]) :-
+test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     util:ms_since_epoch(MilliSeconds),
     Document =
     [
         hello - [åäö,5.05],
         now   - utc(MilliSeconds)
     ],
-    database_dot_collection(DbDotColl),
-    mongo:insert(Mongo, Document, DbDotColl).
+    collection(Collection),
+    mongo:insert(Mongo, Collection, Document).
 
 :- end_tests('mongo:insert/3').
 
 :- begin_tests('mongo:command/3').
 
-test('drop collection', [setup(setup(Mongo)),cleanup(cleanup(Mongo))]) :-
-    collection(Coll),
-    database(Db),
-    mongo:drop_collection(Mongo, Db, Coll, Result),
+test('drop collection', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:drop_collection(Mongo, Collection, Result),
     bson:doc_get(Result, ok, 1.0).
 
 /*
 % Takes a bit too long when MongoDB reallocates the collection later.
-test('drop database', [setup(setup(Mongo)),cleanup(cleanup(Mongo))]) :-
-    Command =
-    [
-        dropDatabase - 1
-    ],
-    database(Db),
-    mongo:command(Mongo, Command, Db).
+test('drop database', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    mongo:drop_database(Mongo).
 */
 
 :- end_tests('mongo:command/3').
