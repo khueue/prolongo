@@ -16,6 +16,7 @@
 
 :- use_module(bson(bson), []).
 :- use_module(bson(bson_format), []). % Temp XXX.
+:- use_module(misc(util), []).
 
 % Defaults.
 mongo_default_host(localhost).
@@ -34,7 +35,7 @@ new_mongo(Mongo) :-
     new_mongo(Mongo, Host, Port).
 
 new_mongo(Mongo, Host, Port) :-
-    Mongo = mongo(socket(Read,Write)),
+    mongo(socket(Read,Write), '', Mongo),
     setup_call_catcher_cleanup(
         socket:tcp_socket(Socket),
         socket:tcp_connect(Socket, Host:Port),
@@ -55,19 +56,26 @@ free_mongo(Mongo) :-
     core:close(Read, [force(true)]),
     core:close(Write, [force(true)]).
 
-% Mongo connection structure:
-% mongo(socket(Read,Write))
+use_database(Mongo, Database, Mongo1) :-
+    mongo_set_database(Mongo, Database, Mongo1).
+
+mongo_set_database(Mongo, Database, Mongo1) :-
+    util:set_arg(Mongo, 2, Database, Mongo1).
+
+% Constructor.
+mongo(Socket, Database, Mongo) :-
+    Mongo = mongo(Socket,Database).
 
 mongo_socket(Mongo, Socket) :-
-    core:arg(1, Mongo, Socket).
+    util:get_arg(Mongo, 1, Socket).
 
 mongo_socket_read(Mongo, Read) :-
     mongo_socket(Mongo, Socket),
-    core:arg(1, Socket, Read).
+    util:get_arg(Socket, 1, Read).
 
 mongo_socket_write(Mongo, Write) :-
     mongo_socket(Mongo, Socket),
-    core:arg(2, Socket, Write).
+    util:get_arg(Socket, 2, Write).
 
 send_bytes_and_flush(Bytes, Write) :-
     send_bytes(Bytes, Write),
