@@ -1,6 +1,7 @@
 :- module(bson,
     [
         doc_bytes/2,
+        doc_is_valid/1,
         doc_empty/1,
         doc_get/3,
         doc_put/4,
@@ -56,6 +57,17 @@ doc_bytes(Doc, Bytes) :-
     core:nonvar(Bytes),
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
+
+%%  doc_is_valid(+Doc) is semidet.
+%
+%   True if Doc is a valid BSON document.
+%
+%   Note: Right now, this is accomplished by converting it to bytes
+%   and failing if an exception is thrown. This can probably be done
+%   more efficiently.
+
+doc_is_valid(Doc) :-
+    catch(doc_bytes(Doc, _Bytes), bson_error(_), fail).
 
 %%  doc_empty(?Doc) is semidet.
 %

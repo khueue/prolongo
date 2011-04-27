@@ -86,6 +86,24 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
 
 :- end_tests('bson:doc_bytes/2').
 
+:- begin_tests('bson:doc_is_valid/1').
+
+test('valid') :-
+    Doc =
+    [
+        a - +null
+    ],
+    bson:doc_is_valid(Doc).
+
+test('invalid', [fail]) :-
+    Doc =
+    [
+        a - +nul % Unknown constant.
+    ],
+    bson:doc_is_valid(Doc).
+
+:- end_tests('bson:doc_is_valid/1').
+
 :- begin_tests('bson:doc_empty/1').
 
 test('empty') :-

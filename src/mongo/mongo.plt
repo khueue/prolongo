@@ -43,14 +43,16 @@ test('drop collection',
 */
 
 test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_database_infos(Mongo, Databases),
+    mongo:list_database_infos(Mongo, DatabaseInfos),
     database(Database),
-    core:memberchk([name-Database|_SizesAndStuff], Databases).
+    bson:doc_get(DatabaseInfos, Database, Info),
+    Info \== +null.
+    %bson_format:pp(DatabaseInfos), nl.
 
 test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_database_names(Mongo, Databases),
+    mongo:list_database_names(Mongo, DatabaseNames),
     database(Database),
-    core:memberchk(Database, Databases).
+    core:memberchk(Database, DatabaseNames).
 
 /*
 % Takes a bit too long when MongoDB reallocates the collection later.

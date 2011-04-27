@@ -115,7 +115,7 @@ subtype(uuid)         --> !, [0x03].
 subtype(md5)          --> !, [0x05].
 subtype(user_defined) --> !, [0x80].
 subtype(Subtype)      -->
-    { throw(bson_error(unknown_subtype, Subtype)) }.
+    { throw(bson_error(unknown_subtype(Subtype))) }.
 
 value_list(Pairs, 0x03, Len) -->
     document(Pairs, Len),
@@ -147,7 +147,7 @@ value_integer(Integer, 0x12, 8) -->
     !,
     int64(Integer).
 value_integer(Integer, _, _) -->
-    { throw(bson_error(too_large, Integer)) }.
+    { throw(bson_error(too_large(Integer))) }.
 
 bytes_n([], 0) --> [], !.
 bytes_n([Byte|Bytes], Len0) -->
@@ -172,7 +172,7 @@ value_constant(null,      0x0A, 0) --> [], !.
 value_constant(min,       0xFF, 0) --> [], !.
 value_constant(max,       0x7F, 0) --> [], !.
 value_constant(Constant,  _,    _) -->
-    { throw(bson_error(unknown_constant, Constant)) }.
+    { throw(bson_error(unknown_constant(Constant))) }.
 
 value_atom(Atom, 0x02, Len) -->
     string(Atom, Len).

@@ -98,23 +98,22 @@ drop_database(Mongo, Database, Result) :-
 
 list_commands(Mongo, Result) :-
     Command = [listCommands-1],
-    %use_database(Mongo, admin, Mongo1),
     command(Mongo, Command, Result).
 
 list_database_infos(Mongo, DatabaseInfos) :-
     Command = [listDatabases-1],
     use_database(Mongo, admin, Mongo1),
     command(Mongo1, Command, Result),
-    bson:doc_get(Result, databases, DatabaseInfos).
+    bson:doc_get(Result, databases, DatabaseInfoArray),
+    repack(DatabaseInfoArray, DatabaseInfos).
+
+repack([], []).
+repack([[name-Name|Info]|Infos], [Name-Info|Names]) :-
+    repack(Infos, Names).
 
 list_database_names(Mongo, DatabaseNames) :-
     list_database_infos(Mongo, DatabaseInfos),
-    get_database_names(DatabaseInfos, DatabaseNames).
-
-get_database_names([], []).
-get_database_names([Info|Infos], [Name|Names]) :-
-    bson:doc_get(Info, name, Name),
-    get_database_names(Infos, Names).
+    bson:doc_keys(DatabaseInfos, DatabaseNames).
 
 command(Mongo, Command, Result) :-
     mongo_get_database(Mongo, Database),
