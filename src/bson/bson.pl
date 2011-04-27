@@ -5,6 +5,9 @@
         doc_get/3,
         doc_put/4,
         doc_delete/3,
+        doc_keys/2,
+        doc_values/2,
+        doc_keys_values/3,
         version/1,
         bson_version/1
     ]).
@@ -91,3 +94,27 @@ doc_delete([], _, []).
 doc_delete([K-_|Pairs], K, Pairs) :- !.
 doc_delete([Other|Pairs], K, [Other|Pairs1]) :-
     doc_delete(Pairs, K, Pairs1).
+
+%%  doc_keys(+Doc, ?Keys) is semidet.
+%
+%   True if Keys is the keys for the associations in Doc.
+
+doc_keys(Doc, Keys) :-
+    doc_keys_values(Doc, Keys, _Values).
+
+%%  doc_values(+Doc, ?Values) is semidet.
+%
+%   True if Values is the values for the associations in Doc.
+
+doc_values(Doc, Values) :-
+    doc_keys_values(Doc, _Keys, Values).
+
+%%  doc_keys_values(+Doc, ?Keys, ?Values) is semidet.
+%%  doc_keys_values(?Doc, +Keys, +Values) is semidet.
+%
+%   True if Doc is the list of successive associations of
+%   Keys and Values.
+
+doc_keys_values([], [], []).
+doc_keys_values([K-V|Pairs], [K|Keys], [V|Values]) :-
+    doc_keys_values(Pairs, Keys, Values).

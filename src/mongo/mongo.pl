@@ -96,6 +96,11 @@ drop_database(Mongo, Database, Result) :-
     use_database(Mongo, Database, Mongo1),
     command(Mongo1, Command, Result).
 
+list_commands(Mongo, Result) :-
+    Command = [listCommands-1],
+    %use_database(Mongo, admin, Mongo1),
+    command(Mongo, Command, Result).
+
 list_databases(Mongo, Databases) :-
     Command = [listDatabases-1],
     use_database(Mongo, admin, Mongo1),

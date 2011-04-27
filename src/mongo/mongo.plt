@@ -29,9 +29,15 @@ test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:command/3').
 
-test('drop collection', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('drop collection',
+[
+    setup(up(Mongo)),
+    condition(collection_exists(Mongo)),
+    cleanup(down(Mongo))
+]) :-
     collection(Collection),
     mongo:drop_collection(Mongo, Collection, Result),
+    write(Result), nl,
     bson:doc_get(Result, ok, 1.0).
 
 test('list databases', [setup(up(Mongo)),cleanup(down(Mongo))]) :-

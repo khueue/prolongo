@@ -187,3 +187,31 @@ test('delete one key') :-
     bson:doc_get(Doc1, key2, +null).
 
 :- end_tests('bson:doc_delete/3').
+
+:- begin_tests('bson:doc_keys/2').
+
+test('doc_keys 1', [true(Got == Expected)]) :-
+    Doc =
+    [
+        a - 1,
+        b - 2,
+        c - 3
+    ],
+    Expected = [a,b,c],
+    bson:doc_keys(Doc, Got).
+
+:- end_tests('bson:doc_keys/2').
+
+:- begin_tests('bson:doc_values/2').
+
+test('doc_values 1', [true(Got == Expected)]) :-
+    Doc =
+    [
+        a - 1,
+        b - 2,
+        c - 3
+    ],
+    Expected = [1,2,3],
+    bson:doc_values(Doc, Got).
+
+:- end_tests('bson:doc_values/2').
