@@ -84,6 +84,14 @@ send_bytes_and_flush(Bytes, Write) :-
 send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
 
+drop_collection(Mongo, Db, Coll, Result) :-
+    Command =
+    [
+        drop - Coll
+    ],
+    mongo:command(Mongo, Command, Db, Result),
+    bson:doc_get(Result, ok, 1.0).
+
 command(Mongo, Command, Database, Result) :-
     core:atom_concat(Database, '.$cmd', DbCollection),
     c_string(DbCollection, DbCollectionBytes),
