@@ -101,16 +101,20 @@ list_commands(Mongo, Result) :-
     %use_database(Mongo, admin, Mongo1),
     command(Mongo, Command, Result).
 
-list_databases(Mongo, Databases) :-
+list_database_infos(Mongo, DatabaseInfos) :-
     Command = [listDatabases-1],
     use_database(Mongo, admin, Mongo1),
     command(Mongo1, Command, Result),
-    bson:doc_get(Result, databases, DatabaseArray),
-    get_db_names(DatabaseArray, Databases).
+    bson:doc_get(Result, databases, DatabaseInfos).
 
-get_db_names([], []).
-get_db_names([[name-Name|_]|Dbs], [Name|Names]) :-
-    get_db_names(Dbs, Names).
+list_database_names(Mongo, DatabaseNames) :-
+    list_database_infos(Mongo, DatabaseInfos),
+    get_database_names(DatabaseInfos, DatabaseNames).
+
+get_database_names([], []).
+get_database_names([Info|Infos], [Name|Names]) :-
+    bson:doc_get(Info, name, Name),
+    get_database_names(Infos, Names).
 
 command(Mongo, Command, Result) :-
     mongo_get_database(Mongo, Database),

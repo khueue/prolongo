@@ -29,6 +29,7 @@ test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:command/3').
 
+/*
 test('drop collection',
 [
     setup(up(Mongo)),
@@ -39,9 +40,15 @@ test('drop collection',
     mongo:drop_collection(Mongo, Collection, Result),
     write(Result), nl,
     bson:doc_get(Result, ok, 1.0).
+*/
 
-test('list databases', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_databases(Mongo, Databases),
+test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    mongo:list_database_infos(Mongo, Databases),
+    database(Database),
+    core:memberchk([name-Database|_SizesAndStuff], Databases).
+
+test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    mongo:list_database_names(Mongo, Databases),
     database(Database),
     core:memberchk(Database, Databases).
 
