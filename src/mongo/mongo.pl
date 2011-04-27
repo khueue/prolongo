@@ -82,12 +82,25 @@ mongo_socket_write(Mongo, Write) :-
     mongo_socket(Mongo, Socket),
     util:get_arg(Socket, 2, Write).
 
+doc_ok(Doc) :-
+    bson:doc_get(Doc, ok, Value),
+    doc_ok_value(Value).
+
+doc_ok_value(1.0).
+doc_ok_value(+true).
+
 send_bytes_and_flush(Bytes, Write) :-
     send_bytes(Bytes, Write),
     core:flush_output(Write).
 
 send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
+
+/*
+list_collection_names(Mongo, CollectionNames) :-
+    Command = [],
+    command(Mongo, Command, CollectionNames).
+*/
 
 drop_collection(Mongo, Collection, Result) :-
     Command = [drop-Collection],
@@ -120,26 +133,8 @@ list_database_names(Mongo, DatabaseNames) :-
 command(Mongo, Command, Result) :-
     mongo_get_database(Mongo, Database),
     command_namespace(CommandNamespace),
-    full_coll_name(Database, CommandNamespace, DbCollection),
-    c_string(DbCollection, DbCollectionBytes),
-    bson:doc_bytes(Command, BytesCommand),
-    lists:append(
-        [
-            [
-                 L0, L1, L2, L3, % Message length.
-                124,  0,  0,  0, %
-                  0,  0,  0,  0, %
-                212,  7,  0,  0  % 2004: query
-            ],
-            [0,0,0,0], % flags
-            DbCollectionBytes,
-            [0,0,0,0], % num skip
-            [1,0,0,0], % num return
-            BytesCommand
-        ],
-        Message),
-    lists:length(Message, MessageLen),
-    length4(MessageLen, [L0,L1,L2,L3]),
+    full_coll_name(Database, CommandNamespace, FullCollName),
+    build_command_message(FullCollName, Command, Message),
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write),
     mongo_socket_read(Mongo, Read),
@@ -147,30 +142,54 @@ command(Mongo, Command, Result) :-
     skip_n(Bytes, 36, Bytes1),
     bson:doc_bytes(Result, Bytes1).
 
+build_command_message(FullCollName, Document, Bytes) :-
+    c_string(FullCollName, BytesFullCollName),
+    bson:doc_bytes(Document, BytesDocument),
+    phrase(build_command_message_aux(
+        BytesFullCollName, BytesDocument, BytesLength),
+        Bytes),
+    lists:length(Bytes, Length),
+    length4(Length, BytesLength).
+
+build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
+    { BytesLength = [_,_,_,_] },
+    BytesLength, % Message length.
+    [124,  0,  0,  0], %
+    [  0,  0,  0,  0], %
+    [212,  7,  0,  0], % 2004: query
+    [  0,  0,  0,  0], % flags
+    BytesFullCollName,
+    [  0,  0,  0,  0], % num skip
+    [  1,  0,  0,  0], % num return
+    BytesCommand.
+
 full_coll_name(Database, Collection, FullCollName) :-
     core:atomic_list_concat([Database,Collection], '.', FullCollName).
 
 insert(Mongo, Collection, Document) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    build_insert_bytes(FullCollName, Document, Message),
+    build_insert_message(FullCollName, Document, Message),
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write).
 
-build_insert_bytes(FullCollName, Document, Bytes) :-
+build_insert_message(FullCollName, Document, Bytes) :-
     c_string(FullCollName, BytesFullCollName),
     bson:doc_bytes(Document, BytesDocument),
-    phrase(build_insert_bytes_aux(BytesFullCollName, BytesDocument), Bytes0),
+    phrase(build_insert_message_aux(BytesFullCollName, BytesDocument), Bytes0),
     lists:length(Bytes0, LengthBut4),
     Length is LengthBut4 + 4,
     length4(Length, BytesLength),
     lists:append(BytesLength, Bytes0, Bytes).
 
-build_insert_bytes_aux(BytesFullCollName, BytesDocument) -->
+build_insert_message_aux(BytesFullCollName, BytesDocument) -->
+    % Header except message length.
     [123,  0,  0,  0], %
     [  0,  0,  0,  0], %
     [210,  7,  0,  0], % 2002: insert
+    % Stuff.
     [  0,  0,  0,  0], % ZERO
+    % Interesting stuff.
     BytesFullCollName,
     BytesDocument.
 

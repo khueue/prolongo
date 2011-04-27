@@ -29,18 +29,15 @@ test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:command/3').
 
-/*
 test('drop collection',
 [
     setup(up(Mongo)),
-    condition(collection_exists(Mongo)),
     cleanup(down(Mongo))
 ]) :-
     collection(Collection),
     mongo:drop_collection(Mongo, Collection, Result),
-    write(Result), nl,
-    bson:doc_get(Result, ok, 1.0).
-*/
+    %write(Result), nl,
+    mongo:doc_ok(Result).
 
 test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_database_infos(Mongo, DatabaseInfos),
@@ -53,6 +50,13 @@ test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_database_names(Mongo, DatabaseNames),
     database(Database),
     core:memberchk(Database, DatabaseNames).
+
+/*
+test('list collection names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    mongo:list_collection_names(Mongo, CollectionNames),
+    collection(Collection),
+    core:memberchk(Collection, CollectionNames).
+*/
 
 /*
 % Takes a bit too long when MongoDB reallocates the collection later.
