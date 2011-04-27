@@ -89,17 +89,27 @@ send_bytes(Bytes, Write) :-
 
 drop_collection(Mongo, Collection, Result) :-
     Command = [drop-Collection],
-    command(Mongo, Command, Result),
-    bson:doc_get(Result, ok, 1.0).
+    command(Mongo, Command, Result).
 
-drop_database(Mongo) :-
+drop_database(Mongo, Database, Result) :-
     Command = [dropDatabase-1],
-    command(Mongo, Command, Result),
-    bson:doc_get(Result, ok, 1.0).
+    use_database(Mongo, Database, Mongo1),
+    command(Mongo1, Command, Result).
+
+list_databases(Mongo, Databases) :-
+    Command = [listDatabases-1],
+    use_database(Mongo, admin, Mongo1),
+    command(Mongo1, Command, Result),
+    bson:doc_get(Result, databases, DatabaseArray),
+    get_db_names(DatabaseArray, Databases).
+
+get_db_names([], []).
+get_db_names([[name-Name|_]|Dbs], [Name|Names]) :-
+    get_db_names(Dbs, Names).
 
 command(Mongo, Command, Result) :-
     mongo_get_database(Mongo, Database),
-    core:atom_concat(Database, '.$cmd', DbCollection),
+    full_coll_name(Database, '$cmd', DbCollection),
     c_string(DbCollection, DbCollectionBytes),
     bson:doc_bytes(Command, BytesCommand),
     lists:append(

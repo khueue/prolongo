@@ -34,10 +34,17 @@ test('drop collection', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:drop_collection(Mongo, Collection, Result),
     bson:doc_get(Result, ok, 1.0).
 
+test('list databases', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    mongo:list_databases(Mongo, Databases),
+    database(Database),
+    core:memberchk(Database, Databases).
+
 /*
 % Takes a bit too long when MongoDB reallocates the collection later.
 test('drop database', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:drop_database(Mongo).
+    database(Database),
+    mongo:drop_database(Mongo, Database, Result),
+    bson:doc_get(Result, ok, 1.0).
 */
 
 :- end_tests('mongo:command/3').
