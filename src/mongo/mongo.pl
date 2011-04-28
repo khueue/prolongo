@@ -143,7 +143,7 @@ command(Mongo, Command, Result) :-
     bson:doc_bytes(Result, Bytes1).
 
 build_command_message(FullCollName, Document, Bytes) :-
-    c_string(FullCollName, BytesFullCollName),
+    phrase(c_string(FullCollName), BytesFullCollName),
     bson:doc_bytes(Document, BytesDocument),
     phrase(build_command_message_aux(
         BytesFullCollName, BytesDocument, BytesLength),
@@ -174,16 +174,17 @@ insert(Mongo, Collection, Document) :-
     send_bytes_and_flush(Message, Write).
 
 build_insert_message(FullCollName, Document, Bytes) :-
-    c_string(FullCollName, BytesFullCollName),
+    phrase(c_string(FullCollName), BytesFullCollName),
     bson:doc_bytes(Document, BytesDocument),
-    phrase(build_insert_message_aux(BytesFullCollName, BytesDocument), Bytes0),
-    lists:length(Bytes0, LengthBut4),
-    Length is LengthBut4 + 4,
-    length4(Length, BytesLength),
-    lists:append(BytesLength, Bytes0, Bytes).
+    phrase(build_insert_message_aux(
+        BytesFullCollName, BytesDocument, BytesLength),
+        Bytes),
+    lists:length(Bytes, Length),
+    length4(Length, BytesLength).
 
-build_insert_message_aux(BytesFullCollName, BytesDocument) -->
-    % Header except message length.
+build_insert_message_aux(BytesFullCollName, BytesDocument, BytesLength) -->
+    { BytesLength = [_,_,_,_] },
+    BytesLength,       % Message length.
     [123,  0,  0,  0], %
     [  0,  0,  0,  0], %
     [210,  7,  0,  0], % 2002: insert
@@ -193,9 +194,10 @@ build_insert_message_aux(BytesFullCollName, BytesDocument) -->
     BytesFullCollName,
     BytesDocument.
 
-c_string(Atom, Bytes) :-
-    bson_unicode:utf8_bytes(Atom, Bytes0),
-    lists:append(Bytes0, [0], Bytes).
+c_string(Atom) -->
+    { bson_unicode:utf8_bytes(Atom, Bytes) },
+    Bytes,
+    [0].
 
 length4(Len, Bytes) :-
     bson_bits:integer_bytes(Len, 4, little, Bytes).
