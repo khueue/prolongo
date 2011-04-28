@@ -168,3 +168,5 @@
    and started cleaning. Should wrap more API soon. Added doc_keys/2,
    doc_values/2, doc_keys_values/3 and doc_is_valid/1. Wrote some tests.
    Can now list database names.
+
+ * April 28. Started writing the report. Actually going pretty good.

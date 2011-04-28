@@ -69,7 +69,7 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
-Prolog is good stuff, and MongoDB ...
+[Prolog is good stuff, and MongoDB ...]
 \end_layout
 
 \begin_layout Abstract
@@ -86,10 +86,20 @@ Introduction
 \end_layout
 
 \begin_layout Standard
+
+\emph on
+[Write this section, or at least finalize it, near the end.]
+\end_layout
+
+\begin_layout Standard
+
+\emph on
 From spec:
 \end_layout
 
 \begin_layout Standard
+
+\emph on
 [MongoDB is a young document-oriented database system that has started to
  gain much attention recently.
  Document-orientation involves removing rigid database schemas and advanced
@@ -100,6 +110,8 @@ From spec:
 \end_layout
 
 \begin_layout Standard
+
+\emph on
 Prolog, being an untyped language, agrees with the document-oriented approach
  of relaxing manifests in order to create more dynamic and flexible systems.
  Embedding terms in other terms is natural in Prolog, and embedding documents
@@ -107,6 +119,8 @@ Prolog, being an untyped language, agrees with the document-oriented approach
 \end_layout
 
 \begin_layout Standard
+
+\emph on
 Many drivers exist, both official and unofficial, that enable the use of
  Mongo\SpecialChar \-
 DB from various programming languages.
@@ -114,43 +128,110 @@ DB from various programming languages.
 \end_layout
 
 \begin_layout Section
-MongoDB
-\end_layout
-
-\begin_layout Standard
-XXX
-\end_layout
-
-\begin_layout Section
 Scope
 \end_layout
 
 \begin_layout Standard
-From spec:
+The aim of this thesis is not to create a feature-complete production-ready
+ driver, but to cover basic CRUD (Create, Read, Update, Delete) functionality
+ and basic connection management, laying the foundation for further development.
+ More advanced MongoDB features such as 
+\begin_inset Quotes eld
+\end_inset
+
+sharding
+\begin_inset Quotes erd
+\end_inset
+
+ [xxx replica sets?] and GridFS are therefore not covered.
 \end_layout
 
 \begin_layout Standard
-[Creating a driver that is usable with, or at least easily portable to,
- other Prolog environments is desirable, but development and testing will
- focus on SWI-Prolog.
-\end_layout
-
-\begin_layout Standard
-More complex features of Mongo\SpecialChar \-
-DB, such as advanced connection management
- and GridFS, will not be implemented.]
+Due to the lack of proper standardization within the Prolog community, maintaini
+ng portability between different Prolog implementations is difficult and
+ not pursued.
 \end_layout
 
 \begin_layout Section
-Method (necessary?)
+Background
 \end_layout
 
 \begin_layout Standard
-Research other drivers, docs.
+This chapter briefly discusses MongoDB and Prolog.
+ 
+\emph on
+XXX where discuss why prolog needs this driver? prolog is its own database,
+ but using the inbuilt database for advanced applications is probably not
+ that great [ref? research this].
+ using a separate database system moves the database logic from the prolog
+ application = good, and promotes easy replication etc.
+\end_layout
+
+\begin_layout Subsection
+MongoDB
 \end_layout
 
 \begin_layout Standard
-Test-driven development.
+MongoDB is a document-oriented database management system that emphasizes
+ speed and flexibility.
+ This is accomplished by sacrificing statically defined database schemas
+ and allowing a certain degree of denormalization by embedded documents
+ into each other.
+\end_layout
+
+\begin_layout Subsubsection
+Document-Oriented vs.
+ Relational Databases
+\end_layout
+
+\begin_layout Standard
+XXX Discuss what doc-oriented is trying to change with respect to relational.
+ Fundamental differences, how MongoDB does them differently, and why.
+\end_layout
+
+\begin_layout Subsection
+Prolog
+\end_layout
+
+\begin_layout Standard
+Prolog is an interpreted dynamic language with its roots in logic.
+ It is also a declarative language, implying that the programmer specifies
+ 
+\emph on
+what
+\emph default
+ the program is supposed to solve, not 
+\emph on
+how
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Type System
+\end_layout
+
+\begin_layout Standard
+The type system used in Prolog is dynamic, and the fundamental data type
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+term
+\begin_inset Quotes erd
+\end_inset
+
+, which can be any value.
+ A variable can be bound to any term, but once bound, it is immutable and
+ cannot be rebound.
+\end_layout
+
+\begin_layout Subsubsection
+Unification?
+\end_layout
+
+\begin_layout Standard
+XXX what the heck am i writing?
 \end_layout
 
 \begin_layout Section
@@ -168,6 +249,11 @@ http://www.mongodb.org/display/DOCS/Writing+Drivers+and+Tools
 
 \begin_layout Section
 Design
+\end_layout
+
+\begin_layout Standard
+At the core of MongoDB lies the BSON binary data format.
+ ...
 \end_layout
 
 \begin_layout Itemize
@@ -221,7 +307,9 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-How do I solve it?
+
+\emph on
+[xxx How do I solve it?]
 \end_layout
 
 \begin_layout Section
@@ -229,7 +317,9 @@ Evaluation
 \end_layout
 
 \begin_layout Standard
-Did it work? Is it usable? What should have been done differently?
+
+\emph on
+[xxx Did it work? Is it usable? What should have been done differently?]
 \end_layout
 
 \begin_layout Section
@@ -237,18 +327,24 @@ Related Work
 \end_layout
 
 \begin_layout Standard
-Compare to existing drivers? Erlang? And something completely different?
+
+\emph on
+[xxx Compare to existing drivers? Erlang? And something completely different?]
 \end_layout
 
 \begin_layout Section
-Conclusion/Future Work
+Conclusion/Future Work [what to call it?]
 \end_layout
 
 \begin_layout Standard
-Not sure how much this section relates to Evaluation above.
+
+\emph on
+[xxx Not sure how much this section relates to Evaluation above.
 \end_layout
 
 \begin_layout Standard
+
+\emph on
 Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to improve
  in the future? Critical parts (BSON) in pure C? Even write a C extension
  with more/most functionality? Don't know how portable that would be though,
@@ -261,7 +357,7 @@ real
 \begin_inset Quotes erd
 \end_inset
 
- driver?
+ driver?]
 \end_layout
 
 \begin_layout Section
@@ -269,12 +365,23 @@ References
 \end_layout
 
 \begin_layout Standard
-References for Prolog DCG? References for various stuff used in SWI? At
- all relevant? How much web references? Most MongoDB driver stuff is web.
+
+\emph on
+[xxx References for Prolog DCG? References for various stuff used in SWI?
+ At all relevant? How much web references? Most MongoDB driver stuff is
+ web.]
+\end_layout
+
+\begin_layout Subsection
+Books
 \end_layout
 
 \begin_layout Standard
-Chodorow, K.
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ Chodorow, K.
  & Dirolf, M.
  (2010) 
 \emph on
@@ -282,6 +389,92 @@ MongoDB: The Definitive Guide.
 
 \emph default
  Sebastopol, United States of America: O'Reilly Media, Inc.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ Bratko, I.
+ (2001) 
+\emph on
+PROLOG Programming for Artificial Intelligence.
+
+\emph default
+ 3rd ed.
+ Essex, England: Pearson Education Limited.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ O'Keefe, R.
+ A.
+ (1990) 
+\emph on
+The Craft of Prolog.
+
+\emph default
+ Cambridge, United States of America: The MIT Press.
+\end_layout
+
+\begin_layout Subsection
+Technical Documentation
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ MongoDB Driver Documentation
+\begin_inset Newline newline
+\end_inset
+
+http://www.mongodb.org/display/DOCS/Drivers
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ BSON Specification
+\begin_inset Newline newline
+\end_inset
+
+http://bsonspec.org/
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+[xxx currently unreferenced]
+\emph default
+ SWI-Prolog Documentation
+\begin_inset Newline newline
+\end_inset
+
+http://www.swi-prolog.org/pldoc/
 \end_layout
 
 \end_body
