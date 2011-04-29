@@ -96,11 +96,10 @@ send_bytes_and_flush(Bytes, Write) :-
 send_bytes(Bytes, Write) :-
     core:format(Write, '~s', [Bytes]).
 
-/*
-list_collection_names(Mongo, CollectionNames) :-
+list_collection_names(Mongo, Names) :-
     Command = [],
-    command(Mongo, Command, CollectionNames).
-*/
+    mongo:command(Mongo, 'system.namespaces', Command, Result),
+    bson:doc_values(Result, Names).
 
 drop_collection(Mongo, Collection, Result) :-
     Command = [drop-Collection],

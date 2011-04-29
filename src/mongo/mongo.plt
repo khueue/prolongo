@@ -43,8 +43,7 @@ test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 % XXX this works now, but I need to fix cursors (only one is shown).
 test('list collection names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    Command = [],
-    mongo:command(Mongo, 'system.namespaces', Command, Result),
+    mongo:list_collection_names(Mongo, Result),
     bson_format:pp(Result).
 
 /*
