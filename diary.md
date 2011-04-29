@@ -170,3 +170,6 @@
    Can now list database names.
 
  * April 28. Started writing the report. Actually going pretty good.
+
+ * April 29. Figured out how to get collection names. Need to implement
+   cursors now I think.
