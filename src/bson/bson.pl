@@ -16,6 +16,7 @@
 /** <module> BSON manipulation.
  *
  *  BSON document manipulation and conversion to-and-from bytes.
+ *  Most of these predicates run in O(n), but that may change.
  *
  *  @see <http://bsonspec.org/>
  */
