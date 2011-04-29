@@ -131,9 +131,12 @@ list_database_names(Mongo, DatabaseNames) :-
     bson:doc_keys(DatabaseInfos, DatabaseNames).
 
 command(Mongo, Command, Result) :-
-    mongo_get_database(Mongo, Database),
     command_namespace(CommandNamespace),
-    full_coll_name(Database, CommandNamespace, FullCollName),
+    command(Mongo, CommandNamespace, Command, Result).
+
+command(Mongo, Collection, Command, Result) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
     build_command_message(FullCollName, Command, Message),
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write),

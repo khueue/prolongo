@@ -252,8 +252,9 @@ Design
 \end_layout
 
 \begin_layout Standard
-At the core of MongoDB lies the BSON binary data format.
- ...
+At the core of MongoDB lies the BSON (Binary JSON) binary data format.
+ BSON is used in MongoDB to communicate data as well as store documents
+ on disk.
 \end_layout
 
 \begin_layout Itemize

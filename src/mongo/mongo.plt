@@ -3,7 +3,7 @@
 :- use_module(misc(util), []).
 
 database('prolongo_test').
-collection('testcoll').
+collection('atestcoll').
 
 up(Mongo) :-
     mongo:new_mongo(Mongo0),
@@ -29,16 +29,6 @@ test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:command/3').
 
-test('drop collection',
-[
-    setup(up(Mongo)),
-    cleanup(down(Mongo))
-]) :-
-    collection(Collection),
-    mongo:drop_collection(Mongo, Collection, Result),
-    %write(Result), nl,
-    mongo:doc_ok(Result).
-
 test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_database_infos(Mongo, DatabaseInfos),
     database(Database),
@@ -51,11 +41,22 @@ test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     database(Database),
     core:memberchk(Database, DatabaseNames).
 
-/*
+% XXX this works now, but I need to fix cursors (only one is shown).
 test('list collection names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_collection_names(Mongo, CollectionNames),
+    Command = [],
+    mongo:command(Mongo, 'system.namespaces', Command, Result),
+    bson_format:pp(Result).
+
+/*
+test('drop collection',
+[
+    setup(up(Mongo)),
+    cleanup(down(Mongo))
+]) :-
     collection(Collection),
-    core:memberchk(Collection, CollectionNames).
+    mongo:drop_collection(Mongo, Collection, Result),
+    %write(Result), nl,
+    mongo:doc_ok(Result).
 */
 
 /*

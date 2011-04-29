@@ -22,7 +22,7 @@ ms_since_epoch(Millis) :-
 
 %%  get_arg(+Struct, +Index, ?Arg) is semidet.
 %
-%   True if Arg is the Index'th argument in Struct. Indexing
+%   True if Arg is the argument at Index in Struct. Indexing
 %   starts at 1.
 
 get_arg(Struct, Index, Arg) :-
