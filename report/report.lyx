@@ -134,7 +134,7 @@ Scope
 \begin_layout Standard
 The aim of this thesis is not to create a feature-complete production-ready
  driver, but to cover basic CRUD (Create, Read, Update, Delete) functionality
- and basic connection management, laying the foundation for further development.
+ and connection handling, laying the foundation for further development.
  More advanced MongoDB features such as 
 \begin_inset Quotes eld
 \end_inset
@@ -174,9 +174,8 @@ MongoDB
 \begin_layout Standard
 MongoDB is a document-oriented database management system that emphasizes
  speed and flexibility.
- This is accomplished by sacrificing statically defined database schemas
- and allowing a certain degree of denormalization by embedded documents
- into each other.
+ This is accomplished by sacrificing fixed database schemas and allowing
+ a certain degree of denormalization by embedded documents into each other.
 \end_layout
 
 \begin_layout Subsubsection
