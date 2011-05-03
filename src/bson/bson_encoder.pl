@@ -1,11 +1,14 @@
 :- module(bson_encoder,
     [
-        doc_to_bytes/2
+        doc_to_bytes/2,
+        doc_to_bytes/3,
+        docs_to_bytes/2,
+        docs_to_bytes/3
     ]).
 
 /** <module> BSON encoder.
  *
- *  This module is private.
+ *  This module is private. See bson.
  */
 
 :- include(misc(common)).
@@ -16,8 +19,8 @@
 %%  doc_to_bytes(+Doc, ?Bytes) is semidet.
 %%  doc_to_bytes(+Doc, ?Bytes, ?NumBytes) is semidet.
 %
-%   True if Bytes is the BSON byte-encoding of Doc. NumBytes is
-%   the number of bytes in Bytes.
+%   True if Bytes is the flat-list BSON byte-encoding of Doc.
+%   NumBytes is the number of bytes in Bytes.
 %
 %   @throws bson_error(Reason)
 
@@ -25,9 +28,30 @@ doc_to_bytes(Doc, Bytes) :-
     doc_to_bytes(Doc, Bytes, _NumBytes).
 
 doc_to_bytes(Doc, Bytes, NumBytes) :-
-    phrase(document(Doc, NumBytes), Bytes),
-    !.
-doc_to_bytes(_Doc, _Bytes, _NumBytes) :-
+    docs_to_bytes([Doc], Bytes, NumBytes).
+
+%%  docs_to_bytes(+Docs, ?Bytes) is semidet.
+%%  docs_to_bytes(+Docs, ?Bytes, ?NumBytes) is semidet.
+%
+%   True if Bytes is the flat-list BSON byte-encoding of all the
+%   documents in the list Docs.
+%   NumBytes is the total number of bytes in Bytes.
+%
+%   @throws bson_error(Reason)
+
+docs_to_bytes(Docs, Bytes) :-
+    docs_to_bytes(Docs, Bytes, _NumBytes).
+
+docs_to_bytes(Docs, Bytes, NumBytes) :-
+    docs_to_bytes(Docs, Bytes, 0, NumBytes).
+
+docs_to_bytes([], [], Num, Num) :- !.
+docs_to_bytes([Doc|Docs], Bytes, Num0, Num) :-
+    phrase(document(Doc, Num1), Bytes, RestBytes),
+    !,
+    Num2 is Num0 + Num1,
+    docs_to_bytes(Docs, RestBytes, Num2, Num).
+docs_to_bytes(_Docs, _Bytes, _Num0, _Num) :-
     throw(bson_error(invalid)).
 
 document(Elements, Len) -->
@@ -62,7 +86,7 @@ value(Value, Tag, Len) -->
     { core:float(Value) }, !,
     value_float(Value, Tag, Len).
 value(Value, Tag, Len) -->
-    { list_shaped(Value) }, !, % Must be before atom, [] is considered one!
+    { util:list_shaped(Value) }, !, % Must be before atom, [] is considered one!
     value_list(Value, Tag, Len).
 value(Value, Tag, Len) -->
     { core:atom(Value) }, !,
@@ -190,9 +214,6 @@ string(Utf8, Len) -->
     int32(NumBytesWithNul),
     Bytes,
     [0].
-
-list_shaped([]).
-list_shaped([_|_]).
 
 object_id_atom_to_bytes(ObjectIdAtom, Bytes, 12) :-
     core:atom_concat('0x', ObjectIdAtom, HexAtom),

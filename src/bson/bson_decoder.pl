@@ -1,11 +1,12 @@
 :- module(bson_decoder,
     [
-        bytes_to_doc/2
+        bytes_to_doc/2,
+        bytes_to_docs/2
     ]).
 
 /** <module> BSON decoder.
  *
- *  This module is private.
+ *  This module is private. See bson.
  */
 
 :- include(misc(common)).
@@ -20,9 +21,21 @@
 %   @throws bson_error(Reason)
 
 bytes_to_doc(Bytes, Doc) :-
-    phrase(document(Doc), Bytes),
-    !.
-bytes_to_doc(_Bytes, _Doc) :-
+    bytes_to_docs(Bytes, [Doc]).
+
+%%  bytes_to_docs(+Bytes, ?Docs) is semidet.
+%
+%   True if Bytes is the flat-list BSON byte-encoding of all the
+%   documents in the list Docs.
+%
+%   @throws bson_error(Reason)
+
+bytes_to_docs([], []) :- !.
+bytes_to_docs(Bytes, [Doc|Docs]) :-
+    phrase(document(Doc), Bytes, RestBytes),
+    !,
+    bytes_to_docs(RestBytes, Docs).
+bytes_to_docs(_Bytes, _Docs) :-
     throw(bson_error(invalid)).
 
 document(Elements) -->

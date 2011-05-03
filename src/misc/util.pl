@@ -1,5 +1,6 @@
 :- module(util,
     [
+        list_shaped/1,
         ms_since_epoch/1,
         get_arg/3,
         set_arg/4,
@@ -10,6 +11,13 @@
  */
 
 :- include(misc(common)).
+
+%%  list_shaped(+Term) is semidet.
+%
+%   True if Term looks like a list (no recursive checks).
+
+list_shaped([]).
+list_shaped([_|_]).
 
 %%  ms_since_epoch(-Millis) is det.
 %

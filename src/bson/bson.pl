@@ -40,6 +40,27 @@ version([0,0,0]).
 
 bson_version([1,0]).
 
+%%  docs_bytes(+Docs, ?Bytes) is semidet.
+%%  docs_bytes(?Docs, +Bytes) is semidet.
+%
+%   True if Bytes is the flat-list BSON byte-encoding of all the
+%   documents in the list Docs.
+%   NumBytes is the number of bytes in Bytes.
+%
+%   @param Docs is a list of key-value pair lists.
+%   @param Bytes is a list of bytes (in 0..255).
+%
+%   @throws bson_error(Reason)
+
+docs_bytes(Docs, Bytes) :-
+    core:nonvar(Docs),
+    !,
+    bson_encoder:docs_to_bytes(Docs, Bytes).
+docs_bytes(Docs, Bytes) :-
+    core:nonvar(Bytes),
+    !,
+    bson_decoder:bytes_to_docs(Bytes, Docs).
+
 %%  doc_bytes(+Doc, ?Bytes) is semidet.
 %%  doc_bytes(?Doc, +Bytes) is semidet.
 %

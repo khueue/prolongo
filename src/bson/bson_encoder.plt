@@ -1,5 +1,56 @@
 :- include(misc(common)).
 
+:- begin_tests('bson_encoder:docs_to_bytes/2').
+
+test('several empty docs', [true(Got == Expected)]) :-
+    Docs =
+    [
+        [],
+        []
+    ],
+    Expected =
+    [
+        5,0,0,0, 0,
+        5,0,0,0, 0
+    ],
+    bson_encoder:docs_to_bytes(Docs, Got).
+
+test('several empty docs, check num bytes', [true(Got == Expected)]) :-
+    Docs =
+    [
+        [],
+        []
+    ],
+    Expected = 10,
+    bson_encoder:docs_to_bytes(Docs, _Bytes, Got).
+
+test('more complex docs', [true(Got == Expected)]) :-
+    Docs =
+    [
+        [hello - []],
+        [hello - []]
+    ],
+    Expected =
+    [
+        % Doc 1.
+        17,0,0,0, % Length of top doc.
+        0x03, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of embedded doc.
+            0, % End of embedded doc.
+        0, % End of top doc.
+        % Doc 2.
+        17,0,0,0, % Length of top doc.
+        0x03, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of embedded doc.
+            0, % End of embedded doc.
+        0 % End of top doc.
+    ],
+    bson_encoder:docs_to_bytes(Docs, Got).
+
+:- end_tests('bson_encoder:docs_to_bytes/2').
+
 :- begin_tests('bson_encoder:doc_to_bytes/2').
 
 test('empty doc', [true(Got == Expected)]) :-

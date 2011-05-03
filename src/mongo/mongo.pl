@@ -3,6 +3,7 @@
         new_mongo/1,
         new_mongo/3,
         free_mongo/1
+        % xxx missing exports
     ]).
 
 /** <module> MongoDB driver.
@@ -86,7 +87,9 @@ doc_ok(Doc) :-
     bson:doc_get(Doc, ok, Value),
     doc_ok_value(Value).
 
+% XXX Which of these are actually required?
 doc_ok_value(1.0).
+doc_ok_value(1).
 doc_ok_value(+true).
 
 send_bytes_and_flush(Bytes, Write) :-
@@ -140,9 +143,10 @@ command(Mongo, Collection, Command, Result) :-
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Message, Write),
     mongo_socket_read(Mongo, Read),
-    read_response(Read, Bytes),
-    skip_n(Bytes, 36, Bytes1),
-    bson:doc_bytes(Result, Bytes1).
+    read_response_bytes(Read, Bytes),
+    phrase(parse_response_header(header(Len,ReqId,RespTo,OpCode)), Bytes, Bytes1),
+    skip_n(Bytes1, 20, Bytes2),
+    bson:doc_bytes(Result, Bytes2).
 
 build_command_message(FullCollName, Document, Bytes) :-
     phrase(c_string(FullCollName), BytesFullCollName),
@@ -204,6 +208,9 @@ c_string(Atom) -->
 length4(Len, Bytes) :-
     bson_bits:integer_bytes(Len, 4, little, Bytes).
 
+int32(Len, Bytes) :-
+    bson_bits:integer_bytes(Len, 4, little, Bytes).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 skip_n(L, 0, L) :- !.
@@ -211,24 +218,22 @@ skip_n([_|L], N, L2) :-
     N1 is N - 1,
     skip_n(L, N1, L2).
 
-read_response(Read, [B0,B1,B2,B3|Bytes]) :-
+parse_response_header(header(Len,ReqId,RespTo,OpCode)) -->
+    [L0,L1,L2,L3],
+    [Req0,Req1,Req2,Req3],
+    [Resp0,Resp1,Resp2,Resp3],
+    [Op0,Op1,Op2,Op3],
+    { int32(Len, [L0,L1,L2,L3]) },
+    { int32(ReqId, [Req0,Req1,Req2,Req3]) },
+    { int32(RespTo, [Resp0,Resp1,Resp2,Resp3]) },
+    { int32(OpCode, [Op0,Op1,Op2,Op3]) }.
+
+read_response_bytes(Read, [B0,B1,B2,B3|Bytes]) :-
     read_n_bytes(Read, 4, BytesForLen),
     BytesForLen = [B0,B1,B2,B3],
     length4(Len, BytesForLen),
     LenBut4 is Len - 4,
     read_n_bytes(Read, LenBut4, Bytes).
-
-parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]) :-
-    Bytes = [
-        L0,L1,L2,L3,
-        Req0,Req1,Req2,Req3,
-        Res0,Res1,Res2,Res3,
-        Op0,Op1,Op2,Op3
-        |_Rest],
-    length4(Len, [L0,L1,L2,L3]),
-    length4(ReqId, [Req0,Req1,Req2,Req3]),
-    length4(RespTo, [Res0,Res1,Res2,Res3]),
-    length4(OpCode, [Op0,Op1,Op2,Op3]).
 
 read_n_bytes(_Read, 0, []) :- !.
 read_n_bytes(Read, N, [Byte|Bytes]) :-
@@ -283,7 +288,7 @@ tryit :-
     new_mongo(Mongo),
     send_bytes(Message, Write),
     core:flush_output(Write),
-    read_response(Read, Bytes),
+    read_response_bytes(Read, Bytes),
     format('Response bytes: ~w~n', [Bytes]),
     parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]),
     format('Len: ~w~n', [Len]),

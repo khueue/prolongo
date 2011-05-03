@@ -1,5 +1,49 @@
 :- include(misc(common)).
 
+:- begin_tests('bson:docs_bytes/2').
+
+
+test('complex doc back-and-forth', [true(Got == Expected)]) :-
+    Doc =
+    [
+        k01 - -5.05,
+        k02 - åäö_string, % Atoms only (no code lists).
+        k03 - [],
+        k04 - [k1-v1, k2-v2],
+        k05 - [v1,v2,v3],
+        k06 - binary(generic,[1,2,3]),
+        k07 - binary(function,[1,2,3]),
+        k08 - binary(old_generic,[1,2,3]),
+        k09 - binary(uuid,[1,2,3]),
+        k10 - binary(md5,[1,2,3]),
+        k11 - binary(user_defined,[1,2,3]),
+        k12 - +undefined,
+        k13 - object_id('47cc67093475061e3d95369d'),
+        k14 - +false,
+        k15 - +true,
+        k16 - utc(1302354660284),
+        k17 - +null,
+        k18 - regex('pattern','options'),
+        k19 - db_pointer('string','47cc67093475061e3d95369d'),
+        k20 - js('code'),
+        k21 - symbol(åäö_string), % Just like atoms.
+        k22 - js('code',[mappings-doc]),
+        k23 - 32,
+        k24 - mongostamp(0),
+        k25 - 9223372036854775807,
+        k26 - +min,
+        k27 - +max
+    ],
+    Expected =
+    [
+        Doc,
+        Doc
+    ],
+    bson:docs_bytes(Expected, Bytes),
+    bson:docs_bytes(Got, Bytes).
+
+:- end_tests('bson:docs_bytes/2').
+
 :- begin_tests('bson:doc_bytes/2').
 
 test('nonvar, nonvar') :-
