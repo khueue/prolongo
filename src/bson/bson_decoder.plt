@@ -40,7 +40,7 @@ test('several more complex docs', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_docs(Bytes, Got).
 
-:- end_tests('bson_decoder:bytes_to_docs/2').    
+:- end_tests('bson_decoder:bytes_to_docs/2').
 
 :- begin_tests('bson_decoder:bytes_to_doc/2').
 

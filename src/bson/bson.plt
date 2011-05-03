@@ -2,7 +2,6 @@
 
 :- begin_tests('bson:docs_bytes/2').
 
-
 test('complex doc back-and-forth', [true(Got == Expected)]) :-
     Doc =
     [
