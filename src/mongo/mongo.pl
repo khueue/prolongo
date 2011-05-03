@@ -16,7 +16,6 @@
 :- include(misc(common)).
 
 :- use_module(bson(bson), []).
-:- use_module(bson(bson_format), []). % Temp XXX.
 :- use_module(misc(util), []).
 
 % Defaults.
@@ -253,7 +252,7 @@ struct MsgHeader {
 
 struct OP_QUERY {
     MsgHeader header;                // standard message header
-    int32     flags;                  // bit vector of query options.  See below for details.
+    int32     flags;                  // bit vector of query options. See ...
     cstring   fullCollectionName;    // "dbname.collectionname"
     int32     numberToSkip;          // number of documents to skip
     int32     numberToReturn;        // number of documents to return
@@ -263,37 +262,4 @@ struct OP_QUERY {
                                      //  to return.  See below for details.
 }
 
-*/
-
-/*
-tryit :-
-    Message =
-    [
-        56,0,0,0,        % mess length
-        123,0,0,0,
-        0,0,0,0,
-        212,7,0,0,       % 2004 : op query
-
-        0,0,0,0,
-        115,97,109,112,108,101,95,97,112,112,
-            95,100,101,118,101,108,111,112,
-            109,101,110,116, 0, % sample_app_development\0
-        0,0,0,0,
-        0,0,0,0,
-
-        5,0,0,0,
-        0
-    ],
-    Mongo = mongo(Read,Write),
-    new_mongo(Mongo),
-    send_bytes(Message, Write),
-    core:flush_output(Write),
-    read_response_bytes(Read, Bytes),
-    format('Response bytes: ~w~n', [Bytes]),
-    parse_response_header(Bytes, [Len,ReqId,RespTo,OpCode]),
-    format('Len: ~w~n', [Len]),
-    format('ReqId: ~w~n', [ReqId]),
-    format('RespTo: ~w~n', [RespTo]),
-    format('OpCode: ~w~n', [OpCode]),
-    free_mongo(Mongo).
 */
