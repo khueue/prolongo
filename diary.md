@@ -173,3 +173,9 @@
 
  * April 29. Figured out how to get collection names. Need to implement
    cursors now I think.
+
+ * May 3. Implemented general predicates to convert between lists of
+   documents and their bytes, and back-and-forth. This will hopefully be useful
+   when parsing database responses that contain an arbitrary sequence of
+   bytes that represent several documents. Should cleanup the creating and
+   reading of socket documents. And try to implement cursors.
