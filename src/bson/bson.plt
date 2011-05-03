@@ -2,6 +2,12 @@
 
 :- begin_tests('bson:docs_bytes/2').
 
+test('no docs', [true(Got == Expected)]) :-
+    Expected = [],
+    Bytes = [],
+    bson:docs_bytes(Expected, Bytes),
+    bson:docs_bytes(Got, Bytes).
+
 test('complex doc back-and-forth', [true(Got == Expected)]) :-
     Doc =
     [

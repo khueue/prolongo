@@ -52,7 +52,7 @@ doc :-
     pldoc_files:doc_save('src/', [recursive(true),doc_root('doc/')]).
 
 load_project_modules :-
-    use_module(library(pldoc), []), % Load first to process all doc comments.
+    use_module(library(pldoc), []), % Load first to enable comment processing.
     use_module(mongo(mongo), []).
 
 load_project_tests :-

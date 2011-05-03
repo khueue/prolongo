@@ -2,6 +2,11 @@
 
 :- begin_tests('bson_decoder:bytes_to_docs/2').
 
+test('no docs', [true(Got == Expected)]) :-
+    Bytes = [],
+    Expected = [],
+    bson_decoder:bytes_to_docs(Bytes, Got).
+
 test('several empty docs', [true(Got == Expected)]) :-
     Bytes =
     [

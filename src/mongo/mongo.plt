@@ -3,7 +3,7 @@
 :- use_module(misc(util), []).
 
 database('prolongo_test').
-collection('atestcoll').
+collection('testcoll').
 
 up(Mongo) :-
     mongo:new_mongo(Mongo0),
@@ -44,6 +44,7 @@ test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 % XXX this works now, but I need to fix cursors (only one is shown).
 test('list collection names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_collection_names(Mongo, Result),
+    write(Result), nl,
     bson_format:pp(Result).
 
 /*
@@ -54,7 +55,7 @@ test('drop collection',
 ]) :-
     collection(Collection),
     mongo:drop_collection(Mongo, Collection, Result),
-    %write(Result), nl,
+    write(Result), nl,
     mongo:doc_ok(Result).
 */
 

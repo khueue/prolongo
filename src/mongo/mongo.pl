@@ -101,7 +101,11 @@ send_bytes(Bytes, Write) :-
 list_collection_names(Mongo, Names) :-
     Command = [],
     mongo:command(Mongo, 'system.namespaces', Command, Result),
-    bson:doc_values(Result, Names).
+    repack_collection_names(Result, Names).
+
+repack_collection_names([], []).
+repack_collection_names([[name-Name]|Pairs], [Name|Names]) :-
+    repack_collection_names(Pairs, Names).
 
 drop_collection(Mongo, Collection, Result) :-
     Command = [drop-Collection],
@@ -143,9 +147,48 @@ command(Mongo, Collection, Command, Result) :-
     send_bytes_and_flush(Message, Write),
     mongo_socket_read(Mongo, Read),
     read_response_bytes(Read, Bytes),
+    inspect_response_bytes(Bytes), %%% xxx
     phrase(parse_response_header(header(Len,ReqId,RespTo,OpCode)), Bytes, Bytes1),
     skip_n(Bytes1, 20, Bytes2),
-    bson:doc_bytes(Result, Bytes2).
+    bson:docs_bytes(Result, Bytes2).
+
+inspect_response_bytes(Bytes) :-
+    core:format('~n--- Begin Response ---~n'),
+    phrase(inspect_response_paperwork, Bytes, Rest),
+    bson:docs_bytes(Docs, Rest),
+    inspect_response_docs(Docs),
+    core:format('--- End Response ---~n~n').
+
+inspect_response_paperwork -->
+    int32little(MessLen),
+    { core:format('MessLen: ~p~n', [MessLen]) },
+    int32little(RequestId),
+    { core:format('RequestId: ~p~n', [RequestId]) },
+    int32little(ResponseTo),
+    { core:format('ResponseTo: ~p~n', [ResponseTo]) },
+    int32little(OpCode),
+    { core:format('OpCode: ~p~n', [OpCode]) },
+    int32little(ResponseFlags),
+    { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
+    int64little(CursorId),
+    { core:format('CursorId: ~p~n', [CursorId]) },
+    int32little(StartingFrom),
+    { core:format('StartingFrom: ~p~n', [StartingFrom]) },
+    int32little(NumberReturned),
+    { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
+
+inspect_response_docs([]).
+inspect_response_docs([Doc|Docs]) :-
+    bson_format:pp(Doc, 1, '  '), nl,
+    inspect_response_docs(Docs).
+
+int32little(Int) -->
+    [L0,L1,L2,L3],
+    { length4(Int, [L0,L1,L2,L3]) }.
+
+int64little(Int) -->
+    [L0,L1,L2,L3,L4,L5,L6,L7],
+    { bson_bits:integer_bytes(Int, 8, little, [L0,L1,L2,L3,L4,L5,L6,L7]) }.
 
 build_command_message(FullCollName, Document, Bytes) :-
     phrase(c_string(FullCollName), BytesFullCollName),
@@ -165,7 +208,7 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  0,  0,  0,  0], % flags
     BytesFullCollName,
     [  0,  0,  0,  0], % num skip
-    [  1,  0,  0,  0], % num return
+    [  0,  0,  0,  0], % num return
     BytesCommand.
 
 full_coll_name(Database, Collection, FullCollName) :-
