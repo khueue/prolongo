@@ -51,6 +51,8 @@ running on localhost on the default port.
 
 ## Future
 
+ * Implement ordered documents? Omit for now.
+ * Generate ObjectID's in the driver? Push to server for now.
  * Move BSON to separate repository (BSON is not inherent to MongoDB).
  * Test and improve compatibility between Prologs.
  * Make sure exception handling is more idiomatic.

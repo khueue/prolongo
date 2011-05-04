@@ -208,7 +208,7 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  0,  0,  0,  0], % flags
     BytesFullCollName,
     [  0,  0,  0,  0], % num skip
-    [  0,  0,  0,  0], % num return
+    [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
 
 full_coll_name(Database, Collection, FullCollName) :-
