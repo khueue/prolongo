@@ -179,3 +179,8 @@
    when parsing database responses that contain an arbitrary sequence of
    bytes that represent several documents. Should cleanup the creating and
    reading of socket documents. And try to implement cursors.
+
+ * May 4. Mostly worked on mongo:find_one/4. It should work. But still
+   unsure of how to properly design everything. Tomorrow I should implement
+   the return field selector for find_one, and then give the real find
+   a try. This would involve cursors, again.

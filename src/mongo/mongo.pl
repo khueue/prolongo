@@ -24,6 +24,68 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
+%%%find_one(Mongo, Collection, Query, ReturnFields, Result)
+find_one(Mongo, Collection, Query, Result) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
+    phrase(build_find_one_bytes(FullCollName, Query), BytesFind),
+    count_bytes_and_set_length(BytesFind),
+    send_to_server(Mongo, BytesFind),
+    read_from_server(Mongo, BytesReply),
+    inspect_response_bytes(BytesReply), %%% xxx
+    phrase(parse_response_header(_), BytesReply, BytesReply1),
+    skip_n(BytesReply1, 20, BytesReply2),
+    bson:doc_bytes(Result, BytesReply2).
+
+count_bytes_and_set_length(Bytes) :-
+    Bytes = [L0,L1,L2,L3|_],
+    lists:length(Bytes, Length),
+    bson_bits:integer_bytes(Length, 4, little, [L0,L1,L2,L3]).
+
+read_from_server(Mongo, Bytes) :-
+    mongo_socket_read(Mongo, Read),
+    read_response_bytes(Read, Bytes).
+
+send_to_server(Mongo, Bytes) :-
+    mongo_socket_write(Mongo, Write),
+    send_bytes_and_flush(Bytes, Write).
+
+build_find_one_bytes(FullCollName, Query) -->
+    build_header(_BytesLength, 4, 4, 2004),
+    build_flags(0),
+    build_namespace(FullCollName),
+    build_num_skip(0),
+    build_num_return(1),
+    build_query(Query).
+
+build_header(BytesLength, RequestId, ResponseTo, OpCode) -->
+    { BytesLength = [_,_,_,_] },
+    BytesLength,
+    build_int32little(RequestId),
+    build_int32little(ResponseTo),
+    build_int32little(OpCode).
+
+build_flags(Flags) -->
+    build_int32little(Flags).
+
+build_int32little(Int) -->
+    { bson_bits:integer_bytes(Int, 4, little, Bytes) },
+    Bytes.
+
+build_namespace(FullCollName) -->
+    { phrase(c_string(FullCollName), BytesFullCollName) },
+    BytesFullCollName.
+
+build_num_skip(Num) -->
+    build_int32little(Num).
+
+build_num_return(Num) -->
+    build_int32little(Num).
+
+build_query(Query) -->
+    { bson:doc_bytes(Query, BytesQuery) },
+    BytesQuery.
+
 %%  new_mongo(-Mongo) is semidet.
 %%  new_mongo(-Mongo, +Host, +Port) is semidet.
 %
@@ -152,44 +214,6 @@ command(Mongo, Collection, Command, Result) :-
     skip_n(Bytes1, 20, Bytes2),
     bson:docs_bytes(Result, Bytes2).
 
-inspect_response_bytes(Bytes) :-
-    core:format('~n--- Begin Response ---~n'),
-    phrase(inspect_response_paperwork, Bytes, Rest),
-    bson:docs_bytes(Docs, Rest),
-    inspect_response_docs(Docs),
-    core:format('--- End Response ---~n~n').
-
-inspect_response_paperwork -->
-    int32little(MessLen),
-    { core:format('MessLen: ~p~n', [MessLen]) },
-    int32little(RequestId),
-    { core:format('RequestId: ~p~n', [RequestId]) },
-    int32little(ResponseTo),
-    { core:format('ResponseTo: ~p~n', [ResponseTo]) },
-    int32little(OpCode),
-    { core:format('OpCode: ~p~n', [OpCode]) },
-    int32little(ResponseFlags),
-    { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
-    int64little(CursorId),
-    { core:format('CursorId: ~p~n', [CursorId]) },
-    int32little(StartingFrom),
-    { core:format('StartingFrom: ~p~n', [StartingFrom]) },
-    int32little(NumberReturned),
-    { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
-
-inspect_response_docs([]).
-inspect_response_docs([Doc|Docs]) :-
-    bson_format:pp(Doc, 1, '  '), nl,
-    inspect_response_docs(Docs).
-
-int32little(Int) -->
-    [L0,L1,L2,L3],
-    { length4(Int, [L0,L1,L2,L3]) }.
-
-int64little(Int) -->
-    [L0,L1,L2,L3,L4,L5,L6,L7],
-    { bson_bits:integer_bytes(Int, 8, little, [L0,L1,L2,L3,L4,L5,L6,L7]) }.
-
 build_command_message(FullCollName, Document, Bytes) :-
     phrase(c_string(FullCollName), BytesFullCollName),
     bson:doc_bytes(Document, BytesDocument),
@@ -306,3 +330,43 @@ struct OP_QUERY {
 }
 
 */
+
+%%%%%%%%%%%% debug:
+
+inspect_response_bytes(Bytes) :-
+    core:format('~n--- Begin Response ---~n'),
+    phrase(inspect_response_paperwork, Bytes, Rest),
+    bson:docs_bytes(Docs, Rest),
+    inspect_response_docs(Docs),
+    core:format('--- End Response ---~n~n').
+
+inspect_response_paperwork -->
+    int32little(MessLen),
+    { core:format('MessLen: ~p~n', [MessLen]) },
+    int32little(RequestId),
+    { core:format('RequestId: ~p~n', [RequestId]) },
+    int32little(ResponseTo),
+    { core:format('ResponseTo: ~p~n', [ResponseTo]) },
+    int32little(OpCode),
+    { core:format('OpCode: ~p~n', [OpCode]) },
+    int32little(ResponseFlags),
+    { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
+    int64little(CursorId),
+    { core:format('CursorId: ~p~n', [CursorId]) },
+    int32little(StartingFrom),
+    { core:format('StartingFrom: ~p~n', [StartingFrom]) },
+    int32little(NumberReturned),
+    { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
+
+inspect_response_docs([]).
+inspect_response_docs([Doc|Docs]) :-
+    bson_format:pp(Doc, 1, '  '), nl,
+    inspect_response_docs(Docs).
+
+int32little(Int) -->
+    [L0,L1,L2,L3],
+    { length4(Int, [L0,L1,L2,L3]) }.
+
+int64little(Int) -->
+    [L0,L1,L2,L3,L4,L5,L6,L7],
+    { bson_bits:integer_bytes(Int, 8, little, [L0,L1,L2,L3,L4,L5,L6,L7]) }.
