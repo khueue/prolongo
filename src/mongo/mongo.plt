@@ -13,16 +13,25 @@ up(Mongo) :-
 down(Mongo) :-
     mongo:free_mongo(Mongo).
 
-:- begin_tests('mongo:find_one/4').
+:- begin_tests('mongo:find_one/4,5').
 
-test('find_one', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     Doc = [hello-world, number-42],
     mongo:insert(Mongo, Collection, Doc),
     mongo:find_one(Mongo, Collection, [hello-world], Doc1),
     bson:doc_get(Doc1, number, 42).
 
-:- end_tests('mongo:find_one/4').
+test('return fields selector', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    Doc = [hello-world, number-42],
+    mongo:insert(Mongo, Collection, Doc),
+    mongo:find_one(Mongo, Collection, [hello-world], [number-1], Doc1),
+    bson:doc_get(Doc1, '_id', object_id(_)),
+    bson:doc_get(Doc1, number, 42),
+    \+ bson:doc_get(Doc1, hello, world).
+
+:- end_tests('mongo:find_one/4,5').
 
 :- begin_tests('mongo:insert/3').
 

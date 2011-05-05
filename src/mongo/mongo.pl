@@ -2,7 +2,9 @@
     [
         new_mongo/1,
         new_mongo/3,
-        free_mongo/1
+        free_mongo/1,
+        find_one/4,
+        find_one/5
         % xxx missing exports
     ]).
 
@@ -24,11 +26,13 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
-%%%find_one(Mongo, Collection, Query, ReturnFields, Result)
 find_one(Mongo, Collection, Query, Result) :-
+    find_one(Mongo, Collection, Query, [], Result).
+
+find_one(Mongo, Collection, Query, ReturnFields, Result) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    phrase(build_find_one_bytes(FullCollName, Query), BytesFind),
+    phrase(build_find_one_bytes(FullCollName, Query, ReturnFields), BytesFind),
     count_bytes_and_set_length(BytesFind),
     send_to_server(Mongo, BytesFind),
     read_from_server(Mongo, BytesReply),
@@ -50,13 +54,14 @@ send_to_server(Mongo, Bytes) :-
     mongo_socket_write(Mongo, Write),
     send_bytes_and_flush(Bytes, Write).
 
-build_find_one_bytes(FullCollName, Query) -->
+build_find_one_bytes(FullCollName, Query, ReturnFields) -->
     build_header(_BytesLength, 4, 4, 2004),
     build_flags(0),
     build_namespace(FullCollName),
     build_num_skip(0),
     build_num_return(1),
-    build_query(Query).
+    build_query(Query),
+    build_return_field_selector(ReturnFields).
 
 build_header(BytesLength, RequestId, ResponseTo, OpCode) -->
     { BytesLength = [_,_,_,_] },
@@ -83,8 +88,12 @@ build_num_return(Num) -->
     build_int32little(Num).
 
 build_query(Query) -->
-    { bson:doc_bytes(Query, BytesQuery) },
-    BytesQuery.
+    { bson:doc_bytes(Query, Bytes) },
+    Bytes.
+
+build_return_field_selector(ReturnFields) -->
+    { bson:doc_bytes(ReturnFields, Bytes) },
+    Bytes.
 
 %%  new_mongo(-Mongo) is semidet.
 %%  new_mongo(-Mongo, +Host, +Port) is semidet.
@@ -210,7 +219,7 @@ command(Mongo, Collection, Command, Result) :-
     mongo_socket_read(Mongo, Read),
     read_response_bytes(Read, Bytes),
     inspect_response_bytes(Bytes), %%% xxx
-    phrase(parse_response_header(header(Len,ReqId,RespTo,OpCode)), Bytes, Bytes1),
+    phrase(parse_response_header(_), Bytes, Bytes1),
     skip_n(Bytes1, 20, Bytes2),
     bson:docs_bytes(Result, Bytes2).
 

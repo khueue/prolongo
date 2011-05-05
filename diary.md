@@ -184,3 +184,6 @@
    unsure of how to properly design everything. Tomorrow I should implement
    the return field selector for find_one, and then give the real find
    a try. This would involve cursors, again.
+
+ * May 5. Implemented return field selector for find_one. Should make more
+   things into arguments though.
