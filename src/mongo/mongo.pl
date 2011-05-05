@@ -26,6 +26,20 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
+find(Mongo, Collection, Query, ReturnFields, Cursor) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
+    phrase(build_find_bytes(FullCollName, Query, ReturnFields), BytesFind),
+    count_bytes_and_set_length(BytesFind),
+    send_to_server(Mongo, BytesFind),
+    read_from_server(Mongo, BytesReply),
+    inspect_response_bytes(BytesReply), %%% xxx
+    phrase(parse_response_header(_), BytesReply, BytesReply1),
+    skip_n(BytesReply1, 20, BytesReply2),
+    %xxxformat('xxxxxx: ~p~n', [BytesReply2]),
+    bson:docs_bytes(ResultDocs, BytesReply2),
+    fix_result_docs(ResultDocs, Result).
+
 find_one(Mongo, Collection, Query, Result) :-
     find_one(Mongo, Collection, Query, [], Result).
 
@@ -39,7 +53,12 @@ find_one(Mongo, Collection, Query, ReturnFields, Result) :-
     inspect_response_bytes(BytesReply), %%% xxx
     phrase(parse_response_header(_), BytesReply, BytesReply1),
     skip_n(BytesReply1, 20, BytesReply2),
-    bson:doc_bytes(Result, BytesReply2).
+    format('xxxxxx: ~p~n', [BytesReply2]),
+    bson:docs_bytes(ResultDocs, BytesReply2),
+    fix_result_docs(ResultDocs, Result).
+
+fix_result_docs([], nil).
+fix_result_docs([Doc], Doc).
 
 count_bytes_and_set_length(Bytes) :-
     Bytes = [L0,L1,L2,L3|_],
