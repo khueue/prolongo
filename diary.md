@@ -187,3 +187,8 @@
 
  * May 5. Implemented return field selector for find_one. Should make more
    things into arguments though.
+
+ * May 17. Back after break from life. Time to get dirty again. Started cursor
+   work (again). I am actually getting a reasonable cursor thingy now,
+   so this should not be hard at all. Tomorrow I will implement get_more and
+   such. Things will progress.

@@ -15,6 +15,18 @@ down(Mongo) :-
 
 :- begin_tests('mongo:find_one/4,5').
 
+/*
+test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:insert(Mongo, Collection, [hello-world,number-1]),
+    mongo:insert(Mongo, Collection, [hello-world,number-2]),
+    mongo:insert(Mongo, Collection, [hello-world,number-3]),
+    mongo:insert(Mongo, Collection, [hello-world,number-4]),
+    mongo:insert(Mongo, Collection, [hello-world,number-5]),
+    mongo:find(Mongo, Collection, [hello-world], [], Cursor),
+    fail.
+*/
+
 test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     Doc = [hello-world, number-42],

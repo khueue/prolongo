@@ -26,19 +26,47 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
-find(Mongo, Collection, Query, ReturnFields, Cursor) :-
+% xxxx write a get_more or whatever.
+
+% xxxxxx issue: it returns a cursor even when exactly all docs are asked for. eller?
+findtest(Cursor, Docs) :-
+    mongo:new_mongo(Mongo0),
+    mongo:use_database(Mongo0, prolongo, Mongo),
+    mongo:find(Mongo, testcoll, [key-set], [num-1], 0, 2, Cursor, Docs),
+    mongo:free_mongo(Mongo).
+
+find(Mongo, Collection, Query, ReturnFields,
+    Skip, Limit, cursor(Mongo,Collection,CursorId), Docs)
+:-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    phrase(build_find_bytes(FullCollName, Query, ReturnFields), BytesFind),
+    phrase(build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit), BytesFind),
     count_bytes_and_set_length(BytesFind),
     send_to_server(Mongo, BytesFind),
     read_from_server(Mongo, BytesReply),
     inspect_response_bytes(BytesReply), %%% xxx
-    phrase(parse_response_header(_), BytesReply, BytesReply1),
-    skip_n(BytesReply1, 20, BytesReply2),
-    %xxxformat('xxxxxx: ~p~n', [BytesReply2]),
-    bson:docs_bytes(ResultDocs, BytesReply2),
-    fix_result_docs(ResultDocs, Result).
+    parse_response_bytes_real_good(
+        BytesReply,
+        _Header,
+        _ResponseFlags, CursorId, _StartingFrom, _NumberReturned,
+        Docs).
+
+build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit) -->
+    build_header(_BytesLength, 4567, 4567, 2004),
+    build_flags(0), % xxx
+    build_namespace(FullCollName),
+    build_num_skip(Skip),
+    build_num_return(Limit),
+    build_query(Query),
+    build_return_field_selector(ReturnFields).
+
+%cursor_next(cursor(Mongo,Coll,CursorId), Doc, cursor(Mongo,Coll,CursorId1)) :-
+%    aoeu.
+
+cursor_has_next(cursor(_Mongo,_Coll,CursorId)) :-
+    CursorId \== 0.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 find_one(Mongo, Collection, Query, Result) :-
     find_one(Mongo, Collection, Query, [], Result).
@@ -97,7 +125,7 @@ build_int32little(Int) -->
     Bytes.
 
 build_namespace(FullCollName) -->
-    { phrase(c_string(FullCollName), BytesFullCollName) },
+    { phrase(c_string(FullCollName), BytesFullCollName) }, % xxx ???
     BytesFullCollName.
 
 build_num_skip(Num) -->
@@ -360,6 +388,33 @@ struct OP_QUERY {
 */
 
 %%%%%%%%%%%% debug:
+
+parse_response_bytes_real_good(Bytes, Header, ResponseFlags, CursorId, StartingFrom, NumberReturned, Docs)
+    :-
+    phrase(
+        parse_response_bytes_paperwork_real_good(
+            Header,
+            ResponseFlags, CursorId, StartingFrom, NumberReturned),
+        Bytes, Rest),
+    bson:docs_bytes(Docs, Rest).
+
+parse_response_bytes_paperwork_real_good(
+    header(MessLen,RequestId,ResponseTo,OpCode),
+    ResponseFlags,
+    CursorId,
+    StartingFrom,
+    NumberReturned)
+    -->
+    int32little(MessLen),
+    int32little(RequestId),
+    int32little(ResponseTo),
+    int32little(OpCode),
+    int32little(ResponseFlags),
+    int64little(CursorId),
+    int32little(StartingFrom),
+    int32little(NumberReturned).
+
+%%%%%%%%%%%%%%%%%%
 
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
