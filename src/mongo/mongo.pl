@@ -396,30 +396,6 @@ read_n_bytes(Read, N, [Byte|Bytes]) :-
     N1 is N - 1,
     read_n_bytes(Read, N1, Bytes).
 
-/*
-
-struct MsgHeader {
-    int32   messageLength; // total message size, including this
-    int32   requestID;     // identifier for this message
-    int32   responseTo;    // requestID from the original request
-                           //   (used in reponses from db)
-    int32   opCode;        // request type - see table below
-}
-
-struct OP_QUERY {
-    MsgHeader header;                // standard message header
-    int32     flags;                  // bit vector of query options. See ...
-    cstring   fullCollectionName;    // "dbname.collectionname"
-    int32     numberToSkip;          // number of documents to skip
-    int32     numberToReturn;        // number of documents to return
-                                     //  in the first OP_REPLY batch
-    document  query;                 // query object.  See below for details.
-  [ document  returnFieldSelector; ] // Optional. Selector indicating the fields
-                                     //  to return.  See below for details.
-}
-
-*/
-
 %%%%%%%%%%%% debug:
 
 parse_response_bytes_real_good(Bytes, Header, ResponseFlags, CursorId, StartingFrom, NumberReturned, Docs)
