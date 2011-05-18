@@ -192,3 +192,8 @@
    work (again). I am actually getting a reasonable cursor thingy now,
    so this should not be hard at all. Tomorrow I will implement get_more and
    such. Things will progress.
+
+ * May 18. Cursors might even be feature-complete now. CRUD-wise,
+   there is not that much to be done now. Need to implement delete, but that
+   is pretty much it. Should clean things up seriously before I wrap
+   basic commands. Should also write lots of tests.

@@ -29,10 +29,14 @@ command_namespace('$cmd').
 % xxxx write a get_more or whatever.
 
 % xxxxxx issue: it returns a cursor even when exactly all docs are asked for. eller?
-findtest(Cursor, Docs) :-
+findtest(Cursor, Docs, DocsMore, Cursor1, DocsMore1, Cursor2, DocsMore12) :-
     mongo:new_mongo(Mongo0),
     mongo:use_database(Mongo0, prolongo, Mongo),
     mongo:find(Mongo, testcoll, [key-set], [num-1], 0, 2, Cursor, Docs),
+    mongo:cursor_get_more(Cursor, 1, DocsMore, Cursor1),
+    %mongo:cursor_kill(Cursor1),
+    mongo:cursor_get_more(Cursor1, 1, DocsMore1, Cursor2),
+    mongo:cursor_get_more(Cursor2, 10, DocsMore12, Cursor22),
     mongo:free_mongo(Mongo).
 
 find(Mongo, Collection, Query, ReturnFields,
@@ -60,10 +64,39 @@ build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit) -->
     build_query(Query),
     build_return_field_selector(ReturnFields).
 
-%cursor_next(cursor(Mongo,Coll,CursorId), Doc, cursor(Mongo,Coll,CursorId1)) :-
-%    aoeu.
+cursor_kill(cursor(Mongo,_Coll,CursorId)) :-
+    phrase(build_cursor_kill_bytes(CursorId), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    send_to_server(Mongo, BytesSend).
 
-cursor_has_next(cursor(_Mongo,_Coll,CursorId)) :-
+build_cursor_kill_bytes(CursorId) -->
+    build_header(_BytesLength, 4567, 4567, 2007),
+    build_flags(0), % xxx zero
+    int32little(1), % num cursor ids
+    int64little(CursorId).
+
+cursor_get_more(cursor(Mongo,Coll,CursorId), Limit, Docs, cursor(Mongo,Coll,CursorId1)) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Coll, FullCollName),
+    phrase(build_get_more_bytes(FullCollName, Limit, CursorId), BytesGetMore),
+    count_bytes_and_set_length(BytesGetMore),
+    send_to_server(Mongo, BytesGetMore),
+    read_from_server(Mongo, BytesReply),
+    inspect_response_bytes(BytesReply), %%% xxx
+    parse_response_bytes_real_good(
+        BytesReply,
+        _Header,
+        _ResponseFlags, CursorId1, _StartingFrom, _NumberReturned,
+        Docs).
+
+build_get_more_bytes(FullCollName, Limit, CursorId) -->
+    build_header(_BytesLength, 4567, 4567, 2005),
+    build_flags(0), % xxx zero
+    build_namespace(FullCollName),
+    build_num_return(Limit),
+    int64little(CursorId).
+
+cursor_has_more(cursor(_Mongo,_Coll,CursorId)) :-
     CursorId \== 0.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
