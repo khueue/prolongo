@@ -8,6 +8,7 @@
 
 ### Development
 
+ * Think about how to split the mongo structure into several.
  * Investigate and wrap the MongoDB API.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
