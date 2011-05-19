@@ -47,16 +47,6 @@ build_delete_bytes(FullCollName, Selector) -->
     build_flags(0), % xxx
     build_query(Selector).
 
-findtest(Cursor, Docs, DocsMore, Cursor1, DocsMore1, Cursor2, DocsMore12) :-
-    mongo:new_mongo(Mongo0),
-    mongo:use_database(Mongo0, prolongo, Mongo),
-    mongo:find(Mongo, testcoll, [key-set], [num-1], 0, 2, Cursor, Docs),
-    mongo:cursor_get_more(Cursor, 1, DocsMore, Cursor1),
-    %mongo:cursor_kill(Cursor1),
-    mongo:cursor_get_more(Cursor1, 1, DocsMore1, Cursor2),
-    mongo:cursor_get_more(Cursor2, 10, DocsMore12, Cursor22),
-    mongo:free_mongo(Mongo).
-
 find(Mongo, Collection, Query, ReturnFields,
     Skip, Limit, cursor(Mongo,Collection,CursorId), Docs)
 :-
@@ -123,21 +113,11 @@ find_one(Mongo, Collection, Query, Result) :-
     find_one(Mongo, Collection, Query, [], Result).
 
 find_one(Mongo, Collection, Query, ReturnFields, Result) :-
-    mongo_get_database(Mongo, Database),
-    full_coll_name(Database, Collection, FullCollName),
-    phrase(build_find_one_bytes(FullCollName, Query, ReturnFields), BytesFind),
-    count_bytes_and_set_length(BytesFind),
-    send_to_server(Mongo, BytesFind),
-    read_from_server(Mongo, BytesReply),
-    inspect_response_bytes(BytesReply), %%% xxx
-    phrase(parse_response_header(_), BytesReply, BytesReply1),
-    skip_n(BytesReply1, 20, BytesReply2),
-    format('xxxxxx: ~p~n', [BytesReply2]),
-    bson:docs_bytes(ResultDocs, BytesReply2),
-    fix_result_docs(ResultDocs, Result).
+    find(Mongo, Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),
+    reformat_result_docs(Docs, Result).
 
-fix_result_docs([], nil).
-fix_result_docs([Doc], Doc).
+reformat_result_docs([], nil).
+reformat_result_docs([Doc], Doc).
 
 count_bytes_and_set_length(Bytes) :-
     Bytes = [L0,L1,L2,L3|_],

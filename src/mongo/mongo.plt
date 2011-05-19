@@ -15,31 +15,61 @@ down(Mongo) :-
 
 :- begin_tests('mongo:find_one/4,5').
 
-/*
 test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
+    mongo:delete(Mongo, Collection, [hello-world]),
     mongo:insert(Mongo, Collection, [hello-world,number-1]),
     mongo:insert(Mongo, Collection, [hello-world,number-2]),
     mongo:insert(Mongo, Collection, [hello-world,number-3]),
     mongo:insert(Mongo, Collection, [hello-world,number-4]),
     mongo:insert(Mongo, Collection, [hello-world,number-5]),
-    mongo:find(Mongo, Collection, [hello-world], [], Cursor),
-    fail.
-*/
+    mongo:insert(Mongo, Collection, [hello-world,number-6]),
+    mongo:insert(Mongo, Collection, [hello-world,number-7]),
+    mongo:insert(Mongo, Collection, [hello-world,number-8]),
+    mongo:insert(Mongo, Collection, [hello-world,number-9]),
+    mongo:find(Mongo, testcoll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
+    Docs0 =
+    [
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_]
+    ],
+    mongo:cursor_has_more(Cursor0),
+    mongo:cursor_get_more(Cursor0, 3, Docs1, Cursor1),
+    Docs1 =
+    [
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_]
+    ],
+    mongo:cursor_has_more(Cursor1),
+    mongo:cursor_get_more(Cursor1, 3, Docs2, Cursor2),
+    Docs2 =
+    [
+    ],
+    \+ mongo:cursor_has_more(Cursor2).
 
 test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     Doc = [hello-world, number-42],
     mongo:insert(Mongo, Collection, Doc),
-    mongo:find_one(Mongo, Collection, [hello-world], Doc1),
+    mongo:find_one(Mongo, Collection, Doc, Doc1),
+    bson:doc_get(Doc1, number, 42).
+
+test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    Doc = [hello-world, number-42],
+    mongo:insert(Mongo, Collection, Doc),
+    mongo:find_one(Mongo, Collection, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
 test('return fields selector', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     Doc = [hello-world, number-42],
     mongo:insert(Mongo, Collection, Doc),
-    mongo:find_one(Mongo, Collection, [hello-world], [number-1], Doc1),
-    bson:doc_get(Doc1, '_id', object_id(_)),
+    Fields = [number-1],
+    mongo:find_one(Mongo, Collection, Doc, Fields, Doc1),
+    bson:doc_get(Doc1, '_id', object_id(_)), % Always returned.
     bson:doc_get(Doc1, number, 42),
     \+ bson:doc_get(Doc1, hello, world).
 
