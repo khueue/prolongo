@@ -26,9 +26,27 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
-% xxxx write a get_more or whatever.
+deletetest(Docs) :-
+    mongo:new_mongo(Mongo0),
+    mongo:use_database(Mongo0, prolongo, Mongo),
+    mongo:delete(Mongo, testcoll, [key-set]),
+    mongo:find(Mongo, testcoll, [key-set], [num-1], 0, 20, _Cursor, Docs),
+    mongo:free_mongo(Mongo).
 
-% xxxxxx issue: it returns a cursor even when exactly all docs are asked for. eller?
+delete(Mongo, Collection, Selector) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
+    phrase(build_delete_bytes(FullCollName, Selector), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    send_to_server(Mongo, BytesSend).
+
+build_delete_bytes(FullCollName, Selector) -->
+    build_header(_BytesLength, 45678, 45678, 2006),
+    build_flags(0), % xxx zero
+    build_namespace(FullCollName),
+    build_flags(0), % xxx
+    build_query(Selector).
+
 findtest(Cursor, Docs, DocsMore, Cursor1, DocsMore1, Cursor2, DocsMore12) :-
     mongo:new_mongo(Mongo0),
     mongo:use_database(Mongo0, prolongo, Mongo),
@@ -392,7 +410,7 @@ read_response_bytes(Read, [B0,B1,B2,B3|Bytes]) :-
 
 read_n_bytes(_Read, 0, []) :- !.
 read_n_bytes(Read, N, [Byte|Bytes]) :-
-    get_byte(Read, Byte),
+    core:get_byte(Read, Byte),
     N1 is N - 1,
     read_n_bytes(Read, N1, Bytes).
 

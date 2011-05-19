@@ -197,3 +197,5 @@
    there is not that much to be done now. Need to implement delete, but that
    is pretty much it. Should clean things up seriously before I wrap
    basic commands. Should also write lots of tests.
+
+ * May 19. Implemented delete.
