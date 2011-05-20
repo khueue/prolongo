@@ -199,3 +199,5 @@
    basic commands. Should also write lots of tests.
 
  * May 19. Implemented delete.
+
+ * May 20. Code cleanup in mongo.pl.

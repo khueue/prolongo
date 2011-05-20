@@ -13,7 +13,7 @@ up(Mongo) :-
 down(Mongo) :-
     mongo:free_mongo(Mongo).
 
-:- begin_tests('mongo:delete/xxx').
+:- begin_tests('mongo:delete/3').
 
 test('delete', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
@@ -22,9 +22,9 @@ test('delete', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:delete(Mongo, Collection, [hello-world]),
     mongo:find(Mongo, Collection, [hello-world], [], 0, 0, _Cursor2, []).
 
-:- end_tests('mongo:delete/xxx').
+:- end_tests('mongo:delete/3').
 
-:- begin_tests('mongo:find_one/4,5').
+:- begin_tests('mongo:find/8').
 
 test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
@@ -59,6 +59,10 @@ test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     [
     ],
     \+ mongo:cursor_has_more(Cursor2).
+
+:- end_tests('mongo:find/8').
+
+:- begin_tests('mongo:find_one/4,5').
 
 test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
@@ -118,7 +122,6 @@ test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 % XXX this works now, but I need to fix cursors (only one is shown).
 test('list collection names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_collection_names(Mongo, Result),
-    write(Result), nl,
     bson_format:pp(Result).
 
 /*

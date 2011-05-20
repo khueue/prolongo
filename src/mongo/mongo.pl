@@ -19,10 +19,7 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
-
-% Defaults.
-mongo_default_host(localhost).
-mongo_default_port(27017).
+:- use_module(mongo(mongo_defaults), []).
 
 command_namespace('$cmd').
 
@@ -34,68 +31,59 @@ delete(Mongo, Collection, Selector) :-
     send_to_server(Mongo, BytesSend).
 
 build_delete_bytes(FullCollName, Selector) -->
-    build_header(_BytesLength, 45678, 45678, 2006),
-    build_flags(0), % xxx zero
-    build_namespace(FullCollName),
-    build_flags(0), % xxx
-    build_query(Selector).
+    build_header(45678, 45678, 2006),
+    int32(0), % ZERO.
+    c_string(FullCollName),
+    int32(0), % Flags.
+    build_bson_doc(Selector).
 
-find(Mongo, Collection, Query, ReturnFields,
-    Skip, Limit, cursor(Mongo,Collection,CursorId), Docs)
+find(Mongo, Coll, Query, ReturnFields,
+    Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)
 :-
     mongo_get_database(Mongo, Database),
-    full_coll_name(Database, Collection, FullCollName),
+    full_coll_name(Database, Coll, FullCollName),
     phrase(build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit), BytesFind),
     count_bytes_and_set_length(BytesFind),
     send_to_server(Mongo, BytesFind),
-    read_from_server(Mongo, BytesReply),
-    inspect_response_bytes(BytesReply), %%% xxx
-    parse_response_bytes_real_good(
-        BytesReply,
-        _Header,
-        _ResponseFlags, CursorId, _StartingFrom, _NumberReturned,
-        Docs).
+    read_reply(Mongo, _Header, info(_Flags,CursorId,_Start,_Num), Docs).
 
 build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit) -->
-    build_header(_BytesLength, 4567, 4567, 2004),
-    build_flags(0), % xxx
-    build_namespace(FullCollName),
-    build_num_skip(Skip),
-    build_num_return(Limit),
-    build_query(Query),
-    build_return_field_selector(ReturnFields).
+    build_header(4567, 4567, 2004),
+    int32(0), % Flags.
+    c_string(FullCollName),
+    int32(Skip),
+    int32(Limit),
+    build_bson_doc(Query),
+    build_bson_doc(ReturnFields).
 
 cursor_kill(cursor(Mongo,_Coll,CursorId)) :-
-    phrase(build_cursor_kill_bytes(CursorId), BytesSend),
-    count_bytes_and_set_length(BytesSend),
-    send_to_server(Mongo, BytesSend).
+    message_cursor_kill(CursorId, BytesMessage),
+    send_to_server(Mongo, BytesMessage).
 
-build_cursor_kill_bytes(CursorId) -->
-    build_header(_BytesLength, 4567, 4567, 2007),
-    build_flags(0), % xxx zero
-    int32little(1), % num cursor ids
-    int64little(CursorId).
+message_cursor_kill(CursorId, BytesMessage) :-
+    phrase(message_cursor_kill(CursorId), BytesMessage),
+    count_bytes_and_set_length(BytesMessage).
+
+message_cursor_kill(CursorId) -->
+    build_header(4567, 4567, 2007),
+    int32(0), % ZERO.
+    int32(1), % Number of cursor IDs.
+    int64(CursorId). % Cursor IDs.
 
 cursor_get_more(cursor(Mongo,Coll,CursorId), Limit, Docs, cursor(Mongo,Coll,CursorId1)) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Coll, FullCollName),
-    phrase(build_get_more_bytes(FullCollName, Limit, CursorId), BytesGetMore),
-    count_bytes_and_set_length(BytesGetMore),
-    send_to_server(Mongo, BytesGetMore),
-    read_from_server(Mongo, BytesReply),
-    inspect_response_bytes(BytesReply), %%% xxx
-    parse_response_bytes_real_good(
-        BytesReply,
-        _Header,
-        _ResponseFlags, CursorId1, _StartingFrom, _NumberReturned,
-        Docs).
+    phrase(message_get_more(FullCollName, Limit, CursorId), BytesMessage),
+    count_bytes_and_set_length(BytesMessage),
+    send_to_server(Mongo, BytesMessage),
+    read_reply(Mongo, _Header, info(_Flags,CursorId1,_Start,_Num), Docs).
 
-build_get_more_bytes(FullCollName, Limit, CursorId) -->
-    build_header(_BytesLength, 4567, 4567, 2005),
-    build_flags(0), % xxx zero
-    build_namespace(FullCollName),
-    build_num_return(Limit),
-    int64little(CursorId).
+message_get_more(FullCollName, Limit, CursorId) -->
+    build_header(4567, 4567, 2005),
+    int32(0), % ZERO.
+    c_string(FullCollName),
+    int32(Limit),
+    int64(CursorId).
 
 cursor_has_more(cursor(_Mongo,_Coll,CursorId)) :-
     CursorId \== 0.
@@ -107,63 +95,19 @@ find_one(Mongo, Collection, Query, Result) :-
 
 find_one(Mongo, Collection, Query, ReturnFields, Result) :-
     find(Mongo, Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),
-    reformat_result_docs(Docs, Result).
+    package_result_doc(Docs, Result).
 
-reformat_result_docs([], nil).
-reformat_result_docs([Doc], Doc).
+package_result_doc([], nil).
+package_result_doc([Doc], Doc).
 
-count_bytes_and_set_length(Bytes) :-
-    Bytes = [L0,L1,L2,L3|_],
-    lists:length(Bytes, Length),
-    bson_bits:integer_bytes(Length, 4, little, [L0,L1,L2,L3]).
+build_header(RequestId, ResponseTo, OpCode) -->
+    [_,_,_,_], % Length of entire message.
+    int32(RequestId),
+    int32(ResponseTo),
+    int32(OpCode).
 
-read_from_server(Mongo, Bytes) :-
-    mongo_socket_read(Mongo, Read),
-    read_response_bytes(Read, Bytes).
-
-send_to_server(Mongo, Bytes) :-
-    mongo_socket_write(Mongo, Write),
-    send_bytes_and_flush(Bytes, Write).
-
-build_find_one_bytes(FullCollName, Query, ReturnFields) -->
-    build_header(_BytesLength, 4, 4, 2004),
-    build_flags(0),
-    build_namespace(FullCollName),
-    build_num_skip(0),
-    build_num_return(1),
-    build_query(Query),
-    build_return_field_selector(ReturnFields).
-
-build_header(BytesLength, RequestId, ResponseTo, OpCode) -->
-    { BytesLength = [_,_,_,_] },
-    BytesLength,
-    build_int32little(RequestId),
-    build_int32little(ResponseTo),
-    build_int32little(OpCode).
-
-build_flags(Flags) -->
-    build_int32little(Flags).
-
-build_int32little(Int) -->
-    { bson_bits:integer_bytes(Int, 4, little, Bytes) },
-    Bytes.
-
-build_namespace(FullCollName) -->
-    { phrase(c_string(FullCollName), BytesFullCollName) }, % xxx ???
-    BytesFullCollName.
-
-build_num_skip(Num) -->
-    build_int32little(Num).
-
-build_num_return(Num) -->
-    build_int32little(Num).
-
-build_query(Query) -->
-    { bson:doc_bytes(Query, Bytes) },
-    Bytes.
-
-build_return_field_selector(ReturnFields) -->
-    { bson:doc_bytes(ReturnFields, Bytes) },
+build_bson_doc(Doc) -->
+    { bson:doc_bytes(Doc, Bytes) },
     Bytes.
 
 %%  new_mongo(-Mongo) is semidet.
@@ -171,11 +115,11 @@ build_return_field_selector(ReturnFields) -->
 %
 %   True if Mongo represents an opaque handle to a new MongoDB
 %   server connection. Host and Port may be supplied, otherwise
-%   the defaults (host localhost and port 27017) are used.
+%   the defaults (see mongo_defaults) are used.
 
 new_mongo(Mongo) :-
-    mongo_default_host(Host),
-    mongo_default_port(Port),
+    mongo_defaults:host(Host),
+    mongo_defaults:port(Port),
     new_mongo(Mongo, Host, Port).
 
 new_mongo(Mongo, Host, Port) :-
@@ -199,6 +143,19 @@ free_mongo(Mongo) :-
     mongo_socket_write(Mongo, Write),
     core:close(Read, [force(true)]),
     core:close(Write, [force(true)]).
+
+count_bytes_and_set_length(Bytes) :-
+    Bytes = [L0,L1,L2,L3|_],
+    lists:length(Bytes, Length),
+    bson_bits:integer_bytes(Length, 4, little, [L0,L1,L2,L3]).
+
+read_from_server(Mongo, Bytes) :-
+    mongo_socket_read(Mongo, Read),
+    read_response_bytes(Read, Bytes).
+
+send_to_server(Mongo, Bytes) :-
+    mongo_socket_write(Mongo, Write),
+    send_bytes_and_flush(Bytes, Write).
 
 use_database(Mongo, Database, Mongo1) :-
     mongo_set_database(Mongo, Database, Mongo1).
@@ -281,18 +238,12 @@ command(Mongo, Command, Result) :-
     command_namespace(CommandNamespace),
     command(Mongo, CommandNamespace, Command, Result).
 
-command(Mongo, Collection, Command, Result) :-
+command(Mongo, Coll, Command, Docs) :-
     mongo_get_database(Mongo, Database),
-    full_coll_name(Database, Collection, FullCollName),
+    full_coll_name(Database, Coll, FullCollName),
     build_command_message(FullCollName, Command, Message),
-    mongo_socket_write(Mongo, Write),
-    send_bytes_and_flush(Message, Write),
-    mongo_socket_read(Mongo, Read),
-    read_response_bytes(Read, Bytes),
-    inspect_response_bytes(Bytes), %%% xxx
-    phrase(parse_response_header(_), Bytes, Bytes1),
-    skip_n(Bytes1, 20, Bytes2),
-    bson:docs_bytes(Result, Bytes2).
+    send_to_server(Mongo, Message),
+    read_reply(Mongo, _Header, _Info, Docs).
 
 build_command_message(FullCollName, Document, Bytes) :-
     phrase(c_string(FullCollName), BytesFullCollName),
@@ -301,7 +252,7 @@ build_command_message(FullCollName, Document, Bytes) :-
         BytesFullCollName, BytesDocument, BytesLength),
         Bytes),
     lists:length(Bytes, Length),
-    length4(Length, BytesLength).
+    int32crap(Length, BytesLength).
 
 build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     { BytesLength = [_,_,_,_] },
@@ -315,15 +266,11 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
 
-full_coll_name(Database, Collection, FullCollName) :-
-    core:atomic_list_concat([Database,Collection], '.', FullCollName).
-
 insert(Mongo, Collection, Document) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
     build_insert_message(FullCollName, Document, Message),
-    mongo_socket_write(Mongo, Write),
-    send_bytes_and_flush(Message, Write).
+    send_to_server(Mongo, Message).
 
 build_insert_message(FullCollName, Document, Bytes) :-
     phrase(c_string(FullCollName), BytesFullCollName),
@@ -332,7 +279,7 @@ build_insert_message(FullCollName, Document, Bytes) :-
         BytesFullCollName, BytesDocument, BytesLength),
         Bytes),
     lists:length(Bytes, Length),
-    length4(Length, BytesLength).
+    int32crap(Length, BytesLength).
 
 build_insert_message_aux(BytesFullCollName, BytesDocument, BytesLength) -->
     { BytesLength = [_,_,_,_] },
@@ -346,38 +293,27 @@ build_insert_message_aux(BytesFullCollName, BytesDocument, BytesLength) -->
     BytesFullCollName,
     BytesDocument.
 
+full_coll_name(Database, Collection, FullCollName) :-
+    core:atomic_list_concat([Database,Collection], '.', FullCollName).
+
 c_string(Atom) -->
     { bson_unicode:utf8_bytes(Atom, Bytes) },
     Bytes,
     [0].
 
-length4(Len, Bytes) :-
-    bson_bits:integer_bytes(Len, 4, little, Bytes).
-
-int32(Len, Bytes) :-
+int32crap(Len, Bytes) :-
     bson_bits:integer_bytes(Len, 4, little, Bytes).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-skip_n(L, 0, L) :- !.
-skip_n([_|L], N, L2) :-
-    N1 is N - 1,
-    skip_n(L, N1, L2).
-
-parse_response_header(header(Len,ReqId,RespTo,OpCode)) -->
-    [L0,L1,L2,L3],
-    [Req0,Req1,Req2,Req3],
-    [Resp0,Resp1,Resp2,Resp3],
-    [Op0,Op1,Op2,Op3],
-    { int32(Len, [L0,L1,L2,L3]) },
-    { int32(ReqId, [Req0,Req1,Req2,Req3]) },
-    { int32(RespTo, [Resp0,Resp1,Resp2,Resp3]) },
-    { int32(OpCode, [Op0,Op1,Op2,Op3]) }.
+read_reply(Mongo, Header, Info, Docs) :-
+    read_from_server(Mongo, Bytes),
+    parse_response(Bytes, Header, Info, Docs).
 
 read_response_bytes(Read, [B0,B1,B2,B3|Bytes]) :-
     read_n_bytes(Read, 4, BytesForLen),
     BytesForLen = [B0,B1,B2,B3],
-    length4(Len, BytesForLen),
+    bson_bits:integer_bytes(Len, 4, little, BytesForLen),
     LenBut4 is Len - 4,
     read_n_bytes(Read, LenBut4, Bytes).
 
@@ -387,34 +323,32 @@ read_n_bytes(Read, N, [Byte|Bytes]) :-
     N1 is N - 1,
     read_n_bytes(Read, N1, Bytes).
 
-%%%%%%%%%%%% debug:
+parse_response(Bytes, Header, Info, Docs) :-
+    % xxx inspect_response_bytes(Bytes),
+    phrase(parse_response_metadata(Header, Info), Bytes, RestBytes),
+    bson:docs_bytes(Docs, RestBytes).
 
-parse_response_bytes_real_good(Bytes, Header, ResponseFlags, CursorId, StartingFrom, NumberReturned, Docs)
-    :-
-    phrase(
-        parse_response_bytes_paperwork_real_good(
-            Header,
-            ResponseFlags, CursorId, StartingFrom, NumberReturned),
-        Bytes, Rest),
-    bson:docs_bytes(Docs, Rest).
+parse_response_metadata(Header, Info) -->
+    { Header = header(MessageLen,RequestId,ResponseTo,OpCode) },
+    { Info = info(Flags,CursorId,StartFrom,NumReturn) },
+    int32(MessageLen),
+    int32(RequestId),
+    int32(ResponseTo),
+    int32(OpCode),
+    int32(Flags),
+    int64(CursorId),
+    int32(StartFrom),
+    int32(NumReturn).
 
-parse_response_bytes_paperwork_real_good(
-    header(MessLen,RequestId,ResponseTo,OpCode),
-    ResponseFlags,
-    CursorId,
-    StartingFrom,
-    NumberReturned)
-    -->
-    int32little(MessLen),
-    int32little(RequestId),
-    int32little(ResponseTo),
-    int32little(OpCode),
-    int32little(ResponseFlags),
-    int64little(CursorId),
-    int32little(StartingFrom),
-    int32little(NumberReturned).
+int32(Int) -->
+    [L0,L1,L2,L3],
+    { bson_bits:integer_bytes(Int, 4, little, [L0,L1,L2,L3]) }.
 
-%%%%%%%%%%%%%%%%%%
+int64(Int) -->
+    [L0,L1,L2,L3,L4,L5,L6,L7],
+    { bson_bits:integer_bytes(Int, 8, little, [L0,L1,L2,L3,L4,L5,L6,L7]) }.
+
+%%%%%%%%%%%% xxx debug:
 
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
@@ -424,32 +358,24 @@ inspect_response_bytes(Bytes) :-
     core:format('--- End Response ---~n~n').
 
 inspect_response_paperwork -->
-    int32little(MessLen),
+    int32(MessLen),
     { core:format('MessLen: ~p~n', [MessLen]) },
-    int32little(RequestId),
+    int32(RequestId),
     { core:format('RequestId: ~p~n', [RequestId]) },
-    int32little(ResponseTo),
+    int32(ResponseTo),
     { core:format('ResponseTo: ~p~n', [ResponseTo]) },
-    int32little(OpCode),
+    int32(OpCode),
     { core:format('OpCode: ~p~n', [OpCode]) },
-    int32little(ResponseFlags),
+    int32(ResponseFlags),
     { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
-    int64little(CursorId),
+    int64(CursorId),
     { core:format('CursorId: ~p~n', [CursorId]) },
-    int32little(StartingFrom),
+    int32(StartingFrom),
     { core:format('StartingFrom: ~p~n', [StartingFrom]) },
-    int32little(NumberReturned),
+    int32(NumberReturned),
     { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
 
 inspect_response_docs([]).
 inspect_response_docs([Doc|Docs]) :-
     bson_format:pp(Doc, 1, '  '), nl,
     inspect_response_docs(Docs).
-
-int32little(Int) -->
-    [L0,L1,L2,L3],
-    { length4(Int, [L0,L1,L2,L3]) }.
-
-int64little(Int) -->
-    [L0,L1,L2,L3,L4,L5,L6,L7],
-    { bson_bits:integer_bytes(Int, 8, little, [L0,L1,L2,L3,L4,L5,L6,L7]) }.
