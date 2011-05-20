@@ -96,7 +96,7 @@ test('var, nonvar', [true(Got == Expected)]) :-
     ],
     bson:doc_bytes(Got, Bytes).
 
-test('var, var', [fail]) :-
+test('var, var', [throws(bson_error(_))]) :-
     bson:doc_bytes(_, _).
 
 test('complex doc back-and-forth', [true(Got == Expected)]) :-

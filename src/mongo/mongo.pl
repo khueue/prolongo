@@ -26,13 +26,6 @@ mongo_default_port(27017).
 
 command_namespace('$cmd').
 
-deletetest(Docs) :-
-    mongo:new_mongo(Mongo0),
-    mongo:use_database(Mongo0, prolongo, Mongo),
-    mongo:delete(Mongo, testcoll, [key-set]),
-    mongo:find(Mongo, testcoll, [key-set], [num-1], 0, 20, _Cursor, Docs),
-    mongo:free_mongo(Mongo).
-
 delete(Mongo, Collection, Selector) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),

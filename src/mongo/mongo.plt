@@ -13,6 +13,17 @@ up(Mongo) :-
 down(Mongo) :-
     mongo:free_mongo(Mongo).
 
+:- begin_tests('mongo:delete/xxx').
+
+test('delete', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:insert(Mongo, Collection, [hello-world]),
+    mongo:find(Mongo, Collection, [hello-world], [], 0, 0, _Cursor1, [_|_]),
+    mongo:delete(Mongo, Collection, [hello-world]),
+    mongo:find(Mongo, Collection, [hello-world], [], 0, 0, _Cursor2, []).
+
+:- end_tests('mongo:delete/xxx').
+
 :- begin_tests('mongo:find_one/4,5').
 
 test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-

@@ -46,7 +46,7 @@ bson_version([1,0]).
 %
 %   True if Bytes is the flat-list BSON byte-encoding of all the
 %   documents in the list Docs.
-%   NumBytes is the number of bytes in Bytes.
+%   NumBytes is the number of bytes in Bytes. XXXXXXXXXXXXX ???
 %
 %   @param Docs is a list of key-value pair lists.
 %   @param Bytes is a list of bytes (in 0..255).
@@ -54,13 +54,15 @@ bson_version([1,0]).
 %   @throws bson_error(Reason)
 
 docs_bytes(Docs, Bytes) :-
-    core:nonvar(Docs),
+    core:ground(Docs),
     !,
     bson_encoder:docs_to_bytes(Docs, Bytes).
 docs_bytes(Docs, Bytes) :-
-    core:nonvar(Bytes),
+    core:ground(Bytes),
     !,
     bson_decoder:bytes_to_docs(Bytes, Docs).
+docs_bytes(_Docs, _Bytes) :-
+    throw(bson_error('at least one arg must be ground')).
 
 %%  doc_bytes(+Doc, ?Bytes) is semidet.
 %%  doc_bytes(?Doc, +Bytes) is semidet.
@@ -73,13 +75,15 @@ docs_bytes(Docs, Bytes) :-
 %   @throws bson_error(Reason)
 
 doc_bytes(Doc, Bytes) :-
-    core:nonvar(Doc),
+    core:ground(Doc),
     !,
     bson_encoder:doc_to_bytes(Doc, Bytes).
 doc_bytes(Doc, Bytes) :-
-    core:nonvar(Bytes),
+    core:ground(Bytes),
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
+doc_bytes(_Doc, _Bytes) :-
+    throw(bson_error('at least one arg must be ground')).
 
 %%  doc_is_valid(+Doc) is semidet.
 %
