@@ -13,6 +13,18 @@ up(Mongo) :-
 down(Mongo) :-
     mongo:free_mongo(Mongo).
 
+:- begin_tests('mongo:update/4').
+
+test('update', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:delete(Mongo, Collection, [hello-world]),
+    mongo:insert(Mongo, Collection, [hello-world]),
+    mongo:update(Mongo, Collection, [hello-world], [hello-me]),
+    mongo:find_one(Mongo, Collection, [hello-me], Doc),
+    bson:doc_get(Doc, hello, me).
+
+:- end_tests('mongo:update/4').
+
 :- begin_tests('mongo:delete/3').
 
 test('delete', [setup(up(Mongo)),cleanup(down(Mongo))]) :-

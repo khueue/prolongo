@@ -37,9 +37,35 @@ build_delete_bytes(FullCollName, Selector) -->
     int32(0), % Flags.
     build_bson_doc(Selector).
 
+/*
+struct OP_UPDATE {
+    MsgHeader header;             // standard message header
+    int32     ZERO;               // 0 - reserved for future use
+    cstring   fullCollectionName; // "dbname.collectionname"
+    int32     flags;              // bit vector. see below
+    document  selector;           // the query to select the document
+    document  update;             // specification of the update to perform
+}
+*/
+
+update(Mongo, Coll, Selector, Update) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Coll, FullCollName),
+    phrase(build_update_bytes(FullCollName, Selector, Update), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    send_to_server(Mongo, BytesSend).
+
+build_update_bytes(FullCollName, Selector, Update) -->
+    build_header(765, 765, 2001),
+    int32(0), % ZERO.
+    c_string(FullCollName),
+    int32(0), % Flags.
+    build_bson_doc(Selector),
+    build_bson_doc(Update).
+
 find(Mongo, Coll, Query, ReturnFields,
-    Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)
-:-
+  Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)
+  :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Coll, FullCollName),
     phrase(build_find_bytes(FullCollName, Query, ReturnFields, Skip, Limit), BytesFind),

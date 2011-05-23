@@ -201,3 +201,6 @@
  * May 19. Implemented delete.
 
  * May 20. Code cleanup in mongo.pl.
+
+ * May 23. Implemented update. Should add options (upsert/multi) to it.
+   And should refactor everything mongo now.
