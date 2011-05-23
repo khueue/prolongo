@@ -15,15 +15,42 @@ down(Mongo) :-
 
 :- begin_tests('mongo:update/4').
 
-test('update', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('update normal', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     mongo:delete(Mongo, Collection, [hello-world]),
+    mongo:delete(Mongo, Collection, [hello-me]),
     mongo:insert(Mongo, Collection, [hello-world]),
     mongo:update(Mongo, Collection, [hello-world], [hello-me]),
     mongo:find_one(Mongo, Collection, [hello-me], Doc),
     bson:doc_get(Doc, hello, me).
 
 :- end_tests('mongo:update/4').
+
+:- begin_tests('mongo:update/5').
+
+test('update upsert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:delete(Mongo, Collection, [hello-world]),
+    mongo:delete(Mongo, Collection, [hello-me]),
+    mongo:update(Mongo, Collection, [hello-world], [hello-me], [upsert]),
+    mongo:find_one(Mongo, Collection, [hello-me], Doc),
+    bson:doc_get(Doc, hello, me).
+
+test('update multi', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Coll),
+    mongo:delete(Mongo, Coll, [hello-world]),
+    mongo:delete(Mongo, Coll, [hello-me]),
+    mongo:insert(Mongo, Coll, [hello-world,num-1]),
+    mongo:insert(Mongo, Coll, [hello-world,num-2]),
+    mongo:insert(Mongo, Coll, [hello-world,num-3]),
+    mongo:update(Mongo, Coll, [hello-world], ['$inc'-[num-10]], [multi]),
+    mongo:find(Mongo, Coll, [hello-world], [], 0, 3, _Cursor, [Doc1,Doc2,Doc3]),
+    % XXX Maybe this sort order is not guaranteed?
+    bson:doc_get(Doc1, num, 11),
+    bson:doc_get(Doc2, num, 12),
+    bson:doc_get(Doc3, num, 13).
+
+:- end_tests('mongo:update/5').
 
 :- begin_tests('mongo:delete/3').
 

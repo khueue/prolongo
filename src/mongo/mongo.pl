@@ -37,31 +37,31 @@ build_delete_bytes(FullCollName, Selector) -->
     int32(0), % Flags.
     build_bson_doc(Selector).
 
-/*
-struct OP_UPDATE {
-    MsgHeader header;             // standard message header
-    int32     ZERO;               // 0 - reserved for future use
-    cstring   fullCollectionName; // "dbname.collectionname"
-    int32     flags;              // bit vector. see below
-    document  selector;           // the query to select the document
-    document  update;             // specification of the update to perform
-}
-*/
+update(Mongo, Coll, Selector, Modifier) :-
+    update(Mongo, Coll, Selector, Modifier, []).
 
-update(Mongo, Coll, Selector, Update) :-
+update(Mongo, Coll, Selector, Modifier, Options) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Coll, FullCollName),
-    phrase(build_update_bytes(FullCollName, Selector, Update), BytesSend),
+    update_options_value(Options, Flags),
+    phrase(build_update_bytes(FullCollName, Selector, Modifier, Flags), BytesSend),
     count_bytes_and_set_length(BytesSend),
     send_to_server(Mongo, BytesSend).
 
-build_update_bytes(FullCollName, Selector, Update) -->
+build_update_bytes(FullCollName, Selector, Modifier, Flags) -->
     build_header(765, 765, 2001),
     int32(0), % ZERO.
     c_string(FullCollName),
-    int32(0), % Flags.
+    int32(Flags),
     build_bson_doc(Selector),
-    build_bson_doc(Update).
+    build_bson_doc(Modifier).
+
+% Not very sophisticated, but dead simple.
+update_options_value([upsert,multi], 3) :- !.
+update_options_value([multi,upsert], 3) :- !.
+update_options_value([upsert],       1) :- !.
+update_options_value([multi],        2) :- !.
+update_options_value([],             0) :- !.
 
 find(Mongo, Coll, Query, ReturnFields,
   Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)

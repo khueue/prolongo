@@ -203,4 +203,6 @@
  * May 20. Code cleanup in mongo.pl.
 
  * May 23. Implemented update. Should add options (upsert/multi) to it.
-   And should refactor everything mongo now.
+   And should refactor everything mongo now. Added said options now. Pretty
+   neat this. Feels like I am really getting somewhere, finally. Having a
+   real workplace also feels pretty good. I can just sit down and work.
