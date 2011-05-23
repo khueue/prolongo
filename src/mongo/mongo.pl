@@ -23,6 +23,15 @@
 
 command_namespace('$cmd').
 
+% xxx new:
+delete(Coll, Selector) :-
+    collection_get_namespace(Coll, FullCollName),
+    phrase(build_delete_bytes(FullCollName, Selector), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    collection_get_connection(Coll, Conn),
+    send_to_server(Conn, BytesSend).
+
+% old: xxx
 delete(Mongo, Collection, Selector) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
@@ -37,6 +46,20 @@ build_delete_bytes(FullCollName, Selector) -->
     int32(0), % Flags.
     build_bson_doc(Selector).
 
+%%%%%%%%%%%%%%%%%%%
+
+update(Coll, Selector, Modifier) :-
+    update(Coll, Selector, Modifier, []).
+
+update(Coll, Selector, Modifier, Options) :-
+    collection_get_namespace(Coll, FullCollName),
+    update_options_value(Options, Flags),
+    phrase(build_update_bytes(FullCollName, Selector, Modifier, Flags), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    collection_get_connection(Coll, Conn),
+    send_to_server(Conn, BytesSend).
+
+% old:
 update(Mongo, Coll, Selector, Modifier) :-
     update(Mongo, Coll, Selector, Modifier, []).
 
@@ -62,6 +85,18 @@ update_options_value([multi,upsert], 3) :- !.
 update_options_value([upsert],       1) :- !.
 update_options_value([multi],        2) :- !.
 update_options_value([],             0) :- !.
+
+%%%%%%%%%%%%%%%%%%
+
+find_one(Mongo, Collection, Query, Result) :-
+    find_one(Mongo, Collection, Query, [], Result).
+
+find_one(Mongo, Collection, Query, ReturnFields, Result) :-
+    find(Mongo, Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),
+    package_result_doc(Docs, Result).
+
+package_result_doc([], nil).
+package_result_doc([Doc], Doc).
 
 find(Mongo, Coll, Query, ReturnFields,
   Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)
@@ -114,17 +149,14 @@ message_get_more(FullCollName, Limit, CursorId) -->
 cursor_has_more(cursor(_Mongo,_Coll,CursorId)) :-
     CursorId \== 0.
 
+cursor_exhaust(Cursor, []) :-
+    \+ cursor_has_more(Cursor).
+cursor_exhaust(Cursor, DocsFinal) :-
+    cursor_get_more(Cursor, 0, Docs0, Cursor1),
+    cursor_exhaust(Cursor1, Docs),
+    lists:append(Docs0, Docs, DocsFinal).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-find_one(Mongo, Collection, Query, Result) :-
-    find_one(Mongo, Collection, Query, [], Result).
-
-find_one(Mongo, Collection, Query, ReturnFields, Result) :-
-    find(Mongo, Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),
-    package_result_doc(Docs, Result).
-
-package_result_doc([], nil).
-package_result_doc([Doc], Doc).
 
 build_header(RequestId, ResponseTo, OpCode) -->
     [_,_,_,_], % Length of entire message.
@@ -158,6 +190,23 @@ new_mongo(Mongo, Host, Port) :-
     %call_cleanup(
     socket:tcp_open_socket(Socket, Read, Write).
     %free_mongo(Mongo)). % Do something on fail to open.
+
+new_connection(Conn) :-
+    new_mongo(Conn).
+
+new_connection(Conn, Host, Port) :-
+    new_mongo(Conn, Host, Port).
+
+get_database(Conn, DbName, db(Conn,DbName)).
+
+get_collection(Db, CollName, Coll) :-
+    Db = db(_Conn,DbName),
+    Coll = coll(Db,FullCollName),
+    full_coll_name(DbName, CollName, FullCollName).
+
+collection_get_namespace(coll(_Db,FullCollName), FullCollName).
+
+collection_get_connection(coll(db(Conn,_DbName),_FullCollName), Conn).
 
 %%  free_mongo(+Mongo) is det.
 %

@@ -28,13 +28,15 @@ test('update normal', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:update/5').
 
-test('update upsert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:delete(Mongo, Collection, [hello-world]),
-    mongo:delete(Mongo, Collection, [hello-me]),
-    mongo:update(Mongo, Collection, [hello-world], [hello-me], [upsert]),
-    mongo:find_one(Mongo, Collection, [hello-me], Doc),
-    bson:doc_get(Doc, hello, me).
+test('update upsert', [setup(up(Conn)),cleanup(down(Conn))]) :-
+    % xxx collection(Collection),
+    mongo:get_database(Conn, prolongo, Db),
+    mongo:get_collection(Db, testcoll, Coll),
+    mongo:delete(Coll, [hello-world]),
+    mongo:delete(Coll, [hello-me]),
+    mongo:update(Coll, [hello-world], [hello-me], [upsert]).
+    %mongo:find_one(Coll, [hello-me], Doc),
+    %bson:doc_get(Doc, hello, me).
 
 test('update multi', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Coll),
@@ -98,6 +100,29 @@ test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     [
     ],
     \+ mongo:cursor_has_more(Cursor2).
+
+test('cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:delete(Mongo, Collection, [hello-world]),
+    mongo:insert(Mongo, Collection, [hello-world,number-1]),
+    mongo:insert(Mongo, Collection, [hello-world,number-2]),
+    mongo:insert(Mongo, Collection, [hello-world,number-3]),
+    mongo:insert(Mongo, Collection, [hello-world,number-4]),
+    mongo:insert(Mongo, Collection, [hello-world,number-5]),
+    mongo:insert(Mongo, Collection, [hello-world,number-6]),
+    mongo:insert(Mongo, Collection, [hello-world,number-7]),
+    mongo:insert(Mongo, Collection, [hello-world,number-8]),
+    mongo:insert(Mongo, Collection, [hello-world,number-9]),
+    mongo:find(Mongo, testcoll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
+    Docs0 =
+    [
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_],
+        ['_id'-object_id(_),number-_]
+    ],
+    mongo:cursor_exhaust(Cursor0, DocsRest),
+    lists:length(DocsRest, 3),
+    write(DocsRest).
 
 :- end_tests('mongo:find/8').
 
