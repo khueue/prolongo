@@ -149,12 +149,17 @@ message_get_more(FullCollName, Limit, CursorId) -->
 cursor_has_more(cursor(_Mongo,_Coll,CursorId)) :-
     CursorId \== 0.
 
-cursor_exhaust(Cursor, []) :-
-    \+ cursor_has_more(Cursor).
-cursor_exhaust(Cursor, DocsFinal) :-
-    cursor_get_more(Cursor, 0, Docs0, Cursor1),
-    cursor_exhaust(Cursor1, Docs),
-    lists:append(Docs0, Docs, DocsFinal).
+cursor_exhaust(Cursor, Docs) :-
+    phrase(cursor_exhaust(Cursor), Docs).
+
+cursor_exhaust(Cursor) -->
+    { \+ cursor_has_more(Cursor) },
+    !,
+    [].
+cursor_exhaust(Cursor) -->
+    { cursor_get_more(Cursor, 0, Docs, Cursor1) },
+    Docs,
+    cursor_exhaust(Cursor1).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

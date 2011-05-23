@@ -116,13 +116,12 @@ test('cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:find(Mongo, testcoll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
     Docs0 =
     [
-        ['_id'-object_id(_),number-_],
-        ['_id'-object_id(_),number-_],
-        ['_id'-object_id(_),number-_]
+        ['_id'-object_id(_),number-4],
+        ['_id'-object_id(_),number-5],
+        ['_id'-object_id(_),number-6]
     ],
     mongo:cursor_exhaust(Cursor0, DocsRest),
-    lists:length(DocsRest, 3),
-    write(DocsRest).
+    lists:length(DocsRest, 3).
 
 :- end_tests('mongo:find/8').
 
