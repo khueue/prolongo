@@ -79,7 +79,7 @@ test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:insert(Mongo, Collection, [hello-world,number-7]),
     mongo:insert(Mongo, Collection, [hello-world,number-8]),
     mongo:insert(Mongo, Collection, [hello-world,number-9]),
-    mongo:find(Mongo, testcoll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
+    mongo:find(Mongo, Collection, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
     Docs0 =
     [
         ['_id'-object_id(_),number-_],
@@ -104,24 +104,18 @@ test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 test('cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     mongo:delete(Mongo, Collection, [hello-world]),
-    mongo:insert(Mongo, Collection, [hello-world,number-1]),
-    mongo:insert(Mongo, Collection, [hello-world,number-2]),
-    mongo:insert(Mongo, Collection, [hello-world,number-3]),
-    mongo:insert(Mongo, Collection, [hello-world,number-4]),
-    mongo:insert(Mongo, Collection, [hello-world,number-5]),
-    mongo:insert(Mongo, Collection, [hello-world,number-6]),
-    mongo:insert(Mongo, Collection, [hello-world,number-7]),
-    mongo:insert(Mongo, Collection, [hello-world,number-8]),
-    mongo:insert(Mongo, Collection, [hello-world,number-9]),
-    mongo:find(Mongo, testcoll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
-    Docs0 =
-    [
-        ['_id'-object_id(_),number-4],
-        ['_id'-object_id(_),number-5],
-        ['_id'-object_id(_),number-6]
-    ],
-    mongo:cursor_exhaust(Cursor0, DocsRest),
-    lists:length(DocsRest, 3).
+    insert_n(Mongo, Collection, 1000),
+    mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
+    mongo:cursor_exhaust(Cursor, DocsRest),
+    lists:length(Docs0, N0),
+    lists:length(DocsRest, N),
+    1000 is N0 + N.
+
+insert_n(_Mongo, _Coll, 0) :- !.
+insert_n(Mongo, Coll, N) :-
+    mongo:insert(Mongo, Coll, [hello-world,number-N]),
+    N1 is N - 1,
+    insert_n(Mongo, Coll, N1).
 
 :- end_tests('mongo:find/8').
 
