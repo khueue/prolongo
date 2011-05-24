@@ -1,8 +1,9 @@
 :- module(mongo_find,
     [
         find_one/3,
-        find_one/4
-        % xxx missing exports
+        find_one/4,
+        find_all/4,
+        find/7
     ]).
 
 /** <module> xxxx
@@ -38,10 +39,11 @@ find_all(Collection, Query, ReturnFields, Docs) :-
 find_all(Collection, Query, ReturnFields) -->
     { find(Collection, Query, ReturnFields, 0, 0, Cursor, Docs0) },
     Docs0,
-    { mongo_cursor:exhaust(Cursor, DocsRest) },
+    { mongo:exhaust(Cursor, DocsRest) },
     DocsRest.
 
-find(Collection, Query, ReturnFields, Skip, Limit, cursor(Collection,CursorId), Docs) :-
+find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
+    Cursor = cursor(Collection,CursorId),
     mongo_collection:get_namespace(Collection, Namespace),
     build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit, BytesSend),
     mongo_collection:get_connection(Collection, Connection),

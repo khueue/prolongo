@@ -2,7 +2,10 @@
     [
         new/1,
         new/3,
-        free/1
+        free/1,
+        get_database/3,
+        send_to_server/2,
+        read_reply/4
     ]).
 
 /** <module> xxxxxxxxx

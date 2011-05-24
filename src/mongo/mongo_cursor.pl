@@ -1,6 +1,9 @@
 :- module(mongo_cursor,
     [
-        % xxx missing exports
+        kill/1,
+        get_more/4,
+        has_more/1,
+        exhaust/2
     ]).
 
 /** <module> xxxx

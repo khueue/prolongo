@@ -1,6 +1,6 @@
 :- module(mongo,
     [
-        % xxx missing exports
+        % See reexports below.
     ]).
 
 /** <module> MongoDB driver.
@@ -10,22 +10,54 @@
  *  @see <http://www.mongodb.org/>
  */
 
+:- reexport(mongo(mongo_connection),
+    [
+        new/1,
+        new/3,
+        free/1,
+        get_database/3
+    ]).
+:- reexport(mongo(mongo_collection),
+    [
+        get_namespace/2,
+        get_connection/2
+    ]).
+:- reexport(mongo(mongo_database),
+    [
+        get_collection/3
+    ]).
+:- reexport(mongo(mongo_find),
+    [
+        find_one/3,
+        find_one/4,
+        find_all/4,
+        find/7
+    ]).
+:- reexport(mongo(mongo_cursor),
+    [
+        kill/1,
+        get_more/4,
+        has_more/1,
+        exhaust/2
+    ]).
+:- reexport(mongo(mongo_insert),
+    [
+        insert/2,
+        insert_batch/3
+    ]).
+:- reexport(mongo(mongo_update),
+    [
+        update/3,
+        update/4
+    ]).
+:- reexport(mongo(mongo_delete),
+    [
+        delete/2
+    ]).
+
 :- include(misc(common)).
 
-:- use_module(bson(bson), []).
-:- use_module(misc(util), []).
-:- use_module(mongo(mongo_defaults), []).
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_connection), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_database), []).
-:- use_module(mongo(mongo_delete), []).
-:- use_module(mongo(mongo_update), []).
-:- use_module(mongo(mongo_cursor), []).
-:- use_module(mongo(mongo_find), []).
-:- use_module(mongo(mongo_insert), []).
-:- use_module(mongo(mongo_util), []).
-
+/*
 command_namespace('$cmd').
 
 doc_ok(Doc) :-
@@ -105,3 +137,4 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  0,  0,  0,  0], % num skip
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
+*/

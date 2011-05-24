@@ -214,4 +214,5 @@
    Operation major cleanup is pretty much finished. Now I have lots of small
    and cohesive files. Just need to wrap it all in mongo.pl, to provide a
    nice interface again. Also, the tests are now asking submodules directly,
-   which needs to be fixed.
+   which needs to be fixed. Submodules are now fixed. mongo.pl exposes the
+   API.

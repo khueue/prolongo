@@ -1,6 +1,7 @@
 :- module(mongo_insert,
     [
-        % xxx missing exports
+        insert/2,
+        insert_batch/3
     ]).
 
 /** <module> xxxxxxxxx
