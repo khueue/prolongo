@@ -133,3 +133,35 @@ parse_response_info(Info) -->
 
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
+
+%%%%%%%%%%%% xxx debug:
+
+inspect_response_bytes(Bytes) :-
+    core:format('~n--- Begin Response ---~n'),
+    phrase(inspect_response_paperwork, Bytes, Rest),
+    bson:docs_bytes(Docs, Rest),
+    inspect_response_docs(Docs),
+    core:format('--- End Response ---~n~n').
+
+inspect_response_paperwork -->
+    int32(MessLen),
+    { core:format('MessLen: ~p~n', [MessLen]) },
+    int32(RequestId),
+    { core:format('RequestId: ~p~n', [RequestId]) },
+    int32(ResponseTo),
+    { core:format('ResponseTo: ~p~n', [ResponseTo]) },
+    int32(OpCode),
+    { core:format('OpCode: ~p~n', [OpCode]) },
+    int32(ResponseFlags),
+    { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
+    int64(CursorId),
+    { core:format('CursorId: ~p~n', [CursorId]) },
+    int32(StartingFrom),
+    { core:format('StartingFrom: ~p~n', [StartingFrom]) },
+    int32(NumberReturned),
+    { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
+
+inspect_response_docs([]).
+inspect_response_docs([Doc|Docs]) :-
+    bson_format:pp(Doc, 1, '  '), nl,
+    inspect_response_docs(Docs).

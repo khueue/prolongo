@@ -2,30 +2,17 @@
 
 :- use_module(misc(util), []).
 
-database('prolongo').
-collection('testcoll').
-
-up(Mongo) :-
-    mongo:new_mongo(Mongo0),
-    database(Database),
-    mongo:use_database(Mongo0, Database, Mongo).
-
-down(Mongo) :-
-    mongo:free_mongo(Mongo).
-
-up222(Conn, Coll) :-
+up(Conn, Coll) :-
     mongo_connection:new(Conn),
-    database(DbName),
-    mongo_connection:get_database(Conn, DbName, Db),
-    collection(CollName),
-    mongo_database:get_collection(Db, CollName, Coll).
+    mongo_connection:get_database(Conn, 'prolongo', Db),
+    mongo_database:get_collection(Db, 'testcoll', Coll).
 
-down222(Conn) :-
+down(Conn) :-
     mongo_connection:free(Conn).
 
 :- begin_tests('mongo:update/4').
 
-test('update normal', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo_delete:delete(Coll, [hello-world]),
     mongo_delete:delete(Coll, [hello-me]),
     mongo_insert:insert(Coll, [hello-world]),
@@ -37,14 +24,14 @@ test('update normal', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
 
 :- begin_tests('mongo:update/5').
 
-test('update upsert', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+test('update upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo_delete:delete(Coll, [hello-world]),
     mongo_delete:delete(Coll, [hello-me]),
     mongo_update:update(Coll, [hello-world], [hello-me], [upsert]),
     mongo_find:find_one(Coll, [hello-me], Doc),
     bson:doc_get(Doc, hello, me).
 
-test('update multi', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo_delete:delete(Coll, [hello-world]),
     mongo_delete:delete(Coll, [hello-me]),
     mongo_insert:insert(Coll, [hello-world,num-1]),
@@ -61,7 +48,7 @@ test('update multi', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
 
 :- begin_tests('mongo:delete/3').
 
-test('delete', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+test('delete', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo_insert:insert(Coll, [hello-world]),
     mongo_find:find(Coll, [hello-world], [], 0, 0, _Cursor1, [_|_]),
     mongo_delete:delete(Coll, [hello-world]),
@@ -71,7 +58,7 @@ test('delete', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
 
 :- begin_tests('mongo:find/8').
 
-test('cursor', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo_delete:delete(Coll, [hello-world]),
     mongo_insert:insert(Coll, [hello-world,number-1]),
     mongo_insert:insert(Coll, [hello-world,number-2]),
@@ -104,29 +91,27 @@ test('cursor', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
     ],
     \+ mongo_cursor:has_more(Cursor2).
 
-test('insert many single, cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:delete(Mongo, Collection, [hello-world]),
-    insert_n_docs(Mongo, Collection, 1000),
-    mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
-    mongo:cursor_exhaust(Cursor, DocsRest),
+test('insert many single, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo_delete:delete(Coll, [hello-world]),
+    insert_n_docs(Coll, 1000),
+    mongo_find:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
+    mongo_cursor:exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
 
-insert_n_docs(_Mongo, _Coll, 0) :- !.
-insert_n_docs(Mongo, Coll, N) :-
-    mongo:insert(Mongo, Coll, [hello-world,number-N]),
+insert_n_docs(_Coll, 0) :- !.
+insert_n_docs(Coll, N) :-
+    mongo_insert:insert(Coll, [hello-world,number-N]),
     N1 is N - 1,
-    insert_n_docs(Mongo, Coll, N1).
+    insert_n_docs(Coll, N1).
 
-test('insert batch, cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:delete(Mongo, Collection, [hello-world]),
+test('insert batch, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo_delete:delete(Coll, [hello-world]),
     create_n_docs(1000, Docs),
-    mongo:insert_batch(Mongo, Collection, [], Docs),
-    mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
-    mongo:cursor_exhaust(Cursor, DocsRest),
+    mongo_insert:insert_batch(Coll, [], Docs),
+    mongo_find:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
+    mongo_cursor:exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
@@ -140,26 +125,23 @@ create_n_docs(N, [[hello-world,number-N]|Docs]) :-
 
 :- begin_tests('mongo:find_one/4,5').
 
-test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
+test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     Doc = [hello-world, number-42],
-    mongo:insert(Mongo, Collection, Doc),
-    mongo:find_one(Mongo, Collection, Doc, Doc1),
+    mongo_insert:insert(Coll, Doc),
+    mongo_find:find_one(Coll, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
-test('entire doc', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
+test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     Doc = [hello-world, number-42],
-    mongo:insert(Mongo, Collection, Doc),
-    mongo:find_one(Mongo, Collection, Doc, Doc1),
+    mongo_insert:insert(Coll, Doc),
+    mongo_find:find_one(Coll, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
-test('return fields selector', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
+test('return fields selector', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     Doc = [hello-world, number-42],
-    mongo:insert(Mongo, Collection, Doc),
+    mongo_insert:insert(Coll, Doc),
     Fields = [number-1],
-    mongo:find_one(Mongo, Collection, Doc, Fields, Doc1),
+    mongo_find:find_one(Coll, Doc, Fields, Doc1),
     bson:doc_get(Doc1, '_id', object_id(_)), % Always returned.
     bson:doc_get(Doc1, number, 42),
     \+ bson:doc_get(Doc1, hello, world).
@@ -168,15 +150,14 @@ test('return fields selector', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:insert/3').
 
-test('insert', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     util:ms_since_epoch(MilliSeconds),
-    Document =
+    Doc =
     [
         hello - [åäö,5.05],
         now   - utc(MilliSeconds)
     ],
-    collection(Collection),
-    mongo:insert(Mongo, Collection, Document).
+    mongo_insert:insert(Coll, Doc).
 
 :- end_tests('mongo:insert/3').
 
