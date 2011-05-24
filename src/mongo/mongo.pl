@@ -153,13 +153,14 @@ cursor_exhaust(Cursor, Docs) :-
     phrase(cursor_exhaust(Cursor), Docs).
 
 cursor_exhaust(Cursor) -->
-    { \+ cursor_has_more(Cursor) },
+    { cursor_has_more(Cursor) },
     !,
-    [].
-cursor_exhaust(Cursor) -->
+    % Fetching the default number of docs -- good/bad?
     { cursor_get_more(Cursor, 0, Docs, Cursor1) },
     Docs,
     cursor_exhaust(Cursor1).
+cursor_exhaust(_Cursor) -->
+    [].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -171,6 +172,10 @@ build_header(RequestId, ResponseTo, OpCode) -->
 
 build_bson_doc(Doc) -->
     { bson:doc_bytes(Doc, Bytes) },
+    Bytes.
+
+build_bson_docs(Docs) -->
+    { bson:docs_bytes(Docs, Bytes) },
     Bytes.
 
 %%  new_mongo(-Mongo) is semidet.
@@ -345,6 +350,19 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  0,  0,  0,  0], % num skip
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
+
+insert_many(Mongo, Collection, Docs) :-
+    mongo_get_database(Mongo, Database),
+    full_coll_name(Database, Collection, FullCollName),
+    phrase(build_insert_many_bytes(FullCollName, Docs), BytesSend),
+    count_bytes_and_set_length(BytesSend),
+    send_to_server(Mongo, BytesSend).
+
+build_insert_many_bytes(FullCollName, Docs) -->
+    build_header(45678, 45678, 2002),
+    int32(0), % ZERO.
+    c_string(FullCollName),
+    build_bson_docs(Docs).
 
 insert(Mongo, Collection, Document) :-
     mongo_get_database(Mongo, Database),

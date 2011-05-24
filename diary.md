@@ -206,3 +206,7 @@
    And should refactor everything mongo now. Added said options now. Pretty
    neat this. Feels like I am really getting somewhere, finally. Having a
    real workplace also feels pretty good. I can just sit down and work.
+
+ * May 24. Added missing insert many. Should perhaps create several predicates
+   for the different updates (upsert/multi) instead of passing options. Will
+   make the API predicates nicer and more readable.

@@ -117,6 +117,22 @@ insert_n(Mongo, Coll, N) :-
     N1 is N - 1,
     insert_n(Mongo, Coll, N1).
 
+test('cursor insert xxx exhaust, multiple', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+    collection(Collection),
+    mongo:delete(Mongo, Collection, [hello-world]),
+    create_n(1000, Docs),
+    mongo:insert_many(Mongo, Collection, Docs),
+    mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
+    mongo:cursor_exhaust(Cursor, DocsRest),
+    lists:length(Docs0, N0),
+    lists:length(DocsRest, N),
+    1000 is N0 + N.
+
+create_n(0, []) :- !.
+create_n(N, [[hello-world,number-N]|Docs]) :-
+    N1 is N - 1,
+    create_n(N1, Docs).
+
 :- end_tests('mongo:find/8').
 
 :- begin_tests('mongo:find_one/4,5').
