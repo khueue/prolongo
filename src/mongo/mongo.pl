@@ -24,17 +24,14 @@
 :- use_module(mongo(mongo_connection), []).
 :- use_module(mongo(mongo_collection), []).
 :- use_module(mongo(mongo_database), []).
+:- use_module(mongo(mongo_delete), []).
 :- use_module(mongo(mongo_util), []).
 
 command_namespace('$cmd').
 
 % xxx new:
 delete(Coll, Selector) :-
-    mongo_collection:get_namespace(Coll, FullCollName),
-    phrase(build_delete_bytes(FullCollName, Selector), BytesSend),
-    count_bytes_and_set_length(BytesSend),
-    mongo_collection:get_connection(Coll, Conn),
-    mongo_connection:send_to_server(Conn, BytesSend).
+    mongo_delete:delete(Coll, Selector).
 
 % old: xxx
 delete(Mongo, Collection, Selector) :-
