@@ -210,4 +210,4 @@
  * May 24. Added missing insert batch. Should perhaps create several predicates
    for the different updates (upsert/multi) instead of passing options. Will
    make the API predicates nicer and more readable. Added option keep_going to
-   batch insert.
+   batch insert. Started major refactoring of mongo.pl.

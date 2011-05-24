@@ -13,28 +13,34 @@ up(Mongo) :-
 down(Mongo) :-
     mongo:free_mongo(Mongo).
 
+up222(Conn, Coll) :-
+    mongo_connection:new(Conn),
+    database(DbName),
+    mongo_connection:get_database(Conn, DbName, Db),
+    collection(CollName),
+    mongo_database:get_collection(Db, CollName, Coll).
+
+down222(Conn) :-
+    mongo_connection:free(Conn).
+
 :- begin_tests('mongo:update/4').
 
-test('update normal', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:delete(Mongo, Collection, [hello-world]),
-    mongo:delete(Mongo, Collection, [hello-me]),
-    mongo:insert(Mongo, Collection, [hello-world]),
-    mongo:update(Mongo, Collection, [hello-world], [hello-me]),
-    mongo:find_one(Mongo, Collection, [hello-me], Doc),
-    bson:doc_get(Doc, hello, me).
+test('update normal', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+    mongo:delete(Coll, [hello-world]).
+    %mongo:delete(Coll, [hello-me]).
+    %mongo:insert(Mongo, Collection, [hello-world]),
+    %mongo:update(Mongo, Collection, [hello-world], [hello-me]),
+    %mongo:find_one(Mongo, Collection, [hello-me], Doc),
+    %bson:doc_get(Doc, hello, me).
 
 :- end_tests('mongo:update/4').
 
 :- begin_tests('mongo:update/5').
 
-test('update upsert', [setup(up(Conn)),cleanup(down(Conn))]) :-
-    % xxx collection(Collection),
-    mongo:get_database(Conn, prolongo, Db),
-    mongo:get_collection(Db, testcoll, Coll),
+test('update upsert', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
-    mongo:delete(Coll, [hello-me]),
-    mongo:update(Coll, [hello-world], [hello-me], [upsert]).
+    mongo:delete(Coll, [hello-me]).
+    %mongo:update(Coll, [hello-world], [hello-me], [upsert]).
     %mongo:find_one(Coll, [hello-me], Doc),
     %bson:doc_get(Doc, hello, me).
 

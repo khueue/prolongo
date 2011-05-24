@@ -20,16 +20,21 @@
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_defaults), []).
+:- use_module(mongo(mongo_bytes), []).
+:- use_module(mongo(mongo_connection), []).
+:- use_module(mongo(mongo_collection), []).
+:- use_module(mongo(mongo_database), []).
+:- use_module(mongo(mongo_util), []).
 
 command_namespace('$cmd').
 
 % xxx new:
 delete(Coll, Selector) :-
-    collection_get_namespace(Coll, FullCollName),
+    mongo_collection:get_namespace(Coll, FullCollName),
     phrase(build_delete_bytes(FullCollName, Selector), BytesSend),
     count_bytes_and_set_length(BytesSend),
-    collection_get_connection(Coll, Conn),
-    send_to_server(Conn, BytesSend).
+    mongo_collection:get_connection(Coll, Conn),
+    mongo_connection:send_to_server(Conn, BytesSend).
 
 % old: xxx
 delete(Mongo, Collection, Selector) :-
