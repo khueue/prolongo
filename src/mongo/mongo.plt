@@ -26,33 +26,32 @@ down222(Conn) :-
 :- begin_tests('mongo:update/4').
 
 test('update normal', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
-    mongo:delete(Coll, [hello-world]).
-    %mongo:delete(Coll, [hello-me]).
-    %mongo:insert(Mongo, Collection, [hello-world]),
-    %mongo:update(Mongo, Collection, [hello-world], [hello-me]),
-    %mongo:find_one(Mongo, Collection, [hello-me], Doc),
-    %bson:doc_get(Doc, hello, me).
+    mongo_delete:delete(Coll, [hello-world]),
+    mongo_delete:delete(Coll, [hello-me]),
+    mongo_insert:insert(Coll, [hello-world]),
+    mongo_update:update(Coll, [hello-world], [hello-me]),
+    mongo_find:find_one(Coll, [hello-me], Doc),
+    bson:doc_get(Doc, hello, me).
 
 :- end_tests('mongo:update/4').
 
 :- begin_tests('mongo:update/5').
 
 test('update upsert', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
-    mongo:delete(Coll, [hello-world]),
-    mongo:delete(Coll, [hello-me]).
-    %mongo:update(Coll, [hello-world], [hello-me], [upsert]).
-    %mongo:find_one(Coll, [hello-me], Doc),
-    %bson:doc_get(Doc, hello, me).
+    mongo_delete:delete(Coll, [hello-world]),
+    mongo_delete:delete(Coll, [hello-me]),
+    mongo_update:update(Coll, [hello-world], [hello-me], [upsert]),
+    mongo_find:find_one(Coll, [hello-me], Doc),
+    bson:doc_get(Doc, hello, me).
 
-test('update multi', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Coll),
-    mongo:delete(Mongo, Coll, [hello-world]),
-    mongo:delete(Mongo, Coll, [hello-me]),
-    mongo:insert(Mongo, Coll, [hello-world,num-1]),
-    mongo:insert(Mongo, Coll, [hello-world,num-2]),
-    mongo:insert(Mongo, Coll, [hello-world,num-3]),
-    mongo:update(Mongo, Coll, [hello-world], ['$inc'-[num-10]], [multi]),
-    mongo:find(Mongo, Coll, [hello-world], [], 0, 3, _Cursor, [Doc1,Doc2,Doc3]),
+test('update multi', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+    mongo_delete:delete(Coll, [hello-world]),
+    mongo_delete:delete(Coll, [hello-me]),
+    mongo_insert:insert(Coll, [hello-world,num-1]),
+    mongo_insert:insert(Coll, [hello-world,num-2]),
+    mongo_insert:insert(Coll, [hello-world,num-3]),
+    mongo_update:update(Coll, [hello-world], ['$inc'-[num-10]], [multi]),
+    mongo_find:find(Coll, [hello-world], [], 0, 3, _Cursor, [Doc1,Doc2,Doc3]),
     % XXX Maybe this sort order is not guaranteed?
     bson:doc_get(Doc1, num, 11),
     bson:doc_get(Doc2, num, 12),
@@ -62,50 +61,48 @@ test('update multi', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
 
 :- begin_tests('mongo:delete/3').
 
-test('delete', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:insert(Mongo, Collection, [hello-world]),
-    mongo:find(Mongo, Collection, [hello-world], [], 0, 0, _Cursor1, [_|_]),
-    mongo:delete(Mongo, Collection, [hello-world]),
-    mongo:find(Mongo, Collection, [hello-world], [], 0, 0, _Cursor2, []).
+test('delete', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+    mongo_insert:insert(Coll, [hello-world]),
+    mongo_find:find(Coll, [hello-world], [], 0, 0, _Cursor1, [_|_]),
+    mongo_delete:delete(Coll, [hello-world]),
+    mongo_find:find(Coll, [hello-world], [], 0, 0, _Cursor2, []).
 
 :- end_tests('mongo:delete/3').
 
 :- begin_tests('mongo:find/8').
 
-test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    collection(Collection),
-    mongo:delete(Mongo, Collection, [hello-world]),
-    mongo:insert(Mongo, Collection, [hello-world,number-1]),
-    mongo:insert(Mongo, Collection, [hello-world,number-2]),
-    mongo:insert(Mongo, Collection, [hello-world,number-3]),
-    mongo:insert(Mongo, Collection, [hello-world,number-4]),
-    mongo:insert(Mongo, Collection, [hello-world,number-5]),
-    mongo:insert(Mongo, Collection, [hello-world,number-6]),
-    mongo:insert(Mongo, Collection, [hello-world,number-7]),
-    mongo:insert(Mongo, Collection, [hello-world,number-8]),
-    mongo:insert(Mongo, Collection, [hello-world,number-9]),
-    mongo:find(Mongo, Collection, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
+test('cursor', [setup(up222(Conn,Coll)),cleanup(down222(Conn))]) :-
+    mongo_delete:delete(Coll, [hello-world]),
+    mongo_insert:insert(Coll, [hello-world,number-1]),
+    mongo_insert:insert(Coll, [hello-world,number-2]),
+    mongo_insert:insert(Coll, [hello-world,number-3]),
+    mongo_insert:insert(Coll, [hello-world,number-4]),
+    mongo_insert:insert(Coll, [hello-world,number-5]),
+    mongo_insert:insert(Coll, [hello-world,number-6]),
+    mongo_insert:insert(Coll, [hello-world,number-7]),
+    mongo_insert:insert(Coll, [hello-world,number-8]),
+    mongo_insert:insert(Coll, [hello-world,number-9]),
+    mongo_find:find(Coll, [hello-world], [number-1], 3, 3, Cursor0, Docs0),
     Docs0 =
     [
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:cursor_has_more(Cursor0),
-    mongo:cursor_get_more(Cursor0, 3, Docs1, Cursor1),
+    mongo_cursor:has_more(Cursor0),
+    mongo_cursor:get_more(Cursor0, 3, Docs1, Cursor1),
     Docs1 =
     [
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:cursor_has_more(Cursor1),
-    mongo:cursor_get_more(Cursor1, 3, Docs2, Cursor2),
+    mongo_cursor:has_more(Cursor1),
+    mongo_cursor:get_more(Cursor1, 3, Docs2, Cursor2),
     Docs2 =
     [
     ],
-    \+ mongo:cursor_has_more(Cursor2).
+    \+ mongo_cursor:has_more(Cursor2).
 
 test('insert many single, cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
