@@ -121,7 +121,7 @@ test('cursor insert xxx exhaust, multiple', [setup(up(Mongo)),cleanup(down(Mongo
     collection(Collection),
     mongo:delete(Mongo, Collection, [hello-world]),
     create_n(1000, Docs),
-    mongo:insert_many(Mongo, Collection, Docs),
+    mongo:insert_batch(Mongo, Collection, Docs),
     mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
     mongo:cursor_exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),

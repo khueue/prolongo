@@ -351,45 +351,21 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
 
-insert_many(Mongo, Collection, Docs) :-
+insert_batch(Mongo, Collection, Docs) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    phrase(build_insert_many_bytes(FullCollName, Docs), BytesSend),
+    phrase(build_insert_batch_bytes(FullCollName, Docs), BytesSend),
     count_bytes_and_set_length(BytesSend),
     send_to_server(Mongo, BytesSend).
 
-build_insert_many_bytes(FullCollName, Docs) -->
+build_insert_batch_bytes(FullCollName, Docs) -->
     build_header(45678, 45678, 2002),
     int32(0), % ZERO.
     c_string(FullCollName),
     build_bson_docs(Docs).
 
-insert(Mongo, Collection, Document) :-
-    mongo_get_database(Mongo, Database),
-    full_coll_name(Database, Collection, FullCollName),
-    build_insert_message(FullCollName, Document, Message),
-    send_to_server(Mongo, Message).
-
-build_insert_message(FullCollName, Document, Bytes) :-
-    phrase(c_string(FullCollName), BytesFullCollName),
-    bson:doc_bytes(Document, BytesDocument),
-    phrase(build_insert_message_aux(
-        BytesFullCollName, BytesDocument, BytesLength),
-        Bytes),
-    lists:length(Bytes, Length),
-    int32crap(Length, BytesLength).
-
-build_insert_message_aux(BytesFullCollName, BytesDocument, BytesLength) -->
-    { BytesLength = [_,_,_,_] },
-    BytesLength,       % Message length.
-    [123,  0,  0,  0], %
-    [  0,  0,  0,  0], %
-    [210,  7,  0,  0], % 2002: insert
-    % Stuff.
-    [  0,  0,  0,  0], % ZERO
-    % Interesting stuff.
-    BytesFullCollName,
-    BytesDocument.
+insert(Mongo, Collection, Doc) :-
+    insert_batch(Mongo, Collection, [Doc]).
 
 full_coll_name(Database, Collection, FullCollName) :-
     core:atomic_list_concat([Database,Collection], '.', FullCollName).
