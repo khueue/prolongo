@@ -98,6 +98,16 @@ find_one(Mongo, Collection, Query, ReturnFields, Result) :-
 package_result_doc([], nil).
 package_result_doc([Doc], Doc).
 
+find_all(Mongo, Coll, Query, ReturnFields, Docs) :-
+    phrase(find_all(Mongo, Coll, Query, ReturnFields), Docs).
+
+% XXX Should be implemented using the "exhaust" flag.
+find_all(Mongo, Coll, Query, ReturnFields) -->
+    { mongo:find(Mongo, Coll, Query, ReturnFields, 0, 0, Cursor, Docs0) },
+    Docs0,
+    { mongo:cursor_exhaust(Cursor, DocsRest) },
+    DocsRest.
+
 find(Mongo, Coll, Query, ReturnFields,
   Skip, Limit, cursor(Mongo,Coll,CursorId), Docs)
   :-
@@ -351,21 +361,25 @@ build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.
 
-insert_batch(Mongo, Collection, Docs) :-
+insert_batch(Mongo, Collection, Options, Docs) :-
     mongo_get_database(Mongo, Database),
     full_coll_name(Database, Collection, FullCollName),
-    phrase(build_insert_batch_bytes(FullCollName, Docs), BytesSend),
+    insert_batch_flags(Options, Flags),
+    phrase(build_insert_batch_bytes(FullCollName, Flags, Docs), BytesSend),
     count_bytes_and_set_length(BytesSend),
     send_to_server(Mongo, BytesSend).
 
-build_insert_batch_bytes(FullCollName, Docs) -->
+insert_batch_flags([keep_going], 1) :- !.
+insert_batch_flags([],           0) :- !.
+
+build_insert_batch_bytes(FullCollName, Flags, Docs) -->
     build_header(45678, 45678, 2002),
-    int32(0), % ZERO.
+    int32(Flags),
     c_string(FullCollName),
     build_bson_docs(Docs).
 
 insert(Mongo, Collection, Doc) :-
-    insert_batch(Mongo, Collection, [Doc]).
+    insert_batch(Mongo, Collection, [], [Doc]).
 
 full_coll_name(Database, Collection, FullCollName) :-
     core:atomic_list_concat([Database,Collection], '.', FullCollName).

@@ -101,37 +101,37 @@ test('cursor', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     ],
     \+ mongo:cursor_has_more(Cursor2).
 
-test('cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('insert many single, cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     mongo:delete(Mongo, Collection, [hello-world]),
-    insert_n(Mongo, Collection, 1000),
+    insert_n_docs(Mongo, Collection, 1000),
     mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
     mongo:cursor_exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
 
-insert_n(_Mongo, _Coll, 0) :- !.
-insert_n(Mongo, Coll, N) :-
+insert_n_docs(_Mongo, _Coll, 0) :- !.
+insert_n_docs(Mongo, Coll, N) :-
     mongo:insert(Mongo, Coll, [hello-world,number-N]),
     N1 is N - 1,
-    insert_n(Mongo, Coll, N1).
+    insert_n_docs(Mongo, Coll, N1).
 
-test('cursor insert xxx exhaust, multiple', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
+test('insert batch, cursor exhaust', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     collection(Collection),
     mongo:delete(Mongo, Collection, [hello-world]),
-    create_n(1000, Docs),
-    mongo:insert_batch(Mongo, Collection, Docs),
+    create_n_docs(1000, Docs),
+    mongo:insert_batch(Mongo, Collection, [], Docs),
     mongo:find(Mongo, Collection, [hello-world], [number-1], 0, 0, Cursor, Docs0),
     mongo:cursor_exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
 
-create_n(0, []) :- !.
-create_n(N, [[hello-world,number-N]|Docs]) :-
+create_n_docs(0, []) :- !.
+create_n_docs(N, [[hello-world,number-N]|Docs]) :-
     N1 is N - 1,
-    create_n(N1, Docs).
+    create_n_docs(N1, Docs).
 
 :- end_tests('mongo:find/8').
 
