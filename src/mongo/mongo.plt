@@ -122,6 +122,13 @@ create_n_docs(N, [[hello-world,number-N]|Docs]) :-
     N1 is N - 1,
     create_n_docs(N1, Docs).
 
+test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:delete(Coll, [hello-world]),
+    create_n_docs(1000, Docs),
+    mongo:insert_batch(Coll, [], Docs),
+    mongo:find_all(Coll, [hello-world], [number-1], DocsAll),
+    lists:length(DocsAll, 1000).
+
 :- end_tests('mongo:find/8').
 
 :- begin_tests('mongo:find_one/4,5').
