@@ -55,6 +55,7 @@ free(Conn) :-
 get_database(Conn, DbName, db(Conn,DbName)).
 
 % Socket.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 get_socket_read(Conn, ReadStream) :-
     get_socket(Conn, Socket),
@@ -67,6 +68,7 @@ get_socket_write(Conn, WriteStream) :-
 get_socket(Conn, Conn).
 
 % Send to server.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 send_to_server(Conn, Bytes) :-
     get_socket_write(Conn, WriteStream),
@@ -80,6 +82,7 @@ send_bytes(Bytes, WriteStream) :-
     core:format(WriteStream, '~s', [Bytes]).
 
 % Read from server.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 read_reply(Mongo, Header, Info, Docs) :-
     read_from_server(Mongo, Bytes),
@@ -103,6 +106,7 @@ read_n_bytes(ReadStream, N, [Byte|Bytes]) :-
     read_n_bytes(ReadStream, N1, Bytes).
 
 % Response parsing.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 parse_response(Bytes, Header, Info, Docs) :-
     % XXX inspect_response_bytes(Bytes),

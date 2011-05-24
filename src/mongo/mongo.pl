@@ -51,9 +51,11 @@ build_delete_bytes(FullCollName, Selector) -->
 %%%%%%%%%%%%%%%%%%%
 
 update(Coll, Selector, Modifier) :-
+    !, % xxxxx
     update(Coll, Selector, Modifier, []).
 
 update(Coll, Selector, Modifier, Options) :-
+    !, % xxxxxx
     collection_get_namespace(Coll, FullCollName),
     update_options_value(Options, Flags),
     phrase(build_update_bytes(FullCollName, Selector, Modifier, Flags), BytesSend),
