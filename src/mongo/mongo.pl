@@ -17,14 +17,12 @@
         free_connection/1,
         get_database/3
     ]).
-:- reexport(mongo(mongo_collection),
-    [
-        collection_namespace/2,
-        collection_connection/2
-    ]).
 :- reexport(mongo(mongo_database),
     [
         get_collection/3
+    ]).
+:- reexport(mongo(mongo_collection),
+    [
     ]).
 :- reexport(mongo(mongo_find),
     [

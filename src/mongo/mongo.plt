@@ -98,7 +98,7 @@ test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:has_more(Cursor1),
+    mongo:has_more(Cursor1), % XXX Why still more, yet empty?
     mongo:get_more(Cursor1, 3, Docs2, Cursor2),
     Docs2 =
     [
