@@ -11,6 +11,17 @@ up(Conn, Coll) :-
 down(Conn) :-
     mongo:free(Conn).
 
+:- begin_tests('mongo:upsert/3').
+
+test('upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:delete(Coll, [hello-world]),
+    mongo:delete(Coll, [hello-me]),
+    mongo:upsert(Coll, [hello-world], [hello-me]),
+    mongo:find_one(Coll, [hello-me], Doc),
+    bson:doc_get(Doc, hello, me).
+
+:- end_tests('mongo:upsert/3').
+
 :- begin_tests('mongo:update/4').
 
 test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-

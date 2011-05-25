@@ -47,6 +47,7 @@
     ]).
 :- reexport(mongo(mongo_update),
     [
+        upsert/3,
         update/3,
         update/4
     ]).

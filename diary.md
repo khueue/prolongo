@@ -216,3 +216,5 @@
    nice interface again. Also, the tests are now asking submodules directly,
    which needs to be fixed. Submodules are now fixed. mongo.pl exposes the
    API.
+
+ * May 25. Added upsert/3 and test.

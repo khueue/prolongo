@@ -1,5 +1,6 @@
 :- module(mongo_update,
     [
+        upsert/3,
         update/3,
         update/4
     ]).
@@ -18,6 +19,21 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_delete), []).
 :- use_module(mongo(mongo_util), []).
+
+%%  upsert.
+%
+%   xxxxxxxxxx
+
+upsert(Collection, Selector, Modifier) :-
+    mongo_collection:get_namespace(Collection, Namespace),
+    options_flags([upsert], Flags),
+    build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
+    mongo_collection:get_connection(Collection, Connection),
+    mongo_connection:send_to_server(Connection, BytesSend).
+
+%%  update.
+%
+%   xxxxxxxxxx
 
 update(Coll, Selector, Modifier) :-
     update(Coll, Selector, Modifier, []).
