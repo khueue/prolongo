@@ -37,10 +37,9 @@ new_connection(Host, Port, Connection) :-
 new_socket(Host, Port, Socket) :-
     setup_call_catcher_cleanup(
         socket:tcp_socket(Sock),
-        socket:tcp_connect(Sock, Host:Port),
+        socket:tcp_connect(Sock, Host:Port, ReadStream, WriteStream),
         exception(_),
         socket:tcp_close_socket(Sock)),
-    socket:tcp_open_socket(Sock, ReadStream, WriteStream),
     Socket = socket(ReadStream,WriteStream).
 
 %%  free_connection(+Connection) is det.
