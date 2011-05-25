@@ -43,11 +43,15 @@ test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:insert(Coll, [hello-world,num-2]),
     mongo:insert(Coll, [hello-world,num-3]),
     mongo:update_all(Coll, [hello-world], ['$inc'-[num-10]]),
-    mongo:find(Coll, [hello-world], [], 0, 3, _Cursor, [Doc1,Doc2,Doc3]),
-    % XXX Maybe this sort order is not guaranteed?
+    mongo:find(Coll, [hello-world], [], 0, 3, _Cursor, Docs),
+    lists:length(Docs, 3),
+    lists:member(Doc1, Docs),
     bson:doc_get(Doc1, num, 11),
+    lists:member(Doc2, Docs),
     bson:doc_get(Doc2, num, 12),
-    bson:doc_get(Doc3, num, 13).
+    lists:member(Doc3, Docs),
+    bson:doc_get(Doc3, num, 13),
+    !.
 
 :- end_tests('mongo:update_all/3').
 
