@@ -10,7 +10,6 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
-:- use_module(mongo(mongo_defaults), []).
 :- use_module(mongo(mongo_util), []).
 
 %%  get_collection.
@@ -20,4 +19,7 @@
 get_collection(Db, CollName, Coll) :-
     Db = db(_Conn,DbName),
     Coll = coll(Db,FullCollName),
-    mongo_util:full_coll_name(DbName, CollName, FullCollName).
+    full_coll_name(DbName, CollName, FullCollName).
+
+full_coll_name(Database, Collection, FullCollName) :-
+    core:atomic_list_concat([Database,Collection], '.', FullCollName).

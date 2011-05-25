@@ -11,7 +11,6 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
-:- use_module(mongo(mongo_defaults), []).
 
 %%  get_namespace.
 %

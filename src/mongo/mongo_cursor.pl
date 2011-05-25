@@ -13,17 +13,15 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
-:- use_module(mongo(mongo_defaults), []).
 :- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_connection), []).
 :- use_module(mongo(mongo_collection), []).
+:- use_module(mongo(mongo_connection), []).
 :- use_module(mongo(mongo_database), []).
-:- use_module(mongo(mongo_delete), []).
-:- use_module(mongo(mongo_update), []).
 :- use_module(mongo(mongo_util), []).
 
-% Kill cursor.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  kill.
+%
+%   xxxxxxx
 
 kill(cursor(Collection,CursorId)) :-
     build_bytes_cursor_kill(CursorId, Bytes),
@@ -40,8 +38,9 @@ build_bytes_cursor_kill(CursorId) -->
     mongo_bytes:int32(1), % Number of cursor IDs.
     mongo_bytes:int64(CursorId). % Cursor IDs.
 
-% Get more.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  get_more.
+%
+%   xxxxxxxx
 
 get_more(cursor(Collection,CursorId), Limit, Docs, cursor(Collection,CursorId1)) :-
     mongo_collection:get_namespace(Collection, Namespace),
@@ -62,14 +61,16 @@ build_bytes_get_more(Namespace, Limit, CursorId) -->
     mongo_bytes:int32(Limit),
     mongo_bytes:int64(CursorId).
 
-% Has more.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  has_more.
+%
+%   xxxxxxxxxxx
 
 has_more(cursor(_Collection,CursorId)) :-
     CursorId \== 0.
 
-% Exhaust.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  exhaust.
+%
+%   xxxxxxxxx
 
 exhaust(Cursor, Docs) :-
     phrase(exhaust(Cursor), Docs).
