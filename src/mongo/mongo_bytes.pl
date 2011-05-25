@@ -4,9 +4,9 @@
         int64/3,
         int64s/3,
         c_string/3,
-        build_header/5,
-        build_bson_doc/3,
-        build_bson_docs/3
+        header/5,
+        bson_doc/3,
+        bson_docs/3
     ]).
 
 /** <module> xxxxxxxxx
@@ -16,6 +16,11 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
+
+int32s([]) --> [].
+int32s([Int|Ints]) -->
+    int32(Int),
+    int32s(Ints).
 
 % Can parse or construct.
 int32(Int) -->
@@ -37,17 +42,17 @@ c_string(Atom) -->
     Bytes,
     [0].
 
-build_header(RequestId, ResponseTo, OpCode) -->
+header(RequestId, ResponseTo, OpCode) -->
     [_,_,_,_], % Length of entire message. Instantiate when possible.
     int32(RequestId),
     int32(ResponseTo),
     int32(OpCode).
 
-build_bson_doc(Doc) -->
+bson_doc(Doc) -->
     { bson:doc_bytes(Doc, Bytes) },
     Bytes.
 
-build_bson_docs(Docs) -->
+bson_docs(Docs) -->
     { bson:docs_bytes(Docs, Bytes) },
     Bytes.
 

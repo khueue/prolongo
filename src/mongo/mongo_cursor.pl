@@ -54,7 +54,7 @@ build_bytes_for_kill_batch(NumCursors, CursorIds, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_kill_batch(NumCursors, CursorIds) -->
-    mongo_bytes:build_header(4567, 4567, 2007),
+    mongo_bytes:header(4567, 4567, 2007),
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:int32(NumCursors),
     mongo_bytes:int64s(CursorIds).
@@ -76,7 +76,7 @@ build_bytes_for_get_more(Namespace, Limit, CursorId, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_get_more(Namespace, Limit, CursorId) -->
-    mongo_bytes:build_header(4567, 4567, 2005),
+    mongo_bytes:header(4567, 4567, 2005),
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Limit),

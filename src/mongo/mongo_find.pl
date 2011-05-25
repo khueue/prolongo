@@ -39,24 +39,25 @@ find_all(Collection, Query, ReturnFields) -->
     { mongo:exhaust(Cursor, DocsRest) },
     DocsRest.
 
+% XXX Need to implement the flags.
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
     Cursor = cursor(Collection,CursorId),
     mongo_collection:collection_namespace(Collection, Namespace),
-    build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit, BytesSend),
+    build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend),
+    mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
     Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned).
 
-build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit, Bytes) :-
-    phrase(build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit), Bytes),
+build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Bytes) :-
+    phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit) -->
-    mongo_bytes:build_header(4567, 4567, 2004),
+build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit) -->
+    mongo_bytes:header(4567, 4567, 2004),
     mongo_bytes:int32(0), % Flags. xxxxxxxx fix
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Skip),
     mongo_bytes:int32(Limit),
-    mongo_bytes:build_bson_doc(Query),
-    mongo_bytes:build_bson_doc(ReturnFields).
+    mongo_bytes:bson_doc(Query),
+    mongo_bytes:bson_doc(ReturnFields).

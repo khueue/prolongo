@@ -25,9 +25,9 @@
 upsert(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([upsert], Flags),
-    build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
+    build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend).
+    mongo_connection:send_to_server(Connection, BytesToSend).
 
 %%  update_all.
 %
@@ -36,9 +36,9 @@ upsert(Collection, Selector, Modifier) :-
 update_all(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([multi], Flags),
-    build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
+    build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend).
+    mongo_connection:send_to_server(Connection, BytesToSend).
 
 %%  update.
 %
@@ -47,22 +47,22 @@ update_all(Collection, Selector, Modifier) :-
 update(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([], Flags),
-    build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
+    build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend).
+    mongo_connection:send_to_server(Connection, BytesToSend).
 
-build_message_bytes(Namespace, Selector, Modifier, Flags, Bytes) :-
-    phrase(build_message_bytes(Namespace, Selector, Modifier, Flags), Bytes),
+build_bytes_for_update(Namespace, Selector, Modifier, Flags, Bytes) :-
+    phrase(build_bytes_for_update(Namespace, Selector, Modifier, Flags), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_message_bytes(Namespace, Selector, Modifier, Flags) -->
-    mongo_bytes:build_header(765, 765, 2001),
+build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
+    mongo_bytes:header(765, 765, 2001), % xxxxxxxxx
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),
-    mongo_bytes:build_bson_doc(Selector),
-    mongo_bytes:build_bson_doc(Modifier).
+    mongo_bytes:bson_doc(Selector),
+    mongo_bytes:bson_doc(Modifier).
 
+options_flags([],       0) :- !.
 options_flags([upsert], 1) :- !.
 options_flags([multi],  2) :- !.
-options_flags([],       0) :- !.

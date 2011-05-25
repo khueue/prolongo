@@ -220,4 +220,5 @@
 
  * May 25. Added upsert/3 and test. Added update_all/3 and test. Added
    kill_batch/1 and tests. General cleanup and documentation. Started
-   encapsulating structures properly.
+   encapsulating structures properly. Tomorrow, maybe clean up comm. with
+   server into send/2 and receive/2.

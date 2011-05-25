@@ -22,20 +22,20 @@ insert(Collection, Doc) :-
 
 insert_batch(Collection, Options, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    insert_batch_options_flags(Options, Flags),
-    build_insert_batch_bytes(Namespace, Flags, Docs, BytesSend),
+    options_flags(Options, Flags),
+    build_bytes_for_insert_batch(Namespace, Flags, Docs, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend).
+    mongo_connection:send_to_server(Connection, BytesToSend).
 
-insert_batch_options_flags([keep_going], 1) :- !.
-insert_batch_options_flags([],           0) :- !.
+options_flags([keep_going], 1) :- !.
+options_flags([],           0) :- !.
 
-build_insert_batch_bytes(Namespace, Flags, Docs, Bytes) :-
-    phrase(build_insert_batch_bytes(Namespace, Flags, Docs), Bytes),
+build_bytes_for_insert_batch(Namespace, Flags, Docs, Bytes) :-
+    phrase(build_bytes_for_insert_batch(Namespace, Flags, Docs), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_insert_batch_bytes(Namespace, Flags, Docs) -->
-    mongo_bytes:build_header(45678, 45678, 2002), % xxxxxxx
+build_bytes_for_insert_batch(Namespace, Flags, Docs) -->
+    mongo_bytes:header(45678, 45678, 2002), % xxxxxxx
     mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
-    mongo_bytes:build_bson_docs(Docs).
+    mongo_bytes:bson_docs(Docs).

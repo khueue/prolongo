@@ -22,17 +22,17 @@
 
 delete(Collection, Selector) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    build_bytes_for_delete_message(Namespace, Selector, BytesSend),
+    build_bytes_for_delete(Namespace, Selector, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesSend).
+    mongo_connection:send_to_server(Connection, BytesToSend).
 
-build_bytes_for_delete_message(Namespace, Selector, Bytes) :-
-    phrase(build_bytes_for_delete_message(Namespace, Selector), Bytes),
+build_bytes_for_delete(Namespace, Selector, Bytes) :-
+    phrase(build_bytes_for_delete(Namespace, Selector), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_bytes_for_delete_message(Namespace, Selector) -->
-    mongo_bytes:build_header(45678, 45678, 2006),
+build_bytes_for_delete(Namespace, Selector) -->
+    mongo_bytes:header(45678, 45678, 2006),
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(0), % Flags.
-    mongo_bytes:build_bson_doc(Selector).
+    mongo_bytes:bson_doc(Selector).
