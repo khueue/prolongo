@@ -20,10 +20,21 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
-%%  kill_batch.
+%%  kill(+Cursor) is det.
 %
-%   xxxxxxx
-%   Caveat: Assumes that all cursors belong to the same database.
+%   True. Tells the database to destroy Cursor, rendering it invalid.
+%   Note that executing has_more/1 on the cursor after killing it will still
+%   yield true if true before. Simply do not use after killing.
+
+kill(Cursor) :-
+    kill_batch([Cursor]).
+
+%%  kill_batch(+Cursors) is det.
+%
+%   True. Tells the database to destroy all cursors in Cursors, rendering
+%   them invalid. See kill/1.
+%
+%   Caveat: Assumes that all cursors use the same database connection.
 
 kill_batch([]) :- !.
 kill_batch(Cursors) :-
@@ -47,15 +58,6 @@ build_bytes_for_kill_batch(NumCursors, CursorIds) -->
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:int32(NumCursors),
     mongo_bytes:int64s(CursorIds).
-
-%%  kill(+Cursor) is det.
-%
-%   True. Tells the database to destroy Cursor, rendering it invalid.
-%   Note that executing has_more(Cursor) after killing it will still
-%   be true if it was true before.
-
-kill(Cursor) :-
-    kill_batch([Cursor]).
 
 %%  get_more(+Cursor, +Limit, -Docs, -NewCursor).
 %
@@ -90,7 +92,8 @@ has_more(cursor(_Collection,CursorId)) :-
 %%  exhaust(+Cursor, -Docs) is det.
 %
 %   True if Docs is all the unfetched documents pointed to by Cursor before
-%   this call. Cursor gets automatically killed.
+%   this call. Cursor gets automatically killed and must not be used
+%   afterwards.
 
 exhaust(Cursor, Docs) :-
     phrase(exhaust(Cursor), Docs).
