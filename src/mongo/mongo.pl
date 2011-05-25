@@ -49,7 +49,7 @@
     [
         upsert/3,
         update/3,
-        update/4
+        update_all/3
     ]).
 :- reexport(mongo(mongo_delete),
     [

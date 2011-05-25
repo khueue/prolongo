@@ -2,7 +2,7 @@
     [
         upsert/3,
         update/3,
-        update/4
+        update_all/3
     ]).
 
 /** <module> xxxxxxxx
@@ -29,16 +29,24 @@ upsert(Collection, Selector, Modifier) :-
     mongo_collection:get_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
+%%  update_all.
+%
+%   xxxxxxxxxx
+
+update_all(Collection, Selector, Modifier) :-
+    mongo_collection:get_namespace(Collection, Namespace),
+    options_flags([multi], Flags),
+    build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
+    mongo_collection:get_connection(Collection, Connection),
+    mongo_connection:send_to_server(Connection, BytesSend).
+
 %%  update.
 %
 %   xxxxxxxxxx
 
-update(Coll, Selector, Modifier) :-
-    update(Coll, Selector, Modifier, []).
-
-update(Collection, Selector, Modifier, Options) :-
+update(Collection, Selector, Modifier) :-
     mongo_collection:get_namespace(Collection, Namespace),
-    options_flags(Options, Flags),
+    options_flags([], Flags),
     build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
     mongo_collection:get_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
@@ -55,9 +63,6 @@ build_message_bytes(Namespace, Selector, Modifier, Flags) -->
     mongo_bytes:build_bson_doc(Selector),
     mongo_bytes:build_bson_doc(Modifier).
 
-% Not very sophisticated, but dead simple.
-options_flags([upsert,multi], 3) :- !.
-options_flags([multi,upsert], 3) :- !.
-options_flags([upsert],       1) :- !.
-options_flags([multi],        2) :- !.
-options_flags([],             0) :- !.
+options_flags([upsert], 1) :- !.
+options_flags([multi],  2) :- !.
+options_flags([],       0) :- !.

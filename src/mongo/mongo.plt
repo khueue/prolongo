@@ -22,7 +22,7 @@ test('upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- end_tests('mongo:upsert/3').
 
-:- begin_tests('mongo:update/4').
+:- begin_tests('mongo:update/3').
 
 test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
@@ -32,16 +32,9 @@ test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:find_one(Coll, [hello-me], Doc),
     bson:doc_get(Doc, hello, me).
 
-:- end_tests('mongo:update/4').
+:- end_tests('mongo:update/3').
 
-:- begin_tests('mongo:update/5').
-
-test('update upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
-    mongo:delete(Coll, [hello-world]),
-    mongo:delete(Coll, [hello-me]),
-    mongo:update(Coll, [hello-world], [hello-me], [upsert]),
-    mongo:find_one(Coll, [hello-me], Doc),
-    bson:doc_get(Doc, hello, me).
+:- begin_tests('mongo:update_all/3').
 
 test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
@@ -49,16 +42,16 @@ test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:insert(Coll, [hello-world,num-1]),
     mongo:insert(Coll, [hello-world,num-2]),
     mongo:insert(Coll, [hello-world,num-3]),
-    mongo:update(Coll, [hello-world], ['$inc'-[num-10]], [multi]),
+    mongo:update_all(Coll, [hello-world], ['$inc'-[num-10]]),
     mongo:find(Coll, [hello-world], [], 0, 3, _Cursor, [Doc1,Doc2,Doc3]),
     % XXX Maybe this sort order is not guaranteed?
     bson:doc_get(Doc1, num, 11),
     bson:doc_get(Doc2, num, 12),
     bson:doc_get(Doc3, num, 13).
 
-:- end_tests('mongo:update/5').
+:- end_tests('mongo:update_all/3').
 
-:- begin_tests('mongo:delete/3').
+:- begin_tests('mongo:delete/2').
 
 test('delete', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:insert(Coll, [hello-world]),
@@ -66,9 +59,9 @@ test('delete', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:find(Coll, [hello-world], [], 0, 0, _Cursor2, []).
 
-:- end_tests('mongo:delete/3').
+:- end_tests('mongo:delete/2').
 
-:- begin_tests('mongo:find/8').
+:- begin_tests('mongo:find/7').
 
 test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
@@ -140,9 +133,9 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:find_all(Coll, [hello-world], [number-1], DocsAll),
     lists:length(DocsAll, 1000).
 
-:- end_tests('mongo:find/8').
+:- end_tests('mongo:find/7').
 
-:- begin_tests('mongo:find_one/4,5').
+:- begin_tests('mongo:find_one/3,4').
 
 test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     Doc = [hello-world, number-42],
@@ -165,9 +158,9 @@ test('return fields selector', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     bson:doc_get(Doc1, number, 42),
     \+ bson:doc_get(Doc1, hello, world).
 
-:- end_tests('mongo:find_one/4,5').
+:- end_tests('mongo:find_one/3,4').
 
-:- begin_tests('mongo:insert/3').
+:- begin_tests('mongo:insert/2').
 
 test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     util:ms_since_epoch(MilliSeconds),
@@ -178,7 +171,7 @@ test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     ],
     mongo:insert(Coll, Doc).
 
-:- end_tests('mongo:insert/3').
+:- end_tests('mongo:insert/2').
 
 /*
 :- begin_tests('mongo:command/3').

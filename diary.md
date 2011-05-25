@@ -217,4 +217,4 @@
    which needs to be fixed. Submodules are now fixed. mongo.pl exposes the
    API.
 
- * May 25. Added upsert/3 and test.
+ * May 25. Added upsert/3 and test. Added update_all/3 and test.
