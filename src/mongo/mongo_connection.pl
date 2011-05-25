@@ -17,20 +17,20 @@
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_defaults), []).
 
-%%  new_mongo(-Mongo) is semidet.
-%%  new_mongo(-Mongo, +Host, +Port) is semidet.
+%%  new(-Connection) is semidet.
+%%  new(-Connection, +Host, +Port) is semidet.
 %
 %   xxx True if Mongo represents an opaque handle to a new MongoDB
 %   server connection. Host and Port may be supplied, otherwise
 %   the defaults (see mongo_defaults) are used.
 
-new(Conn) :-
+new(Connection) :-
     mongo_defaults:host(Host),
     mongo_defaults:port(Port),
-    new(Conn, Host, Port).
+    new(Connection, Host, Port).
 
-new(Conn, Host, Port) :-
-    Conn = socket(ReadStream,WriteStream),
+new(Connection, Host, Port) :-
+    Connection = socket(ReadStream,WriteStream),
     setup_call_catcher_cleanup(
         socket:tcp_socket(Socket),
         socket:tcp_connect(Socket, Host:Port),
@@ -38,43 +38,44 @@ new(Conn, Host, Port) :-
         socket:tcp_close_socket(Socket)),
     %call_cleanup(
     socket:tcp_open_socket(Socket, ReadStream, WriteStream).
-    %free_mongo(Mongo)). % Do something on fail to open.
+    %free(Connection)). % Do something on fail to open.
 
-%%  free(+Mongo) is det.
+%%  free(+Connection) is det.
 %
 %   xxx Frees any resources associated with the Mongo handle,
 %   rendering it unusable.
 
-free(Conn) :-
-    get_socket_read(Conn, ReadStream),
-    get_socket_write(Conn, WriteStream),
+free(Connection) :-
+    get_socket_read(Connection, ReadStream),
+    get_socket_write(Connection, WriteStream),
     core:close(ReadStream, [force(true)]),
     core:close(WriteStream, [force(true)]).
 
-%%  get_database.
+%%  get_database(+Connection, +DatabaseName, -Database).
 %
-%   xxxxx
+%   Database is a handle to the database DatabaseName. No communication
+%   is performed so the database might or might not exist.
 
-get_database(Conn, DbName, database(Conn,DbName)).
+get_database(Connection, DatabaseName, database(Connection,DatabaseName)).
 
 % Socket.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-get_socket_read(Conn, ReadStream) :-
-    get_socket(Conn, Socket),
+get_socket_read(Connection, ReadStream) :-
+    get_socket(Connection, Socket),
     util:get_arg(Socket, 1, ReadStream).
 
-get_socket_write(Conn, WriteStream) :-
-    get_socket(Conn, Socket),
+get_socket_write(Connection, WriteStream) :-
+    get_socket(Connection, Socket),
     util:get_arg(Socket, 2, WriteStream).
 
-get_socket(Conn, Conn).
+get_socket(Connection, Connection).
 
 % Send to server.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-send_to_server(Conn, Bytes) :-
-    get_socket_write(Conn, WriteStream),
+send_to_server(Connection, Bytes) :-
+    get_socket_write(Connection, WriteStream),
     send_bytes_and_flush(Bytes, WriteStream).
 
 send_bytes_and_flush(Bytes, WriteStream) :-
@@ -87,12 +88,12 @@ send_bytes(Bytes, WriteStream) :-
 % Read from server.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-read_reply(Mongo, Header, Info, Docs) :-
-    read_from_server(Mongo, Bytes),
+read_reply(Connection, Header, Info, Docs) :-
+    read_from_server(Connection, Bytes),
     parse_response(Bytes, Header, Info, Docs).
 
-read_from_server(Conn, Bytes) :-
-    get_socket_read(Conn, ReadStream),
+read_from_server(Connection, Bytes) :-
+    get_socket_read(Connection, ReadStream),
     read_response_bytes(ReadStream, Bytes).
 
 read_response_bytes(Read, [B0,B1,B2,B3|Bytes]) :-
@@ -137,8 +138,9 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-%%%%%%%%%%%% xxx debug:
+%%%%%%%%%%%% XXX debug:
 
+/*
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
     phrase(inspect_response_paperwork, Bytes, Rest),
@@ -168,3 +170,4 @@ inspect_response_docs([]).
 inspect_response_docs([Doc|Docs]) :-
     bson_format:pp(Doc, 1, '  '), nl,
     inspect_response_docs(Docs).
+*/

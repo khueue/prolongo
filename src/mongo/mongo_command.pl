@@ -61,28 +61,28 @@ command(Mongo, Command, Result) :-
 
 command(Mongo, Coll, Command, Docs) :-
     mongo_get_database(Mongo, Database),
-    full_coll_name(Database, Coll, FullCollName),
-    build_command_message(FullCollName, Command, Message),
+    namespace(Database, Coll, Namespace),
+    build_command_message(Namespace, Command, Message),
     send_to_server(Mongo, Message),
     read_reply(Mongo, _Header, _Info, Docs).
 
-build_command_message(FullCollName, Document, Bytes) :-
-    phrase(c_string(FullCollName), BytesFullCollName),
+build_command_message(Namespace, Document, Bytes) :-
+    phrase(c_string(Namespace), BytesNamespace),
     bson:doc_bytes(Document, BytesDocument),
     phrase(build_command_message_aux(
-        BytesFullCollName, BytesDocument, BytesLength),
+        BytesNamespace, BytesDocument, BytesLength),
         Bytes),
     lists:length(Bytes, Length),
     int32crap(Length, BytesLength).
 
-build_command_message_aux(BytesFullCollName, BytesCommand, BytesLength) -->
+build_command_message_aux(BytesNamespace, BytesCommand, BytesLength) -->
     { BytesLength = [_,_,_,_] },
     BytesLength, % Message length.
     [124,  0,  0,  0], %
     [  0,  0,  0,  0], %
     [212,  7,  0,  0], % 2004: query
     [  0,  0,  0,  0], % flags
-    BytesFullCollName,
+    BytesNamespace,
     [  0,  0,  0,  0], % num skip
     [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
     BytesCommand.

@@ -22,7 +22,7 @@
 
 %%  kill(+Cursor) is det.
 %
-%   True. Tells the database to destroy Cursor, rendering it invalid.
+%   Tells the database to destroy Cursor, rendering it invalid.
 %   Note that executing has_more/1 on the cursor after killing it will still
 %   yield true if true before. Simply do not use after killing.
 
@@ -31,7 +31,7 @@ kill(Cursor) :-
 
 %%  kill_batch(+Cursors) is det.
 %
-%   True. Tells the database to destroy all cursors in Cursors, rendering
+%   Tells the database to destroy all cursors in Cursors, rendering
 %   them invalid. See kill/1.
 %
 %   Caveat: Assumes that all cursors use the same database connection.

@@ -219,4 +219,4 @@
    API.
 
  * May 25. Added upsert/3 and test. Added update_all/3 and test. Added
-   kill_batch/1 and tests.
+   kill_batch/1 and tests. General cleanup and documentation.

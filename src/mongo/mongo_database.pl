@@ -12,14 +12,14 @@
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_util), []).
 
-%%  get_collection.
+%%  get_collection(+Database, +CollectionName, -Collection) is det.
 %
-%   xxxxxxxx
+%   Collection is a handle to the collection CollectionName in Database.
 
-get_collection(Db, CollName, Coll) :-
-    Db = database(_Conn,DbName),
-    Coll = collection(Db,FullCollName),
-    full_coll_name(DbName, CollName, FullCollName).
+get_collection(Database, CollectionName, Collection) :-
+    Database = database(_Connection,DatabaseName),
+    namespace(DatabaseName, CollectionName, Namespace),
+    Collection = collection(Database,Namespace).
 
-full_coll_name(Database, Collection, FullCollName) :-
-    core:atomic_list_concat([Database,Collection], '.', FullCollName).
+namespace(Database, CollectionName, Namespace) :-
+    core:atomic_list_concat([Database,CollectionName], '.', Namespace).
