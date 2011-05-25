@@ -1,6 +1,7 @@
 :- module(mongo_bytes,
     [
         int32/3,
+        int32s/3,
         int64/3,
         int64s/3,
         c_string/3,
