@@ -142,19 +142,15 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 :- begin_tests('mongo:find_one/3,4').
 
 test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
-    Doc = [hello-world, number-42],
-    mongo:insert(Coll, Doc),
-    mongo:find_one(Coll, Doc, Doc1),
-    bson:doc_get(Doc1, number, 42).
-
-test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
-    Doc = [hello-world, number-42],
+    Doc = [hello-world,number-42],
+    mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, Doc),
     mongo:find_one(Coll, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
 test('return fields selector', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
-    Doc = [hello-world, number-42],
+    Doc = [hello-world,number-42],
+    mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, Doc),
     Fields = [number-1],
     mongo:find_one(Coll, Doc, Fields, Doc1),
@@ -173,6 +169,7 @@ test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
         hello - [åäö,5.05],
         now   - utc(MilliSeconds)
     ],
+    mongo:delete(Coll, [hello-[åäö,5.05]]),
     mongo:insert(Coll, Doc).
 
 :- end_tests('mongo:insert/2').
