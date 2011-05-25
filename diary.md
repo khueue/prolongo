@@ -49,10 +49,10 @@
  * April 4. Refactored decoder slightly. Added relation term_bson/2 to bson,
    which calls necessary subpredicate. Moved tests into separate files: they
    were getting too long, and separating them makes it easier to write them
-   simultaneously. As long as tests and implementation are close to each other,
-   I am okay. (Impl in .pl and tests in .plt next to each other.) The decoder
-   should now be feature complete. It does minimal error checking, but it
-   should be able to parse all element types. It might still need some
+   simultaneously. As long as tests and implementation are close to each
+   other, I am okay. (Impl in .pl and tests in .plt next to each other.) The
+   decoder should now be feature complete. It does minimal error checking,
+   but it should be able to parse all element types. It might still need some
    cleaning though. Added version predicates to bson. Made comments more
    in line with PlDoc.
 
@@ -175,9 +175,9 @@
    cursors now I think.
 
  * May 3. Implemented general predicates to convert between lists of
-   documents and their bytes, and back-and-forth. This will hopefully be useful
-   when parsing database responses that contain an arbitrary sequence of
-   bytes that represent several documents. Should cleanup the creating and
+   documents and their bytes, and back-and-forth. This will hopefully be
+   useful when parsing database responses that contain an arbitrary sequence
+   of bytes that represent several documents. Should cleanup the creating and
    reading of socket documents. And try to implement cursors.
 
  * May 4. Mostly worked on mongo:find_one/4. It should work. But still
@@ -207,10 +207,11 @@
    neat this. Feels like I am really getting somewhere, finally. Having a
    real workplace also feels pretty good. I can just sit down and work.
 
- * May 24. Added missing insert batch. Should perhaps create several predicates
-   for the different updates (upsert/multi) instead of passing options. Will
-   make the API predicates nicer and more readable. Added option keep_going to
-   batch insert. Started major refactoring of mongo.pl. It is going pretty good.
+ * May 24. Added missing insert batch. Should perhaps create several
+   predicates for the different updates (upsert/multi) instead of passing
+   options. Will make the API predicates nicer and more readable. Added option
+   keep_going to batch insert. Started major refactoring of mongo.pl. It is
+   going pretty good.
    Operation major cleanup is pretty much finished. Now I have lots of small
    and cohesive files. Just need to wrap it all in mongo.pl, to provide a
    nice interface again. Also, the tests are now asking submodules directly,
