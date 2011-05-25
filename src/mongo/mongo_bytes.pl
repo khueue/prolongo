@@ -2,6 +2,7 @@
     [
         int32/3,
         int64/3,
+        int64s/3,
         c_string/3,
         build_header/5,
         build_bson_doc/3,
@@ -20,6 +21,11 @@
 int32(Int) -->
     [B0,B1,B2,B3],
     { bson_bits:integer_bytes(Int, 4, little, [B0,B1,B2,B3]) }.
+
+int64s([]) --> [].
+int64s([Int|Ints]) -->
+    int64(Int),
+    int64s(Ints).
 
 % Can parse or construct.
 int64(Int) -->

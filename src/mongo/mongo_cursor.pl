@@ -27,30 +27,35 @@
 
 kill_batch([]) :- !.
 kill_batch(Cursors) :-
-    Cursors = [cursor(Collection,_)|_],
     lists:length(Cursors, NumCursors),
-    build_bytes_cursor_kill(CursorId, Bytes),
+    extract_cursor_ids(Cursors, CursorIds),
+    build_bytes_for_kill_batch(NumCursors, CursorIds, BytesToSend),
+    Cursors = [cursor(Collection,_)|_],
     mongo_collection:get_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, Bytes).
+    mongo_connection:send_to_server(Connection, BytesToSend).
+
+extract_cursor_ids([], []).
+extract_cursor_ids([cursor(_Coll,Id)|Cursors], [Id|Ids]) :-
+    extract_cursor_ids(Cursors, Ids).
+
+build_bytes_for_kill_batch(NumCursors, CursorIds, Bytes) :-
+    phrase(build_bytes_for_kill_batch(NumCursors, CursorIds), Bytes),
+    mongo_bytes:count_bytes_and_set_length(Bytes).
+
+build_bytes_for_kill_batch(NumCursors, CursorIds) -->
+    mongo_bytes:build_header(4567, 4567, 2007),
+    mongo_bytes:int32(0), % ZERO.
+    mongo_bytes:int32(NumCursors),
+    mongo_bytes:int64s(CursorIds).
 
 %%  kill(+Cursor) is det.
 %
-%   True. Destroys Cursor, rendering it unusable.
+%   True. Tells the database to destroy Cursor, rendering it invalid.
+%   Note that executing has_more(Cursor) after killing it will still
+%   be true if it was true before.
 
-kill(cursor(Collection,CursorId)) :-
-    build_bytes_for_kill(CursorId, Bytes),
-    mongo_collection:get_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, Bytes).
-
-build_bytes_for_kill(CursorId, Bytes) :-
-    phrase(build_bytes_for_kill(CursorId), Bytes),
-    mongo_bytes:count_bytes_and_set_length(Bytes).
-
-build_bytes_for_kill(CursorId) -->
-    mongo_bytes:build_header(4567, 4567, 2007),
-    mongo_bytes:int32(0), % ZERO.
-    mongo_bytes:int32(1), % Number of cursor IDs.
-    mongo_bytes:int64(CursorId). % Cursor IDs.
+kill(Cursor) :-
+    kill_batch([Cursor]).
 
 %%  get_more(+Cursor, +Limit, -Docs, -NewCursor).
 %

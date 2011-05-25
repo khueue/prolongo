@@ -11,6 +11,11 @@ up(Conn, Coll) :-
 down(Conn) :-
     mongo:free(Conn).
 
+create_n_docs(0, []) :- !.
+create_n_docs(N, [[hello-world,number-N]|Docs]) :-
+    N1 is N - 1,
+    create_n_docs(N1, Docs).
+
 :- begin_tests('mongo:upsert/3').
 
 test('upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
@@ -125,11 +130,6 @@ test('insert batch, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))])
     lists:length(DocsRest, N),
     1000 is N0 + N.
 
-create_n_docs(0, []) :- !.
-create_n_docs(N, [[hello-world,number-N]|Docs]) :-
-    N1 is N - 1,
-    create_n_docs(N1, Docs).
-
 test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
     create_n_docs(1000, Docs),
@@ -138,6 +138,32 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     lists:length(DocsAll, 1000).
 
 :- end_tests('mongo:find/7').
+
+:- begin_tests('mongo:kill/1'). % xxx name?
+
+test('cursor kill', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:delete(Coll, [hello-world]),
+    create_n_docs(20, Docs),
+    mongo:insert_batch(Coll, [], Docs),
+    mongo:find(Coll, [hello-world], [], 0, 10, Cursor, _NotAllDocs),
+    mongo:kill(Cursor),
+    mongo:get_more(Cursor, 10, [], _Cursor1).
+
+:- end_tests('mongo:kill/1').
+
+:- begin_tests('mongo:kill_batch/1'). % xxx name?
+
+test('cursor kill batch', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:delete(Coll, [hello-world]),
+    create_n_docs(20, Docs),
+    mongo:insert_batch(Coll, [], Docs),
+    mongo:find(Coll, [hello-world], [], 0, 10, Cursor1, _NotAllDocs1),
+    mongo:find(Coll, [hello-world], [], 0, 10, Cursor2, _NotAllDocs2),
+    mongo:kill_batch([Cursor1,Cursor2]),
+    mongo:get_more(Cursor1, 10, [], _Cursor11),
+    mongo:get_more(Cursor2, 10, [], _Cursor22).
+
+:- end_tests('mongo:kill_batch/1').
 
 :- begin_tests('mongo:find_one/3,4').
 
