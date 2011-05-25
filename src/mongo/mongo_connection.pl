@@ -55,7 +55,7 @@ free(Conn) :-
 %
 %   xxxxx
 
-get_database(Conn, DbName, db(Conn,DbName)).
+get_database(Conn, DbName, database(Conn,DbName)).
 
 % Socket.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

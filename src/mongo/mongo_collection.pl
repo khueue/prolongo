@@ -16,10 +16,10 @@
 %
 %   xxxxxxxx
 
-get_namespace(coll(_Db,FullCollName), FullCollName).
+get_namespace(collection(_Db,FullCollName), FullCollName).
 
 %%  get_connection.
 %
 %   xxxxxxxx
 
-get_connection(coll(db(Conn,_DbName),_FullCollName), Conn).
+get_connection(collection(database(Conn,_DbName),_FullCollName), Conn).
