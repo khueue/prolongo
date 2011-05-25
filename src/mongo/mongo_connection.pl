@@ -1,8 +1,8 @@
 :- module(mongo_connection,
     [
-        new/1,
-        new/3,
-        free/1,
+        new_connection/1,
+        new_connection/3,
+        free_connection/1,
         get_database/3,
         send_to_server/2,
         read_reply/4
@@ -17,19 +17,19 @@
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_defaults), []).
 
-%%  new(-Connection) is semidet.
-%%  new(-Connection, +Host, +Port) is semidet.
+%%  new_connection(-Connection) is semidet.
+%%  new_connection(-Connection, +Host, +Port) is semidet.
 %
 %   xxx True if Mongo represents an opaque handle to a new MongoDB
 %   server connection. Host and Port may be supplied, otherwise
 %   the defaults (see mongo_defaults) are used.
 
-new(Connection) :-
+new_connection(Connection) :-
     mongo_defaults:host(Host),
     mongo_defaults:port(Port),
-    new(Connection, Host, Port).
+    new_connection(Connection, Host, Port).
 
-new(Connection, Host, Port) :-
+new_connection(Connection, Host, Port) :-
     Connection = socket(ReadStream,WriteStream),
     setup_call_catcher_cleanup(
         socket:tcp_socket(Socket),
@@ -38,14 +38,14 @@ new(Connection, Host, Port) :-
         socket:tcp_close_socket(Socket)),
     %call_cleanup(
     socket:tcp_open_socket(Socket, ReadStream, WriteStream).
-    %free(Connection)). % Do something on fail to open.
+    %free_connection(Connection)). % Do something on fail to open.
 
-%%  free(+Connection) is det.
+%%  free_connection(+Connection) is det.
 %
 %   xxx Frees any resources associated with the Mongo handle,
 %   rendering it unusable.
 
-free(Connection) :-
+free_connection(Connection) :-
     get_socket_read(Connection, ReadStream),
     get_socket_write(Connection, WriteStream),
     core:close(ReadStream, [force(true)]),
@@ -54,9 +54,10 @@ free(Connection) :-
 %%  get_database(+Connection, +DatabaseName, -Database).
 %
 %   Database is a handle to the database DatabaseName. No communication
-%   is performed so the database might or might not exist.
+%   is performed so the actual database might or might not exist.
 
-get_database(Connection, DatabaseName, database(Connection,DatabaseName)).
+get_database(Connection, DatabaseName, Database) :-
+    mongo_database:new_database(Connection, DatabaseName, Database).
 
 % Socket.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,9 +139,10 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-%%%%%%%%%%%% XXX debug:
-
 /*
+
+%%% XXX DEBUG:
+
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
     phrase(inspect_response_paperwork, Bytes, Rest),
@@ -170,4 +172,5 @@ inspect_response_docs([]).
 inspect_response_docs([Doc|Docs]) :-
     bson_format:pp(Doc, 1, '  '), nl,
     inspect_response_docs(Docs).
+
 */

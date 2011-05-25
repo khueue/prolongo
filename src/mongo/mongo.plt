@@ -4,12 +4,12 @@
 :- use_module(misc(util), []).
 
 up(Conn, Coll) :-
-    mongo:new(Conn),
+    mongo:new_connection(Conn),
     mongo:get_database(Conn, 'prolongo', Db),
     mongo:get_collection(Db, 'testcoll', Coll).
 
 down(Conn) :-
-    mongo:free(Conn).
+    mongo:free_connection(Conn).
 
 create_n_docs(0, []) :- !.
 create_n_docs(N, [[hello-world,number-N]|Docs]) :-

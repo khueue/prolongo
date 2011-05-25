@@ -1,7 +1,9 @@
 :- module(mongo_collection,
     [
-        get_namespace/2,
-        get_connection/2
+        new_collection/3,
+        collection_database/2,
+        collection_namespace/2,
+        collection_connection/2
     ]).
 
 /** <module> xxxxxxxxx
@@ -12,14 +14,24 @@
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 
-%%  get_namespace.
+%%  collection_get_database.
 %
-%   xxxxxxxx
+%   xxxxxxxxx
 
-get_namespace(collection(_Db,Namespace), Namespace).
+new_collection(Database, CollectionName, Collection) :-
+    mongo_database:database_name(Database, DatabaseName),
+    namespace_atom(DatabaseName, CollectionName, Namespace),
+    Collection = collection(Database,Namespace).
 
-%%  get_connection.
-%
-%   xxxxxxxx
+collection_database(Collection, Database) :-
+    util:get_arg(Collection, 1, Database).
 
-get_connection(collection(database(Conn,_DbName),_Namespace), Conn).
+collection_namespace(Collection, Namespace) :-
+    util:get_arg(Collection, 2, Namespace).
+
+collection_connection(Collection, Connection) :-
+    collection_database(Collection, Database),
+    mongo_database:database_connection(Database, Connection).
+
+namespace_atom(DatabaseName, CollectionName, Namespace) :-
+    core:atomic_list_concat([DatabaseName,CollectionName], '.', Namespace).

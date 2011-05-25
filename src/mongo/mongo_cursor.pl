@@ -42,7 +42,7 @@ kill_batch(Cursors) :-
     extract_cursor_ids(Cursors, CursorIds),
     build_bytes_for_kill_batch(NumCursors, CursorIds, BytesToSend),
     Cursors = [cursor(Collection,_)|_],
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
 extract_cursor_ids([], []).
@@ -64,9 +64,9 @@ build_bytes_for_kill_batch(NumCursors, CursorIds) -->
 %   xxxxxxxx
 
 get_more(cursor(Collection,CursorId), Limit, Docs, cursor(Collection,CursorId1)) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     build_bytes_for_get_more(Namespace, Limit, CursorId, BytesToSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
     Info = info(_Flags,CursorId1,_StartingFrom,_NumberReturned).

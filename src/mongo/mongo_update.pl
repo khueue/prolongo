@@ -23,10 +23,10 @@
 %   xxxxxxxxxx
 
 upsert(Collection, Selector, Modifier) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([upsert], Flags),
     build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
 %%  update_all.
@@ -34,10 +34,10 @@ upsert(Collection, Selector, Modifier) :-
 %   xxxxxxxxxx
 
 update_all(Collection, Selector, Modifier) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([multi], Flags),
     build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
 %%  update.
@@ -45,10 +45,10 @@ update_all(Collection, Selector, Modifier) :-
 %   xxxxxxxxxx
 
 update(Collection, Selector, Modifier) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     options_flags([], Flags),
     build_message_bytes(Namespace, Selector, Modifier, Flags, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
 build_message_bytes(Namespace, Selector, Modifier, Flags, Bytes) :-

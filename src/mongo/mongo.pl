@@ -12,15 +12,15 @@
 
 :- reexport(mongo(mongo_connection),
     [
-        new/1,
-        new/3,
-        free/1,
+        new_connection/1,
+        new_connection/3,
+        free_connection/1,
         get_database/3
     ]).
 :- reexport(mongo(mongo_collection),
     [
-        get_namespace/2,
-        get_connection/2
+        collection_namespace/2,
+        collection_connection/2
     ]).
 :- reexport(mongo(mongo_database),
     [

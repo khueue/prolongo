@@ -21,10 +21,10 @@ insert(Collection, Doc) :-
     insert_batch(Collection, [], [Doc]).
 
 insert_batch(Collection, Options, Docs) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     insert_batch_options_flags(Options, Flags),
     build_insert_batch_bytes(Namespace, Flags, Docs, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
 insert_batch_options_flags([keep_going], 1) :- !.

@@ -21,9 +21,9 @@
 %   xxxxxxxxxx
 
 delete(Collection, Selector) :-
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     build_bytes_for_delete_message(Namespace, Selector, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend).
 
 build_bytes_for_delete_message(Namespace, Selector, Bytes) :-

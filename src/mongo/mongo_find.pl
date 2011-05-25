@@ -41,9 +41,9 @@ find_all(Collection, Query, ReturnFields) -->
 
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
     Cursor = cursor(Collection,CursorId),
-    mongo_collection:get_namespace(Collection, Namespace),
+    mongo_collection:collection_namespace(Collection, Namespace),
     build_find_bytes(Namespace, Query, ReturnFields, Skip, Limit, BytesSend),
-    mongo_collection:get_connection(Collection, Connection),
+    mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
     Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned).
