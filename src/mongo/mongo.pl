@@ -36,6 +36,7 @@
 :- reexport(mongo(mongo_cursor),
     [
         kill/1,
+        kill_batch/1,
         get_more/4,
         has_more/1,
         exhaust/2
