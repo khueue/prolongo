@@ -18,7 +18,7 @@
 :- use_module(mongo(mongo_defaults), []).
 
 %%  new_connection(-Connection) is semidet.
-%%  new_connection(-Connection, +Host, +Port) is semidet.
+%%  new_connection(+Host, +Port, -Connection) is semidet.
 %
 %   xxx True if Mongo represents an opaque handle to a new MongoDB
 %   server connection. Host and Port may be supplied, otherwise
@@ -27,18 +27,21 @@
 new_connection(Connection) :-
     mongo_defaults:host(Host),
     mongo_defaults:port(Port),
-    new_connection(Connection, Host, Port).
+    new_connection(Host, Port, Connection).
 
-new_connection(Connection, Host, Port) :-
-    Connection = socket(ReadStream,WriteStream),
+new_connection(Host, Port, Connection) :-
+    new_socket(Host, Port, Socket),
+    Connection = connection(Socket).
+
+% XXX Make sure something is done on all possible failures.
+new_socket(Host, Port, Socket) :-
     setup_call_catcher_cleanup(
-        socket:tcp_socket(Socket),
-        socket:tcp_connect(Socket, Host:Port),
+        socket:tcp_socket(Sock),
+        socket:tcp_connect(Sock, Host:Port),
         exception(_),
-        socket:tcp_close_socket(Socket)),
-    %call_cleanup(
-    socket:tcp_open_socket(Socket, ReadStream, WriteStream).
-    %free_connection(Connection)). % Do something on fail to open.
+        socket:tcp_close_socket(Sock)),
+    socket:tcp_open_socket(Sock, ReadStream, WriteStream),
+    Socket = socket(ReadStream,WriteStream).
 
 %%  free_connection(+Connection) is det.
 %
@@ -70,7 +73,8 @@ get_socket_write(Connection, WriteStream) :-
     get_socket(Connection, Socket),
     util:get_arg(Socket, 2, WriteStream).
 
-get_socket(Connection, Connection).
+get_socket(Connection, Socket) :-
+    util:get_arg(Connection, 1, Socket).
 
 % Send to server.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
