@@ -17,6 +17,7 @@
 :- use_module(misc(util), []).
 
 command_collection('$cmd').
+namespace_collection('system.namespaces').
 admin_database('admin').
 
 %%  drop_database.
@@ -74,17 +75,6 @@ repack_database_infos([], []).
 repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
     repack_database_infos(Infos, Names).
 
-/*
-    Command = [listDatabases-1],
-    use_database(Mongo, admin, Mongo1),
-    command(Mongo1, Command, Result),
-    bson:doc_get(Result, databases, DatabaseInfoArray),
-    repack_database_infos(DatabaseInfoArray, DatabaseInfos).
-    mongo_database:get_collection(Database, 'system.namespaces', Collection),
-    mongo_find:find_all(Collection, [], [], CollectionInfos),
-    repack_collection_names(CollectionInfos, Names).
-*/
-
 %%  list_commands.
 %
 %   xxxxxxxxxx
@@ -99,7 +89,8 @@ list_commands(Database, Result) :-
 %   xxxxxxxxxxxxxxx
 
 list_collection_names(Database, Names) :-
-    mongo_database:get_collection(Database, 'system.namespaces', Collection),
+    namespace_collection(CollNamespacesName),
+    mongo_database:get_collection(Database, CollNamespacesName, Collection),
     mongo_find:find_all(Collection, [], [], CollectionInfos),
     repack_collection_names(CollectionInfos, Names).
 
