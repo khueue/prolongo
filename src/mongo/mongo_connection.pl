@@ -76,8 +76,9 @@ get_socket_write(Connection, WriteStream) :-
 get_socket(Connection, Socket) :-
     util:get_arg(Connection, 1, Socket).
 
-% Send to server.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  send_to_server.
+%
+%   xxxxxxxxx
 
 send_to_server(Connection, Bytes) :-
     get_socket_write(Connection, WriteStream),
@@ -90,8 +91,9 @@ send_bytes_and_flush(Bytes, WriteStream) :-
 send_bytes(Bytes, WriteStream) :-
     core:format(WriteStream, '~s', [Bytes]).
 
-% Read from server.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  read_reply.
+%
+%   xxxxxxxx
 
 read_reply(Connection, Header, Info, Docs) :-
     read_from_server(Connection, Bytes),
@@ -101,12 +103,17 @@ read_from_server(Connection, Bytes) :-
     get_socket_read(Connection, ReadStream),
     read_response_bytes(ReadStream, Bytes).
 
-read_response_bytes(Read, [B0,B1,B2,B3|Bytes]) :-
-    read_n_bytes(Read, 4, BytesForLen),
-    BytesForLen = [B0,B1,B2,B3],
-    bson_bits:integer_bytes(Len, 4, little, BytesForLen),
-    LenBut4 is Len - 4,
-    read_n_bytes(Read, LenBut4, Bytes).
+read_response_bytes(ReadStream, [B0,B1,B2,B3|Bytes]) :-
+    read_message_length(ReadStream, [B0,B1,B2,B3], Length),
+    read_rest_of_message(ReadStream, Length, Bytes).
+
+read_message_length(ReadStream, Bytes, Length) :-
+    read_n_bytes(ReadStream, 4, Bytes),
+    bson_bits:integer_bytes(Length, 4, little, Bytes).
+
+read_rest_of_message(ReadStream, Length, Bytes) :-
+    LengthRest is Length - 4,
+    read_n_bytes(ReadStream, LengthRest, Bytes).
 
 read_n_bytes(_ReadStream, 0, []) :- !.
 read_n_bytes(ReadStream, N, [Byte|Bytes]) :-
