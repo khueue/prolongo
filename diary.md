@@ -222,3 +222,5 @@
    kill_batch/1 and tests. General cleanup and documentation. Started
    encapsulating structures properly. Tomorrow, maybe clean up comm. with
    server into send/2 and receive/2. Encapsulate cursor.
+
+ * May 26. Encapsulated cursor. Some socket cleanup.

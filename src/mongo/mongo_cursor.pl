@@ -20,6 +20,15 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
+new_cursor(Collection, CursorId, Cursor) :-
+    Cursor = cursor(Collection, CursorId).
+
+cursor_collection(Cursor, Collection) :-
+    util:get_arg(Cursor, 1, Collection).
+
+cursor_id(Cursor, CursorId) :-
+    util:get_arg(Cursor, 2, CursorId).
+
 %%  kill(+Cursor) is det.
 %
 %   Tells the database to destroy Cursor, rendering it invalid.
@@ -41,12 +50,14 @@ kill_batch(Cursors) :-
     lists:length(Cursors, NumCursors),
     extract_cursor_ids(Cursors, CursorIds),
     build_bytes_for_kill_batch(NumCursors, CursorIds, BytesToSend),
-    Cursors = [cursor(Collection,_)|_],
+    Cursors = [Cursor|_],
+    cursor_collection(Cursor, Collection),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
 extract_cursor_ids([], []).
-extract_cursor_ids([cursor(_Coll,Id)|Cursors], [Id|Ids]) :-
+extract_cursor_ids([Cursor|Cursors], [Id|Ids]) :-
+    cursor_id(Cursor, Id),
     extract_cursor_ids(Cursors, Ids).
 
 build_bytes_for_kill_batch(NumCursors, CursorIds, Bytes) :-
@@ -63,13 +74,16 @@ build_bytes_for_kill_batch(NumCursors, CursorIds) -->
 %
 %   xxxxxxxx
 
-get_more(cursor(Collection,CursorId), Limit, Docs, cursor(Collection,CursorId1)) :-
+get_more(Cursor, Limit, Docs, NewCursor) :-
+    cursor_collection(Cursor, Collection),
+    cursor_id(Cursor, CursorId),
     mongo_collection:collection_namespace(Collection, Namespace),
     build_bytes_for_get_more(Namespace, Limit, CursorId, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
-    Info = info(_Flags,CursorId1,_StartingFrom,_NumberReturned).
+    Info = info(_Flags,CursorId1,_StartingFrom,_NumberReturned),
+    new_cursor(Collection, CursorId1, NewCursor).
 
 build_bytes_for_get_more(Namespace, Limit, CursorId, Bytes) :-
     phrase(build_bytes_for_get_more(Namespace, Limit, CursorId), Bytes),
@@ -86,7 +100,8 @@ build_bytes_for_get_more(Namespace, Limit, CursorId) -->
 %
 %   True if Cursor might have unfetched documents.
 
-has_more(cursor(_Collection,CursorId)) :-
+has_more(Cursor) :-
+    cursor_id(Cursor, CursorId),
     CursorId \== 0.
 
 %%  exhaust(+Cursor, -Docs) is det.

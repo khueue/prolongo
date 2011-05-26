@@ -41,13 +41,13 @@ find_all(Collection, Query, ReturnFields) -->
 
 % XXX Need to implement the flags.
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
-    Cursor = cursor(Collection,CursorId),
     mongo_collection:collection_namespace(Collection, Namespace),
     build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
-    Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned).
+    Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned),
+    mongo_cursor:new_cursor(Collection, CursorId, Cursor).
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Bytes) :-
     phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit), Bytes),
