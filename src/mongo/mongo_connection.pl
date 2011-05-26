@@ -38,8 +38,12 @@ new_socket(Host, Port, Socket) :-
         socket:tcp_socket(SocketId),
         socket:tcp_connect(SocketId, Host:Port, ReadStream, WriteStream),
         exception(_),
-        socket:tcp_close_socket(SocketId)),
+        close_socket_and_throw(SocketId)),
     Socket = socket(ReadStream,WriteStream).
+
+close_socket_and_throw(SocketId) :-
+    socket:tcp_close_socket(SocketId),
+    throw(mongo_error('could not connect to server')).
 
 %%  free_connection(+Connection) is det.
 %
