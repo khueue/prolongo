@@ -200,7 +200,7 @@ test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- end_tests('mongo:insert/2').
 
-:- begin_tests('mongo:command/3').
+:- begin_tests('mongo commands').
 
 test('list commands', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:collection_database(Coll, Database),
@@ -230,4 +230,4 @@ test('drop database', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:collection_database(Coll, Database),
     mongo:drop_database(Database).
 
-:- end_tests('mongo:command/3').
+:- end_tests('mongo commands').
