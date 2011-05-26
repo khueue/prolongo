@@ -3,7 +3,8 @@
         list_commands/2,
         list_collection_names/2,
         list_database_infos/2,
-        list_database_names/2
+        list_database_names/2,
+        drop_collection/1
     ]).
 
 /** <module> xxxxxxx
@@ -47,6 +48,22 @@ drop_database(Mongo, Database, Result) :-
     use_database(Mongo, Database, Mongo1),
     command(Mongo1, Command, Result).
 */
+
+%%  drop_collection.
+%
+%   xxxxxxxxx
+
+drop_collection(Collection) :-
+    mongo_collection:collection_name(Collection, CollectionName),
+    mongo_collection:collection_database(Collection, Database),
+    command_collection(CommandCollectionName),
+    mongo_database:get_collection(Database, CommandCollectionName, CommandCollection),
+    mongo_find:find_one(CommandCollection, [drop-CollectionName], [], Doc),
+    doc_ok(Doc),
+    !.
+drop_collection(Collection) :-
+    mongo_collection:collection_name(Collection, CollectionName),
+    throw(mongo_error('could not drop collection', CollectionName)).
 
 %%  list_database_names.
 %

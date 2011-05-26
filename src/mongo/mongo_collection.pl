@@ -2,6 +2,7 @@
     [
         new_collection/3,
         collection_database/2,
+        collection_name/2,
         collection_namespace/2,
         collection_connection/2
     ]).
@@ -25,6 +26,11 @@ new_collection(Database, CollectionName, Collection) :-
 
 collection_database(Collection, Database) :-
     util:get_arg(Collection, 1, Database).
+
+collection_name(Collection, CollectionName) :-
+    collection_namespace(Collection, Namespace),
+    core:atomic_list_concat([_|L], '.', Namespace), % xxx factor out
+    core:atomic_list_concat(L, '.', CollectionName).
 
 collection_namespace(Collection, Namespace) :-
     util:get_arg(Collection, 2, Namespace).

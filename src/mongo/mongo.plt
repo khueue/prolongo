@@ -221,21 +221,12 @@ test('list database infos', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
 test('list database names', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
     mongo:list_database_names(Conn, Names),
     lists:member(prolongo, Names),
-    !.
+    !. % Not interested in member choices.
+
+test('drop collection', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:drop_collection(Coll).
 
 /*
-test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_database_infos(Mongo, DatabaseInfos),
-    database(Database),
-    bson:doc_get(DatabaseInfos, Database, Info),
-    Info \== +null.
-    %bson_format:pp(DatabaseInfos), nl.
-
-test('list database names', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    mongo:list_database_names(Mongo, DatabaseNames),
-    database(Database),
-    core:memberchk(Database, DatabaseNames).
-
 test('drop collection',
 [
     setup(up(Mongo)),

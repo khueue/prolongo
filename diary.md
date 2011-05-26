@@ -229,3 +229,4 @@
    was found or not (it fails if not). Reimplemented
    list_database_[infos|names] and added tests. Need to fix drop collection
    and such, but other than that their are not that many more commands to fix.
+   Added drop_collection and test.
