@@ -40,7 +40,7 @@ kill(Cursor) :-
 
 %%  kill_batch(+Cursors) is det.
 %
-%   Tells the database to destroy all cursors in Cursors, rendering
+%   Tells the database to destroy all cursors in list Cursors, rendering
 %   them invalid. See kill/1.
 %
 %   Caveat: Assumes that all cursors use the same database connection.
