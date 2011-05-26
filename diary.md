@@ -228,6 +228,9 @@
    bson:doc_get_strict/3, because it is sometimes nice to know if the key
    was found or not (it fails if not). Reimplemented
    list_database_[infos|names] and added tests. Need to fix drop collection
-   and such, but other than that their are not that many more commands to fix.
+   and such, but other than that there are not that many more commands to fix.
    Added drop_collection and test. Added drop_database and test. Will probably
-   not add any more commands for now.
+   not add any more commands for now. Should maybe refactor the commands a
+   bit. I think there are common factors such as getting the command
+   collection. And a thought: should mongo_command.pl be removed and its
+   predicates moved into the modules on which you call them?
