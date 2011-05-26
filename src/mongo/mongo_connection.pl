@@ -33,13 +33,12 @@ new_connection(Host, Port, Connection) :-
     new_socket(Host, Port, Socket),
     Connection = connection(Socket).
 
-% XXX Make sure something is done on all possible failures.
 new_socket(Host, Port, Socket) :-
     setup_call_catcher_cleanup(
-        socket:tcp_socket(Sock),
-        socket:tcp_connect(Sock, Host:Port, ReadStream, WriteStream),
+        socket:tcp_socket(SocketId),
+        socket:tcp_connect(SocketId, Host:Port, ReadStream, WriteStream),
         exception(_),
-        socket:tcp_close_socket(Sock)),
+        socket:tcp_close_socket(SocketId)),
     Socket = socket(ReadStream,WriteStream).
 
 %%  free_connection(+Connection) is det.
@@ -48,8 +47,10 @@ new_socket(Host, Port, Socket) :-
 %   rendering it unusable.
 
 free_connection(Connection) :-
-    get_socket_read(Connection, ReadStream),
-    get_socket_write(Connection, WriteStream),
+    get_socket(Connection, Socket),
+    free_socket(Socket).
+
+free_socket(socket(ReadStream,WriteStream)) :-
     core:close(ReadStream, [force(true)]),
     core:close(WriteStream, [force(true)]).
 
