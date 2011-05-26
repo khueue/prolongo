@@ -23,6 +23,7 @@
     ]).
 :- reexport(mongo(mongo_collection),
     [
+        collection_database/2
     ]).
 :- reexport(mongo(mongo_find),
     [
@@ -53,6 +54,11 @@
 :- reexport(mongo(mongo_delete),
     [
         delete/2
+    ]).
+:- reexport(mongo(mongo_command),
+    [
+        list_commands/2,
+        list_collection_names/2
     ]).
 
 :- include(misc(common)).

@@ -1,5 +1,7 @@
 :- module(mongo_command,
     [
+        list_commands/2,
+        list_collection_names/2
     ]).
 
 /** <module> xxxxxxx
@@ -7,7 +9,10 @@
 
 :- include(misc(common)).
 
-command_namespace('$cmd').
+:- use_module(bson(bson), []).
+:- use_module(misc(util), []).
+
+command_collection('$cmd').
 
 doc_ok(Doc) :-
     bson:doc_get(Doc, ok, Value),
@@ -18,14 +23,17 @@ doc_ok_value(1.0).
 doc_ok_value(1).
 doc_ok_value(+true).
 
-list_collection_names(Mongo, Names) :-
-    Command = [],
-    mongo:command(Mongo, 'system.namespaces', Command, Result),
-    repack_collection_names(Result, Names).
+/*
+command(Database, Command, Result) :-
+    command_namespace(CommandNamespace),
+    command(Mongo, CommandNamespace, Command, Result).
 
-repack_collection_names([], []).
-repack_collection_names([[name-Name]|Pairs], [Name|Names]) :-
-    repack_collection_names(Pairs, Names).
+command(Mongo, Coll, Command, Docs) :-
+    mongo_get_database(Mongo, Database),
+    namespace(Database, Coll, Namespace),
+    build_command_message(Namespace, Command, Message),
+    send_to_server(Mongo, Message),
+    read_reply(Mongo, _Header, _Info, Docs).
 
 drop_collection(Mongo, Collection, Result) :-
     Command = [drop-Collection],
@@ -35,10 +43,6 @@ drop_database(Mongo, Database, Result) :-
     Command = [dropDatabase-1],
     use_database(Mongo, Database, Mongo1),
     command(Mongo1, Command, Result).
-
-list_commands(Mongo, Result) :-
-    Command = [listCommands-1],
-    command(Mongo, Command, Result).
 
 list_database_infos(Mongo, DatabaseInfos) :-
     Command = [listDatabases-1],
@@ -54,35 +58,40 @@ repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
 list_database_names(Mongo, DatabaseNames) :-
     list_database_infos(Mongo, DatabaseInfos),
     bson:doc_keys(DatabaseInfos, DatabaseNames).
+*/
 
-command(Mongo, Command, Result) :-
-    command_namespace(CommandNamespace),
-    command(Mongo, CommandNamespace, Command, Result).
+%%  list_commands.
+%
+%   xxxxxxxxxx
 
-command(Mongo, Coll, Command, Docs) :-
-    mongo_get_database(Mongo, Database),
-    namespace(Database, Coll, Namespace),
-    build_command_message(Namespace, Command, Message),
-    send_to_server(Mongo, Message),
-    read_reply(Mongo, _Header, _Info, Docs).
+list_commands(Database, Result) :-
+    command_collection(CollectionName),
+    mongo_database:get_collection(Database, CollectionName, Collection),
+    mongo_find:find_one(Collection, [listCommands-1], [commands-1], Result).
 
-build_command_message(Namespace, Document, Bytes) :-
-    phrase(c_string(Namespace), BytesNamespace),
-    bson:doc_bytes(Document, BytesDocument),
-    phrase(build_command_message_aux(
-        BytesNamespace, BytesDocument, BytesLength),
-        Bytes),
-    lists:length(Bytes, Length),
-    int32crap(Length, BytesLength).
+%%  list_collection_names.
+%
+%   xxxxxxxxxxxxxxx
 
-build_command_message_aux(BytesNamespace, BytesCommand, BytesLength) -->
-    { BytesLength = [_,_,_,_] },
-    BytesLength, % Message length.
-    [124,  0,  0,  0], %
-    [  0,  0,  0,  0], %
-    [212,  7,  0,  0], % 2004: query
-    [  0,  0,  0,  0], % flags
-    BytesNamespace,
-    [  0,  0,  0,  0], % num skip
-    [  2,  0,  0,  0], % num return xxxxxxxxxxxxxxxxxxxxxxx
-    BytesCommand.
+list_collection_names(Database, Names) :-
+    mongo_database:get_collection(Database, 'system.namespaces', Collection),
+    mongo_find:find_all(Collection, [], [], CollectionInfos),
+    repack_collection_names(CollectionInfos, Names).
+
+repack_collection_names([], []).
+repack_collection_names([Pair|Pairs], [Name|Names]) :-
+    acceptable_collection(Pair),
+    !,
+    repack_collection(Pair, Name),
+    repack_collection_names(Pairs, Names).
+repack_collection_names([_Pair|Pairs], Names) :-
+    repack_collection_names(Pairs, Names).
+
+acceptable_collection([name-Namespace]) :-
+    \+ util:atom_contains(Namespace, '$').
+acceptable_collection([name-Namespace]) :-
+    util:atom_contains(Namespace, '.oplog.$').
+
+repack_collection([name-Namespace], Name) :-
+    core:atomic_list_concat([_|L], '.', Namespace),
+    core:atomic_list_concat(L, '.', Name).

@@ -125,11 +125,8 @@ read_n_bytes(ReadStream, N, [Byte|Bytes]) :-
     N1 is N - 1,
     read_n_bytes(ReadStream, N1, Bytes).
 
-% Response parsing.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 parse_response(Bytes, Header, Info, Docs) :-
-    % XXX inspect_response_bytes(Bytes),
+    %inspect_response_bytes(Bytes),
     phrase(parse_response_meta(Header, Info), Bytes, RestBytes),
     parse_response_docs(RestBytes, Docs).
 
@@ -154,8 +151,6 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-/*
-
 %%% XXX DEBUG:
 
 inspect_response_bytes(Bytes) :-
@@ -166,26 +161,24 @@ inspect_response_bytes(Bytes) :-
     core:format('--- End Response ---~n~n').
 
 inspect_response_paperwork -->
-    int32(MessLen),
+    mongo_bytes:int32(MessLen),
     { core:format('MessLen: ~p~n', [MessLen]) },
-    int32(RequestId),
+    mongo_bytes:int32(RequestId),
     { core:format('RequestId: ~p~n', [RequestId]) },
-    int32(ResponseTo),
+    mongo_bytes:int32(ResponseTo),
     { core:format('ResponseTo: ~p~n', [ResponseTo]) },
-    int32(OpCode),
+    mongo_bytes:int32(OpCode),
     { core:format('OpCode: ~p~n', [OpCode]) },
-    int32(ResponseFlags),
+    mongo_bytes:int32(ResponseFlags),
     { core:format('ResponseFlags: ~p~n', [ResponseFlags]) },
-    int64(CursorId),
+    mongo_bytes:int64(CursorId),
     { core:format('CursorId: ~p~n', [CursorId]) },
-    int32(StartingFrom),
+    mongo_bytes:int32(StartingFrom),
     { core:format('StartingFrom: ~p~n', [StartingFrom]) },
-    int32(NumberReturned),
+    mongo_bytes:int32(NumberReturned),
     { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
 
 inspect_response_docs([]).
 inspect_response_docs([Doc|Docs]) :-
     bson_format:pp(Doc, 1, '  '), nl,
     inspect_response_docs(Docs).
-
-*/

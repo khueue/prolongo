@@ -201,6 +201,31 @@ test('found null') :-
 
 :- end_tests('bson:doc_get/3').
 
+:- begin_tests('bson:doc_get_strict/3').
+
+test('not found') :-
+    Doc =
+    [
+        key - value
+    ],
+    \+ bson:doc_get_strict(Doc, notfoundkey, _).
+
+test('found') :-
+    Doc =
+    [
+        key - value
+    ],
+    bson:doc_get_strict(Doc, key, value).
+
+test('found null') :-
+    Doc =
+    [
+        key - +null
+    ],
+    bson:doc_get_strict(Doc, key, +null).
+
+:- end_tests('bson:doc_get_strict/3').
+
 :- begin_tests('bson:doc_put/4').
 
 test('put in empty') :-

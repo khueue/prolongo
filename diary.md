@@ -223,4 +223,7 @@
    encapsulating structures properly. Tomorrow, maybe clean up comm. with
    server into send/2 and receive/2. Encapsulate cursor.
 
- * May 26. Encapsulated cursor. Some socket cleanup.
+ * May 26. Encapsulated cursor. Some socket cleanup. Started cleaning up
+   command. Reimplemented list_collection_names, list_commands. Implemented
+   bson:doc_get_strict/3, because it is sometimes nice to know if the key
+   was found or not.

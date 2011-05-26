@@ -4,6 +4,7 @@
         doc_is_valid/1,
         doc_empty/1,
         doc_get/3,
+        doc_get_strict/3,
         doc_put/4,
         doc_delete/3,
         doc_keys/2,
@@ -112,6 +113,15 @@ doc_get([], _, +null).
 doc_get([K-V|_], K, V) :- !.
 doc_get([_|Pairs], K, V) :-
     doc_get(Pairs, K, V).
+
+%%  doc_get_strict(+Doc, +Key, ?Value) is semidet.
+%
+%   True if Value is the value associated with Key in Doc,
+%   or fails if Key is not found or does not match Value.
+
+doc_get_strict([K-V|_], K, V) :- !.
+doc_get_strict([_|Pairs], K, V) :-
+    doc_get_strict(Pairs, K, V).
 
 %%  doc_put(+Doc, +Key, +Value, ?NewDoc) is semidet.
 %

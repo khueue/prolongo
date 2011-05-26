@@ -4,7 +4,8 @@
         ms_since_epoch/1,
         get_arg/3,
         set_arg/4,
-        replace_nth1/4
+        replace_nth1/4,
+        atom_contains/2
     ]).
 
 /** <module> Various utility predicates.
@@ -57,3 +58,10 @@ replace_nth1([_|Xs], 1, Value, [Value|Xs]) :- !.
 replace_nth1([X|Xs], N, Value, [X|Xs1]) :-
     N1 is N - 1,
     replace_nth1(Xs, N1, Value, Xs1).
+
+%%  atom_contains.
+%
+%   xxxxxxxxxxxxx
+
+atom_contains(Atom, SubAtom) :-
+    core:sub_atom(Atom, _, _, _, SubAtom), !.
