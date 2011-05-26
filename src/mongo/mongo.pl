@@ -61,7 +61,8 @@
         list_collection_names/2,
         list_database_infos/2,
         list_database_names/2,
-        drop_collection/1
+        drop_collection/1,
+        drop_database/1
     ]).
 
 :- include(misc(common)).

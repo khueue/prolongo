@@ -56,7 +56,7 @@ test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     bson:doc_get(Doc2, num, 102),
     lists:member(Doc3, Docs),
     bson:doc_get(Doc3, num, 103),
-    !. % Not interested in member/2 choice-points.
+    !. % Not interested in member choices.
 
 :- end_tests('mongo:update_all/3').
 
@@ -216,32 +216,18 @@ test('list collection names', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 test('list database infos', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
     mongo:list_database_infos(Conn, Infos),
-    bson:doc_get_strict(Infos, prolongo, _).
+    bson:doc_get_strict(Infos, 'prolongo', _).
 
 test('list database names', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
     mongo:list_database_names(Conn, Names),
-    lists:member(prolongo, Names),
+    lists:member('prolongo', Names),
     !. % Not interested in member choices.
 
 test('drop collection', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:drop_collection(Coll).
 
-/*
-test('drop collection',
-[
-    setup(up(Mongo)),
-    cleanup(down(Mongo))
-]) :-
-    collection(Collection),
-    mongo:drop_collection(Mongo, Collection, Result),
-    write(Result), nl,
-    mongo:doc_ok(Result).
-
-% Takes a bit too long when MongoDB reallocates the collection later.
-test('drop database', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
-    database(Database),
-    mongo:drop_database(Mongo, Database, Result),
-    bson:doc_get(Result, ok, 1.0).
-*/
+test('drop database', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:collection_database(Coll, Database),
+    mongo:drop_database(Database).
 
 :- end_tests('mongo:command/3').

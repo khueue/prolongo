@@ -4,7 +4,8 @@
         list_collection_names/2,
         list_database_infos/2,
         list_database_names/2,
-        drop_collection/1
+        drop_collection/1,
+        drop_database/1
     ]).
 
 /** <module> xxxxxxx
@@ -18,36 +19,19 @@
 command_collection('$cmd').
 admin_database('admin').
 
-doc_ok(Doc) :-
-    bson:doc_get(Doc, ok, Value),
-    doc_ok_value(Value).
+%%  drop_database.
+%
+%   xxxxxxxxx
 
-% XXX Which of these are actually required?
-doc_ok_value(1.0).
-doc_ok_value(1).
-doc_ok_value(+true).
-
-/*
-command(Database, Command, Result) :-
-    command_namespace(CommandNamespace),
-    command(Mongo, CommandNamespace, Command, Result).
-
-command(Mongo, Coll, Command, Docs) :-
-    mongo_get_database(Mongo, Database),
-    namespace(Database, Coll, Namespace),
-    build_command_message(Namespace, Command, Message),
-    send_to_server(Mongo, Message),
-    read_reply(Mongo, _Header, _Info, Docs).
-
-drop_collection(Mongo, Collection, Result) :-
-    Command = [drop-Collection],
-    command(Mongo, Command, Result).
-
-drop_database(Mongo, Database, Result) :-
-    Command = [dropDatabase-1],
-    use_database(Mongo, Database, Mongo1),
-    command(Mongo1, Command, Result).
-*/
+drop_database(Database) :-
+    command_collection(CmdCollName),
+    mongo_database:get_collection(Database, CmdCollName, CmdColl),
+    mongo_find:find_one(CmdColl, [dropDatabase-1], [], Doc),
+    doc_ok(Doc),
+    !.
+drop_database(Database) :-
+    mongo_database:database_name(Database, DatabaseName),
+    throw(mongo_error('could not drop database', DatabaseName)).
 
 %%  drop_collection.
 %
@@ -136,3 +120,16 @@ acceptable_collection([name-Namespace]) :-
 repack_collection([name-Namespace], Name) :-
     core:atomic_list_concat([_|L], '.', Namespace),
     core:atomic_list_concat(L, '.', Name).
+
+%%  doc_ok.
+%
+%   xxxxxxxxxxx
+
+doc_ok(Doc) :-
+    bson:doc_get_strict(Doc, ok, Value),
+    doc_ok_value(Value).
+
+% XXX Which of these are actually required?
+doc_ok_value(1.0).
+doc_ok_value(1).
+doc_ok_value(+true).
