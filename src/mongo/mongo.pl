@@ -58,7 +58,9 @@
 :- reexport(mongo(mongo_command),
     [
         list_commands/2,
-        list_collection_names/2
+        list_collection_names/2,
+        list_database_infos/2,
+        list_database_names/2
     ]).
 
 :- include(misc(common)).

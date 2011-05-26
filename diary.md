@@ -226,4 +226,6 @@
  * May 26. Encapsulated cursor. Some socket cleanup. Started cleaning up
    command. Reimplemented list_collection_names, list_commands. Implemented
    bson:doc_get_strict/3, because it is sometimes nice to know if the key
-   was found or not.
+   was found or not (it fails if not). Reimplemented
+   list_database_[infos|names] and added tests. Need to fix drop collection
+   and such, but other than that their are not that many more commands to fix.

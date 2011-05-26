@@ -1,7 +1,9 @@
 :- module(mongo_command,
     [
         list_commands/2,
-        list_collection_names/2
+        list_collection_names/2,
+        list_database_infos/2,
+        list_database_names/2
     ]).
 
 /** <module> xxxxxxx
@@ -13,6 +15,7 @@
 :- use_module(misc(util), []).
 
 command_collection('$cmd').
+admin_database('admin').
 
 doc_ok(Doc) :-
     bson:doc_get(Doc, ok, Value),
@@ -43,21 +46,42 @@ drop_database(Mongo, Database, Result) :-
     Command = [dropDatabase-1],
     use_database(Mongo, Database, Mongo1),
     command(Mongo1, Command, Result).
+*/
 
-list_database_infos(Mongo, DatabaseInfos) :-
-    Command = [listDatabases-1],
-    use_database(Mongo, admin, Mongo1),
-    command(Mongo1, Command, Result),
-    bson:doc_get(Result, databases, DatabaseInfoArray),
-    repack_database_infos(DatabaseInfoArray, DatabaseInfos).
+%%  list_database_names.
+%
+%   xxxxxxxxx
+
+list_database_names(Connection, Names) :-
+    list_database_infos(Connection, Infos),
+    bson:doc_keys(Infos, Names).
+
+%%  list_database_infos.
+%
+%   xxxxxxxxxx
+
+list_database_infos(Connection, Infos) :-
+    admin_database(DatabaseName),
+    mongo_connection:get_database(Connection, DatabaseName, Database),
+    command_collection(CollectionName),
+    mongo_database:get_collection(Database, CollectionName, Collection),
+    mongo_find:find_one(Collection, [listDatabases-1], [], Doc),
+    bson:doc_get(Doc, databases, InfoArray),
+    repack_database_infos(InfoArray, Infos).
 
 repack_database_infos([], []).
 repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
     repack_database_infos(Infos, Names).
 
-list_database_names(Mongo, DatabaseNames) :-
-    list_database_infos(Mongo, DatabaseInfos),
-    bson:doc_keys(DatabaseInfos, DatabaseNames).
+/*
+    Command = [listDatabases-1],
+    use_database(Mongo, admin, Mongo1),
+    command(Mongo1, Command, Result),
+    bson:doc_get(Result, databases, DatabaseInfoArray),
+    repack_database_infos(DatabaseInfoArray, DatabaseInfos).
+    mongo_database:get_collection(Database, 'system.namespaces', Collection),
+    mongo_find:find_all(Collection, [], [], CollectionInfos),
+    repack_collection_names(CollectionInfos, Names).
 */
 
 %%  list_commands.

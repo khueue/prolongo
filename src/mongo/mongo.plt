@@ -214,6 +214,15 @@ test('list collection names', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     lists:member('testcoll', Names),
     !. % Not interested in member choices.
 
+test('list database infos', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
+    mongo:list_database_infos(Conn, Infos),
+    bson:doc_get_strict(Infos, prolongo, _).
+
+test('list database names', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
+    mongo:list_database_names(Conn, Names),
+    lists:member(prolongo, Names),
+    !.
+
 /*
 test('list database infos', [setup(up(Mongo)),cleanup(down(Mongo))]) :-
     mongo:list_database_infos(Mongo, DatabaseInfos),
