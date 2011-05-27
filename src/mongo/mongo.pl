@@ -54,7 +54,8 @@
     ]).
 :- reexport(mongo(mongo_delete),
     [
-        delete/2
+        delete/2,
+        delete/3
     ]).
 :- reexport(mongo(mongo_command),
     [

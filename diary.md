@@ -238,4 +238,6 @@
  * May 27. Factored out socket. Small refactor in command. Added generic
    command/3. Added get_last_error/2. I aim to start (for real this time)
    with the report on Monday. Implemented flags for find, but they are very
-   much untested. Most of them are pretty weird.
+   much untested. Most of them are pretty weird. Moved options_flags to
+   mongo_util. The implementation is a bit crufty and involves a meta-call
+   actually. Maybe I should get rid of this. Implemented flags for delete.

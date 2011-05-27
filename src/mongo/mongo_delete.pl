@@ -1,6 +1,7 @@
 :- module(mongo_delete,
     [
-        delete/2
+        delete/2,
+        delete/3
     ]).
 
 /** <module> xxxx
@@ -21,18 +22,28 @@
 %   xxxxxxxxxx
 
 delete(Collection, Selector) :-
+    delete(Collection, Selector, []).
+
+option_value(single_remove, 1).
+
+%%  delete.
+%
+%   xxxxxxxxxx
+
+delete(Collection, Selector, Options) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    build_bytes_for_delete(Namespace, Selector, BytesToSend),
+    mongo_util:options_flags(Options, mongo_delete:option_value, Flags),
+    build_bytes_for_delete(Namespace, Selector, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
-build_bytes_for_delete(Namespace, Selector, Bytes) :-
-    phrase(build_bytes_for_delete(Namespace, Selector), Bytes),
+build_bytes_for_delete(Namespace, Selector, Flags, Bytes) :-
+    phrase(build_bytes_for_delete(Namespace, Selector, Flags), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_bytes_for_delete(Namespace, Selector) -->
+build_bytes_for_delete(Namespace, Selector, Flags) -->
     mongo_bytes:header(45678, 45678, 2006),
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
-    mongo_bytes:int32(0), % Flags.
+    mongo_bytes:int32(Flags),
     mongo_bytes:bson_doc(Selector).

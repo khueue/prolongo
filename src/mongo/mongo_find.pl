@@ -48,22 +48,12 @@ option_value(await_data,         32).
 option_value(exhaust,            64).
 option_value(partial,           128).
 
-% XXX Move to generic place and reuse.
-options_value([], 0).
-options_value([Option|Options], Value) :-
-    options_value(Options, Value0),
-    option_value(Option, Value1),
-    Value is Value0 \/ Value1,
-    !.
-options_value([Option|_], _Value) :-
-    throw(mongo_error('unknown option for find', Option)).
-
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
     find(Collection, Query, ReturnFields, Skip, Limit, [], Cursor, Docs).
 
 find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    options_value(Options, Flags),
+    mongo_util:options_flags(Options, mongo_find:option_value, Flags),
     build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
