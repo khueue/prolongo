@@ -237,4 +237,5 @@
 
  * May 27. Factored out socket. Small refactor in command. Added generic
    command/3. Added get_last_error/2. I aim to start (for real this time)
-   with the report on Monday.
+   with the report on Monday. Implemented flags for find, but they are very
+   much untested. Most of them are pretty weird.

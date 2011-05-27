@@ -84,7 +84,7 @@ read_rest_of_message(Socket, TotalLength, Bytes) :-
     mongo_socket:receive_n_bytes(Socket, LengthRest, Bytes).
 
 parse_response(Bytes, Header, Info, Docs) :-
-    %inspect_response_bytes(Bytes),
+    % inspect_response_bytes(Bytes),
     phrase(parse_response_meta(Header, Info), Bytes, RestBytes),
     parse_response_docs(RestBytes, Docs).
 

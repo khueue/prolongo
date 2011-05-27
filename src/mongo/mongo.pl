@@ -30,7 +30,8 @@
         find_one/3,
         find_one/4,
         find_all/4,
-        find/7
+        find/7,
+        find/8
     ]).
 :- reexport(mongo(mongo_cursor),
     [

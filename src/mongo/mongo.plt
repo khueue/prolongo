@@ -139,7 +139,10 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- end_tests('mongo:find/7').
 
-:- begin_tests('mongo:kill/1'). % xxx name?
+:- begin_tests('mongo:find/8').
+:- end_tests('mongo:find/8').
+
+:- begin_tests('mongo:kill/1'). % xxx better name?
 
 test('cursor kill', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),

@@ -3,7 +3,8 @@
         find_one/3,
         find_one/4,
         find_all/4,
-        find/7
+        find/7,
+        find/8
     ]).
 
 /** <module> xxxx
@@ -39,23 +40,44 @@ find_all(Collection, Query, ReturnFields) -->
     { mongo:exhaust(Cursor, DocsRest) },
     DocsRest.
 
-% XXX Need to implement the flags.
+option_value(tailable_cursor,     2).
+option_value(slave_ok,            4).
+% option_value(oplog_replay,      8). % Skip this.
+option_value(no_cursor_timeout,  16).
+option_value(await_data,         32).
+option_value(exhaust,            64).
+option_value(partial,           128).
+
+% XXX Move to generic place and reuse.
+options_value([], 0).
+options_value([Option|Options], Value) :-
+    options_value(Options, Value0),
+    option_value(Option, Value1),
+    Value is Value0 \/ Value1,
+    !.
+options_value([Option|_], _Value) :-
+    throw(mongo_error('unknown option for find', Option)).
+
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
+    find(Collection, Query, ReturnFields, Skip, Limit, [], Cursor, Docs).
+
+find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, BytesToSend),
+    options_value(Options, Flags),
+    build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
     Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned),
     mongo_cursor:new_cursor(Collection, CursorId, Cursor).
 
-build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Bytes) :-
-    phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit), Bytes),
+build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, Bytes) :-
+    phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
-build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit) -->
-    mongo_bytes:header(4567, 4567, 2004),
-    mongo_bytes:int32(0), % Flags. xxxxxxxx fix
+build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags) -->
+    mongo_bytes:header(4567, 4567, 2004), % xxxxx
+    mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Skip),
     mongo_bytes:int32(Limit),
