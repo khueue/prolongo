@@ -234,3 +234,5 @@
    bit. I think there are common factors such as getting the command
    collection. And a thought: should mongo_command.pl be removed and its
    predicates moved into the modules on which you call them?
+
+ * May 27. Factored out socket.

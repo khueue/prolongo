@@ -16,6 +16,7 @@
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_defaults), []).
+:- use_module(mongo(mongo_socket), []).
 
 %%  new_connection(-Connection) is semidet.
 %%  new_connection(+Host, +Port, -Connection) is semidet.
@@ -30,20 +31,11 @@ new_connection(Connection) :-
     new_connection(Host, Port, Connection).
 
 new_connection(Host, Port, Connection) :-
-    new_socket(Host, Port, Socket),
+    mongo_socket:new_socket(Host, Port, Socket),
     Connection = connection(Socket).
 
-new_socket(Host, Port, Socket) :-
-    setup_call_catcher_cleanup(
-        socket:tcp_socket(SocketId),
-        socket:tcp_connect(SocketId, Host:Port, ReadStream, WriteStream),
-        exception(_),
-        close_socket_and_throw(SocketId)),
-    Socket = socket(ReadStream,WriteStream).
-
-close_socket_and_throw(SocketId) :-
-    socket:tcp_close_socket(SocketId),
-    throw(mongo_error('could not connect to server')).
+connection_socket(Connection, Socket) :-
+    util:get_arg(Connection, 1, Socket).
 
 %%  free_connection(+Connection) is det.
 %
@@ -51,12 +43,8 @@ close_socket_and_throw(SocketId) :-
 %   rendering it unusable.
 
 free_connection(Connection) :-
-    get_socket(Connection, Socket),
-    free_socket(Socket).
-
-free_socket(socket(ReadStream,WriteStream)) :-
-    core:close(ReadStream, [force(true)]),
-    core:close(WriteStream, [force(true)]).
+    connection_socket(Connection, Socket),
+    mongo_socket:free_socket(Socket).
 
 %%  get_database(+Connection, +DatabaseName, -Database).
 %
@@ -66,64 +54,34 @@ free_socket(socket(ReadStream,WriteStream)) :-
 get_database(Connection, DatabaseName, Database) :-
     mongo_database:new_database(Connection, DatabaseName, Database).
 
-% Socket.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-get_socket_read(Connection, ReadStream) :-
-    get_socket(Connection, Socket),
-    util:get_arg(Socket, 1, ReadStream).
-
-get_socket_write(Connection, WriteStream) :-
-    get_socket(Connection, Socket),
-    util:get_arg(Socket, 2, WriteStream).
-
-get_socket(Connection, Socket) :-
-    util:get_arg(Connection, 1, Socket).
-
 %%  send_to_server.
 %
 %   xxxxxxxxx
 
 send_to_server(Connection, Bytes) :-
-    get_socket_write(Connection, WriteStream),
-    send_bytes_and_flush(Bytes, WriteStream).
-
-send_bytes_and_flush(Bytes, WriteStream) :-
-    send_bytes(Bytes, WriteStream),
-    core:flush_output(WriteStream).
-
-send_bytes(Bytes, WriteStream) :-
-    core:format(WriteStream, '~s', [Bytes]).
+    connection_socket(Connection, Socket),
+    mongo_socket:send_bytes(Socket, Bytes).
 
 %%  read_reply.
 %
 %   xxxxxxxx
 
 read_reply(Connection, Header, Info, Docs) :-
-    read_from_server(Connection, Bytes),
+    connection_socket(Connection, Socket),
+    read_response_bytes(Socket, Bytes),
     parse_response(Bytes, Header, Info, Docs).
 
-read_from_server(Connection, Bytes) :-
-    get_socket_read(Connection, ReadStream),
-    read_response_bytes(ReadStream, Bytes).
+read_response_bytes(Socket, [B0,B1,B2,B3|Bytes]) :-
+    read_message_length(Socket, [B0,B1,B2,B3], TotalLength),
+    read_rest_of_message(Socket, TotalLength, Bytes).
 
-read_response_bytes(ReadStream, [B0,B1,B2,B3|Bytes]) :-
-    read_message_length(ReadStream, [B0,B1,B2,B3], Length),
-    read_rest_of_message(ReadStream, Length, Bytes).
-
-read_message_length(ReadStream, Bytes, Length) :-
-    read_n_bytes(ReadStream, 4, Bytes),
+read_message_length(Socket, Bytes, Length) :-
+    mongo_socket:receive_n_bytes(Socket, 4, Bytes),
     bson_bits:integer_bytes(Length, 4, little, Bytes).
 
-read_rest_of_message(ReadStream, Length, Bytes) :-
-    LengthRest is Length - 4,
-    read_n_bytes(ReadStream, LengthRest, Bytes).
-
-read_n_bytes(_ReadStream, 0, []) :- !.
-read_n_bytes(ReadStream, N, [Byte|Bytes]) :-
-    core:get_byte(ReadStream, Byte),
-    N1 is N - 1,
-    read_n_bytes(ReadStream, N1, Bytes).
+read_rest_of_message(Socket, TotalLength, Bytes) :-
+    LengthRest is TotalLength - 4,
+    mongo_socket:receive_n_bytes(Socket, LengthRest, Bytes).
 
 parse_response(Bytes, Header, Info, Docs) :-
     %inspect_response_bytes(Bytes),
