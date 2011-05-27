@@ -235,4 +235,9 @@ test('generic command', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:command(Database, [profile - -1], Doc),
     bson:doc_get_strict(Doc, ok, _).
 
+test('command get last error', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:collection_database(Coll, Database),
+    mongo:get_last_error(Database, Doc),
+    bson:doc_get_strict(Doc, ok, _).
+
 :- end_tests('mongo commands').

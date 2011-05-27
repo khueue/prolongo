@@ -6,7 +6,8 @@
         list_database_infos/2,
         list_database_names/2,
         drop_collection/1,
-        drop_database/1
+        drop_database/1,
+        get_last_error/2
     ]).
 
 /** <module> xxxxxxx
@@ -33,13 +34,19 @@ command(Database, Query, Doc) :-
     database_cmd_collection(Database, CmdColl),
     mongo_find:find_one(CmdColl, Query, [], Doc).
 
+%%  get_last_error.
+%
+%   xxxxxxxxx
+
+get_last_error(Database, Doc) :-
+    command(Database, [getlasterror-1], Doc).
+
 %%  drop_database.
 %
 %   xxxxxxxxx
 
 drop_database(Database) :-
-    database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, [dropDatabase-1], [], Doc),
+    command(Database, [dropDatabase-1], Doc),
     doc_ok(Doc),
     !.
 drop_database(Database) :-

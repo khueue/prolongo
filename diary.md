@@ -236,4 +236,4 @@
    predicates moved into the modules on which you call them?
 
  * May 27. Factored out socket. Small refactor in command. Added generic
-   command/3.
+   command/3. Added get_last_error/2.
