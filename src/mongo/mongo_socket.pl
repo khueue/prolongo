@@ -11,7 +11,6 @@
 
 :- include(misc(common)).
 
-:- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 
 %%  new_socket.

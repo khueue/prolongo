@@ -230,4 +230,9 @@ test('drop database', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:collection_database(Coll, Database),
     mongo:drop_database(Database).
 
+test('generic command', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+    mongo:collection_database(Coll, Database),
+    mongo:command(Database, [profile - -1], Doc),
+    bson:doc_get_strict(Doc, ok, _).
+
 :- end_tests('mongo commands').

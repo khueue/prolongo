@@ -57,6 +57,7 @@
     ]).
 :- reexport(mongo(mongo_command),
     [
+        command/3,
         list_commands/2,
         list_collection_names/2,
         list_database_infos/2,

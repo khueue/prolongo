@@ -1,5 +1,6 @@
 :- module(mongo_command,
     [
+        command/3,
         list_commands/2,
         list_collection_names/2,
         list_database_infos/2,
@@ -20,13 +21,24 @@ command_collection('$cmd').
 namespace_collection('system.namespaces').
 admin_database('admin').
 
+database_cmd_collection(Database, CmdColl) :-
+    command_collection(CmdCollName),
+    mongo_database:get_collection(Database, CmdCollName, CmdColl).
+
+%%  command.
+%
+%   xxxxxxxxxx
+
+command(Database, Query, Doc) :-
+    database_cmd_collection(Database, CmdColl),
+    mongo_find:find_one(CmdColl, Query, [], Doc).
+
 %%  drop_database.
 %
 %   xxxxxxxxx
 
 drop_database(Database) :-
-    command_collection(CmdCollName),
-    mongo_database:get_collection(Database, CmdCollName, CmdColl),
+    database_cmd_collection(Database, CmdColl),
     mongo_find:find_one(CmdColl, [dropDatabase-1], [], Doc),
     doc_ok(Doc),
     !.
@@ -39,11 +51,10 @@ drop_database(Database) :-
 %   xxxxxxxxx
 
 drop_collection(Collection) :-
-    mongo_collection:collection_name(Collection, CollectionName),
     mongo_collection:collection_database(Collection, Database),
-    command_collection(CommandCollectionName),
-    mongo_database:get_collection(Database, CommandCollectionName, CommandCollection),
-    mongo_find:find_one(CommandCollection, [drop-CollectionName], [], Doc),
+    database_cmd_collection(Database, CmdColl),
+    mongo_collection:collection_name(Collection, CollectionName),
+    mongo_find:find_one(CmdColl, [drop-CollectionName], [], Doc),
     doc_ok(Doc),
     !.
 drop_collection(Collection) :-
@@ -65,9 +76,8 @@ list_database_names(Connection, Names) :-
 list_database_infos(Connection, Infos) :-
     admin_database(DatabaseName),
     mongo_connection:get_database(Connection, DatabaseName, Database),
-    command_collection(CollectionName),
-    mongo_database:get_collection(Database, CollectionName, Collection),
-    mongo_find:find_one(Collection, [listDatabases-1], [], Doc),
+    database_cmd_collection(Database, CmdColl),
+    mongo_find:find_one(CmdColl, [listDatabases-1], [], Doc),
     bson:doc_get(Doc, databases, InfoArray),
     repack_database_infos(InfoArray, Infos).
 
@@ -80,9 +90,8 @@ repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
 %   xxxxxxxxxx
 
 list_commands(Database, Result) :-
-    command_collection(CollectionName),
-    mongo_database:get_collection(Database, CollectionName, Collection),
-    mongo_find:find_one(Collection, [listCommands-1], [commands-1], Result).
+    database_cmd_collection(Database, CmdColl),
+    mongo_find:find_one(CmdColl, [listCommands-1], [commands-1], Result).
 
 %%  list_collection_names.
 %

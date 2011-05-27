@@ -235,4 +235,5 @@
    collection. And a thought: should mongo_command.pl be removed and its
    predicates moved into the modules on which you call them?
 
- * May 27. Factored out socket.
+ * May 27. Factored out socket. Small refactor in command. Added generic
+   command/3.
