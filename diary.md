@@ -241,3 +241,4 @@
    much untested. Most of them are pretty weird. Moved options_flags to
    mongo_util. The implementation is a bit crufty and involves a meta-call
    actually. Maybe I should get rid of this. Implemented flags for delete.
+   Maybe I should start thinking about proper error handling.
