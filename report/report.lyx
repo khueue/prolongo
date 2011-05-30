@@ -178,19 +178,13 @@ MongoDB
 \begin_layout Standard
 MongoDB is a document-oriented database management system that emphasizes
  speed, scalability and flexibility.
- This is accomplished by sacrificing fixed database schemas and, by avoiding
+ This is accomplished by avoiding fixed database schemas and, by sacrificing
  joins, requiring a certain degree of denormalization by embedding documents
  into each other.
 \end_layout
 
 \begin_layout Subsubsection
-Document-Oriented vs.
- Relational Databases
-\end_layout
-
-\begin_layout Standard
-XXX Discuss what doc-oriented is trying to change with respect to relational.
- Fundamental differences, how MongoDB does them differently, and why.
+Features
 \end_layout
 
 \begin_layout Paragraph
@@ -217,6 +211,20 @@ scaling out
 
  - just add new comps and let the database figure things out, distribute,
  ...
+\end_layout
+
+\begin_layout Subsubsection
+Key Differences Between MongoDB and the Relational Model
+\end_layout
+
+\begin_layout Subsubsection
+Document-Oriented vs.
+ Relational Databases
+\end_layout
+
+\begin_layout Standard
+XXX Discuss what doc-oriented is trying to change with respect to relational.
+ Fundamental differences, how MongoDB does them differently, and why.
 \end_layout
 
 \begin_layout Subsection
@@ -256,14 +264,6 @@ term
  cannot be rebound.
 \end_layout
 
-\begin_layout Subsubsection
-Unification?
-\end_layout
-
-\begin_layout Standard
-XXX what the heck am i writing?
-\end_layout
-
 \begin_layout Section
 Requirements
 \end_layout
@@ -293,6 +293,14 @@ The driver must be able to convert back and forth between some kind of Prolog
 \end_layout
 
 \begin_layout Subsection
+Connection Handling
+\end_layout
+
+\begin_layout Standard
+XXX maintain a connection to the database, socket ...
+\end_layout
+
+\begin_layout Subsection
 Fundamental Database Operations
 \end_layout
 
@@ -306,22 +314,30 @@ Design
 \end_layout
 
 \begin_layout Standard
-At the core of MongoDB lies the BSON (Binary JSON) binary data format.
- BSON is used in MongoDB to communicate data as well as store documents
- on disk.
+XXX This chapter discusses the overall design of the driver.
 \end_layout
 
-\begin_layout Itemize
-BSON encoder/decoder
+\begin_layout Subsection
+BSON Conversion
 \end_layout
 
-\begin_deeper
+\begin_layout Standard
+At the core of MongoDB lies the BSON binary data format which is used to
+ communicate data as well as store data on disk.
+ When communicating with a MongoDB instance, documents are transmitted over
+ the network as bytes of BSON.
+ The driver converts Prolog stuctures into series of BSON bytes before sending
+ them to the database, and database responses are converted back to Prolog
+ again.
+\end_layout
+
 \begin_layout Itemize
 Some parts written in C.
  Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.
  And perhaps some efficiency.)
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Discuss data structures, term [key:value] maps to bytelist [4,1,7,9,3,...]
  etc.
@@ -334,29 +350,69 @@ Design choices: text as atoms (why not list of codes, [97,98,99]?) Inspired
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-Network communication
+\begin_layout Subsubsection
+BSON Encoder
 \end_layout
 
-\begin_deeper
+\begin_layout Standard
+XXX
+\end_layout
+
+\begin_layout Subsubsection
+BSON Decoder
+\end_layout
+
+\begin_layout Standard
+XXX
+\end_layout
+
+\begin_layout Subsection
+Network Communication
+\end_layout
+
 \begin_layout Itemize
 How does the communication work? How simplistic is the communication administrat
 ion? Sockets, connections, etc.
 \end_layout
 
-\end_deeper
-\begin_layout Itemize
-MongoDB API
+\begin_layout Subsection
+Database Interface
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 Thoroughly discuss design of wrapper API, how lists and structures are represent
 ed etc.
  What algorithms are used etc.
 \end_layout
 
-\end_deeper
+\begin_layout Subsubsection
+Find Documents
+\end_layout
+
+\begin_layout Subsubsection
+Insert Documents
+\end_layout
+
+\begin_layout Subsubsection
+Update Documents
+\end_layout
+
+\begin_layout Subsubsection
+Delete Documents
+\end_layout
+
+\begin_layout Subsubsection
+Database Commands
+\end_layout
+
+\begin_layout Subsection
+Error Handling?
+\end_layout
+
+\begin_layout Standard
+XXX how are errors in failing queries handled, for instance?
+\end_layout
+
 \begin_layout Section
 Implementation
 \end_layout
@@ -364,7 +420,12 @@ Implementation
 \begin_layout Standard
 
 \emph on
-[xxx How do I solve it?]
+[xxx How do I solve it? What is this chapter supposed to contain?]
+\end_layout
+
+\begin_layout Standard
+XXX Discuss code organization, modules? Discuss why some parts of BSON is
+ implemented in C? Discuss the test suite? Discuss dependencies and portability?
 \end_layout
 
 \begin_layout Section
@@ -384,7 +445,8 @@ Related Work
 \begin_layout Standard
 
 \emph on
-[xxx Compare to existing drivers? Erlang? And something completely different?]
+[xxx Compare to existing drivers? Erlang? And something completely different?
+ Will probably skip this chapter.]
 \end_layout
 
 \begin_layout Section
