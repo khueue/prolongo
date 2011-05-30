@@ -264,6 +264,12 @@ term
  cannot be rebound.
 \end_layout
 
+\begin_layout Standard
+The fundamental unit of code in Prolog is the predicate.
+ A predicate consists of one or several clauses, together forming a logical
+ disjunction.
+\end_layout
+
 \begin_layout Section
 Requirements
 \end_layout
@@ -273,7 +279,11 @@ Requirements
 \end_layout
 
 \begin_layout Subsection
-BSON Serialization and Deserialization
+BSON Conversion
+\end_layout
+
+\begin_layout Standard
+[XXX Discuss how BSON relates to JSON? Where? Background?]
 \end_layout
 
 \begin_layout Standard
@@ -288,8 +298,8 @@ The data representation format used by MongoDB is a binary-encoded variation
 \end_layout
 
 \begin_layout Standard
-The driver must be able to convert back and forth between some kind of Prolog
- structure and BSON bytes.
+The driver must be able to convert back and forth between some suitable
+ Prolog structure and BSON bytes.
 \end_layout
 
 \begin_layout Subsection
@@ -297,11 +307,14 @@ Connection Handling
 \end_layout
 
 \begin_layout Standard
-XXX maintain a connection to the database, socket ...
+The driver must be able to obtain a connection to a database instance using
+ a TCP socket.
+ All communication with the database is performed through this socket, using
+ a certain protocol.
 \end_layout
 
 \begin_layout Subsection
-Fundamental Database Operations
+Document Handling
 \end_layout
 
 \begin_layout Standard
@@ -315,6 +328,7 @@ Design
 
 \begin_layout Standard
 XXX This chapter discusses the overall design of the driver.
+ [xxx this will probably be the biggest chapter, I wager]
 \end_layout
 
 \begin_layout Subsection
@@ -328,7 +342,12 @@ At the core of MongoDB lies the BSON binary data format which is used to
  the network as bytes of BSON.
  The driver converts Prolog stuctures into series of BSON bytes before sending
  them to the database, and database responses are converted back to Prolog
- again.
+ structures again.
+\end_layout
+
+\begin_layout Standard
+A BSON document is represented in Prolog as a list of key/value pairs.
+ Keys are UTF-8 encoded atoms, and values can be of several different types.
 \end_layout
 
 \begin_layout Itemize
@@ -375,8 +394,16 @@ How does the communication work? How simplistic is the communication administrat
 ion? Sockets, connections, etc.
 \end_layout
 
+\begin_layout Itemize
+new_connection/1,3
+\end_layout
+
+\begin_layout Itemize
+free_connection/1
+\end_layout
+
 \begin_layout Subsection
-Database Interface
+Document Interaction
 \end_layout
 
 \begin_layout Itemize
@@ -389,24 +416,45 @@ ed etc.
 Find Documents
 \end_layout
 
+\begin_layout Standard
+find_one/3, find_one/4, find_all/4, find/7, find/8, kill/1, kill_batch/1,
+ get_more/4, has_more/1, exhaust/2
+\end_layout
+
 \begin_layout Subsubsection
 Insert Documents
+\end_layout
+
+\begin_layout Standard
+insert/2, insert_batch/3
 \end_layout
 
 \begin_layout Subsubsection
 Update Documents
 \end_layout
 
+\begin_layout Standard
+upsert/3, update/3, update_all/3
+\end_layout
+
 \begin_layout Subsubsection
 Delete Documents
+\end_layout
+
+\begin_layout Standard
+delete/2, delete/3
 \end_layout
 
 \begin_layout Subsubsection
 Database Commands
 \end_layout
 
+\begin_layout Standard
+command/3
+\end_layout
+
 \begin_layout Subsection
-Error Handling?
+Error Handling
 \end_layout
 
 \begin_layout Standard
@@ -426,6 +474,7 @@ Implementation
 \begin_layout Standard
 XXX Discuss code organization, modules? Discuss why some parts of BSON is
  implemented in C? Discuss the test suite? Discuss dependencies and portability?
+ Discuss efficiency (relevant)?
 \end_layout
 
 \begin_layout Section

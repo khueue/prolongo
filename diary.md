@@ -242,3 +242,6 @@
    mongo_util. The implementation is a bit crufty and involves a meta-call
    actually. Maybe I should get rid of this. Implemented flags for delete.
    Maybe I should start thinking about proper error handling.
+
+ * May 30. Started working on the report. Mostly structure, but writing bits
+   here and there.
