@@ -149,7 +149,7 @@ sharding
 \begin_layout Standard
 Due to the lack of proper standardization within the Prolog community, maintaini
 ng portability between different Prolog implementations is difficult and
- not pursued.
+ not actively pursued.
 \end_layout
 
 \begin_layout Section
@@ -184,11 +184,88 @@ MongoDB is a document-oriented database management system that emphasizes
 \end_layout
 
 \begin_layout Subsubsection
-Features
+Document-Orientation
+\end_layout
+
+\begin_layout Standard
+[XXX References, OMG.]
+\end_layout
+
+\begin_layout Standard
+MongoDB employs a document-oriented view of data.
+ Instead of looking at the 
+\begin_inset Quotes eld
+\end_inset
+
+row
+\begin_inset Quotes erd
+\end_inset
+
+ as the primary data entity, document-orientation introduces the notion
+ of a 
+\begin_inset Quotes eld
+\end_inset
+
+document
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A document in MongoDB resides in a 
+\begin_inset Quotes eld
+\end_inset
+
+collection
+\begin_inset Quotes erd
+\end_inset
+
+, and no predefined schema is enforced on the collection.
+ Therefore, documents in a collection need not share the same structure.
+ This allows for great flexibility, especially with data migrations as individua
+l documents can be modified freely without updating a schema and affecting
+ all documents in a collection.
+\end_layout
+
+\begin_layout Standard
+A document consists of key/value pairs, where keys are strings and values
+ can be many different things, including other documents (embedded documents).
+ Allowing recursive structures in the database is a step away from the more
+ traditional concepts used in relational databases, where a high degree
+ of normalization is often desired.
+ Relaxing the need for normalization makes it possible to create highly
+ efficient systems by avoiding expensive join operations.
+\end_layout
+
+\begin_layout Subsubsection
+Main Features
+\end_layout
+
+\begin_layout Paragraph
+Document-Oriented
+\end_layout
+
+\begin_layout Standard
+MongoDB is designed to be easy to scale, and this is easier to achieve when
+ the relational model is not used.
+ Document-oriented databases are more flexible and impose less restrictions
+ on the layout of data, allowing for complex data structures to be stored
+ within a single document.
+ [XXX ref? Mongo book p 1]
 \end_layout
 
 \begin_layout Paragraph
 Low Maintenance
+\end_layout
+
+\begin_layout Standard
+Because there are no database schemas, and databases and collections can
+ be created on the fly without explicit commands, MongoDB requires very
+ little manual maintenance.
+ The database system is designed to ...
+ xxx
 \end_layout
 
 \begin_layout Standard
@@ -201,7 +278,7 @@ Scalability
 \end_layout
 
 \begin_layout Standard
-XXX designed from scratch to allow easy 
+MongoDB approach to scaling focuses on 
 \begin_inset Quotes eld
 \end_inset
 
@@ -209,22 +286,16 @@ scaling out
 \begin_inset Quotes erd
 \end_inset
 
- - just add new comps and let the database figure things out, distribute,
- ...
+, the process of adding more commodity servers to the cluster instead of
+ replacing existing machines with high-end ones.
 \end_layout
 
-\begin_layout Subsubsection
-Key Differences Between MongoDB and the Relational Model
-\end_layout
-
-\begin_layout Subsubsection
-Document-Oriented vs.
- Relational Databases
+\begin_layout Subsection
+BSON
 \end_layout
 
 \begin_layout Standard
-XXX Discuss what doc-oriented is trying to change with respect to relational.
- Fundamental differences, how MongoDB does them differently, and why.
+XXX Discuss what BSON is, how it relates to JSON.
 \end_layout
 
 \begin_layout Subsection
@@ -266,8 +337,12 @@ term
 
 \begin_layout Standard
 The fundamental unit of code in Prolog is the predicate.
- A predicate consists of one or several clauses, together forming a logical
+ A predicate consists of one or more clauses, together forming a logical
  disjunction.
+ The value of any predicate is either true or false, indicating whether
+ the predicate succeeded.
+ Any other output must be specified as arguments that are bound to values
+ by the predicate before it returns.
 \end_layout
 
 \begin_layout Section
@@ -280,10 +355,6 @@ Requirements
 
 \begin_layout Subsection
 BSON Conversion
-\end_layout
-
-\begin_layout Standard
-[XXX Discuss how BSON relates to JSON? Where? Background?]
 \end_layout
 
 \begin_layout Standard
@@ -303,12 +374,12 @@ The driver must be able to convert back and forth between some suitable
 \end_layout
 
 \begin_layout Subsection
-Connection Handling
+Connection Management
 \end_layout
 
 \begin_layout Standard
-The driver must be able to obtain a connection to a database instance using
- a TCP socket.
+The driver must be able to obtain a connection to a database server instance
+ using a TCP socket.
  All communication with the database is performed through this socket, using
  a certain protocol.
 \end_layout
@@ -403,7 +474,7 @@ free_connection/1
 \end_layout
 
 \begin_layout Subsection
-Document Interaction
+Database Interaction
 \end_layout
 
 \begin_layout Itemize
@@ -414,6 +485,10 @@ ed etc.
 
 \begin_layout Subsubsection
 Find Documents
+\end_layout
+
+\begin_layout Standard
+XXX describe the various interfaces, how cursors work
 \end_layout
 
 \begin_layout Standard
