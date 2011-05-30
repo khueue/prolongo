@@ -172,10 +172,15 @@ MongoDB
 \end_layout
 
 \begin_layout Standard
+[Ref: MongoDB: The Definitive Guide, p 4]
+\end_layout
+
+\begin_layout Standard
 MongoDB is a document-oriented database management system that emphasizes
- speed and flexibility.
- This is accomplished by sacrificing fixed database schemas and allowing
- a certain degree of denormalization by embedded documents into each other.
+ speed, scalability and flexibility.
+ This is accomplished by sacrificing fixed database schemas and, by avoiding
+ joins, requiring a certain degree of denormalization by embedding documents
+ into each other.
 \end_layout
 
 \begin_layout Subsubsection
@@ -186,6 +191,32 @@ Document-Oriented vs.
 \begin_layout Standard
 XXX Discuss what doc-oriented is trying to change with respect to relational.
  Fundamental differences, how MongoDB does them differently, and why.
+\end_layout
+
+\begin_layout Paragraph
+Low Maintenance
+\end_layout
+
+\begin_layout Standard
+XXX out of the way, no schemas, add/remove fields from individual documents
+ easy ...
+\end_layout
+
+\begin_layout Paragraph
+Scalability
+\end_layout
+
+\begin_layout Standard
+XXX designed from scratch to allow easy 
+\begin_inset Quotes eld
+\end_inset
+
+scaling out
+\begin_inset Quotes erd
+\end_inset
+
+ - just add new comps and let the database figure things out, distribute,
+ ...
 \end_layout
 
 \begin_layout Subsection
@@ -238,12 +269,36 @@ Requirements
 \end_layout
 
 \begin_layout Standard
-Various requirements on the implementation.
- See for example
+[Ref: http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements]
+\end_layout
+
+\begin_layout Subsection
+BSON Serialization and Deserialization
 \end_layout
 
 \begin_layout Standard
-http://www.mongodb.org/display/DOCS/Writing+Drivers+and+Tools
+[Ref: http://bsonspec.org/]
+\end_layout
+
+\begin_layout Standard
+The data representation format used by MongoDB is a binary-encoded variation
+ of JSON, called BSON (Binary JSON).
+ In MongoDB, BSON is the format used to store data on disk as well as transmit
+ data over the network.
+\end_layout
+
+\begin_layout Standard
+The driver must be able to convert back and forth between some kind of Prolog
+ structure and BSON bytes.
+\end_layout
+
+\begin_layout Subsection
+Fundamental Database Operations
+\end_layout
+
+\begin_layout Standard
+The driver must expose functionality to find, insert, update and delete
+ documents in the database.
 \end_layout
 
 \begin_layout Section
@@ -348,7 +403,7 @@ Conclusion/Future Work [what to call it?]
 Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to improve
  in the future? Critical parts (BSON) in pure C? Even write a C extension
  with more/most functionality? Don't know how portable that would be though,
- but SWI (and probably SICStus also?) has a mature interface to C.
+ but SWI (and probably SICStus?) has a mature interface to C.
  What is missing for it to be a 
 \begin_inset Quotes eld
 \end_inset
