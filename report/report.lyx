@@ -278,7 +278,7 @@ Scalability
 \end_layout
 
 \begin_layout Standard
-MongoDB approach to scaling focuses on 
+The MongoDB approach to scaling focuses on 
 \begin_inset Quotes eld
 \end_inset
 
@@ -286,8 +286,10 @@ scaling out
 \begin_inset Quotes erd
 \end_inset
 
-, the process of adding more commodity servers to the cluster instead of
- replacing existing machines with high-end ones.
+ -- the process of adding more commodity servers to the cluster instead
+ of replacing existing machines with high-end ones.
+ Adding more machines when the need arises is straight-forward and the database
+ system itself figures out how to best configure the added machines.
 \end_layout
 
 \begin_layout Subsection
@@ -296,6 +298,17 @@ BSON
 
 \begin_layout Standard
 XXX Discuss what BSON is, how it relates to JSON.
+\end_layout
+
+\begin_layout Standard
+At the core of MongoDB lies the BSON (Binary JSON) data format which is
+ used to communicate data as well as store data on disk.
+ When communicating with a MongoDB instance, documents are transmitted over
+ the network as bytes of BSON.
+\end_layout
+
+\begin_layout Standard
+The reason for using a binary format such as BSON is efficiency.
 \end_layout
 
 \begin_layout Subsection
