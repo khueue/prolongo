@@ -86,32 +86,21 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-
-\emph on
-[Write this section, or at least finalize it, near the end.]
+[XXX Is the following more suitable as abstract?]
 \end_layout
 
 \begin_layout Standard
-
-\emph on
-From spec:
+MongoDB is a document-oriented database system with a strong focus on flexibilit
+y, scalability and performance.
+ Document-orientation involves leaving the row-centric concept of the relational
+ database model, and introducing the much more flexible notion of a document.
+ Document-orientation avoids rigid database schemas and also promotes a
+ certain degree of denormalization which allows embedding documents into
+ each other, leading to potentially much better performance by avoiding
+ the need for expensive join operations.
 \end_layout
 
 \begin_layout Standard
-
-\emph on
-[MongoDB is a young document-oriented database system that has started to
- gain much attention recently.
- Document-orientation involves removing rigid database schemas and advanced
- transactions, in favor of flexibility.
- Document-orientation also promotes a certain degree of denormalization
- which allows embedding documents into each other, leading to potentially
- much better performance by avoiding the need for expensive join operations.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
 Prolog, being an untyped language, agrees with the document-oriented approach
  of relaxing manifests in order to create more dynamic and flexible systems.
  Embedding terms in other terms is natural in Prolog, and embedding documents
@@ -119,12 +108,27 @@ Prolog, being an untyped language, agrees with the document-oriented approach
 \end_layout
 
 \begin_layout Standard
+In order to use MongoDB from a programming language, some kind of interface,
+ or 
+\begin_inset Quotes eld
+\end_inset
 
-\emph on
-Many drivers exist, both official and unofficial, that enable the use of
- Mongo\SpecialChar \-
-DB from various programming languages.
- At the time of writing, no such driver for Prolog seems to exist.]
+driver
+\begin_inset Quotes erd
+\end_inset
+
+, must sit in-between the database system and the language to facilitate
+ the communication.
+ 
+\end_layout
+
+\begin_layout Section
+Purpose
+\end_layout
+
+\begin_layout Standard
+The purpose of this thesis is to discuss the design and implementation of
+ a MongoDB driver for Prolog.
 \end_layout
 
 \begin_layout Section
@@ -135,15 +139,8 @@ Scope
 The aim of this thesis is not to create a feature-complete production-ready
  driver, but to cover basic CRUD (Create, Read, Update, Delete) functionality
  and connection handling, laying the foundation for further development.
- More advanced MongoDB features such as 
-\begin_inset Quotes eld
-\end_inset
-
-sharding
-\begin_inset Quotes erd
-\end_inset
-
- [xxx replica sets?] and GridFS are therefore not covered.
+ More advanced MongoDB features such as replication and file storage are
+ therefore not covered.
 \end_layout
 
 \begin_layout Standard
@@ -224,14 +221,14 @@ collection
 
 , and no predefined schema is enforced on the collection.
  Therefore, documents in a collection need not share the same structure.
- This allows for great flexibility, especially with data migrations as individua
-l documents can be modified freely without updating a schema and affecting
- all documents in a collection.
+ This allows for great flexibility, especially with data migrations, as
+ individual documents can be modified freely without updating a schema and
+ affecting all documents in a collection.
 \end_layout
 
 \begin_layout Standard
 A document consists of key/value pairs, where keys are strings and values
- can be many different things, including other documents (embedded documents).
+ can be of many different types, including other documents (embedded documents).
  Allowing recursive structures in the database is a step away from the more
  traditional concepts used in relational databases, where a high degree
  of normalization is often desired.
@@ -262,10 +259,9 @@ Low Maintenance
 
 \begin_layout Standard
 Because there are no database schemas, and databases and collections can
- be created on the fly without explicit commands, MongoDB requires very
+ be created on-the-fly without explicit commands, MongoDB requires very
  little manual maintenance.
- The database system is designed to ...
- xxx
+ The database system is designed to be very automatic.
 \end_layout
 
 \begin_layout Standard
@@ -286,10 +282,10 @@ scaling out
 \begin_inset Quotes erd
 \end_inset
 
- -- the process of adding more commodity servers to the cluster instead
- of replacing existing machines with high-end ones.
+ -- the process of adding more commodity servers to a cluster instead of
+ replacing existing servers with better (and more expensive) ones.
  Adding more machines when the need arises is straight-forward and the database
- system itself figures out how to best configure the added machines.
+ system itself figures out how to best configure the machines.
 \end_layout
 
 \begin_layout Subsection
@@ -303,8 +299,8 @@ XXX Discuss what BSON is, how it relates to JSON.
 \begin_layout Standard
 At the core of MongoDB lies the BSON (Binary JSON) data format which is
  used to communicate data as well as store data on disk.
- When communicating with a MongoDB instance, documents are transmitted over
- the network as bytes of BSON.
+ When a driver communicates with a MongoDB instance, documents are transmitted
+ over the network as a series of BSON-encoded bytes.
 \end_layout
 
 \begin_layout Standard
@@ -313,6 +309,11 @@ The reason for using a binary format such as BSON is efficiency.
 
 \begin_layout Subsection
 Prolog
+\end_layout
+
+\begin_layout Standard
+[XXX How much Prolog do I need to describe? Just enough to understand the
+ code examples later on?]
 \end_layout
 
 \begin_layout Standard
