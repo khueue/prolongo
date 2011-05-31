@@ -140,7 +140,7 @@ The aim of this thesis is not to create a feature-complete production-ready
  driver, but to cover basic CRUD (Create, Read, Update, Delete) functionality
  and connection handling, laying the foundation for further development.
  More advanced MongoDB features such as replication and file storage are
- therefore not covered.
+ not covered.
 \end_layout
 
 \begin_layout Standard
@@ -208,6 +208,7 @@ document
 \end_inset
 
 .
+ [ref mongodb p 1]
 \end_layout
 
 \begin_layout Standard
@@ -250,23 +251,14 @@ MongoDB is designed to be easy to scale, and this is easier to achieve when
  Document-oriented databases are more flexible and impose less restrictions
  on the layout of data, allowing for complex data structures to be stored
  within a single document.
- [XXX ref? Mongo book p 1]
-\end_layout
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongodb"
 
-\begin_layout Paragraph
-Low Maintenance
-\end_layout
+\end_inset
 
-\begin_layout Standard
-Because there are no database schemas, and databases and collections can
- be created on-the-fly without explicit commands, MongoDB requires very
- little manual maintenance.
- The database system is designed to be very automatic.
-\end_layout
-
-\begin_layout Standard
-XXX out of the way, no schemas, add/remove fields from individual documents
- easy ...
+[XXX ref? Mongo book p 1]
 \end_layout
 
 \begin_layout Paragraph
@@ -284,8 +276,21 @@ scaling out
 
  -- the process of adding more commodity servers to a cluster instead of
  replacing existing servers with better (and more expensive) ones.
- Adding more machines when the need arises is straight-forward and the database
- system itself figures out how to best configure the machines.
+ [xxx ref mongodb p 2] Adding more machines when the need arises is straight-for
+ward and the database system itself figures out how to best configure the
+ machines.
+ [xxx ref mongodb p 3]
+\end_layout
+
+\begin_layout Paragraph
+Low Maintenance
+\end_layout
+
+\begin_layout Standard
+Because there are no database schemas, and databases and collections can
+ be created on-the-fly without explicit commands, MongoDB requires very
+ little manual maintenance.
+ The database system is designed to be very automatic.
 \end_layout
 
 \begin_layout Subsection
@@ -304,7 +309,15 @@ At the core of MongoDB lies the BSON (Binary JSON) data format which is
 \end_layout
 
 \begin_layout Standard
-The reason for using a binary format such as BSON is efficiency.
+The reason for using a binary format such as BSON is efficiency [xxx ref].
+ Because JSON is a plain-text format, numbers need to be converted to and
+ from text in order to be used.
+ This kind of conversion is generally slow, and BSON therefore extends the
+ JSON model with a set of data types that can be parsed directly.
+ For instance, a 32-bit integer is encoded in BSON as four consecutive little-en
+dian bytes.
+ This wastes some space for small integers, but is much faster to parse.
+ [xxx ref bsonspec.org faq?]
 \end_layout
 
 \begin_layout Subsection
@@ -349,14 +362,20 @@ term
  cannot be rebound.
 \end_layout
 
+\begin_layout Subsubsection
+Program Structure
+\end_layout
+
 \begin_layout Standard
 The fundamental unit of code in Prolog is the predicate.
  A predicate consists of one or more clauses, together forming a logical
  disjunction.
  The value of any predicate is either true or false, indicating whether
  the predicate succeeded.
- Any other output must be specified as arguments that are bound to values
- by the predicate before it returns.
+ Any other output must be specified as arguments that are bound by the predicate
+ before it returns.
+ The convention used for argument order is input-arguments first, intermediate
+ values in the middle, and output-arguments last.
 \end_layout
 
 \begin_layout Section
@@ -615,28 +634,15 @@ real
  driver?]
 \end_layout
 
-\begin_layout Section
-References
-\end_layout
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "mongodb"
 
-\begin_layout Standard
+\end_inset
 
-\emph on
-[xxx References for Prolog DCG? References for various stuff used in SWI?
- At all relevant? How much web references? Most MongoDB driver stuff is
- web.]
-\end_layout
-
-\begin_layout Subsection
-Books
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-[xxx currently unreferenced]
-\emph default
- Chodorow, K.
+Chodorow, K.
  & Dirolf, M.
  (2010) 
 \emph on
@@ -644,18 +650,17 @@ MongoDB: The Definitive Guide.
 
 \emph default
  Sebastopol, United States of America: O'Reilly Media, Inc.
-\begin_inset Newline newline
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "bratko"
+
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-
-\emph on
-[xxx currently unreferenced]
-\emph default
- Bratko, I.
+[xxx unreferenced] Bratko, I.
  (2001) 
 \emph on
 PROLOG Programming for Artificial Intelligence.
@@ -663,18 +668,17 @@ PROLOG Programming for Artificial Intelligence.
 \emph default
  3rd ed.
  Essex, England: Pearson Education Limited.
-\begin_inset Newline newline
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "okeefe"
+
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-
-\emph on
-[xxx currently unreferenced]
-\emph default
- O'Keefe, R.
+[xxx unreferenced] O'Keefe, R.
  A.
  (1990) 
 \emph on
@@ -684,48 +688,45 @@ The Craft of Prolog.
  Cambridge, United States of America: The MIT Press.
 \end_layout
 
-\begin_layout Subsection
-Technical Documentation
-\end_layout
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "driver"
 
-\begin_layout Standard
+\end_inset
 
-\emph on
-[xxx currently unreferenced]
-\emph default
- MongoDB Driver Documentation
+[xxx unreferenced] MongoDB Driver Documentation
 \begin_inset Newline newline
 \end_inset
 
 http://www.mongodb.org/display/DOCS/Drivers
-\begin_inset Newline newline
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "bson"
+
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-
-\emph on
-[xxx currently unreferenced]
-\emph default
- BSON Specification
+[xxx unreferenced] BSON Specification
 \begin_inset Newline newline
 \end_inset
 
 http://bsonspec.org/
-\begin_inset Newline newline
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "swi"
+
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-
-\emph on
-[xxx currently unreferenced]
-\emph default
- SWI-Prolog Documentation
+[xxx unreferenced] SWI-Prolog Documentation
 \begin_inset Newline newline
 \end_inset
 
