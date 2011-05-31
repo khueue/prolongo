@@ -245,3 +245,5 @@
 
  * May 30. Started working on the report. Mostly structure, but writing bits
    here and there.
+
+ * May 31. Some report work. Added proper bibliography.

@@ -4,12 +4,12 @@
 
 ### Report
 
- * Think about structure and start to write something.
+ * Write report.
 
 ### Development
 
- * Clean up more in various modules. Exports for instance.
- * Investigate and wrap the MongoDB API.
+ * Implement proper error handling when queries fail.
+ * Decide on RequestId/ResponseTo stuff.
  * (Decide on amount of (and implement) validation in encoder/decoder.)
 
 ## Usage
@@ -23,9 +23,9 @@ running on localhost on the default port.
  * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
     * Autoloading must be turned on (default).
  * ANSI C compiler (modify the Makefile if other than GCC)
- * MongoDB (tested on Mac OS X using MongoDB 1.8.1)
+ * MongoDB (tested on Mac OS X using MongoDB 1.8.x)
 
-## Coding Guidelines (That Might Surprise)
+## Coding Guidelines
 
  * Use empty imports (use_module(mymodule, [])) in order to not
    pollute the namespace.
@@ -52,6 +52,7 @@ running on localhost on the default port.
 
 ## Future
 
+ * Refactor mongo tests. They are too complex.
  * Implement ordered documents? Omit for now.
  * Generate ObjectID's in the driver? Push to server for now.
  * Move BSON to separate repository (BSON is not inherent to MongoDB).

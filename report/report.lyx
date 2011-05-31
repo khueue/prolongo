@@ -455,7 +455,7 @@ A BSON document is represented in Prolog as a list of key/value pairs.
 \end_layout
 
 \begin_layout Itemize
-Some parts written in C.
+[xxx is this implementation stuff?] Some parts written in C.
  Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.
  And perhaps some efficiency.)
 \end_layout
