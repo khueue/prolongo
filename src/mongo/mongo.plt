@@ -85,6 +85,11 @@ test('delete single', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:find/7').
 
+test('error', [setup(up(Conn,Coll)),cleanup(down(Conn)),
+    throws(mongo_error(_ErrorDoc))])
+    :-
+    mongo:find(Coll, ['$where'-world], [], 0, 0, _Cursor, _Docs).
+
 test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world,number-1]),

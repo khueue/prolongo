@@ -56,13 +56,14 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
-    mongo_bytes:header(765, 765, 2001), % xxxxxxxxx
+    mongo_bytes:header(000, 000, 2001), % xxxxx request, response
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),
     mongo_bytes:bson_doc(Selector),
     mongo_bytes:bson_doc(Modifier).
 
+% xxx update with new strategy, look at find
 options_flags([],       0) :- !.
 options_flags([upsert], 1) :- !.
 options_flags([multi],  2) :- !.

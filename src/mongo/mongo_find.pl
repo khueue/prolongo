@@ -58,15 +58,24 @@ find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
     mongo_connection:read_reply(Connection, _Header, Info, Docs),
-    Info = info(_Flags,CursorId,_StartingFrom,_NumberReturned),
+    Info = info(ReturnFlags,CursorId,_StartingFrom,_NumberReturned),
+    throw_on_error(ReturnFlags, Docs),
     mongo_cursor:new_cursor(Collection, CursorId, Cursor).
+
+throw_on_error(Flags, [ErrorDoc]) :-
+    error_bit_is_set(Flags),
+    throw(mongo_error(ErrorDoc)).
+throw_on_error(_Flags, _Docs). % Query succeeded.
+
+error_bit_is_set(Flags) :-
+    2 is Flags /\ 2.
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, Bytes) :-
     phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags), Bytes),
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags) -->
-    mongo_bytes:header(4567, 4567, 2004), % xxxxx
+    mongo_bytes:header(000, 000, 2004), % xxxxx request, response
     mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Skip),
