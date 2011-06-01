@@ -59,9 +59,9 @@ replace_nth1([X|Xs], N, Value, [X|Xs1]) :-
     N1 is N - 1,
     replace_nth1(Xs, N1, Value, Xs1).
 
-%%  atom_contains.
+%%  atom_contains(+Atom, +SubAtom) is semidet.
 %
-%   xxxxxxxxxxxxx
+%   True if SubAtom is a subatom of Atom.
 
 atom_contains(Atom, SubAtom) :-
     core:sub_atom(Atom, _, _, _, SubAtom), !.
