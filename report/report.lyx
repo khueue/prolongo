@@ -569,6 +569,11 @@ Error Handling
 XXX how are errors in failing queries handled, for instance?
 \end_layout
 
+\begin_layout Standard
+Errors issued by a failed query is detected by the driver and an exception
+ is thrown that contains the error document returned by the database.
+\end_layout
+
 \begin_layout Section
 Implementation
 \end_layout

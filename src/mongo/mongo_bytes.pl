@@ -10,7 +10,7 @@
         bson_docs/3
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Low-level construction of messages to send over the wire.
  */
 
 :- include(misc(common)).

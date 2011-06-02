@@ -42,7 +42,7 @@ build_bytes_for_delete(Namespace, Selector, Flags, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_delete(Namespace, Selector, Flags) -->
-    mongo_bytes:header(45678, 45678, 2006),
+    mongo_bytes:header(000, 000, 2006), % xxxxx request, response
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),
