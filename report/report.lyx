@@ -317,8 +317,8 @@ Prolog
 \end_layout
 
 \begin_layout Standard
-This section gives a small introduction to Prolog in order to appreciate
- the code examples in subsequent sections.
+This section gives a small introduction to Prolog in order to more easily
+ appreciate the code examples in subsequent sections.
 \end_layout
 
 \begin_layout Standard
@@ -341,10 +341,6 @@ how
  [xxx currently not mentioning this in the chapter]
 \end_layout
 
-\begin_layout Standard
-XXXXXX Comment conventions +, - etc.
-\end_layout
-
 \begin_layout Subsubsection
 Type System
 \end_layout
@@ -362,6 +358,7 @@ term
 , which can be any value.
  A variable can be bound to any term, but once bound, it is immutable and
  cannot be rebound.
+ Variables start with an uppercase letter.
 \end_layout
 
 \begin_layout Subsubsection
@@ -550,6 +547,33 @@ reference "sub:Program-Structure"
 T
 \noun default
 ).
+\end_layout
+
+\begin_layout Subsubsection
+Documentation Convention
+\end_layout
+
+\begin_layout Standard
+When documenting Prolog predicates, each argument is usually prefixed with
+ a symbol that indicates how the argument is supposed to behave.
+ The following documentation convention is employed by subsequent chapters.
+\end_layout
+
+\begin_layout Description
++ Input argument.
+ The argument must be already instantiated.
+\end_layout
+
+\begin_layout Description
+- Output argument.
+ The argument must not be already instantiated, but instead instantiated
+ by the predicate.
+\end_layout
+
+\begin_layout Description
+? The argument may or may not be instantiated.
+ This is commonly used when the predicate can be used to either verify the
+ argument or instantiate it.
 \end_layout
 
 \begin_layout Section
@@ -900,6 +924,11 @@ mongo:new_connection
 Accessing the Database
 \end_layout
 
+\begin_layout Standard
+[XXX This is where I will discuss the interesting stuff that you actually
+ use.]
+\end_layout
+
 \begin_layout Subsubsection
 Find Documents
 \end_layout
@@ -965,9 +994,9 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-
-\emph on
-[XXX What is this chapter supposed to contain, really?]
+[XXX What is this chapter supposed to contain, really? Discuss code organization
+, modules? Discuss the test suite? Discuss portability? Discuss efficiency
+ (relevant?)?]
 \end_layout
 
 \begin_layout Subsection
@@ -989,7 +1018,7 @@ Being able to subvert the type system in C makes it trivial to populate
 
 \begin_layout Standard
 BSON conversion is something the driver does very often, and pushing common
- operations down to a more low-level language is likely faster.
+ operations down to a more low-level language is likely more efficient.
 \end_layout
 
 \begin_layout Subsection
@@ -1015,11 +1044,6 @@ Compiler An ANSI C compiler is required to build parts of the low-level
 
 \begin_layout Description
 MongoDB The driver is tested on MongoDB versions 1.8.0 and 1.8.1.
-\end_layout
-
-\begin_layout Standard
-XXX Discuss code organization, modules? Discuss the test suite? Discuss
- dependencies and portability? Discuss efficiency (relevant?)?
 \end_layout
 
 \begin_layout Section
