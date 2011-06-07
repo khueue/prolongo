@@ -287,7 +287,7 @@ Because there are no database schemas, and databases and collections can
  [xxx ref mongodb]
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 BSON
 \end_layout
 
@@ -609,7 +609,7 @@ This chapter discusses the overall design of the driver.
 \end_layout
 
 \begin_layout Subsection
-Structure
+Driver Structure
 \end_layout
 
 \begin_layout Standard
@@ -618,7 +618,7 @@ xxx discuss modules, mongo, bson, etc.
 \end_layout
 
 \begin_layout Subsection
-BSON Conversion
+BSON Handling
 \end_layout
 
 \begin_layout Standard
@@ -900,12 +900,6 @@ mongo:new_connection
 Accessing the Database
 \end_layout
 
-\begin_layout Standard
-[xxx Thoroughly discuss design of wrapper API, how lists and structures
- are represented etc.
- What algorithms are used etc.]
-\end_layout
-
 \begin_layout Subsubsection
 Find Documents
 \end_layout
@@ -973,15 +967,59 @@ Implementation
 \begin_layout Standard
 
 \emph on
-[xxx How do I solve it? What is this chapter supposed to contain?]
+[XXX What is this chapter supposed to contain, really?]
+\end_layout
+
+\begin_layout Subsection
+C Extension
 \end_layout
 
 \begin_layout Standard
-XXX Discuss code organization, modules? Discuss why some parts of BSON is
- implemented in C? (Basically didn't know how to easily handle bytes-to-float
- in Prolog.
- And perhaps some efficiency.) Discuss the test suite? Discuss dependencies
- and portability? Discuss efficiency (relevant?)?
+A small part of the BSON handling is written in C instead of Prolog.
+ This part involves conversion of integers and floats to and from bytes.
+ The two reasons for this are efficiency and ease of programming.
+\end_layout
+
+\begin_layout Standard
+Being able to subvert the type system in C makes it trivial to populate
+ a fixed-width number with individual bytes and then interpret them as a
+ whole.
+ This is especially convenient when converting bytes into floating-point.
+\end_layout
+
+\begin_layout Standard
+BSON conversion is something the driver does very often, and pushing common
+ operations down to a more low-level language is likely faster.
+\end_layout
+
+\begin_layout Subsection
+Environment
+\end_layout
+
+\begin_layout Standard
+[XXX Is this relevant?]
+\end_layout
+
+\begin_layout Description
+Prolog The driver is developed and tested on SWI-Prolog 5.10.2.
+\end_layout
+
+\begin_layout Description
+C
+\begin_inset space ~
+\end_inset
+
+Compiler An ANSI C compiler is required to build parts of the low-level
+ BSON handling.
+\end_layout
+
+\begin_layout Description
+MongoDB The driver is tested on MongoDB versions 1.8.0 and 1.8.1.
+\end_layout
+
+\begin_layout Standard
+XXX Discuss code organization, modules? Discuss the test suite? Discuss
+ dependencies and portability? Discuss efficiency (relevant?)?
 \end_layout
 
 \begin_layout Section
