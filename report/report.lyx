@@ -69,7 +69,7 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
-[Prolog is good stuff, and MongoDB ...]
+[xxx Prolog is good stuff, and MongoDB ...]
 \end_layout
 
 \begin_layout Abstract
@@ -86,7 +86,7 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-[XXX Is the following more suitable as abstract?]
+[XXX Is the following more suitable as Abstract material?]
 \end_layout
 
 \begin_layout Standard
@@ -155,13 +155,6 @@ Background
 
 \begin_layout Standard
 This chapter briefly discusses MongoDB and Prolog.
- 
-\emph on
-XXX where discuss why prolog needs this driver? prolog is its own database,
- but using the inbuilt database for advanced applications is probably not
- that great [ref? research this].
- using a separate database system moves the database logic from the prolog
- application = good, and promotes easy replication etc.
 \end_layout
 
 \begin_layout Subsection
@@ -190,7 +183,7 @@ Document-Orientation
 
 \begin_layout Standard
 MongoDB employs a document-oriented view of data.
- Instead of looking at the 
+ Instead of focusing on the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -246,8 +239,8 @@ Document-Oriented
 \end_layout
 
 \begin_layout Standard
-MongoDB is designed to be easy to scale, and this is easier to achieve when
- the relational model is not used.
+MongoDB is designed to be easy to scale, a goal which is easier to achieve
+ when the relational model is not used.
  Document-oriented databases are more flexible and impose less restrictions
  on the layout of data, allowing for complex data structures to be stored
  within a single document.
@@ -291,6 +284,7 @@ Because there are no database schemas, and databases and collections can
  be created on-the-fly without explicit commands, MongoDB requires very
  little manual maintenance.
  The database system is designed to be very automatic.
+ [xxx ref mongodb]
 \end_layout
 
 \begin_layout Subsection
@@ -298,20 +292,18 @@ BSON
 \end_layout
 
 \begin_layout Standard
-XXX Discuss what BSON is, how it relates to JSON.
-\end_layout
-
-\begin_layout Standard
 At the core of MongoDB lies the BSON (Binary JSON) data format which is
  used to communicate data as well as store data on disk.
  When a driver communicates with a MongoDB instance, documents are transmitted
- over the network as a series of BSON-encoded bytes.
+ over the network as a series of BSON encoded bytes.
 \end_layout
 
 \begin_layout Standard
-The reason for using a binary format such as BSON is efficiency [xxx ref].
- Because JSON is a plain-text format, numbers need to be converted to and
- from text in order to be used.
+BSON is similar to and heavily influenced by JSON, the main difference being
+ that BSON is a binary format whereas JSON is plain-text.
+ The reason for using a binary format is efficiency.
+ With JSON, numbers need to be converted to and from text in order to be
+ used.
  This kind of conversion is generally slow, and BSON therefore extends the
  JSON model with a set of data types that can be parsed directly.
  For instance, a 32-bit integer is encoded in BSON as four consecutive little-en
@@ -322,6 +314,11 @@ dian bytes.
 
 \begin_layout Subsection
 Prolog
+\end_layout
+
+\begin_layout Standard
+This section gives a small introduction to Prolog in order to appreciate
+ the code examples in subsequent sections.
 \end_layout
 
 \begin_layout Standard
@@ -341,6 +338,7 @@ what
 how
 \emph default
 .
+ [xxx currently not mentioning this in the chapter]
 \end_layout
 
 \begin_layout Subsubsection
@@ -364,6 +362,13 @@ term
 
 \begin_layout Subsubsection
 Program Structure
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Program-Structure"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -372,10 +377,129 @@ The fundamental unit of code in Prolog is the predicate.
  disjunction.
  The value of any predicate is either true or false, indicating whether
  the predicate succeeded.
- Any other output must be specified as arguments that are bound by the predicate
- before it returns.
+ Any other output must be specified as output-arguments that become bound
+ by the predicate before it returns.
  The convention used for argument order is input-arguments first, intermediate
- values in the middle, and output-arguments last.
+ values in the middle, and output-arguments last [xxx ref prolog guidelines].
+\end_layout
+
+\begin_layout Standard
+A solution to calculate the number of elements in a list is given as follows,
+ illustrating that the order of arguments is input, intermediate values,
+ and finally output.
+ This predicate uses an accumulator to construct the final result.
+ Anonymous variables, or 
+\begin_inset Quotes eld
+\end_inset
+
+don't care
+\begin_inset Quotes erd
+\end_inset
+
+ variables, are denoted with an initial underscore.
+ [xxx ref]
+\end_layout
+
+\begin_layout LyX-Code
+length([], N, N).
+\end_layout
+
+\begin_layout LyX-Code
+length([_|L], N0, N) :-
+\end_layout
+
+\begin_layout LyX-Code
+    N1 is N0 + 1,
+\end_layout
+
+\begin_layout LyX-Code
+    length(L, N1, N).
+\end_layout
+
+\begin_layout Standard
+In an interactive Prolog environment, the above predicate may be used like
+ this, providing a starting value for the accumulator.
+\end_layout
+
+\begin_layout LyX-Code
+?- length([a,b,c], 0, Length).
+\end_layout
+
+\begin_layout LyX-Code
+Length = 3
+\end_layout
+
+\begin_layout Subsubsection
+Data Structures
+\end_layout
+
+\begin_layout Standard
+The main primitive data types in Prolog are integers, floats and atoms.
+ In SWI-Prolog [xxx ref SWI] integers are unbounded, and floats are represented
+ as 64-bit IEEE 754 doubles.
+ Atoms represent UTF-8 encoded text.
+\end_layout
+
+\begin_layout Standard
+Compound data structures are lists and structures.
+ A list is an ordered collection of zero or more terms which need not be
+ the same type.
+ A structure is xxx
+\end_layout
+
+\begin_layout Subsubsection
+Control Flow
+\end_layout
+
+\begin_layout Standard
+Branching is performed by means of 
+\begin_inset Quotes eld
+\end_inset
+
+backtracking
+\begin_inset Quotes erd
+\end_inset
+
+ into an appropriate clause, and iteration is performed by recursion.
+\end_layout
+
+\begin_layout Standard
+The first step in knowing which clause to use for a certain set of input
+ is accomplished through 
+\begin_inset Quotes eld
+\end_inset
+
+head unification
+\begin_inset Quotes erd
+\end_inset
+
+, sometimes called 
+\begin_inset Quotes eld
+\end_inset
+
+pattern matching
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Prolog tries to unify the input with the formal parameters of the first
+ clause of the predicate.
+ If the unification fails, the process is repeated with the second clause,
+ and so on.
+ Invoking the predicate 
+\noun on
+length
+\noun default
+ shown in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Program-Structure"
+
+\end_inset
+
+ with a non-empty list causes unification to fail in the first clause (an
+ empty list cannot be unified with a non-empty list), but succeed in the
+ second.
 \end_layout
 
 \begin_layout Section
@@ -395,7 +519,7 @@ BSON Conversion
 \end_layout
 
 \begin_layout Standard
-The data representation format used by MongoDB is a binary-encoded variation
+The data representation format used by MongoDB is a binary encoded variation
  of JSON, called BSON (Binary JSON).
  In MongoDB, BSON is the format used to store data on disk as well as transmit
  data over the network.
@@ -412,9 +536,8 @@ Connection Management
 
 \begin_layout Standard
 The driver must be able to obtain a connection to a database server instance
- using a TCP socket.
- All communication with the database is performed through this socket, using
- a certain protocol.
+ using a TCP (Transmission Control Protocol) socket.
+ All communication with the database is performed through this socket.
 \end_layout
 
 \begin_layout Subsection
@@ -436,6 +559,14 @@ XXX This chapter discusses the overall design of the driver.
 \end_layout
 
 \begin_layout Subsection
+Structure
+\end_layout
+
+\begin_layout Standard
+xxx discuss modules, mongo, bson, etc.
+\end_layout
+
+\begin_layout Subsection
 BSON Conversion
 \end_layout
 
@@ -444,9 +575,9 @@ At the core of MongoDB lies the BSON binary data format which is used to
  communicate data as well as store data on disk.
  When communicating with a MongoDB instance, documents are transmitted over
  the network as bytes of BSON.
- The driver converts Prolog stuctures into series of BSON bytes before sending
- them to the database, and database responses are converted back to Prolog
- structures again.
+ The driver converts Prolog structures into series of BSON bytes before
+ sending them to the database, and database responses are converted back
+ to Prolog structures again.
 \end_layout
 
 \begin_layout Standard
@@ -474,46 +605,156 @@ Design choices: text as atoms (why not list of codes, [97,98,99]?) Inspired
 
 \end_deeper
 \begin_layout Subsubsection
-BSON Encoder
+Document-to-BSON Conversion
 \end_layout
 
 \begin_layout Standard
 XXX
+\end_layout
+
+\begin_layout Standard
+[12,0,0,0, 16, 97,0, 42,0,0,0, 0]
 \end_layout
 
 \begin_layout Subsubsection
-BSON Decoder
+BSON-to-Document Conversion
 \end_layout
 
 \begin_layout Standard
-XXX
+Given a list of BSON encoded bytes, the relation 
+\noun on
+bson:doc_bytes/2
+\noun default
+ can be used to convert them into their structured equivalent.
+ The empty document is represented in BSON as five bytes, the first four
+ being a 32-bit little-endian integer representing the length of the entire
+ document, and the last byte signaling the end of the document with a zero.
+\end_layout
+
+\begin_layout LyX-Code
+?- bson:doc_bytes(Doc, [12,0,0,0,16,97,0,42,0,0,0,0]).
+\end_layout
+
+\begin_layout LyX-Code
+Doc = [a-42]
+\end_layout
+
+\begin_layout Standard
+If a series of BSON bytes represent a concatenation of documents, the relation
+ 
+\noun on
+bson:docs_bytes/2
+\noun default
+ can be used.
+ The following yields two empty documents wrapped in a list.
+\end_layout
+
+\begin_layout LyX-Code
+?- bson:docs_bytes(
+\end_layout
+
+\begin_layout LyX-Code
+       Docs,
+\end_layout
+
+\begin_layout LyX-Code
+       [5,0,0,0,0,12,0,0,0,16,97,0,42,0,0,0,0]).
+\end_layout
+
+\begin_layout LyX-Code
+Docs = [[],[a-42]]
+\end_layout
+
+\begin_layout Standard
+An exception is thrown if the conversion fails [xxx detail the exception].
 \end_layout
 
 \begin_layout Subsection
 Network Communication
 \end_layout
 
-\begin_layout Itemize
-How does the communication work? How simplistic is the communication administrat
-ion? Sockets, connections, etc.
+\begin_layout Standard
+Communication with a MongoDB instance is conducted using a TCP socket.
+ [xxx ref mongo wire protocol]
 \end_layout
 
-\begin_layout Itemize
-new_connection/1,3
+\begin_layout Subsubsection
+Obtaining a Connection
 \end_layout
 
-\begin_layout Itemize
-free_connection/1
+\begin_layout Standard
+A connection can be established by the predicate 
+\noun on
+mongo:new_connection
+\noun default
+/1,3.
+ Two versions of the predicate are provided, one which assumes the default
+ MongoDB host and port, and one which allows this to be specified.
+ If an error occurs during the setup, an exception is thrown.
+\end_layout
+
+\begin_layout LyX-Code
+?- mongo:new_connection(Connection).
+\end_layout
+
+\begin_layout LyX-Code
+Connection = 
+\emph on
+[opaque connection handle]
+\end_layout
+
+\begin_layout Standard
+The following will connect to a MongoDB instance running on localhost attached
+ to the port 1234.
+\end_layout
+
+\begin_layout LyX-Code
+?- mongo:new_connection(localhost, 1234, Connection).
+\end_layout
+
+\begin_layout LyX-Code
+Connection = 
+\emph on
+[opaque connection handle]
+\end_layout
+
+\begin_layout Subsubsection
+Releasing a Connection
+\end_layout
+
+\begin_layout Standard
+When a connection is no longer needed it must be properly released back
+ to the system.
+ Assuming 
+\emph on
+Connection
+\emph default
+ is a connection obtained by the predicate 
+\noun on
+mongo:new_connection
+\noun default
+, the following will release any resources associated with it, rendering
+ it unusable.
+\end_layout
+
+\begin_layout LyX-Code
+?- mongo:free_connection(Connection).
+\end_layout
+
+\begin_layout LyX-Code
+
+\emph on
+[Connection may no longer be used]
 \end_layout
 
 \begin_layout Subsection
-Database Interaction
+Accessing the Database
 \end_layout
 
-\begin_layout Itemize
-Thoroughly discuss design of wrapper API, how lists and structures are represent
-ed etc.
- What algorithms are used etc.
+\begin_layout Standard
+[xxx Thoroughly discuss design of wrapper API, how lists and structures
+ are represented etc.
+ What algorithms are used etc.]
 \end_layout
 
 \begin_layout Subsubsection
@@ -572,6 +813,8 @@ XXX how are errors in failing queries handled, for instance?
 \begin_layout Standard
 Errors issued by a failed query is detected by the driver and an exception
  is thrown that contains the error document returned by the database.
+ The error document contains a key called '$err' that maps to an atom describing
+ the nature of the error.
 \end_layout
 
 \begin_layout Section
@@ -587,7 +830,7 @@ Implementation
 \begin_layout Standard
 XXX Discuss code organization, modules? Discuss why some parts of BSON is
  implemented in C? Discuss the test suite? Discuss dependencies and portability?
- Discuss efficiency (relevant)?
+ Discuss efficiency (relevant?)?
 \end_layout
 
 \begin_layout Section
@@ -636,7 +879,20 @@ real
 \begin_inset Quotes erd
 \end_inset
 
- driver?]
+ driver? Discuss choice of list as BSON document.
+ Maybe use some map-like structure instead.]
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "xxxxx"
+
+\end_inset
+
+[xxx how should these be ordered? alphabetical last names? publish date?
+ in order of first referenced in text?]
 \end_layout
 
 \begin_layout Bibliography
@@ -655,6 +911,27 @@ MongoDB: The Definitive Guide.
 
 \emph default
  Sebastopol, United States of America: O'Reilly Media, Inc.
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "prolog"
+
+\end_inset
+
+Clocksin, W.
+ F.
+ & Mellish, C.
+ S.
+ (1994) 
+\emph on
+Programming in Prolog.
+
+\emph default
+ 4th ed.
+ New York, United States of America: Springer-Verlag.
 \end_layout
 
 \begin_layout Bibliography
@@ -697,6 +974,29 @@ The Craft of Prolog.
 \labelwidthstring References
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "guidelines"
+
+\end_inset
+
+Some Coding Guidelines for Prolog
+\begin_inset Newline newline
+\end_inset
+
+Covington, M.
+ A.
+ et al.
+ Retrieved 2011-06-07.
+ [xxx how to format web refs?]
+\begin_inset Newline newline
+\end_inset
+
+http://www.ai.uga.edu/mc/plcoding.pdf
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "driver"
 
 \end_inset
@@ -716,7 +1016,7 @@ key "bson"
 
 \end_inset
 
-[xxx unreferenced] BSON Specification
+[xxx unreferenced] BSON Specification, Retrieved 2011-06-07.
 \begin_inset Newline newline
 \end_inset
 
