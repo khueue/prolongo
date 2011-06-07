@@ -69,7 +69,7 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
-[xxx Prolog is good stuff, and MongoDB ...]
+[XXX Prolog is good stuff, and MongoDB ...]
 \end_layout
 
 \begin_layout Abstract
@@ -86,7 +86,8 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-[XXX Is the following more suitable as Abstract material?]
+[XXX Is the following more suitable as Abstract material? If so, what should
+ the introduction contain?]
 \end_layout
 
 \begin_layout Standard
@@ -162,15 +163,12 @@ MongoDB
 \end_layout
 
 \begin_layout Standard
-[Ref: MongoDB: The Definitive Guide, p 4]
-\end_layout
-
-\begin_layout Standard
 MongoDB is a document-oriented database management system that emphasizes
  speed, scalability and flexibility.
  This is accomplished by avoiding fixed database schemas and, by sacrificing
  joins, requiring a certain degree of denormalization by embedding documents
  into each other.
+ [XXX ref: MongoDB: The Definitive Guide, p 4]
 \end_layout
 
 \begin_layout Subsubsection
@@ -178,7 +176,7 @@ Document-Orientation
 \end_layout
 
 \begin_layout Standard
-[XXX References, OMG.]
+[XXX lots of references missing here right now]
 \end_layout
 
 \begin_layout Standard
@@ -201,7 +199,7 @@ document
 \end_inset
 
 .
- [ref mongodb p 1]
+ [xxx ref mongodb p 1]
 \end_layout
 
 \begin_layout Standard
@@ -317,11 +315,6 @@ Prolog
 \end_layout
 
 \begin_layout Standard
-This section gives a small introduction to Prolog in order to more easily
- appreciate the code examples in subsequent sections.
-\end_layout
-
-\begin_layout Standard
 [XXX How much Prolog do I need to describe? Just enough to understand the
  code examples later on?]
 \end_layout
@@ -338,7 +331,21 @@ what
 how
 \emph default
 .
- [xxx currently not mentioning this in the chapter]
+\end_layout
+
+\begin_layout Standard
+This section gives a small introduction to Prolog in order to more easily
+ appreciate the code examples in subsequent sections.
+ [xxx should i say something like 
+\begin_inset Quotes eld
+\end_inset
+
+for a more thorough explanation see ...
+ 
+\begin_inset Quotes eld
+\end_inset
+
+? or is that out of scope?]
 \end_layout
 
 \begin_layout Subsubsection
@@ -358,7 +365,7 @@ term
 , which can be any value.
  A variable can be bound to any term, but once bound, it is immutable and
  cannot be rebound.
- Variables start with an uppercase letter.
+ Variables are recognized by an uppercase initial.
 \end_layout
 
 \begin_layout Subsubsection
@@ -457,6 +464,10 @@ Data Structures
 \end_layout
 
 \begin_layout Standard
+[XXX lots of missing refs]
+\end_layout
+
+\begin_layout Standard
 The main primitive data types in Prolog are integers, floats and atoms.
  In SWI-Prolog [xxx ref SWI] integers are unbounded, and floats are represented
  as 64-bit IEEE 754 doubles.
@@ -486,7 +497,8 @@ tail
 \end_layout
 
 \begin_layout Standard
-A structure is xxx
+A structure is ...
+ [xxx explain]
 \end_layout
 
 \begin_layout Subsubsection
@@ -506,7 +518,7 @@ backtracking
 \end_layout
 
 \begin_layout Standard
-The first step in knowing which clause to use for a certain set of input
+The first step in determining which clause to use for a certain set of input
  is accomplished through 
 \begin_inset Quotes eld
 \end_inset
@@ -581,7 +593,11 @@ Requirements
 \end_layout
 
 \begin_layout Standard
-[Ref: http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements]
+This chapter discusses the functionality required by the driver.
+\end_layout
+
+\begin_layout Standard
+[XXX main ref: http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements]
 \end_layout
 
 \begin_layout Subsection
@@ -589,7 +605,7 @@ BSON Conversion
 \end_layout
 
 \begin_layout Standard
-[Ref: http://bsonspec.org/]
+[xxx ref: http://bsonspec.org/]
 \end_layout
 
 \begin_layout Standard
@@ -629,7 +645,10 @@ Design
 
 \begin_layout Standard
 This chapter discusses the overall design of the driver.
- [xxx this will probably be the biggest chapter, I wager]
+\end_layout
+
+\begin_layout Standard
+[xxx this will probably be the biggest chapter, I wager]
 \end_layout
 
 \begin_layout Subsection
@@ -637,8 +656,9 @@ Driver Structure
 \end_layout
 
 \begin_layout Standard
-xxx discuss modules, mongo, bson, etc.
- What to include etc.
+[xxx discuss modules, mongo, bson, etc.
+ What module to include etc.
+ ?]
 \end_layout
 
 \begin_layout Subsection
@@ -664,14 +684,13 @@ A BSON document is represented in Prolog as a list of key/value pairs.
  Keys are UTF-8 encoded atoms, and values can be of several different types.
 \end_layout
 
-\begin_layout Itemize
-XXXX Design choices: text as atoms (why not list of codes, [97,98,99]?)
- Inspired slightly by JSON parser: http://www.swi-prolog.org/pldoc/doc_for?object=
-section%283,%275.1%27,swi%28%27/doc/packages/http.html%27%29%29
-\end_layout
-
 \begin_layout Subsubsection
 Document-to-BSON Conversion
+\end_layout
+
+\begin_layout Standard
+[XXX 6.2.1 and 6.2.2 will probably be rewritten and merged into one section.
+ The conversion predicate works ways and could be described as such.]
 \end_layout
 
 \begin_layout Standard
@@ -925,7 +944,7 @@ Accessing the Database
 \end_layout
 
 \begin_layout Standard
-[XXX This is where I will discuss the interesting stuff that you actually
+[XXX This is where I will discuss the interesting stuff that you would actually
  use.]
 \end_layout
 
@@ -934,7 +953,7 @@ Find Documents
 \end_layout
 
 \begin_layout Standard
-XXX describe the various interfaces, how cursors work
+[XXX describe the various interfaces, how cursors work etc]
 \end_layout
 
 \begin_layout Standard
@@ -979,10 +998,6 @@ Error Handling
 \end_layout
 
 \begin_layout Standard
-XXX how are errors in failing queries handled, for instance?
-\end_layout
-
-\begin_layout Standard
 Errors issued by a failed query is detected by the driver and an exception
  is thrown that contains the error document returned by the database.
  The error document contains a key called '$err' that maps to an atom describing
@@ -1018,7 +1033,7 @@ Being able to subvert the type system in C makes it trivial to populate
 
 \begin_layout Standard
 BSON conversion is something the driver does very often, and pushing common
- operations down to a more low-level language is likely more efficient.
+ operations down to a lower-level language is likely more efficient.
 \end_layout
 
 \begin_layout Subsection
@@ -1064,11 +1079,12 @@ Related Work
 
 \emph on
 [xxx Compare to existing drivers? Erlang? And something completely different?
- Will probably skip this chapter.]
+ Will probably skip this chapter.
+ Doesn't feel that interesting.]
 \end_layout
 
 \begin_layout Section
-Conclusion/Future Work [what to call it?]
+Conclusion/Future Work [merge or split?]
 \end_layout
 
 \begin_layout Standard
@@ -1081,9 +1097,9 @@ Conclusion/Future Work [what to call it?]
 
 \emph on
 Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to improve
- in the future? Critical parts (BSON) in pure C? Even write a C extension
- with more/most functionality? Don't know how portable that would be though,
- but SWI (and probably SICStus?) has a mature interface to C.
+ in the future? Write a C extension with more/most functionality? Incorporate
+ BSON C implementation? Don't know how portable that would be though, but
+ SWI (and probably SICStus?) has a mature interface to C.
  What is missing for it to be a 
 \begin_inset Quotes eld
 \end_inset
