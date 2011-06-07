@@ -105,8 +105,8 @@ doc_empty([]).
 
 %%  doc_get(+Doc, +Key, ?Value) is semidet.
 %
-%   True if Value is the value associated with Key in Doc,
-%   or +null if the Key cannot be found. This means that there
+%   True if Value is the value associated with Key in Doc
+%   or +null if Key cannot be found. This means that there
 %   is no way of knowing if Value actually was +null or not found.
 
 doc_get([], _, +null).

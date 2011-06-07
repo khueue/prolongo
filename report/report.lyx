@@ -341,6 +341,10 @@ how
  [xxx currently not mentioning this in the chapter]
 \end_layout
 
+\begin_layout Standard
+XXXXXX Comment conventions +, - etc.
+\end_layout
+
 \begin_layout Subsubsection
 Type System
 \end_layout
@@ -405,7 +409,7 @@ length([], N, N).
 \end_layout
 
 \begin_layout LyX-Code
-length([_|L], N0, N) :-
+length([_|T], N0, N) :-
 \end_layout
 
 \begin_layout LyX-Code
@@ -413,7 +417,7 @@ length([_|L], N0, N) :-
 \end_layout
 
 \begin_layout LyX-Code
-    length(L, N1, N).
+    length(T, N1, N).
 \end_layout
 
 \begin_layout Standard
@@ -429,6 +433,28 @@ In an interactive Prolog environment, the above predicate may be used like
 Length = 3
 \end_layout
 
+\begin_layout Standard
+A predicate is usually referred to by its name and arity (number of arguments),
+ and, if possible, its module: 
+\noun on
+module:predicate/arity
+\noun default
+.
+ If the 
+\noun on
+length
+\noun default
+ predicate above would be defined in the module 
+\noun on
+lists
+\noun default
+, it would be referred to as 
+\noun on
+lists:length/3
+\noun default
+.
+\end_layout
+
 \begin_layout Subsubsection
 Data Structures
 \end_layout
@@ -441,10 +467,29 @@ The main primitive data types in Prolog are integers, floats and atoms.
 \end_layout
 
 \begin_layout Standard
-Compound data structures are lists and structures.
- A list is an ordered collection of zero or more terms which need not be
+A list is an ordered collection of zero or more terms which need not be
  the same type.
- A structure is xxx
+ A non-empty list is a recursive structure which consists of the 
+\begin_inset Quotes eld
+\end_inset
+
+head
+\begin_inset Quotes erd
+\end_inset
+
+ which is the first element, and a 
+\begin_inset Quotes eld
+\end_inset
+
+tail
+\begin_inset Quotes erd
+\end_inset
+
+ which is itself a list of all elements except the first.
+\end_layout
+
+\begin_layout Standard
+A structure is xxx
 \end_layout
 
 \begin_layout Subsubsection
@@ -460,7 +505,7 @@ backtracking
 \begin_inset Quotes erd
 \end_inset
 
- into an appropriate clause, and iteration is performed by recursion.
+ into an appropriate clause, and repetition is performed by recursion.
 \end_layout
 
 \begin_layout Standard
@@ -469,7 +514,7 @@ The first step in knowing which clause to use for a certain set of input
 \begin_inset Quotes eld
 \end_inset
 
-head unification
+unification
 \begin_inset Quotes erd
 \end_inset
 
@@ -499,7 +544,12 @@ reference "sub:Program-Structure"
 
  with a non-empty list causes unification to fail in the first clause (an
  empty list cannot be unified with a non-empty list), but succeed in the
- second.
+ second (the first element is selected but ignored, and the tail is bound
+ to the variable 
+\noun on
+T
+\noun default
+).
 \end_layout
 
 \begin_layout Section
@@ -554,7 +604,7 @@ Design
 \end_layout
 
 \begin_layout Standard
-XXX This chapter discusses the overall design of the driver.
+This chapter discusses the overall design of the driver.
  [xxx this will probably be the biggest chapter, I wager]
 \end_layout
 
@@ -564,6 +614,7 @@ Structure
 
 \begin_layout Standard
 xxx discuss modules, mongo, bson, etc.
+ What to include etc.
 \end_layout
 
 \begin_layout Subsection
@@ -582,38 +633,29 @@ At the core of MongoDB lies the BSON binary data format which is used to
 
 \begin_layout Standard
 A BSON document is represented in Prolog as a list of key/value pairs.
+ A pair is a structure named '-' (dash) with two arguments, a key and a
+ value.
+ Using a symbol as the structure's name makes it possible to write the name
+ as an infix operator, avoiding the need for parentheses.
  Keys are UTF-8 encoded atoms, and values can be of several different types.
 \end_layout
 
 \begin_layout Itemize
-[xxx is this implementation stuff?] Some parts written in C.
- Why? (Basically didn't know how to easily handle bytes-to-float in Prolog.
- And perhaps some efficiency.)
+XXXX Design choices: text as atoms (why not list of codes, [97,98,99]?)
+ Inspired slightly by JSON parser: http://www.swi-prolog.org/pldoc/doc_for?object=
+section%283,%275.1%27,swi%28%27/doc/packages/http.html%27%29%29
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Discuss data structures, term [key:value] maps to bytelist [4,1,7,9,3,...]
- etc.
-\end_layout
-
-\begin_layout Itemize
-Design choices: text as atoms (why not list of codes, [97,98,99]?) Inspired
- slightly by JSON parser: http://www.swi-prolog.org/pldoc/doc_for?object=section%2
-83,%275.1%27,swi%28%27/doc/packages/http.html%27%29%29
-\end_layout
-
-\end_deeper
 \begin_layout Subsubsection
 Document-to-BSON Conversion
 \end_layout
 
 \begin_layout Standard
-XXX
+A document with two fields may look like this:
 \end_layout
 
-\begin_layout Standard
-[12,0,0,0, 16, 97,0, 42,0,0,0, 0]
+\begin_layout LyX-Code
+[name-'MongoDB', type-db]
 \end_layout
 
 \begin_layout Subsubsection
@@ -621,11 +663,27 @@ BSON-to-Document Conversion
 \end_layout
 
 \begin_layout Standard
+When converting a document to BSON, a list of bytes is obtained.
+\end_layout
+
+\begin_layout Standard
+When converting between structured documents and BSON encoded bytes, the
+ relation 
+\noun on
+bson:doc_bytes/2
+\noun default
+ can be used.
+ This is a two-way relation that accepts a document and returns bytes, or
+ accepts bytes and returns a document.
+ xxxxxxxxxxxxxx
+\end_layout
+
+\begin_layout Standard
 Given a list of BSON encoded bytes, the relation 
 \noun on
 bson:doc_bytes/2
 \noun default
- can be used to convert them into their structured equivalent.
+ can be used to convert it into its structured equivalent.
  The empty document is represented in BSON as five bytes, the first four
  being a 32-bit little-endian integer representing the length of the entire
  document, and the last byte signaling the end of the document with a zero.
@@ -640,13 +698,13 @@ Doc = [a-42]
 \end_layout
 
 \begin_layout Standard
-If a series of BSON bytes represent a concatenation of documents, the relation
+If a series of BSON bytes represents a concatenation of documents, the relation
  
 \noun on
 bson:docs_bytes/2
 \noun default
  can be used.
- The following yields two empty documents wrapped in a list.
+ The following yields an empty and a non-empty document wrapped in a list.
 \end_layout
 
 \begin_layout LyX-Code
@@ -667,6 +725,97 @@ Docs = [[],[a-42]]
 
 \begin_layout Standard
 An exception is thrown if the conversion fails [xxx detail the exception].
+\end_layout
+
+\begin_layout Subsubsection
+Document Manipulation
+\end_layout
+
+\begin_layout Standard
+[XXX This section got very manual-ish.
+ Is this relevant? Should I keep it, rewrite or omit?]
+\end_layout
+
+\begin_layout Standard
+To make working with documents easier, a set of simple helper predicates
+ are provided.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_is_valid(+Doc)
+\end_layout
+
+\begin_layout Standard
+True if Doc is a valid document and can be converted into BSON encoded bytes.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_empty(?Doc)
+\end_layout
+
+\begin_layout Standard
+True if Doc is an empty BSON document.
+ Can be used to both check for emptiness as well as obtain an empty document.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_get(+Doc, +Key, ?Value)
+\end_layout
+
+\begin_layout Standard
+True if Value is the value associated with Key in Doc or +null if Key cannot
+ be found.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_get_strict(+Doc, +Key, ?Value)
+\end_layout
+
+\begin_layout Standard
+True if Value is the value associated with Key in Doc.
+ Fails if Key is not found or does not match Value.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
+\end_layout
+
+\begin_layout Standard
+True if NewDoc is Doc with the addition or update of the association Key-Value.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_delete(+Doc, +Key, ?NewDoc)
+\end_layout
+
+\begin_layout Standard
+True if NewDoc is Doc with the association removed that has Key as key.
+ At most one association is removed.
+ No change if Key is not found.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_keys(+Doc, ?Keys)
+\end_layout
+
+\begin_layout Standard
+True if Keys is the keys for the associations in Doc.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_values(+Doc, ?Values)
+\end_layout
+
+\begin_layout Standard
+True if Values is the values for the associations in Doc.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_keys_values(+Doc, ?Keys, ?Values)
+\end_layout
+
+\begin_layout Standard
+True if Doc is the list of successive associations of Keys and Values.
 \end_layout
 
 \begin_layout Subsection
@@ -733,7 +882,7 @@ Connection
 \noun on
 mongo:new_connection
 \noun default
-, the following will release any resources associated with it, rendering
+/1,3, the following will release any resources associated with it, rendering
  it unusable.
 \end_layout
 
@@ -829,8 +978,10 @@ Implementation
 
 \begin_layout Standard
 XXX Discuss code organization, modules? Discuss why some parts of BSON is
- implemented in C? Discuss the test suite? Discuss dependencies and portability?
- Discuss efficiency (relevant?)?
+ implemented in C? (Basically didn't know how to easily handle bytes-to-float
+ in Prolog.
+ And perhaps some efficiency.) Discuss the test suite? Discuss dependencies
+ and portability? Discuss efficiency (relevant?)?
 \end_layout
 
 \begin_layout Section
