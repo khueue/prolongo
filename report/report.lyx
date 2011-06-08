@@ -949,16 +949,66 @@ Accessing the Database
 \end_layout
 
 \begin_layout Subsubsection
+Databases and Collections
+\end_layout
+
+\begin_layout Standard
+[XXX write about how to gain access to databases and collections within]
+\end_layout
+
+\begin_layout Standard
+Once a connection to the database server has been obtained, a xxxxxx
+\end_layout
+
+\begin_layout Subsubsection
 Find Documents
 \end_layout
 
 \begin_layout Standard
-[XXX describe the various interfaces, how cursors work etc]
+Querying the database for documents is accomplished through the family of
+ 
+\begin_inset Quotes eld
+\end_inset
+
+find
+\begin_inset Quotes erd
+\end_inset
+
+ predicates.
+ Depending on the nature of the query, different predicates can be used
+ to retrieve, for example, a single document or all documents matching the
+ query.
 \end_layout
 
 \begin_layout Standard
-find_one/3, find_one/4, find_all/4, find/7, find/8, kill/1, kill_batch/1,
- get_more/4, has_more/1, exhaust/2
+In general, a query returns documents in batches.
+ A certain number of documents are returned with the query response, but
+ if there are too many documents to fit in one response, a 
+\begin_inset Quotes eld
+\end_inset
+
+cursor
+\begin_inset Quotes erd
+\end_inset
+
+ is established.
+ This cursor can then be used to further query for the rest of the resulting
+ documents.
+\end_layout
+
+\begin_layout Paragraph
+mongo:find_one(+Collection, +Query, -Doc)
+\end_layout
+
+\begin_layout Standard
+Returns the first document found in the collection that matches the query
+ document.
+ If no match can be found, the returned document is the atom nil.
+\end_layout
+
+\begin_layout Standard
+[find_one/3, find_one/4, find_all/4, find/7, find/8, kill/1, kill_batch/1,
+ get_more/4, has_more/1, exhaust/2]
 \end_layout
 
 \begin_layout Subsubsection
