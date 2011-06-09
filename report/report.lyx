@@ -24,7 +24,7 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize default
+\paperfontsize 12
 \spacing onehalf
 \use_hyperref false
 \papersize default
@@ -297,8 +297,9 @@ At the core of MongoDB lies the BSON (Binary JSON) data format which is
 \end_layout
 
 \begin_layout Standard
-BSON is similar to and heavily influenced by JSON, the main difference being
- that BSON is a binary format whereas JSON is plain-text.
+BSON is similar to and heavily influenced by JSON (JavaScript Object Notation),
+ the main difference being that BSON is a binary format whereas JSON is
+ plain-text.
  The reason for using a binary format is efficiency.
  With JSON, numbers need to be converted to and from text in order to be
  used.
@@ -425,8 +426,8 @@ length([_|T], N0, N) :-
 \end_layout
 
 \begin_layout Standard
-In an interactive Prolog environment, the above predicate may be used like
- this, providing a starting value for the accumulator.
+In an interactive Prolog environment, the above predicate may be used as
+ follows, providing a starting value for the accumulator.
 \end_layout
 
 \begin_layout LyX-Code
@@ -953,11 +954,31 @@ Databases and Collections
 \end_layout
 
 \begin_layout Standard
-[XXX write about how to gain access to databases and collections within]
+A MongoDB server can contain multiple logical databases, and each database
+ can contain multiple document collections.
+ Once a connection to the server has been established, a handle to a logical
+ database can be retrieved by the predicate 
+\noun on
+mongo:get_database/3
+\noun default
+.
+ The predicate accepts a connection handle and the name of the desired database
+ as an atom, and returns a handle to the database.
+ The database need not exist beforehand, and will be created when it is
+ first used.
 \end_layout
 
 \begin_layout Standard
-Once a connection to the database server has been obtained, a xxxxxx
+The database handle can be used to execute general database commands, but
+ a collection handle must be retrieved when working with documents.
+ This is accomplished by the predicate 
+\noun on
+mongo:get_collection/3
+\noun default
+, which accepts a database handle and the name of the collection, and returns
+ a collection handle.
+ The collection need not exist beforehand, and will be created when it is
+ first used.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1078,7 +1099,7 @@ A small part of the BSON handling is written in C instead of Prolog.
 Being able to subvert the type system in C makes it trivial to populate
  a fixed-width number with individual bytes and then interpret them as a
  whole.
- This is especially convenient when converting bytes into floating-point.
+ This is especially convenient when converting between bytes and floating-point.
 \end_layout
 
 \begin_layout Standard
