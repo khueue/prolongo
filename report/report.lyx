@@ -123,7 +123,7 @@ driver
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Purpose
 \end_layout
 
@@ -132,7 +132,7 @@ The purpose of this thesis is to discuss the design and implementation of
  a MongoDB driver for Prolog.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Scope
 \end_layout
 
@@ -648,18 +648,42 @@ Design
 This chapter discusses the overall design of the driver.
 \end_layout
 
-\begin_layout Standard
-[xxx this will probably be the biggest chapter, I wager]
-\end_layout
-
 \begin_layout Subsection
-Driver Structure
+Driver Organization
 \end_layout
 
 \begin_layout Standard
-[xxx discuss modules, mongo, bson, etc.
- What module to include etc.
- ?]
+The driver is organized into two modules: 
+\emph on
+mongo
+\emph default
+ and 
+\emph on
+bson
+\emph default
+.
+ The 
+\emph on
+mongo
+\emph default
+ module is the main module which contains all the functionality needed to
+ work with a MongoDB instance.
+ The 
+\emph on
+bson
+\emph default
+ module exposes functionality to handle BSON conversions between documents
+ and bytes, and also document manipulation predicates.
+ The 
+\emph on
+bson
+\emph default
+ module is used internally by the 
+\emph on
+mongo
+\emph default
+ module, but it is implemented separately because BSON is not inherent to
+ MongoDB and can be used without it.
 \end_layout
 
 \begin_layout Subsection
@@ -941,7 +965,7 @@ mongo:new_connection
 \end_layout
 
 \begin_layout Subsection
-Accessing the Database
+Working with Data
 \end_layout
 
 \begin_layout Standard
@@ -988,13 +1012,9 @@ Find Documents
 \begin_layout Standard
 Querying the database for documents is accomplished through the family of
  
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 find
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
  predicates.
  Depending on the nature of the query, different predicates can be used
  to retrieve, for example, a single document or all documents matching the
@@ -1017,6 +1037,409 @@ cursor
  documents.
 \end_layout
 
+\begin_layout Standard
+The arguments for the various 
+\emph on
+find
+\emph default
+ predicates are similar and described in Table
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Arguments-for-find"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}{%
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Query
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which documents to match
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++ReturnFields
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which fields to return
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Skip
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Number of documents to skip
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Limit
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Number of documents to return
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Options
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+List of option atoms
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Cursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cursor used to fetch more documents
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Docs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Documents returned by the query
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Arguments-for-find"
+
+\end_inset
+
+Arguments for find-predicates.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The most general 
+\emph on
+find
+\emph default
+ predicate is 
+\noun on
+mongo:find/8
+\noun default
+.
+ It is invoked using all the arguments in Table
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Arguments-for-find"
+
+\end_inset
+
+ and therefore offers fine-grained control over the query.
+\end_layout
+
+\begin_layout Standard
+If only one document is desired, 
+\noun on
+mongo:find_one/3
+\noun default
+ and 
+\noun on
+mongo:find_one/4
+\noun default
+ can be used.
+ These predicates return xxxxx
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="1">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+oaeuaoeu
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mongo:find(+Collection, +Query, +ReturnFields,+Skip, +Limit, +Options, -Cursor,
+ -Docs)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+aoeuao
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+mongo:find(+Collection, +Query, +ReturnFields, +Skip, +Limit, +Options,
+ -Cursor, -Docs)
+\end_layout
+
+\begin_layout Standard
+aoeuaoeuao
+\end_layout
+
 \begin_layout Paragraph
 mongo:find_one(+Collection, +Query, -Doc)
 \end_layout
@@ -1025,6 +1448,14 @@ mongo:find_one(+Collection, +Query, -Doc)
 Returns the first document found in the collection that matches the query
  document.
  If no match can be found, the returned document is the atom nil.
+\end_layout
+
+\begin_layout Paragraph
+mongo:find_one(+Collection, +Query, +ReturnFields, -Doc)
+\end_layout
+
+\begin_layout Standard
+aoeuxxxx
 \end_layout
 
 \begin_layout Standard
@@ -1108,11 +1539,7 @@ BSON conversion is something the driver does very often, and pushing common
 \end_layout
 
 \begin_layout Subsection
-Environment
-\end_layout
-
-\begin_layout Standard
-[XXX Is this relevant?]
+Technical Environment
 \end_layout
 
 \begin_layout Description
@@ -1181,6 +1608,14 @@ real
 
  driver? Discuss choice of list as BSON document.
  Maybe use some map-like structure instead.]
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+[Should I include a chapter with some kind of usage example, with a longer
+ code snippet that shows what modules to include and how to actually interact
+ with the driver? Is that Appendix material?]
 \end_layout
 
 \begin_layout Bibliography
