@@ -17,18 +17,19 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
-%%  delete.
+%%  delete(+Collection, +Selector).
 %
-%   xxxxxxxxxx
+%   Identical to calling delete/3 without options.
 
 delete(Collection, Selector) :-
     delete(Collection, Selector, []).
 
 option_value(single_remove, 1).
 
-%%  delete.
+%%  delete(+Collection, +Selector, +Options).
 %
-%   xxxxxxxxxx
+%   True if all documents in Collection matching Selector are deleted
+%   using Options (possible: single_remove).
 
 delete(Collection, Selector, Options) :-
     mongo_collection:collection_namespace(Collection, Namespace),

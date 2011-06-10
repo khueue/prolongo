@@ -17,8 +17,16 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
+%%  insert(+Collection, +Doc).
+%
+%   True if Doc is inserted into Collection.
+
 insert(Collection, Doc) :-
     insert_batch(Collection, [], [Doc]).
+
+%%  insert_batch(+Collection, +Options, +Docs).
+%
+%   True if Docs are inserted into Collection using Options (keep_going).
 
 insert_batch(Collection, Options, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),

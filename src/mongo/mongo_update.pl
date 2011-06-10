@@ -18,9 +18,10 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
-%%  upsert.
+%%  upsert(+Collection, +Selector, +Modifier).
 %
-%   xxxxxxxxxx
+%   True if the first document in Collection matching Selector is updated
+%   according to Modifier. If no such document exists, it is created.
 
 upsert(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
@@ -29,9 +30,10 @@ upsert(Collection, Selector, Modifier) :-
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
-%%  update_all.
+%%  update_all(+Collection, +Selector, +Modifier).
 %
-%   xxxxxxxxxx
+%   True if all documents in Collection matching Selector is updated
+%   according to Modifier.
 
 update_all(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
@@ -40,9 +42,10 @@ update_all(Collection, Selector, Modifier) :-
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
-%%  update.
+%%  update(+Collection, +Selector, +Modifier).
 %
-%   xxxxxxxxxx
+%   True if the first document in Collection matching Selector is updated
+%   according to Modifier.
 
 update(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),

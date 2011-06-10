@@ -26,24 +26,25 @@ database_cmd_collection(Database, CmdColl) :-
     command_collection(CmdCollName),
     mongo_database:get_collection(Database, CmdCollName, CmdColl).
 
-%%  command.
+%%  command(+Database, +Query, -Doc).
 %
-%   xxxxxxxxxx
+%   True if Doc is the response to Query, issued on Database.
 
 command(Database, Query, Doc) :-
     database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, Query, [], Doc).
+    mongo_find:find_one(CmdColl, Query, Doc).
 
-%%  get_last_error.
+%%  get_last_error(+Database, -Doc).
 %
-%   xxxxxxxxx
+%   True if Doc is a document describing the status of the latest query.
 
 get_last_error(Database, Doc) :-
     command(Database, [getlasterror-1], Doc).
 
-%%  drop_database.
+%%  drop_database(+Database).
 %
-%   xxxxxxxxx
+%   True if Database is dropped. Throws an exception if Database could
+%   not be dropped.
 
 drop_database(Database) :-
     command(Database, [dropDatabase-1], Doc),
@@ -53,38 +54,39 @@ drop_database(Database) :-
     mongo_database:database_name(Database, DatabaseName),
     throw(mongo_error('could not drop database', DatabaseName)).
 
-%%  drop_collection.
+%%  drop_collection(+Collection).
 %
-%   xxxxxxxxx
+%   True if Collection is dropped from its database. Throws an exception
+%   if Collection could not be dropped.
 
 drop_collection(Collection) :-
     mongo_collection:collection_database(Collection, Database),
     database_cmd_collection(Database, CmdColl),
     mongo_collection:collection_name(Collection, CollectionName),
-    mongo_find:find_one(CmdColl, [drop-CollectionName], [], Doc),
+    mongo_find:find_one(CmdColl, [drop-CollectionName], Doc),
     doc_ok(Doc),
     !.
 drop_collection(Collection) :-
     mongo_collection:collection_name(Collection, CollectionName),
     throw(mongo_error('could not drop collection', CollectionName)).
 
-%%  list_database_names.
+%%  list_database_names(+Connection, -Names).
 %
-%   xxxxxxxxx
+%   True if Names is a list of names of all logical databases.
 
 list_database_names(Connection, Names) :-
     list_database_infos(Connection, Infos),
     bson:doc_keys(Infos, Names).
 
-%%  list_database_infos.
+%%  list_database_infos(+Connection, -Infos).
 %
-%   xxxxxxxxxx
+%   True if Infos is a list of documents detailing all logical databases.
 
 list_database_infos(Connection, Infos) :-
     admin_database(DatabaseName),
     mongo_connection:get_database(Connection, DatabaseName, Database),
     database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, [listDatabases-1], [], Doc),
+    mongo_find:find_one(CmdColl, [listDatabases-1], Doc),
     bson:doc_get(Doc, databases, InfoArray),
     repack_database_infos(InfoArray, Infos).
 
@@ -92,17 +94,18 @@ repack_database_infos([], []).
 repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
     repack_database_infos(Infos, Names).
 
-%%  list_commands.
+%%  list_commands(+Database, -Commands).
 %
-%   xxxxxxxxxx
+%   True if Commands is a list of documents detailing the commands that
+%   can be executed on Database.
 
 list_commands(Database, Result) :-
     database_cmd_collection(Database, CmdColl),
     mongo_find:find_one(CmdColl, [listCommands-1], [commands-1], Result).
 
-%%  list_collection_names.
+%%  list_collection_names(+Database, -Names).
 %
-%   xxxxxxxxxxxxxxx
+%   True if Names is the list of collection names in Database.
 
 list_collection_names(Database, Names) :-
     namespace_collection(CollNamespacesName),

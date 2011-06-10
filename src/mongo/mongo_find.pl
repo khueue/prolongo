@@ -20,8 +20,18 @@
 :- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
+%%  find_one(+Collection, +Query, -Doc).
+%
+%   Identical to calling find_one/4 with empty return fields (all fields).
+
 find_one(Collection, Query, Result) :-
     find_one(Collection, Query, [], Result).
+
+%%  find_one(+Collection, +Query, +ReturnFields, -Doc).
+%
+%   True if Doc is the first document in Collection that matches Query.
+%   ReturnFields is a document describing which fields to return
+%   (empty means all fields).
 
 find_one(Collection, Query, ReturnFields, Doc) :-
     find(Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),
@@ -29,6 +39,12 @@ find_one(Collection, Query, ReturnFields, Doc) :-
 
 package_result_doc([], nil).
 package_result_doc([Doc], Doc).
+
+%%  find_all(+Collection, +Query, +ReturnFields, -Docs).
+%
+%   True if Docs is all the documents in Collection that match Query.
+%   ReturnFields is a document describing which fields to return
+%   (empty means all fields).
 
 find_all(Collection, Query, ReturnFields, Docs) :-
     phrase(find_all(Collection, Query, ReturnFields), Docs).
@@ -48,8 +64,23 @@ option_value(await_data,         32).
 option_value(exhaust,            64).
 option_value(partial,           128).
 
+%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, -Cursor, -Docs).
+%
+%   Identical to calling find/8 without options.
+
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
     find(Collection, Query, ReturnFields, Skip, Limit, [], Cursor, Docs).
+
+%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, +Options, -Cursor, -Docs).
+%
+%   True if Docs is the first batch of documents in Collection that
+%   match Query. ReturnFields is a document describing which fields to
+%   return (empty means all fields). Skip is the number of documents
+%   to skip, and Limit is the number of documents to return. If the
+%   result contains more documents than can fit into a single response,
+%   Cursor can be used to retrieve more documents. Options is a list
+%   of atoms (tailable_cursor, slave_ok, no_cursor_timeout, await_data,
+%   exhaust, partial).
 
 find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
