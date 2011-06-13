@@ -1033,22 +1033,33 @@ cursor
 \end_inset
 
  is established.
- This cursor can then be used to query for further documents.
+ The cursor can then be used to query for further documents.
 \end_layout
 
 \begin_layout Standard
-The arguments for the various 
+The three main predicates for finding documents are 
+\emph on
+mongo:find/8
+\emph default
+, 
+\emph on
+mongo:find_one/4
+\emph default
+ and 
+\emph on
+mongo:find_all/4
+\emph default
+.
+ The most general predicate is 
 \emph on
 find
 \emph default
- predicates are described in Table
-\begin_inset space ~
-\end_inset
-
-
+ which takes many arguments and offers very fine-grained control over the
+ query.
+ The interface to the predicate is described in 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "tab:Arguments-for-find"
+LatexCommand formatted
+reference "tab:interface-find"
 
 \end_inset
 
@@ -1261,11 +1272,11 @@ Documents returned by the query
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:Arguments-for-find"
+name "tab:interface-find"
 
 \end_inset
 
-Arguments for find-predicates.
+Interface to mongo:find/8.
 \end_layout
 
 \end_inset
@@ -1279,68 +1290,336 @@ Arguments for find-predicates.
 \end_layout
 
 \begin_layout Standard
-The most general 
+The predicate 
 \emph on
-find
+find_one
 \emph default
- predicate is 
-\noun on
-mongo:find/8
-\noun default
-.
- It is invoked using all the arguments in Table
-\begin_inset space ~
-\end_inset
-
-
+ is intended for the common case where you only expect one matching document.
+ If no matching document is found, the returned document is the atom 'nil'.
+ The interface is described in 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "tab:Arguments-for-find"
+LatexCommand formatted
+reference "tab:interface-find-one"
 
 \end_inset
 
- and therefore offers fine-grained control over the query.
+.
 \end_layout
 
 \begin_layout Standard
-If only one document is desired, 
-\noun on
-mongo:find_one/3
-\noun default
- and 
-\noun on
-mongo:find_one/4
-\noun default
- can be used.
- These predicates return xxxxx
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Query
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which document to match
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++ReturnFields
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which fields to return
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Doc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document returned by the query
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-find-one"
+
+\end_inset
+
+Interface to mongo:find_one/4.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-mongo:find(+Collection, +Query, +ReturnFields, +Skip, +Limit, +Options,
- -Cursor, -Docs)
+The predicate 
+\emph on
+find_all
+\emph default
+ is intended for situations where all matching documents need processing
+ and it is convenient to collect them into a single (potentially large)
+ list.
+ The interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-find-all"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Query
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which documents to match
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++ReturnFields
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which fields to return
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Docs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Documents returned by the query
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-find-all"
+
+\end_inset
+
+Interface to mongo:find_all/4.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
-mongo:find_one(+Collection, +Query, -Doc)
+Using Cursors
 \end_layout
 
 \begin_layout Standard
-Returns the first document found in the collection that matches the query
- document.
- If no match can be found, the returned document is the atom nil.
-\end_layout
-
-\begin_layout Paragraph
-mongo:find_one(+Collection, +Query, +ReturnFields, -Doc)
+[XXX cursors]
 \end_layout
 
 \begin_layout Standard
-aoeuxxxx
-\end_layout
-
-\begin_layout Standard
-[find_one/3, find_one/4, find_all/4, find/7, find/8, kill/1, kill_batch/1,
- get_more/4, has_more/1, exhaust/2]
+[kill/1, kill_batch/1, get_more/4, has_more/1, exhaust/2]
 \end_layout
 
 \begin_layout Subsubsection
