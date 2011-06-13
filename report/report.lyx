@@ -572,18 +572,29 @@ When documenting Prolog predicates, each argument is usually prefixed with
  The following documentation convention is employed by subsequent chapters.
 \end_layout
 
-\begin_layout Description
-+ Input argument.
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
++ 
+\emph on
+Input argument.
+
+\emph default
  The argument must be already instantiated.
 \end_layout
 
-\begin_layout Description
-- Output argument.
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+- 
+\emph on
+Output argument.
+
+\emph default
  The argument must not be already instantiated, but instead instantiated
  by the predicate.
 \end_layout
 
-\begin_layout Description
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
 ? The argument may or may not be instantiated.
  This is commonly used when the predicate can be used to either verify the
  argument or instantiate it.
@@ -2235,7 +2246,7 @@ Delete Documents
 \end_layout
 
 \begin_layout Subsubsection
-Database Commands
+General Database Commands
 \end_layout
 
 \begin_layout Standard
