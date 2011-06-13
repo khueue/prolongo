@@ -1062,22 +1062,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{center}{%
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="9" columns="2">
 <features tabularvalignment="middle">
@@ -1264,22 +1249,6 @@ Documents returned by the query
 </cell>
 </row>
 </lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\backslash
-end{center}
-\end_layout
 
 \end_inset
 
