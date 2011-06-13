@@ -648,7 +648,7 @@ Document Handling
 
 \begin_layout Standard
 The driver must expose functionality to find, insert, update and delete
- documents in the database.
+ documents in a database.
 \end_layout
 
 \begin_layout Section
