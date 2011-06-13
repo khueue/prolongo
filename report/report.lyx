@@ -969,8 +969,8 @@ Working with Data
 \end_layout
 
 \begin_layout Standard
-[XXX This is where I will discuss the interesting stuff that you would actually
- use.]
+This section gives an overview of the main functionality needed to work
+ with a database and its documents.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1068,9 +1068,10 @@ reference "tab:interface-find"
 
 \begin_layout Standard
 \begin_inset Float table
+placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1308,9 +1309,10 @@ reference "tab:interface-find-one"
 
 \begin_layout Standard
 \begin_inset Float table
+placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1469,9 +1471,10 @@ reference "tab:interface-find-all"
 
 \begin_layout Standard
 \begin_inset Float table
+placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1615,11 +1618,596 @@ Using Cursors
 \end_layout
 
 \begin_layout Standard
-[XXX cursors]
+When a query matches more documents than can be returned in a single response,
+ a cursor is established and returned.
+ A cursor is created and maintained by the database instance, and it represents
+ a pointer to a subset of the documents matched by a query [xxx ref and
+ maybe rewrite].
 \end_layout
 
 \begin_layout Standard
-[kill/1, kill_batch/1, get_more/4, has_more/1, exhaust/2]
+After making a query, the predicate 
+\emph on
+mongo:cursor_has_more/
+\emph default
+1 can be called on a cursor.
+ The predicate succeeds if more documents can be retrieved, and its interface
+ is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-has-more"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Cursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cursor to investigate
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-cursor-has-more"
+
+\end_inset
+
+Interface to mongo:cursor_has_more/1.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If more documents need to be retrieved, the predicate 
+\emph on
+mongo:cursor_get_more/4
+\emph default
+ can be used.
+ This predicate takes a cursor, returns a number of documents and also a
+ new cursor handle representing the possibly modified state of the cursor.
+ The interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-get-more"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Cursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cursor to investigate
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Limit
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Number of documents to return
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Docs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Documents returned by the query
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-NewCursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+New state of Cursor
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-cursor-get-more"
+
+\end_inset
+
+Interface to mongo:cursor_has_more/1.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When a cursor is no longer needed, it must be explicitly killed in order
+ for the database to clean up any resources claimed by it.
+ This is accomplished by the predicate 
+\emph on
+mongo:cursor_kill/1
+\emph default
+, described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-kill"
+
+\end_inset
+
+.
+ If several cursors need to be killed, a more efficient version called 
+\emph on
+mongo:cursor_kill_batch/1
+\emph default
+ can be used to kill them in a single database call.
+ This predicate is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-kill-batch"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Cursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cursor to kill
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-cursor-kill"
+
+\end_inset
+
+Interface to mongo:cursor_kill/1.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Cursors
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+List of cursors to kill
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-cursor-kill-batch"
+
+\end_inset
+
+Interface to mongo:cursor_kill_batch/1.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Should all remaining documents matched by a query need to be retrieved in
+ a single action, the predicate 
+\emph on
+mongo:cursor_exhaust/2
+\emph default
+ can be used.
+ This is a convenience predicate that simply queries the cursor until all
+ documents have been retrieved, and returns them as a single list.
+ A cursor exhausted by this predicate need not be manually killed.
+ The interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-exhaust"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Cursor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cursor to exhaust (and automatically kill)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Docs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+All remaining documents pointed to by the cursor
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-cursor-exhaust"
+
+\end_inset
+
+Interface to mongo:cursor_exhaust/2.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -1627,7 +2215,7 @@ Insert Documents
 \end_layout
 
 \begin_layout Standard
-insert/2, insert_batch/3
+[XXX insert/2, insert_batch/3]
 \end_layout
 
 \begin_layout Subsubsection
@@ -1635,7 +2223,7 @@ Update Documents
 \end_layout
 
 \begin_layout Standard
-upsert/3, update/3, update_all/3
+[XXX upsert/3, update/3, update_all/3]
 \end_layout
 
 \begin_layout Subsubsection
@@ -1643,7 +2231,7 @@ Delete Documents
 \end_layout
 
 \begin_layout Standard
-delete/2, delete/3
+[XXX delete/2, delete/3]
 \end_layout
 
 \begin_layout Subsubsection
@@ -1651,7 +2239,7 @@ Database Commands
 \end_layout
 
 \begin_layout Standard
-command/3
+[XXX command/3]
 \end_layout
 
 \begin_layout Subsection
@@ -1661,8 +2249,11 @@ Error Handling
 \begin_layout Standard
 Errors issued by a failed query is detected by the driver and an exception
  is thrown that contains the error document returned by the database.
- The error document contains a key called '$err' that maps to an atom describing
- the nature of the error.
+ The error document contains a key called 
+\emph on
+$err
+\emph default
+ that maps to an atom describing the nature of the error.
 \end_layout
 
 \begin_layout Section
@@ -1941,11 +2532,11 @@ http://www.swi-prolog.org/pldoc/
 
 \begin_layout Section
 \start_of_appendix
-Driver API
+XXX Complete driver API?
 \end_layout
 
-\begin_layout Standard
-[XXX List all API documentation?]
+\begin_layout Section
+XXX Usage manual?
 \end_layout
 
 \end_body
