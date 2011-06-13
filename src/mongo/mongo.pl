@@ -35,11 +35,11 @@
     ]).
 :- reexport(mongo(mongo_cursor),
     [
-        kill/1,
-        kill_batch/1,
-        get_more/4,
-        has_more/1,
-        exhaust/2
+        cursor_kill/1,
+        cursor_kill_batch/1,
+        cursor_get_more/4,
+        cursor_has_more/1,
+        cursor_exhaust/2
     ]).
 :- reexport(mongo(mongo_insert),
     [

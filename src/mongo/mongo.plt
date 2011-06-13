@@ -108,26 +108,26 @@ test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:has_more(Cursor0),
-    mongo:get_more(Cursor0, 3, Docs1, Cursor1),
+    mongo:cursor_has_more(Cursor0),
+    mongo:cursor_get_more(Cursor0, 3, Docs1, Cursor1),
     Docs1 =
     [
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:has_more(Cursor1), % XXX Why still more, yet empty?
-    mongo:get_more(Cursor1, 3, Docs2, Cursor2),
+    mongo:cursor_has_more(Cursor1), % XXX Why still more, yet empty?
+    mongo:cursor_get_more(Cursor1, 3, Docs2, Cursor2),
     Docs2 =
     [
     ],
-    \+ mongo:has_more(Cursor2).
+    \+ mongo:cursor_has_more(Cursor2).
 
 test('insert many single, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
     insert_n_docs(Coll, 1000),
     mongo:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
-    mongo:exhaust(Cursor, DocsRest),
+    mongo:cursor_exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
@@ -143,7 +143,7 @@ test('insert batch, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))])
     create_n_docs(1000, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
-    mongo:exhaust(Cursor, DocsRest),
+    mongo:cursor_exhaust(Cursor, DocsRest),
     lists:length(Docs0, N0),
     lists:length(DocsRest, N),
     1000 is N0 + N.
@@ -160,19 +160,19 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 :- begin_tests('mongo:find/8').
 :- end_tests('mongo:find/8').
 
-:- begin_tests('mongo:kill/1'). % xxx better name?
+:- begin_tests('mongo:cursor_kill/1').
 
 test('cursor kill', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
     create_n_docs(20, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor, _NotAllDocs),
-    mongo:kill(Cursor),
-    mongo:get_more(Cursor, 10, [], _Cursor1).
+    mongo:cursor_kill(Cursor),
+    mongo:cursor_get_more(Cursor, 10, [], _Cursor1).
 
-:- end_tests('mongo:kill/1').
+:- end_tests('mongo:cursor_kill/1').
 
-:- begin_tests('mongo:kill_batch/1'). % xxx name?
+:- begin_tests('mongo:cursor_kill_batch/1').
 
 test('cursor kill batch', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:delete(Coll, [hello-world]),
@@ -180,11 +180,11 @@ test('cursor kill batch', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor1, _NotAllDocs1),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor2, _NotAllDocs2),
-    mongo:kill_batch([Cursor1,Cursor2]),
-    mongo:get_more(Cursor1, 10, [], _Cursor11),
-    mongo:get_more(Cursor2, 10, [], _Cursor22).
+    mongo:cursor_kill_batch([Cursor1,Cursor2]),
+    mongo:cursor_get_more(Cursor1, 10, [], _Cursor11),
+    mongo:cursor_get_more(Cursor2, 10, [], _Cursor22).
 
-:- end_tests('mongo:kill_batch/1').
+:- end_tests('mongo:cursor_kill_batch/1').
 
 :- begin_tests('mongo:find_one/3,4').
 

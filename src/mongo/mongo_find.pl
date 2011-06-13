@@ -53,7 +53,7 @@ find_all(Collection, Query, ReturnFields, Docs) :-
 find_all(Collection, Query, ReturnFields) -->
     { find(Collection, Query, ReturnFields, 0, 0, Cursor, Docs0) },
     Docs0,
-    { mongo:exhaust(Cursor, DocsRest) },
+    { mongo:cursor_exhaust(Cursor, DocsRest) },
     DocsRest.
 
 option_value(tailable_cursor,     2).
