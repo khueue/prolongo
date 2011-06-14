@@ -2831,7 +2831,8 @@ A small part of the BSON handling is written in C instead of Prolog.
 Being able to subvert the type system in C makes it trivial to populate
  a fixed-width number with individual bytes and then interpret them as a
  whole.
- This is especially convenient when converting between bytes and floating-point.
+ This is especially convenient when converting between bytes and floating-point
+ numbers.
 \end_layout
 
 \begin_layout Standard
