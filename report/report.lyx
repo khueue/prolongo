@@ -2227,10 +2227,14 @@ Insert Documents
 
 \begin_layout Standard
 Two predicates are available to insert documents into a database collection.
- The simplest one is mongo:insert/2, which accepts a collection handle and
- a document to insert, as described in 
+ The simplest one is 
+\emph on
+mongo:insert/2
+\emph default
+, which accepts a collection handle and a document to insert, as described
+ in 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand formatted
 reference "tab:interface-insert"
 
 \end_inset
@@ -2243,7 +2247,7 @@ reference "tab:interface-insert"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2344,10 +2348,14 @@ Interface to mongo:insert/2.
 
 \begin_layout Standard
 If several documents need to be inserted, a more efficient predicate called
- mongo:insert_batch/3 may be used.
+ 
+\emph on
+mongo:insert_batch/3
+\emph default
+ may be used.
  This predicate is described in 
 \begin_inset CommandInset ref
-LatexCommand ref
+LatexCommand formatted
 reference "tab:interface-insert-batch"
 
 \end_inset
@@ -2479,10 +2487,6 @@ Interface to mongo:insert_batch/3.
 
 \end_layout
 
-\begin_layout Standard
-[XXX insert/2, insert_batch/3]
-\end_layout
-
 \begin_layout Subsubsection
 Update Documents
 \end_layout
@@ -2496,7 +2500,270 @@ Delete Documents
 \end_layout
 
 \begin_layout Standard
-[XXX delete/2, delete/3]
+Deleting documents from a collection is accomplished through the predicates
+ 
+\emph on
+mongo:delete/2
+\emph default
+ and 
+\emph on
+mongo:delete/3
+\emph default
+.
+ Both predicates accept a collection handle and a 
+\begin_inset Quotes eld
+\end_inset
+
+selector
+\begin_inset Quotes erd
+\end_inset
+
+ document that describes which documents to match and delete.
+ All matching documents are deleted unless the option 'single_remove' is
+ supplied.
+ The predicate interfaces are described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-delete-2"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-delete-3"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Selector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which documents to delete
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-delete-2"
+
+\end_inset
+
+Interface to mongo:delete/3.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Selector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which documents to delete
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Options
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+List of option atoms
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-delete-3"
+
+\end_inset
+
+Interface to mongo:delete/3.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -2532,7 +2799,7 @@ Implementation
 \end_layout
 
 \begin_layout Subsection
-Parsing Techniques
+Parsing Technique
 \end_layout
 
 \begin_layout Standard
@@ -2546,8 +2813,8 @@ difference lists
 \begin_inset Quotes erd
 \end_inset
 
-, which is a common approach in Prolog to avoid unnecessary list concatenation
- [XXX ref].
+, which is a common approach in Prolog to avoid unnecessary (and inefficient)
+ list concatenation [XXX ref].
 \end_layout
 
 \begin_layout Subsection
