@@ -91,7 +91,8 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-MongoDB is a document-oriented database system with a strong focus on flexibilit
+Mongo\SpecialChar \-
+DB is a document-oriented database system with a strong focus on flexibilit
 y, scalability and performance.
  Document-orientation involves leaving the row-centric concept of the relational
  database model, and introducing the much more flexible notion of a document.
@@ -105,11 +106,13 @@ y, scalability and performance.
 Prolog, being an untyped language, agrees with the document-oriented approach
  of relaxing manifests in order to create more dynamic and flexible systems.
  Embedding terms in other terms is natural in Prolog, and embedding documents
- in other documents is natural in MongoDB.
+ in other documents is natural in Mongo\SpecialChar \-
+DB.
 \end_layout
 
 \begin_layout Standard
-In order to use MongoDB from a programming language, some kind of interface,
+In order to use Mongo\SpecialChar \-
+DB from a programming language, some kind of interface,
  or 
 \begin_inset Quotes eld
 \end_inset
@@ -120,7 +123,6 @@ driver
 
 , must sit in-between the database system and the language to facilitate
  the communication.
- 
 \end_layout
 
 \begin_layout Subsection
@@ -129,7 +131,8 @@ Purpose
 
 \begin_layout Standard
 The purpose of this thesis is to discuss the design and implementation of
- a MongoDB driver for Prolog.
+ a Mongo\SpecialChar \-
+DB driver for Prolog.
 \end_layout
 
 \begin_layout Subsection
@@ -140,7 +143,8 @@ Scope
 The aim of this thesis is not to create a feature-complete production-ready
  driver, but to cover basic CRUD (Create, Read, Update, Delete) functionality
  and connection handling, laying the foundation for further development.
- More advanced MongoDB features such as replication and file storage are
+ More advanced Mongo\SpecialChar \-
+DB features such as replication and file storage are
  not covered.
 \end_layout
 
@@ -155,7 +159,8 @@ Background
 \end_layout
 
 \begin_layout Standard
-This chapter briefly discusses MongoDB and Prolog.
+This chapter briefly discusses Mongo\SpecialChar \-
+DB and Prolog.
 \end_layout
 
 \begin_layout Subsection
@@ -163,7 +168,8 @@ MongoDB
 \end_layout
 
 \begin_layout Standard
-MongoDB is a document-oriented database management system that emphasizes
+Mongo\SpecialChar \-
+DB is a document-oriented database management system that emphasizes
  speed, scalability and flexibility.
  This is accomplished by avoiding fixed database schemas and, by sacrificing
  joins, requiring a certain degree of denormalization by embedding documents
@@ -180,7 +186,8 @@ Document-Orientation
 \end_layout
 
 \begin_layout Standard
-MongoDB employs a document-oriented view of data.
+Mongo\SpecialChar \-
+DB employs a document-oriented view of data.
  Instead of focusing on the 
 \begin_inset Quotes eld
 \end_inset
@@ -203,7 +210,8 @@ document
 \end_layout
 
 \begin_layout Standard
-A document in MongoDB resides in a 
+A document in Mongo\SpecialChar \-
+DB resides in a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -320,11 +328,6 @@ Prolog
 \end_layout
 
 \begin_layout Standard
-[XXX How much Prolog do I need to describe? Just enough to understand the
- code examples later on?]
-\end_layout
-
-\begin_layout Standard
 Prolog is an interpreted dynamic language with its roots in logic.
  It is also a declarative language, implying that the programmer specifies
  
@@ -341,16 +344,6 @@ how
 \begin_layout Standard
 This section gives a small introduction to Prolog in order to more easily
  appreciate the code examples in subsequent sections.
- [xxx should i say something like 
-\begin_inset Quotes eld
-\end_inset
-
-for a more thorough explanation see ...
- 
-\begin_inset Quotes eld
-\end_inset
-
-? or is that out of scope?]
 \end_layout
 
 \begin_layout Subsubsection
@@ -594,12 +587,16 @@ N1
 \end_inset
 
  is bound to the value of the current accumulator plus one, using the is-operato
-r to perform addition.
+r to perform the addition.
  The 
 \begin_inset Quotes eld
 \end_inset
 
-plus one
+plus
+\begin_inset space ~
+\end_inset
+
+one
 \begin_inset Quotes erd
 \end_inset
 
@@ -629,7 +626,18 @@ reference "lis:length-program"
 \end_inset
 
  may be used as follows, providing a starting value of zero for the accumulator.
- The example is illustrated using a 
+ The example in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:trace-of-length"
+
+\end_inset
+
+ is illustrated using a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -752,7 +760,97 @@ Length = 3.
 \end_layout
 
 \begin_layout Standard
-[XXX explain trace]
+In listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:trace-of-length"
+
+\end_inset
+
+, line
+\begin_inset space ~
+\end_inset
+
+1 shows the query being posed, which is to find the length of a list of
+ three elements.
+ Line
+\begin_inset space ~
+\end_inset
+
+2 shows the first call being made, which matches the second clause of the
+ predicate due to the non-empty list.
+ Variables are renamed internally by Prolog and can be identified by the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+_G
+\begin_inset Quotes erd
+\end_inset
+
+ prefix.
+ The initial accumulator of zero is incremented by one and bound to the
+ variable 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},language=Prolog"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+_G476
+\end_layout
+
+\end_inset
+
+ on line
+\begin_inset space ~
+\end_inset
+
+3.
+ Line
+\begin_inset space ~
+\end_inset
+
+4 indicates with the word 
+\begin_inset Quotes eld
+\end_inset
+
+exit
+\begin_inset Quotes erd
+\end_inset
+
+ that this call succeeded.
+ Line
+\begin_inset space ~
+\end_inset
+
+5 makes a recursive call with the tail of the list, the incremented accumulator
+ and the same unbound variable used for the final result.
+ This recursive process is repeated until line
+\begin_inset space ~
+\end_inset
+
+11, where the tail of the list contains no elements.
+\end_layout
+
+\begin_layout Standard
+On line
+\begin_inset space ~
+\end_inset
+
+11, the first clause (the base case) of the predicate matches the empty
+ list and so the resulting length is bound to the value of the accumulator,
+ which is 3.
+ Because the base case has been reached, no more steps are needed to satisfy
+ the query.
+ The recursion unfolds, showing the final bindings for each successful call
+ on the way back to the initial call.
+ The last argument is bound to the value 3 which is the expected answer.
 \end_layout
 
 \begin_layout Subsubsection
