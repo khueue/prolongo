@@ -328,7 +328,7 @@ Prolog
 \end_layout
 
 \begin_layout Standard
-Prolog is an interpreted dynamic language with its roots in logic.
+Prolog is an interpreted and dynamic language with its roots in logic.
  It is also a declarative language, implying that the programmer specifies
  
 \emph on
@@ -363,7 +363,6 @@ term
 , which can be any value.
  A variable can be bound to any term, but once bound, it is immutable and
  cannot be rebound.
- Variables are recognized by an uppercase initial.
 \end_layout
 
 \begin_layout Subsubsection
@@ -375,34 +374,39 @@ Data Structures
 \end_layout
 
 \begin_layout Standard
-The main primitive data types in Prolog are 
+The main primitives in Prolog are 
 \emph on
 integer
 \emph default
-, 
+s, 
 \emph on
-float
+floats
 \emph default
  and 
 \emph on
 atom
 \emph default
-.
- In SWI-Prolog integers are unbounded, and floats are represented as 64-bit
+s.
+ In SWI-Prolog, integers are unbounded and floats are represented as 64-bit
  IEEE 754 doubles.
  Atoms represent UTF-8 encoded text [xxx ref SWI].
 \end_layout
 
 \begin_layout Standard
-A structure is ...
- [xxx explain]
+A 
+\emph on
+structure
+\emph default
+ is a compound value [xxxxxxxxxx]
 \end_layout
 
 \begin_layout Standard
-[xxx a special case of a structure, with some syntactic sugar is the list
- ...] A list is an ordered collection of zero or more terms which need not
- be the same type.
- A non-empty list is a recursive structure which consists of the 
+A 
+\emph on
+list
+\emph default
+ is a sequence of zero or more terms which need not share the same type.
+ A non-empty list is a recursive structure that consists of a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -419,6 +423,33 @@ tail
 \end_inset
 
  which is itself a list of all elements except the first.
+ If a list has only one element, its tail is the empty list.
+ The empty list has neither head nor tail.
+\end_layout
+
+\begin_layout Subsubsection
+Unification
+\end_layout
+
+\begin_layout Standard
+XXXXXXXXXXXXX
+\end_layout
+
+\begin_layout Standard
+Variables are recognized by an uppercase initial.
+\end_layout
+
+\begin_layout Standard
+xxxxxxxxxxx Anonymous variables, or 
+\begin_inset Quotes eld
+\end_inset
+
+don't care
+\begin_inset Quotes erd
+\end_inset
+
+ variables, are denoted by an initial underscore.
+ [xxx ref] Anonymous variables are used when xx struct forces xxx
 \end_layout
 
 \begin_layout Subsubsection
@@ -445,20 +476,37 @@ The fundamental unit of code in Prolog is the predicate (also called relation).
 \end_layout
 
 \begin_layout Standard
-A program to calculate the number of elements in a list is given as follows,
- illustrating that the order of arguments is input, intermediate values,
- and finally output.
- This predicate uses an accumulator to construct the final result.
- Anonymous variables, or 
+A program to calculate the number of elements in a list is given in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:length-program"
+
+\end_inset
+
+.
+ This predicate follows the conventional argument order and uses an 
 \begin_inset Quotes eld
 \end_inset
 
-don't care
+accumulator
 \begin_inset Quotes erd
 \end_inset
 
- variables, are denoted by an initial underscore.
- [xxx ref]
+ as an intermediate value.
+ An accumulator is a fabricated extra argument that holds the state of something
+ produced 
+\begin_inset Quotes eld
+\end_inset
+
+so far
+\begin_inset Quotes erd
+\end_inset
+
+ [XXX ref].
 \end_layout
 
 \begin_layout Standard
@@ -532,7 +580,7 @@ Line
 \begin_inset space ~
 \end_inset
 
-1 is the first clause, which is a base (non-recursive) case that states
+1 holds the first clause, which is a base (non-recursive) case that states
  that the length of an empty list is the same as the value of the accumulator.
  This means that the initial value of the accumulator must be zero in order
  for the relation to be meaningful.
@@ -586,8 +634,11 @@ N1
 
 \end_inset
 
- is bound to the value of the current accumulator plus one, using the is-operato
-r to perform the addition.
+ is bound to the value of the current accumulator plus one, using the 
+\emph on
+is
+\emph default
+-operator to perform the addition.
  The 
 \begin_inset Quotes eld
 \end_inset
