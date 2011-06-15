@@ -233,11 +233,12 @@ Main Features
 \end_layout
 
 \begin_layout Paragraph
-Document-Oriented
+Document-Orientation
 \end_layout
 
 \begin_layout Standard
-MongoDB is designed to be easy to scale, a goal which is easier to achieve
+Mongo\SpecialChar \-
+DB is designed to be easy to scale, a goal which is easier to achieve
  when the relational model is not used.
  Document-oriented databases are more flexible and impose less restrictions
  on the layout of data, allowing for complex data structures to be stored
@@ -257,7 +258,8 @@ Scalability
 \end_layout
 
 \begin_layout Standard
-The MongoDB approach to scaling involves 
+The Mongo\SpecialChar \-
+DB approach to scaling involves 
 \begin_inset Quotes eld
 \end_inset
 
@@ -279,7 +281,8 @@ Low Maintenance
 
 \begin_layout Standard
 Because there are no database schemas, and databases and collections can
- be created on-the-fly without explicit commands, MongoDB requires very
+ be created on-the-fly without explicit commands, Mongo\SpecialChar \-
+DB requires very
  little manual maintenance.
  The database system is designed to be very automatic.
  [xxx ref mongodb]
@@ -290,7 +293,8 @@ BSON
 \end_layout
 
 \begin_layout Standard
-At the core of MongoDB lies the BSON (Binary JSON) data format which is
+At the core of Mongo\SpecialChar \-
+DB lies the BSON (Binary JSON) data format which is
  used to communicate data as well as store data on disk.
  When a driver communicates with a MongoDB instance, documents are transmitted
  over the network as a series of BSON encoded bytes.
@@ -525,9 +529,9 @@ reference "lis:length-program"
  takes three arguments: a list, an accumulator used to successively accumulate
  the length, and the length of the list.
  To calculate the length, the third argument is passed as an unbound variable.
- On the other hand, if the length is a value, the predicate verifies if
- the relation between the list and the given length holds, and fails (returns
- false) otherwise.
+ On the other hand, if the length is instead a value, the predicate verifies
+ if the relation between the list and the given length holds, and fails
+ (returns false) otherwise.
 \end_layout
 
 \begin_layout Standard
@@ -549,7 +553,7 @@ Line
 2 starts the second clause, which deals with non-empty lists.
  The construct 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily}"
+lstparams "basicstyle={\ttfamily},language=Prolog"
 inline true
 status open
 
@@ -560,10 +564,11 @@ status open
 
 \end_inset
 
- states that the head of the list is bound to an anonymous variable and
- the tail of the list is bound to the variable 
+ states that the head of the list (first element) is bound to an anonymous
+ variable and the tail of the list (all but the first element) is bound
+ to the variable 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily}"
+lstparams "basicstyle={\ttfamily},language=Prolog"
 inline true
 status open
 
@@ -575,12 +580,55 @@ T
 \end_inset
 
 .
- xxxxxxxxxxxxxxx
+ The variable 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},language=Prolog"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+N1
+\end_layout
+
+\end_inset
+
+ is bound to the value of the current accumulator plus one, using the is-operato
+r to perform addition.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+plus one
+\begin_inset Quotes erd
+\end_inset
+
+ indicates that we have successfully counted one element, the head of the
+ list.
+ The predicate then continues by invoking itself recursively, passing the
+ tail of the list, the updated accumulator, and the final length of the
+ list.
+ The final length is bound to the final value of the accumulator as soon
+ as the tail of the list is empty and the base case can be matched.
+\end_layout
+
+\begin_layout Paragraph
+Execution Example
 \end_layout
 
 \begin_layout Standard
-In an interactive Prolog environment, the above predicate may be used as
- follows, providing a starting value of zero for the accumulator.
+In an interactive Prolog environment, the predicate in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:length-program"
+
+\end_inset
+
+ may be used as follows, providing a starting value of zero for the accumulator.
  The example is illustrated using a 
 \begin_inset Quotes eld
 \end_inset
