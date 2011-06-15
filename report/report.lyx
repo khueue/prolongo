@@ -1323,7 +1323,7 @@ reference "tab:interface-find-one"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2492,7 +2492,181 @@ Update Documents
 \end_layout
 
 \begin_layout Standard
-[XXX upsert/3, update/3, update_all/3]
+Updating a single document is done using the predicate 
+\emph on
+mongo:update/3
+\emph default
+.
+ It accepts a collection handle, a selector document and a document describing
+ the update to perform on the matched document.
+ If several documents match the selector, only the first one is used.
+ The interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-update"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Selector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing which document to match
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Modifier
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing the update to perform
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-update"
+
+\end_inset
+
+Interface to mongo:update/3.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If all matching documents need to be updated, a similar predicate called
+ mongo:update_all/3 can be used.
+ The interface to this predicate is identical to the one described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-update"
+
+\end_inset
+
+, but it performs the update on all matching documents instead of just the
+ first.
+\end_layout
+
+\begin_layout Standard
+A common use case is the combination of an update and an insert, called
+ an 
+\begin_inset Quotes eld
+\end_inset
+
+upsert
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is identical to a normal update (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-update"
+
+\end_inset
+
+), with the exception that the document is simply inserted if not found.
 \end_layout
 
 \begin_layout Subsubsection
