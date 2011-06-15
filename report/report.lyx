@@ -427,7 +427,7 @@ length([_|T], N0, N) :-
 
 \begin_layout Standard
 In an interactive Prolog environment, the above predicate may be used as
- follows, providing a starting value for the accumulator.
+ follows, providing a starting value of zero for the accumulator.
 \end_layout
 
 \begin_layout LyX-Code
@@ -440,7 +440,7 @@ Length = 3
 
 \begin_layout Standard
 A predicate is usually referred to by its name and arity (number of arguments),
- and, if possible, its module: 
+ and, if applicable, its module: 
 \noun on
 module:predicate/arity
 \noun default
@@ -469,15 +469,33 @@ Data Structures
 \end_layout
 
 \begin_layout Standard
-The main primitive data types in Prolog are integers, floats and atoms.
+The main primitive data types in Prolog are 
+\emph on
+integer
+\emph default
+, 
+\emph on
+float
+\emph default
+ and 
+\emph on
+atom
+\emph default
+.
  In SWI-Prolog [xxx ref SWI] integers are unbounded, and floats are represented
  as 64-bit IEEE 754 doubles.
  Atoms represent UTF-8 encoded text.
 \end_layout
 
 \begin_layout Standard
-A list is an ordered collection of zero or more terms which need not be
- the same type.
+A structure is ...
+ [xxx explain]
+\end_layout
+
+\begin_layout Standard
+[xxx a special case of a structure, with some syntactic sugar is the list
+ ...] A list is an ordered collection of zero or more terms which need not
+ be the same type.
  A non-empty list is a recursive structure which consists of the 
 \begin_inset Quotes eld
 \end_inset
@@ -495,11 +513,6 @@ tail
 \end_inset
 
  which is itself a list of all elements except the first.
-\end_layout
-
-\begin_layout Standard
-A structure is ...
- [xxx explain]
 \end_layout
 
 \begin_layout Subsubsection
@@ -673,28 +686,13 @@ mongo
 bson
 \emph default
 .
- The 
-\emph on
-mongo
-\emph default
- module is the main module which contains all the functionality needed to
- work with a MongoDB instance.
- The 
-\emph on
-bson
-\emph default
- module exposes functionality to handle BSON conversions between documents
- and bytes, and also document manipulation predicates.
- The 
-\emph on
-bson
-\emph default
- module is used internally by the 
-\emph on
-mongo
-\emph default
- module, but it is implemented separately because BSON is not inherent to
- MongoDB and can be used without it.
+ The mongo module is the main module which contains all the functionality
+ needed to work with a MongoDB instance.
+ The bson module exposes functionality to handle BSON conversions between
+ documents and bytes, and also document manipulation predicates.
+ The bson module is used internally by the mongo module, but implemented
+ separately because BSON is not inherent to MongoDB and can be used without
+ it.
 \end_layout
 
 \begin_layout Subsection
@@ -2515,7 +2513,7 @@ reference "tab:interface-update"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2636,7 +2634,11 @@ Interface to mongo:update/3.
 
 \begin_layout Standard
 If all matching documents need to be updated, a similar predicate called
- mongo:update_all/3 can be used.
+ 
+\emph on
+mongo:update_all/3
+\emph default
+ can be used.
  The interface to this predicate is identical to the one described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -2649,8 +2651,8 @@ reference "tab:interface-update"
 \end_layout
 
 \begin_layout Standard
-A common use case is the combination of an update and an insert, called
- an 
+A common use case is the combination of an update and an insert, sometimes
+ called an 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2659,14 +2661,19 @@ upsert
 \end_inset
 
 .
- This is identical to a normal update (described in 
+ This predicate is called 
+\emph on
+mongo:upsert/3
+\emph default
+, and works like a normal update (described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:interface-update"
 
 \end_inset
 
-), with the exception that the document is simply inserted if not found.
+) except that if the document does not exist it is inserted instead of updated
+ [XXX ref].
 \end_layout
 
 \begin_layout Subsubsection
@@ -2945,7 +2952,8 @@ General Database Commands
 \end_layout
 
 \begin_layout Standard
-[XXX command/3]
+Some commands deal not with documents directly, but with whole databases,
+ collections or meta data.
 \end_layout
 
 \begin_layout Subsection
@@ -2968,12 +2976,11 @@ Implementation
 
 \begin_layout Standard
 [XXX What is this chapter supposed to contain, really? Discuss code organization
-, modules? Discuss the test suite? Discuss portability? Discuss efficiency
- (relevant?)?]
+, modules? Discuss portability? Discuss efficiency (relevant?)?]
 \end_layout
 
 \begin_layout Subsection
-Parsing Technique
+Definite Clause Grammar
 \end_layout
 
 \begin_layout Standard
@@ -3015,7 +3022,29 @@ BSON conversion is something the driver does very often, and pushing common
 \end_layout
 
 \begin_layout Subsection
+Unit Testing
+\end_layout
+
+\begin_layout Standard
+Unit testing is conducted using 
+\emph on
+PlUnit,
+\emph default
+ a unit testing framework built into SWI-Prolog and designed to be compatible
+ with other Prolog implementations [XXX ref].
+\end_layout
+
+\begin_layout Subsection
 Technical Environment
+\end_layout
+
+\begin_layout Standard
+The technical environment used during development is as follows.
+\end_layout
+
+\begin_layout Description
+POSIX The driver is developed on a POSIX (Portable Operating System Interface
+ for Unix) compliant system.
 \end_layout
 
 \begin_layout Description
@@ -3104,24 +3133,6 @@ key "xxxxx"
 
 [xxx how should these be ordered? alphabetical last names? publish date?
  in order of first referenced in text?]
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "mongodb"
-
-\end_inset
-
-Chodorow, K.
- & Dirolf, M.
- (2010) 
-\emph on
-MongoDB: The Definitive Guide.
-
-\emph default
- Sebastopol, United States of America: O'Reilly Media, Inc.
 \end_layout
 
 \begin_layout Bibliography
