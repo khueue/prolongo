@@ -328,7 +328,7 @@ DB includes an interactive JavaScript-based shell that can be used
 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "lis:using-the-shell"
+reference "lis:inserting-and-finding"
 
 \end_inset
 
@@ -348,11 +348,11 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "lis:using-the-shell"
+name "lis:inserting-and-finding"
 
 \end_inset
 
-Using the shell.
+Inserting and finding documents.
 \end_layout
 
 \end_inset
@@ -382,7 +382,7 @@ connecting to: test
 
 \begin_layout Plain Layout
 
-    switched to db blog
+switched to db blog
 \end_layout
 
 \begin_layout Plain Layout
@@ -402,22 +402,52 @@ connecting to: test
 
 \begin_layout Plain Layout
 
+> db.posts.insert(
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "title" : "Second post",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "content" : "Post number 2." })
+\end_layout
+
+\begin_layout Plain Layout
+
 > db.posts.find()
 \end_layout
 
 \begin_layout Plain Layout
 
-    { "_id" : ObjectId("4dfb6a5de8d172995e7874d7"),
+{ "_id" : ObjectId("4dfb6a5de8d172995e7874d7"),
 \end_layout
 
 \begin_layout Plain Layout
 
-      "title" : "My first post",
+  "title" : "My first post",
 \end_layout
 
 \begin_layout Plain Layout
 
-      "content" : "First post!" }
+  "content" : "First post!" }
+\end_layout
+
+\begin_layout Plain Layout
+
+{ "_id" : ObjectId("4dfcbec7e8d172995e7874d8"),
+\end_layout
+
+\begin_layout Plain Layout
+
+  "title" : "Second post",
+\end_layout
+
+\begin_layout Plain Layout
+
+  "content" : "Post number 2." }
 \end_layout
 
 \end_inset
@@ -439,11 +469,11 @@ blog
 \end_inset
 
 , but does not create it.
- Line
+ Lines
 \begin_inset space ~
 \end_inset
 
-6 inserts a document into the collection 
+6 and 9 insert two documents into the collection 
 \begin_inset Quotes eld
 \end_inset
 
@@ -452,8 +482,8 @@ posts
 \end_inset
 
 .
- This command, which is the first to manipulate data inside the database,
- triggers the actual creation of both the database and the collection.
+ The first insert is the first command to manipulate data inside the database,
+ so this triggers the actual creation of both the database and the collection.
  Because no arguments are passed to the 
 \begin_inset Quotes eld
 \end_inset
@@ -466,8 +496,8 @@ find
 \begin_inset space ~
 \end_inset
 
-9, it retrieves all documents in the collection, which is just the one we
- previously inserted.
+12, it retrieves all documents in the collection, which are the ones we
+ just inserted.
 \end_layout
 
 \begin_layout Standard
@@ -479,9 +509,297 @@ _id
 \begin_inset Quotes erd
 \end_inset
 
- has been added to our document.
+ has been added to both documents.
  Unless a document already has such a field, one is automatically generated
- by the database when it is first inserted into a collection.
+ by the database when it is first inserted.
+ This field must be able to uniquely identify documents within a collection.
+\end_layout
+
+\begin_layout Standard
+To add comments to the first blog post, an update can be issued, illustrated
+ in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:adding-a-field"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:adding-a-field"
+
+\end_inset
+
+Adding a field to a document.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.update(
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "_id" : ObjectId("4dfb6a5de8d172995e7874d7") },
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "$set" : { "comments" : [ "Good post!" ] } },
+\end_layout
+
+\begin_layout Plain Layout
+
+    false,
+\end_layout
+
+\begin_layout Plain Layout
+
+    false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An update expects four arguments: a document indicating which document(s)
+ to update, a document describing the update to perform, and two booleans
+ indicating whether to perform an 
+\begin_inset Quotes eld
+\end_inset
+
+upsert
+\begin_inset Quotes erd
+\end_inset
+
+ [XXX footnote?] and if multiple documents should be updated if the query
+ matches more than one.
+\end_layout
+
+\begin_layout Standard
+The document describing the update to perform (the second argument) includes
+ a special field called 
+\begin_inset Quotes eld
+\end_inset
+
+$set
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This field is a document that contains fields to be set (in this case added)
+ in the updated document.
+ Displaying all documents after performing the update is illustrated in
+ listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:displaying-documents-of"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:displaying-documents-of"
+
+\end_inset
+
+Displaying documents of different structure.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.find()
+\end_layout
+
+\begin_layout Plain Layout
+
+{ "_id" : ObjectId("4dfcbec7e8d172995e7874d8"),
+\end_layout
+
+\begin_layout Plain Layout
+
+  "title" : "Second post",
+\end_layout
+
+\begin_layout Plain Layout
+
+  "content" : "Post number 2." }
+\end_layout
+
+\begin_layout Plain Layout
+
+{ "_id" : ObjectId("4dfb6a5de8d172995e7874d7"),
+\end_layout
+
+\begin_layout Plain Layout
+
+  "comments" : [ "Good post!" ],
+\end_layout
+
+\begin_layout Plain Layout
+
+  "content" : "First post!",
+\end_layout
+
+\begin_layout Plain Layout
+
+  "title" : "My first post" }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The updated document now contains an embedded array with a single comment.
+ Listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:adding-to-an-array"
+
+\end_inset
+
+ shows what happens if another comment is added.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:adding-to-an-array"
+
+\end_inset
+
+Adding to an array.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.update(
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "_id" : ObjectId("4dfb6a5de8d172995e7874d7") },
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "$push" : { "comments" : "Interesting." } },
+\end_layout
+
+\begin_layout Plain Layout
+
+    false,
+\end_layout
+
+\begin_layout Plain Layout
+
+    false)
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.find()
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+{ "_id" : ObjectId("4dfb6a5de8d172995e7874d7"),
+\end_layout
+
+\begin_layout Plain Layout
+
+  "comments" : [ "Good post!", "Interesting." ],
+\end_layout
+
+\begin_layout Plain Layout
+
+  "content" : "First post!",
+\end_layout
+
+\begin_layout Plain Layout
+
+  "title" : "My first post" }
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -3878,22 +4196,6 @@ key "swi"
 \end_inset
 
 http://www.swi-prolog.org/pldoc/
-\end_layout
-
-\begin_layout Standard
-\begin_inset Newpage pagebreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-\start_of_appendix
-XXX Complete driver API?
-\end_layout
-
-\begin_layout Section
-XXX Usage manual?
 \end_layout
 
 \end_body
