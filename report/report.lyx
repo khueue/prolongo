@@ -73,6 +73,23 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
+Flesh out MongoDB, examples are nice (make big references to Mongo and Prolog)
+\end_layout
+
+\begin_layout Abstract
+Make Design into API Design, very straight-forward
+\end_layout
+
+\begin_layout Abstract
+Insert Usage Example
+\end_layout
+
+\begin_layout Abstract
+Make Implementation discuss lots more on how things are implemented, like
+ BSON parsing, socket communication etc.
+\end_layout
+
+\begin_layout Abstract
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
@@ -297,21 +314,192 @@ DB requires very
 \end_layout
 
 \begin_layout Subsubsection
+Interactive Shell
+\end_layout
+
+\begin_layout Standard
+Mongo\SpecialChar \-
+DB includes an interactive JavaScript-based shell that can be used
+ to conveniently access the database system [XXX ref mongo shell].
+ The example in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:using-the-shell"
+
+\end_inset
+
+ illustrates the beginning of a shell session to create a simple blog database.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},breaklines=true,numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:using-the-shell"
+
+\end_inset
+
+Using the shell.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$ mongo
+\end_layout
+
+\begin_layout Plain Layout
+
+MongoDB shell version: 1.8.1
+\end_layout
+
+\begin_layout Plain Layout
+
+connecting to: test
+\end_layout
+
+\begin_layout Plain Layout
+
+> use blog
+\end_layout
+
+\begin_layout Plain Layout
+
+    switched to db blog
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.insert(
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "title" : "My first post",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "content" : "First post!" })
+\end_layout
+
+\begin_layout Plain Layout
+
+> db.posts.find()
+\end_layout
+
+\begin_layout Plain Layout
+
+    { "_id" : ObjectId("4dfb6a5de8d172995e7874d7"),
+\end_layout
+
+\begin_layout Plain Layout
+
+      "title" : "My first post",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "content" : "First post!" }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Line
+\begin_inset space ~
+\end_inset
+
+4 switches to the database called 
+\begin_inset Quotes eld
+\end_inset
+
+blog
+\begin_inset Quotes erd
+\end_inset
+
+, but does not create it.
+ Line
+\begin_inset space ~
+\end_inset
+
+6 inserts a document into the collection 
+\begin_inset Quotes eld
+\end_inset
+
+posts
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This command, which is the first to manipulate data inside the database,
+ triggers the actual creation of both the database and the collection.
+ Because no arguments are passed to the 
+\begin_inset Quotes eld
+\end_inset
+
+find
+\begin_inset Quotes erd
+\end_inset
+
+ call on line
+\begin_inset space ~
+\end_inset
+
+9, it retrieves all documents in the collection, which is just the one we
+ previously inserted.
+\end_layout
+
+\begin_layout Standard
+A new field called 
+\begin_inset Quotes eld
+\end_inset
+
+_id
+\begin_inset Quotes erd
+\end_inset
+
+ has been added to our document.
+ Unless a document already has such a field, one is automatically generated
+ by the database when it is first inserted into a collection.
+\end_layout
+
+\begin_layout Subsubsection
 BSON
 \end_layout
 
 \begin_layout Standard
 At the core of Mongo\SpecialChar \-
-DB lies the BSON (Binary JSON) data format which is
- used to communicate data as well as store data on disk.
+DB lies the BSON (Binary JSON) [XXX ref bson] data format
+ which is used to communicate data as well as store data on disk.
  When a driver communicates with a MongoDB instance, documents are transmitted
  over the network as a series of BSON encoded bytes.
 \end_layout
 
 \begin_layout Standard
-BSON is similar to and heavily influenced by JSON (JavaScript Object Notation),
- the main difference being that BSON is a binary format whereas JSON is
- plain-text.
+BSON is similar to and heavily influenced by JSON (JavaScript Object Notation)
+ [XXX ref json], the main difference being that BSON is a binary format
+ whereas JSON is plain-text.
  The reason for using a binary format is efficiency.
  With JSON, numbers need to be converted to and from text in order to be
  used.
@@ -520,7 +708,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:length-program"
@@ -711,7 +898,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:trace-of-length"
@@ -1059,7 +1245,7 @@ The data representation format used by MongoDB is a binary encoded variation
 \end_layout
 
 \begin_layout Standard
-The driver must be able to convert back and forth between some suitable
+The driver must be able to convert back and forth between some idiomatic
  Prolog structure and BSON bytes.
 \end_layout
 
@@ -1083,11 +1269,12 @@ The driver must expose functionality to find, insert, update and delete
 \end_layout
 
 \begin_layout Section
-Design
+API Design
 \end_layout
 
 \begin_layout Standard
-This chapter discusses the overall design of the driver.
+This chapter discusses the overall design of the driver and describes its
+ Application Programming Interface (API).
 \end_layout
 
 \begin_layout Subsection
@@ -3391,7 +3578,20 @@ $err
 \end_layout
 
 \begin_layout Section
+Usage Example
+\end_layout
+
+\begin_layout Standard
+This chapter shows an example of how to use the driver.
+\end_layout
+
+\begin_layout Section
 Implementation
+\end_layout
+
+\begin_layout Standard
+[XXX Talk a lot more about how things actually are implemented.
+ DCGs, sockets, wire bytes, ...]
 \end_layout
 
 \begin_layout Standard
