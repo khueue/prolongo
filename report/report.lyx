@@ -958,6 +958,54 @@ don't care
  [xxx ref] Anonymous variables are used when xx struct forces xxx
 \end_layout
 
+\begin_layout Standard
+XXX rewrite this: 
+\end_layout
+
+\begin_layout Standard
+The first step in determining which clause to use for a certain set of input
+ is accomplished through 
+\begin_inset Quotes eld
+\end_inset
+
+unification
+\begin_inset Quotes erd
+\end_inset
+
+, sometimes called 
+\begin_inset Quotes eld
+\end_inset
+
+pattern matching
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Prolog tries to unify the input with the formal parameters of the first
+ clause of the predicate.
+ If the unification fails, the process is repeated with the second clause,
+ and so on.
+ Invoking the predicate 
+\noun on
+length
+\noun default
+ shown in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Program-Structure"
+
+\end_inset
+
+ with a non-empty list causes unification to fail in the first clause (an
+ empty list cannot be unified with a non-empty list), but succeed in the
+ second (the first element is selected but ignored, and the tail is bound
+ to the variable 
+\noun on
+T
+\noun default
+).
+\end_layout
+
 \begin_layout Subsubsection
 Program Structure
 \begin_inset CommandInset label
@@ -1413,7 +1461,7 @@ Control Flow
 \end_layout
 
 \begin_layout Standard
-Branching is performed by means of 
+Branching is performed by 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1421,51 +1469,55 @@ backtracking
 \begin_inset Quotes erd
 \end_inset
 
- into an appropriate clause, and repetition is performed by recursion.
+.
+ Prolog works in a top-down, depth-first fashion when evaluating predicates
+ [XXX ref].
+ Calling the predicate 
+\emph on
+length/3
+\emph default
+ in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:length-program"
+
+\end_inset
+
+ with a non-empty list will make Prolog first try to unify with the first
+ clause.
+ This fails, and the second clause is backtracked into.
+ Should this clause also fail for some reason, the next clause after that
+ would be tried, and so on, until no more clauses are found and the predicate
+ fails.
 \end_layout
 
 \begin_layout Standard
-The first step in determining which clause to use for a certain set of input
- is accomplished through 
-\begin_inset Quotes eld
+Iteration is performed by recursion.
+ The predicate 
+\emph on
+length/3
+\emph default
+ in listing
+\begin_inset space ~
 \end_inset
 
-unification
-\begin_inset Quotes erd
-\end_inset
 
-, sometimes called 
-\begin_inset Quotes eld
-\end_inset
-
-pattern matching
-\begin_inset Quotes erd
-\end_inset
-
-.
- Prolog tries to unify the input with the formal parameters of the first
- clause of the predicate.
- If the unification fails, the process is repeated with the second clause,
- and so on.
- Invoking the predicate 
-\noun on
-length
-\noun default
- shown in 
 \begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Program-Structure"
+LatexCommand formatted
+reference "lis:length-program"
 
 \end_inset
 
- with a non-empty list causes unification to fail in the first clause (an
- empty list cannot be unified with a non-empty list), but succeed in the
- second (the first element is selected but ignored, and the tail is bound
- to the variable 
-\noun on
-T
-\noun default
-).
+ is a recursive predicate because it is defined in terms of itself [XXX
+ ref].
+ To solve the problem of calculating the length of a list, the predicate
+ solves a smaller problem, namely calculating the length of a shorter list:
+ the tail.
+ It works its way to the base case and eventually arrives at a solution.
 \end_layout
 
 \begin_layout Subsubsection
