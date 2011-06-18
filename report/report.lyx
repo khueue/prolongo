@@ -321,6 +321,7 @@ Interactive Shell
 Mongo\SpecialChar \-
 DB includes an interactive JavaScript-based shell that can be used
  to conveniently access the database system [XXX ref mongo shell].
+ In JavaScript, documents are represented as objects.
  The example in listing
 \begin_inset space ~
 \end_inset
@@ -876,10 +877,6 @@ Data Structures
 \end_layout
 
 \begin_layout Standard
-[XXX lots of missing refs]
-\end_layout
-
-\begin_layout Standard
 The main primitives in Prolog are 
 \emph on
 integer
@@ -903,7 +900,10 @@ A
 \emph on
 structure
 \emph default
- is a compound value [xxxxxxxxxx]
+ is a compound value with a fixed number of components and possibly a name.
+ The components are terms that need not share the same type and can be anything,
+ including other structures.
+ Structures are often used to represent trees [XXX ref prog in prolog].
 \end_layout
 
 \begin_layout Standard
@@ -930,7 +930,7 @@ tail
 
  which is itself a list of all elements except the first.
  If a list has only one element, its tail is the empty list.
- The empty list has neither head nor tail.
+ The empty list has neither head nor tail [XXX ref prog in prolog].
 \end_layout
 
 \begin_layout Subsubsection
