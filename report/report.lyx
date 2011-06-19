@@ -191,7 +191,11 @@ DB is a document-oriented database management system that emphasizes
  This is accomplished by avoiding fixed database schemas and, by sacrificing
  joins, requiring a certain degree of denormalization by embedding documents
  into each other.
- [XXX ref: MongoDB: The Definitive Guide, p 4]
+ See 
+\emph on
+MongoDB: The Definitive Guide
+\emph default
+ for a more comprehensive explanation.
 \end_layout
 
 \begin_layout Subsubsection
@@ -902,7 +906,7 @@ structure
 \emph default
  is a compound value with a fixed number of components and possibly a name.
  The components are terms that need not share the same type and can be anything,
- including other structures.
+ including variables and other structures.
  Structures are often used to represent trees [XXX ref prog in prolog].
 \end_layout
 
@@ -4123,6 +4127,24 @@ key "xxxxx"
 
 [xxx how should these be ordered? alphabetical last names? publish date?
  in order of first referenced in text?]
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "mongo"
+
+\end_inset
+
+Chodorow, K.
+ & Dirolf, M.
+ (2010) 
+\emph on
+MongoDB: The Definitive Guide.
+
+\emph default
+ Sebastopol, United States of America: O'Reilly Media, Inc.
 \end_layout
 
 \begin_layout Bibliography
