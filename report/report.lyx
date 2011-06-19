@@ -930,9 +930,7 @@ term
 \begin_inset Quotes erd
 \end_inset
 
-, which can be any value.
- A variable can be bound to any term, but once bound, it is immutable and
- cannot be rebound 
+, which can be any value 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "prolog"
@@ -970,7 +968,18 @@ key "swi"
 \end_inset
 
 .
- The following shows the syntax for integers, floats and atoms:
+ Listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:primitives-in-prolog"
+
+\end_inset
+
+ shows the syntax for integers, floats and atoms.
 \end_layout
 
 \begin_layout Standard
@@ -978,6 +987,26 @@ key "swi"
 lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
 inline false
 status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:primitives-in-prolog"
+
+\end_inset
+
+Primitives in Prolog.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -1021,7 +1050,18 @@ key "prolog"
  The components are terms that need not share the same type and can be anything,
  including variables and other structures.
  Structures are often used to represent trees.
- Structures are written as follows:
+ Structures are shown in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:structures-in-prolog"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1029,6 +1069,26 @@ key "prolog"
 lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
 inline false
 status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:structures-in-prolog"
+
+\end_inset
+
+Structures in Prolog.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -1078,7 +1138,18 @@ tail
  which is itself a list of all elements except the first.
  If a list has only one element, its tail is the empty list.
  The empty list has neither head nor tail.
- The following shows an empty and a non-empty list:
+ Listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:lists-in-prolog"
+
+\end_inset
+
+ shows an empty and a non-empty list.
 \end_layout
 
 \begin_layout Standard
@@ -1086,6 +1157,26 @@ tail
 lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
 inline false
 status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:lists-in-prolog"
+
+\end_inset
+
+Lists in Prolog.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -1103,7 +1194,7 @@ status open
 \end_layout
 
 \begin_layout Subsubsection
-Unification
+Unification and Pattern Matching
 \end_layout
 
 \begin_layout Standard
@@ -1116,7 +1207,7 @@ assignment
 \end_inset
 
  operation.
- Instead, most value propagation is performed by a mechanism called 
+ Instead, value propagation is performed by a mechanism called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1144,43 +1235,225 @@ key "prolog"
 \end_layout
 
 \begin_layout Standard
-Variables are recognized by an uppercase initial.
+Variables are denoted by an uppercase initial.
+ A variable can be bound to any term, but once bound, it is immutable and
+ cannot be rebound.
 \end_layout
 
 \begin_layout Standard
-It is sometimes useful to make a proper unification because of structural
- needs, but the actual value is of no interest...
- xxxxxxx
+The unification 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+X = hello
+\end_layout
+
+\end_inset
+
+ succeeds, and the variable 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+X
+\end_layout
+
+\end_inset
+
+ is bound, or instantiated, to the atom 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+hello
+\end_layout
+
+\end_inset
+
+.
+ The unification 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+[1,2,3,4,5] = [H|T]
+\end_layout
+
+\end_inset
+
+ will result in 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+H
+\end_layout
+
+\end_inset
+
+ being bound to the integer 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+1
+\end_layout
+
+\end_inset
+
+, and 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\end_inset
+
+ being bound to the list 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+[2,3,4,5]
+\end_layout
+
+\end_inset
+
+.
+ The vertical bar is used to indicate that everything to the right of it
+ represents the tail of the list, in other words, any and all elements that
+ are not explicitly unified from the start of the list.
+ This is necessary in order to work with lists of unknown length.
+ The unification 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+A = B
+\end_layout
+
+\end_inset
+
+ binds the variables together, so as soon as one of them is bound to a value
+ later on, the other will be bound to the same thing.
 \end_layout
 
 \begin_layout Standard
-xxxxxxxxxxx Anonymous variables, or 
-\begin_inset Quotes eld
+An unsuccessful unification is for instance 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+[a,b,c] = [a,b,d]
+\end_layout
+
 \end_inset
 
-don't care
-\begin_inset Quotes erd
+.
+ The lengths of the lists match, but the atoms 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+c
+\end_layout
+
 \end_inset
 
- variables, are denoted by an initial underscore.
- [xxx ref] Anonymous variables are used when xx struct forces xxx
+ and 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+d
+\end_layout
+
+\end_inset
+
+ are different and cannot be unified.
+ The unification 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+foo(a,b,c) = foo(A,A,C)
+\end_layout
+
+\end_inset
+
+ fails because this would require 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+a
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset listings
+lstparams "basicstyle={\ttfamily}"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+b
+\end_layout
+
+\end_inset
+
+ to be the same atom.
 \end_layout
 
 \begin_layout Standard
-XXX rewrite this: 
-\end_layout
-
-\begin_layout Standard
-The first step in determining which clause to use for a certain set of input
- is accomplished through 
-\begin_inset Quotes eld
-\end_inset
-
-unification
-\begin_inset Quotes erd
-\end_inset
-
-, sometimes called 
+When invoking a predicate, a process called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1188,30 +1461,42 @@ pattern matching
 \begin_inset Quotes erd
 \end_inset
 
-.
- Prolog tries to unify the input with the formal parameters of the first
- clause of the predicate.
- If the unification fails, the process is repeated with the second clause,
- and so on.
- Invoking the predicate 
-\noun on
-length
-\noun default
- shown in 
+ is initiated.
+ Prolog tries to unify the given arguments with the formal parameters of
+ the first clause of the predicate.
+ If unification succeeds, Prolog proceeds to evaluate any premises present
+ in the clause.
+ If unification fails, Prolog undoes the effects of the unification so far,
+ and repeats the process with the next clause of the predicate.
+\end_layout
+
+\begin_layout Standard
+It is often necessary to make a unification in order to access certain parts
+ of a structure without caring for all the bindings created.
+ In these cases, anonymous, or 
+\begin_inset Quotes eld
+\end_inset
+
+don't care
+\begin_inset Quotes erd
+\end_inset
+
+, variables can be used.
+ These are denoted by an initial underscore.
+ The predicate in listing
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:Program-Structure"
+reference "lis:length-program"
 
 \end_inset
 
- with a non-empty list causes unification to fail in the first clause (an
- empty list cannot be unified with a non-empty list), but succeed in the
- second (the first element is selected but ignored, and the tail is bound
- to the variable 
-\noun on
-T
-\noun default
-).
+ uses such a variable because the actual value of the list head is of no
+ importance.
+ It suffices to know that an element exists.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1295,7 +1580,7 @@ key "prolog"
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog,numbers=left,numberstyle={\scriptsize}"
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
 inline false
 status open
 
@@ -1377,7 +1662,7 @@ Line
 2 starts the second clause, which deals with non-empty lists.
  The list construct 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog"
+lstparams "basicstyle={\ttfamily}"
 inline true
 status open
 
@@ -1392,7 +1677,7 @@ status open
  variable and the tail of the list (all but the first element) is bound
  to the variable 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog"
+lstparams "basicstyle={\ttfamily}"
 inline true
 status open
 
@@ -1406,7 +1691,7 @@ T
 .
  The variable 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog"
+lstparams "basicstyle={\ttfamily}"
 inline true
 status open
 
@@ -1485,7 +1770,7 @@ trace
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog,numbers=left,numberstyle={\scriptsize},tabsize=4"
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize},tabsize=4"
 inline false
 status open
 
@@ -1629,7 +1914,7 @@ _G
  The initial accumulator of zero is incremented by one and bound to the
  variable 
 \begin_inset listings
-lstparams "basicstyle={\ttfamily},language=Prolog"
+lstparams "basicstyle={\ttfamily}"
 inline true
 status open
 
@@ -1984,9 +2269,16 @@ This chapter discusses how documents are represented in Prolog and describes
 Documents in Prolog
 \end_layout
 
+\begin_layout Subsubsection
+Document Literals
+\end_layout
+
 \begin_layout Standard
 One advantage of working in a high-level language such as Prolog is the
  ability to express complex structures as literals.
+ Most functions in Mongo\SpecialChar \-
+DB work with documents directly, so being able to
+ easily construct and pass around document literals is helpful.
 \end_layout
 
 \begin_layout Standard
@@ -1994,7 +2286,8 @@ A BSON document is represented in Prolog as a list of key/value pairs.
  A pair is a structure named '-' (dash) with two arguments, a key and a
  value.
  Using a symbol as the name of the structure makes it possible to write
- the name as an infix operator, avoiding the need for parentheses.
+ it as an infix operator, avoiding the need for parentheses and making the
+ key/value association more natural.
  Keys are UTF-8 encoded atoms, and values can be of several different types.
  Listing
 \begin_inset space ~
@@ -2136,24 +2429,7 @@ At the core of MongoDB lies the BSON binary data format which is used to
 \end_layout
 
 \begin_layout Paragraph
-Document-to-BSON Conversion
-\end_layout
-
-\begin_layout Standard
-[XXX 6.2.1 and 6.2.2 will probably be rewritten and merged into one section.
- The conversion predicate works ways and could be described as such.]
-\end_layout
-
-\begin_layout Standard
-A document with two fields may look like this:
-\end_layout
-
-\begin_layout LyX-Code
-[name-'MongoDB', type-db]
-\end_layout
-
-\begin_layout Paragraph
-BSON-to-Document Conversion
+Document-BSON Conversion
 \end_layout
 
 \begin_layout Standard
@@ -2317,13 +2593,19 @@ Driver API
 \end_layout
 
 \begin_layout Subsubsection
-Network Communication
+Database Connection
 \end_layout
 
 \begin_layout Standard
-Communication with a MongoDB instance is conducted through a Transmission
- Control Protocol (TCP) socket.
- [xxx ref mongo wire protocol]
+Communication with a MongoDB server instance is conducted through a TCP
+ socket 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wire"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -4414,6 +4696,10 @@ Usage Example
 This chapter shows an example of how to use the driver.
 \end_layout
 
+\begin_layout Standard
+XXXXXXXXXXXXXXXXX
+\end_layout
+
 \begin_layout Section
 Implementation
 \end_layout
@@ -4452,7 +4738,7 @@ bson
 \end_layout
 
 \begin_layout Subsection
-Definite Clause Grammar
+Grammar Rules
 \end_layout
 
 \begin_layout Standard
@@ -4737,6 +5023,33 @@ status collapsed
 \begin_layout Plain Layout
 
 http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "wire"
+
+\end_inset
+
+Mongo Wire Protocol.
+ Accessed 2011-06-19.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.mongodb.org/display/DOCS/Mongo+Wire+Protocol
 \end_layout
 
 \end_inset
