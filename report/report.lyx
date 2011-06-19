@@ -73,23 +73,6 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
-Flesh out MongoDB, examples are nice (make big references to Mongo and Prolog)
-\end_layout
-
-\begin_layout Abstract
-Make Design into API Design, very straight-forward
-\end_layout
-
-\begin_layout Abstract
-Insert Usage Example
-\end_layout
-
-\begin_layout Abstract
-Make Implementation discuss lots more on how things are implemented, like
- BSON parsing, socket communication etc.
-\end_layout
-
-\begin_layout Abstract
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
@@ -103,8 +86,16 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-[XXX Is the following more suitable as Abstract material? If so, what should
- the introduction contain?]
+[[[XXX Make Design into API Design, very straight-forward
+\end_layout
+
+\begin_layout Standard
+Insert Usage Example
+\end_layout
+
+\begin_layout Standard
+Make Implementation discuss lots more on how things are implemented, like
+ BSON parsing, socket communication etc.]]]
 \end_layout
 
 \begin_layout Standard
@@ -191,11 +182,7 @@ DB is a document-oriented database management system that emphasizes
  This is accomplished by avoiding fixed database schemas and, by sacrificing
  joins, requiring a certain degree of denormalization by embedding documents
  into each other.
- See 
-\emph on
-MongoDB: The Definitive Guide
-\emph default
- for a more comprehensive explanation.
+ See Chodorow and Dirolf (2010) for a more complete discussion.
 \end_layout
 
 \begin_layout Subsubsection
@@ -203,12 +190,15 @@ Document-Orientation
 \end_layout
 
 \begin_layout Standard
-[XXX lots of references missing here right now]
-\end_layout
-
-\begin_layout Standard
 Mongo\SpecialChar \-
-DB employs a document-oriented view of data.
+DB employs a document-oriented view of data 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
  Instead of focusing on the 
 \begin_inset Quotes eld
 \end_inset
@@ -227,7 +217,6 @@ document
 \end_inset
 
 .
- [xxx ref mongodb p 1]
 \end_layout
 
 \begin_layout Standard
@@ -244,7 +233,14 @@ collection
  Therefore, documents in a collection need not share the same structure.
  This allows for great flexibility, especially with data migrations, as
  individual documents can be modified freely without updating a schema and
- affecting all documents in a collection.
+ affecting all documents in a collection 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -254,7 +250,14 @@ A document consists of key/value pairs, where keys are strings and values
  traditional concepts used in relational databases, where a high degree
  of normalization is often desired.
  Relaxing the need for normalization makes it possible to create highly
- efficient systems by avoiding expensive join operations.
+ efficient systems by avoiding expensive join operations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -271,15 +274,14 @@ DB is designed to be easy to scale, a goal which is easier to achieve
  when the relational model is not used.
  Document-oriented databases are more flexible and impose less restrictions
  on the layout of data, allowing for complex data structures to be stored
- within a single document.
- 
+ within a single document 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "mongodb"
+key "mongo"
 
 \end_inset
 
-[XXX ref? Mongo book p 1]
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -297,11 +299,16 @@ scaling out
 \end_inset
 
  -- the process of adding more commodity servers to a cluster instead of
- replacing existing servers with better (and more expensive) ones.
- [xxx ref mongodb p 2] Adding more machines when the need arises is straight-for
-ward and the database system itself figures out how to best configure the
- machines.
- [xxx ref mongodb p 3]
+ replacing existing servers with better (and more expensive) ones 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
+ Adding more machines when the need arises is straight-forward and the database
+ system itself figures out how to best configure the machines.
 \end_layout
 
 \begin_layout Paragraph
@@ -313,8 +320,14 @@ Because there are no database schemas, and databases and collections can
  be created on-the-fly without explicit commands, Mongo\SpecialChar \-
 DB requires very
  little manual maintenance.
- The database system is designed to be very automatic.
- [xxx ref mongodb]
+ The database system is designed to be very automatic 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -324,7 +337,14 @@ Interactive Shell
 \begin_layout Standard
 Mongo\SpecialChar \-
 DB includes an interactive JavaScript-based shell that can be used
- to conveniently access the database system [XXX ref mongo shell].
+ to conveniently access the database system 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
  In JavaScript, documents are represented as objects.
  The example in listing
 \begin_inset space ~
@@ -517,7 +537,15 @@ _id
  has been added to both documents.
  Unless a document already has such a field, one is automatically generated
  by the database when it is first inserted.
- This field must be able to uniquely identify documents within a collection.
+ This field must be able to uniquely identify documents within a collection
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -809,20 +837,42 @@ Adding to an array.
 
 \begin_layout Subsubsection
 BSON
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:BSON"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 At the core of Mongo\SpecialChar \-
-DB lies the BSON (Binary JSON) [XXX ref bson] data format
- which is used to communicate data as well as store data on disk.
- When a driver communicates with a MongoDB instance, documents are transmitted
+DB lies the BSON (Binary JSON) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bson"
+
+\end_inset
+
+ data format which is used to communicate data as well as store data on
+ disk.
+ When a driver communicates with a Mongo\SpecialChar \-
+DB instance, documents are transmitted
  over the network as a series of BSON encoded bytes.
 \end_layout
 
 \begin_layout Standard
 BSON is similar to and heavily influenced by JSON (JavaScript Object Notation)
- [XXX ref json], the main difference being that BSON is a binary format
- whereas JSON is plain-text.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "json"
+
+\end_inset
+
+, the main difference being that BSON is a binary format whereas JSON is
+ plain-text.
  The reason for using a binary format is efficiency.
  With JSON, numbers need to be converted to and from text in order to be
  used.
@@ -830,8 +880,15 @@ BSON is similar to and heavily influenced by JSON (JavaScript Object Notation)
  JSON model with a set of data types that can be parsed directly.
  For instance, a 32-bit integer is encoded in BSON as four consecutive little-en
 dian bytes.
- This wastes some space for small integers, but is much faster to parse.
- [xxx ref bsonspec.org faq?]
+ This wastes some space for small integers, but is much faster to parse
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bson"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -849,12 +906,20 @@ what
 \emph on
 how
 \emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bratko"
+
+\end_inset
+
 .
 \end_layout
 
 \begin_layout Standard
 This section gives a small introduction to Prolog in order to more easily
  appreciate the code examples in subsequent sections.
+ See Clocksin and Mellish (1994) or Bratko (2001) for a more complete discussion.
 \end_layout
 
 \begin_layout Subsubsection
@@ -873,7 +938,14 @@ term
 
 , which can be any value.
  A variable can be bound to any term, but once bound, it is immutable and
- cannot be rebound.
+ cannot be rebound 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -896,7 +968,14 @@ atom
 s.
  In SWI-Prolog, integers are unbounded and floats are represented as 64-bit
  IEEE 754 doubles.
- Atoms represent UTF-8 encoded text [xxx ref SWI].
+ Atoms represent UTF-8 encoded text 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "swi"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -904,10 +983,18 @@ A
 \emph on
 structure
 \emph default
- is a compound value with a fixed number of components and possibly a name.
+ is a compound value with a fixed number of components and possibly a name
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
  The components are terms that need not share the same type and can be anything,
  including variables and other structures.
- Structures are often used to represent trees [XXX ref prog in prolog].
+ Structures are often used to represent trees.
 \end_layout
 
 \begin_layout Standard
@@ -915,7 +1002,15 @@ A
 \emph on
 list
 \emph default
- is a sequence of zero or more terms which need not share the same type.
+ is a sequence of zero or more terms which need not share the same type
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
  A non-empty list is a recursive structure that consists of a 
 \begin_inset Quotes eld
 \end_inset
@@ -934,7 +1029,7 @@ tail
 
  which is itself a list of all elements except the first.
  If a list has only one element, its tail is the empty list.
- The empty list has neither head nor tail [XXX ref prog in prolog].
+ The empty list has neither head nor tail.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1022,7 +1117,15 @@ name "sub:Program-Structure"
 \end_layout
 
 \begin_layout Standard
-The fundamental unit of code in Prolog is the predicate (also called relation).
+The fundamental unit of code in Prolog is the predicate (also called relation)
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
  A predicate consists of one or more clauses, together forming a logical
  disjunction.
  The value of any predicate is either true or false, indicating whether
@@ -1030,7 +1133,14 @@ The fundamental unit of code in Prolog is the predicate (also called relation).
  Any other output must be specified as output-arguments that become bound
  by the predicate before it returns.
  The convention used for argument order is input-arguments first, intermediate
- values in the middle, and output-arguments last [xxx ref prolog guidelines].
+ values in the middle, and output-arguments last 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "guidelines"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1064,7 +1174,14 @@ so far
 \begin_inset Quotes erd
 \end_inset
 
- [XXX ref].
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1473,9 +1590,15 @@ backtracking
 \begin_inset Quotes erd
 \end_inset
 
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
 .
- Prolog works in a top-down, depth-first fashion when evaluating predicates
- [XXX ref].
+ Prolog works in a top-down, depth-first fashion when evaluating predicates.
  Calling the predicate 
 \emph on
 length/3
@@ -1500,7 +1623,14 @@ reference "lis:length-program"
 \end_layout
 
 \begin_layout Standard
-Iteration is performed by recursion.
+Iteration is performed by recursion 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
  The predicate 
 \emph on
 length/3
@@ -1516,8 +1646,7 @@ reference "lis:length-program"
 
 \end_inset
 
- is a recursive predicate because it is defined in terms of itself [XXX
- ref].
+ is a recursive predicate because it is defined in terms of itself.
  To solve the problem of calculating the length of a list, the predicate
  solves a smaller problem, namely calculating the length of a shorter list:
  the tail.
@@ -1530,7 +1659,14 @@ Documentation Convention
 
 \begin_layout Standard
 When documenting Prolog predicates, each argument is usually prefixed with
- a symbol that indicates how the argument is supposed to behave.
+ a symbol that indicates how the argument is supposed to behave 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "guidelines"
+
+\end_inset
+
+.
  The following documentation convention is employed by subsequent chapters.
 \end_layout
 
@@ -1557,22 +1693,26 @@ Output.
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-? Argument may or may not be instantiated.
+? [XXX used?] Argument may or may not be instantiated.
  This is commonly used when the predicate can be used to either verify the
  argument or instantiate it.
 \end_layout
 
 \begin_layout Standard
-A predicate is usually referred to by its name and arity (number of arguments),
+A predicate is referred to by its name and arity (number of arguments),
  and, if applicable, its module: 
-\noun on
+\emph on
 module:predicate/arity
-\noun default
+\emph default
 .
- If the 
-\noun on
+ Should the 
+\begin_inset Quotes eld
+\end_inset
+
 length
-\noun default
+\begin_inset Quotes erd
+\end_inset
+
  predicate in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -1580,14 +1720,18 @@ reference "sub:Program-Structure"
 
 \end_inset
 
- would be defined in the module 
-\noun on
+ be defined in the module 
+\begin_inset Quotes eld
+\end_inset
+
 lists
-\noun default
+\begin_inset Quotes erd
+\end_inset
+
 , it would be referred to as 
-\noun on
+\emph on
 lists:length/3
-\noun default
+\emph default
 .
 \end_layout
 
@@ -1596,26 +1740,93 @@ Requirements
 \end_layout
 
 \begin_layout Standard
-This chapter discusses the functionality required by the driver.
-\end_layout
-
-\begin_layout Standard
-[XXX main ref: http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements]
+This chapter discusses the functionality to be implemented by the driver.
 \end_layout
 
 \begin_layout Subsection
+Suggested Features
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Suggested-Features"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Mongo\SpecialChar \-
+DB Driver Requirements 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "driver_req"
+
+\end_inset
+
+ list the following items as high priority for a driver to provide, in no
+ particular order:
+\end_layout
+
+\begin_layout Enumerate
+BSON serialization/deserialization,
+\end_layout
+
+\begin_layout Enumerate
+full cursor support,
+\end_layout
+
+\begin_layout Enumerate
+close exhausted cursors,
+\end_layout
+
+\begin_layout Enumerate
+support for running database commands,
+\end_layout
+
+\begin_layout Enumerate
+handle query errors,
+\end_layout
+
+\begin_layout Enumerate
+convert all strings to UTF-8 (part of proper support for BSON),
+\end_layout
+
+\begin_layout Enumerate
+hint, explain, count, $where,
+\end_layout
+
+\begin_layout Enumerate
+database profiling,
+\end_layout
+
+\begin_layout Enumerate
+advanced connection management, and
+\end_layout
+
+\begin_layout Enumerate
+automatic reconnection.
+\end_layout
+
+\begin_layout Subsection
+Selected Features
+\end_layout
+
+\begin_layout Standard
+To keep development focused on providing just enough functionality to use
+ the database system as data storage and retrieval, the driver focuses on
+ items 1-6 and omits items 7-10 from the list in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sub:Suggested-Features"
+
+\end_inset
+
+.
+ The selected requirements are further described in this section.
+\end_layout
+
+\begin_layout Subsubsection
 BSON Conversion
-\end_layout
-
-\begin_layout Standard
-[xxx ref: http://bsonspec.org/]
-\end_layout
-
-\begin_layout Standard
-The data representation format used by MongoDB is a binary encoded variation
- of JSON, called BSON (Binary JSON).
- In MongoDB, BSON is the format used to store data on disk as well as transmit
- data over the network.
 \end_layout
 
 \begin_layout Standard
@@ -1623,27 +1834,54 @@ The driver must be able to convert back and forth between some idiomatic
  Prolog structure and BSON bytes.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Connection Management
 \end_layout
 
 \begin_layout Standard
-The driver must be able to obtain a connection to a database server instance
- using a TCP (Transmission Control Protocol) socket.
+The driver must be able to obtain a connection to a database server using
+ a TCP (Transmission Control Protocol) socket.
  All communication with the database is performed through this socket.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
+Database Commands
+\end_layout
+
+\begin_layout Standard
+The driver must be able to execute arbitrary database commands, such as
+ creating and dropping collections.
+\end_layout
+
+\begin_layout Subsubsection
 Document Handling
 \end_layout
 
 \begin_layout Standard
 The driver must expose functionality to find, insert, update and delete
- documents in a database.
+ documents in a collection, providing basic CRUD (Create, Read, Update,
+ Delete) facilities.
 \end_layout
 
 \begin_layout Section
-API Design
+Design
+\end_layout
+
+\begin_layout Subsection
+Documents in Prolog
+\end_layout
+
+\begin_layout Standard
+[XXX How are BSON documents designed?]
+\end_layout
+
+\begin_layout Standard
+One advantage of working in a high-level language with a rich syntax such
+ as Prolog is the ability to express complex structures as literals.
+\end_layout
+
+\begin_layout Subsection
+Driver API
 \end_layout
 
 \begin_layout Standard
@@ -1651,7 +1889,7 @@ This chapter discusses the overall design of the driver and describes its
  Application Programming Interface (API).
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Driver Organization
 \end_layout
 
@@ -1674,8 +1912,8 @@ bson
  it.
 \end_layout
 
-\begin_layout Subsection
-BSON Handling
+\begin_layout Subsubsection
+BSON Handling [XXX Rewrite and merge with 4.1]
 \end_layout
 
 \begin_layout Standard
@@ -1698,7 +1936,7 @@ A BSON document is represented in Prolog as a list of key/value pairs, also
  Keys are UTF-8 encoded atoms, and values can be of several different types.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Document-to-BSON Conversion
 \end_layout
 
@@ -1715,7 +1953,7 @@ A document with two fields may look like this:
 [name-'MongoDB', type-db]
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 BSON-to-Document Conversion
 \end_layout
 
@@ -1784,7 +2022,7 @@ Docs = [[],[a-42]]
 An exception is thrown if the conversion fails [xxx detail the exception].
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Document Manipulation
 \end_layout
 
@@ -1798,7 +2036,7 @@ To make working with documents easier, a set of simple helper predicates
  are provided.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_is_valid(+Doc)
 \end_layout
 
@@ -1806,7 +2044,7 @@ bson:doc_is_valid(+Doc)
 True if Doc is a valid document and can be converted into BSON encoded bytes.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_empty(?Doc)
 \end_layout
 
@@ -1815,7 +2053,7 @@ True if Doc is an empty BSON document.
  Can be used to both check for emptiness as well as obtain an empty document.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_get(+Doc, +Key, ?Value)
 \end_layout
 
@@ -1824,7 +2062,7 @@ True if Value is the value associated with Key in Doc or +null if Key cannot
  be found.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_get_strict(+Doc, +Key, ?Value)
 \end_layout
 
@@ -1833,7 +2071,7 @@ True if Value is the value associated with Key in Doc.
  Fails if Key is not found or does not match Value.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
 \end_layout
 
@@ -1841,7 +2079,7 @@ bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
 True if NewDoc is Doc with the addition or update of the association Key-Value.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_delete(+Doc, +Key, ?NewDoc)
 \end_layout
 
@@ -1851,7 +2089,7 @@ True if NewDoc is Doc with the association removed that has Key as key.
  No change if Key is not found.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_keys(+Doc, ?Keys)
 \end_layout
 
@@ -1859,7 +2097,7 @@ bson:doc_keys(+Doc, ?Keys)
 True if Keys is the keys for the associations in Doc.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_values(+Doc, ?Values)
 \end_layout
 
@@ -1867,7 +2105,7 @@ bson:doc_values(+Doc, ?Values)
 True if Values is the values for the associations in Doc.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 bson:doc_keys_values(+Doc, ?Keys, ?Values)
 \end_layout
 
@@ -1875,7 +2113,7 @@ bson:doc_keys_values(+Doc, ?Keys, ?Values)
 True if Doc is the list of successive associations of Keys and Values.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Network Communication
 \end_layout
 
@@ -1885,7 +2123,7 @@ Communication with a MongoDB instance is conducted through a Transmission
  [xxx ref mongo wire protocol]
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Obtaining a Connection
 \end_layout
 
@@ -1925,7 +2163,7 @@ Connection =
 [opaque connection handle]
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Releasing a Connection
 \end_layout
 
@@ -1954,7 +2192,7 @@ mongo:new_connection
 [Connection may no longer be used]
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Working with Data
 \end_layout
 
@@ -1963,7 +2201,7 @@ This section gives an overview of the main functionality needed to work
  with databases, collections and documents.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Databases and Collections
 \end_layout
 
@@ -1995,7 +2233,7 @@ mongo:get_collection/3
  first used.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Find Documents
 \end_layout
 
@@ -2603,7 +2841,7 @@ Interface to mongo:find_all/4.
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subparagraph
 Using Cursors
 \end_layout
 
@@ -3078,7 +3316,7 @@ Interface to mongo:cursor_kill_batch/1.
 
 \begin_layout Standard
 Should all remaining documents matched by a query need to be retrieved in
- a single action, the predicate 
+ a single step, the predicate 
 \emph on
 mongo:cursor_exhaust/2
 \emph default
@@ -3200,7 +3438,7 @@ Interface to mongo:cursor_exhaust/2.
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Insert Documents
 \end_layout
 
@@ -3466,7 +3704,7 @@ Interface to mongo:insert_batch/3.
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Update Documents
 \end_layout
 
@@ -3657,7 +3895,7 @@ reference "tab:interface-update"
  [XXX ref].
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Delete Documents
 \end_layout
 
@@ -3928,7 +4166,7 @@ Interface to mongo:delete/3.
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 General Database Commands
 \end_layout
 
@@ -3937,7 +4175,7 @@ Some commands deal not with documents directly, but with whole databases,
  collections or meta data.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Error Handling
 \end_layout
 
@@ -3979,7 +4217,14 @@ Definite Clause Grammar
 
 \begin_layout Standard
 Most of the code that converts to or from lists is implemented using the
- Definite Clause Grammar (DCG) syntax in Prolog.
+ Definite Clause Grammar (DCG) syntax in Prolog 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
  This grammar technique provides a convenient interface to 
 \begin_inset Quotes eld
 \end_inset
@@ -3989,7 +4234,14 @@ difference lists
 \end_inset
 
 , which is a common approach in Prolog to avoid unnecessary (and inefficient)
- list concatenation [XXX ref].
+ list concatenation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "okeefe"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -4016,7 +4268,7 @@ BSON conversion is something the driver does very often, and pushing common
 \end_layout
 
 \begin_layout Subsection
-Unit Testing
+Test Suite
 \end_layout
 
 \begin_layout Standard
@@ -4029,7 +4281,7 @@ PlUnit,
 \end_layout
 
 \begin_layout Subsection
-Technical Environment
+Environment
 \end_layout
 
 \begin_layout Standard
@@ -4069,19 +4321,7 @@ Evaluation
 \end_layout
 
 \begin_layout Section
-Related Work
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-[xxx Compare to existing drivers? Erlang? And something completely different?
- Will probably skip this chapter.
- Doesn't feel that interesting.]
-\end_layout
-
-\begin_layout Section
-Conclusion/Future Work [merge or split?]
+Conclusion/Future Work [XXX merge or split?]
 \end_layout
 
 \begin_layout Standard
@@ -4107,26 +4347,6 @@ real
 
  driver? Discuss choice of list as BSON document.
  Maybe use some map-like structure instead.]
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-[Should I include a chapter with some kind of usage example, with a longer
- code snippet that shows what modules to include and how to actually interact
- with the driver? Is that Appendix material?]
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "xxxxx"
-
-\end_inset
-
-[xxx how should these be ordered? alphabetical last names? publish date?
- in order of first referenced in text?]
 \end_layout
 
 \begin_layout Bibliography
@@ -4176,7 +4396,7 @@ key "bratko"
 
 \end_inset
 
-[xxx unreferenced] Bratko, I.
+Bratko, I.
  (2001) 
 \emph on
 PROLOG Programming for Artificial Intelligence.
@@ -4194,7 +4414,7 @@ key "okeefe"
 
 \end_inset
 
-[xxx unreferenced] O'Keefe, R.
+O'Keefe, R.
  A.
  (1990) 
 \emph on
@@ -4220,26 +4440,48 @@ Covington, M.
  A.
  et al.
  Retrieved 2011-06-07.
- [xxx how to format web refs?]
+ [xxx how to format web refs? article?]
 \begin_inset Newline newline
 \end_inset
 
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
 http://www.ai.uga.edu/mc/plcoding.pdf
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
 \labelwidthstring References
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "driver"
+key "driver_req"
 
 \end_inset
 
-[xxx unreferenced] MongoDB Driver Documentation
+Mongo Driver Requirements
 \begin_inset Newline newline
 \end_inset
 
-http://www.mongodb.org/display/DOCS/Drivers
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -4250,11 +4492,48 @@ key "bson"
 
 \end_inset
 
-[xxx unreferenced] BSON Specification, Retrieved 2011-06-07.
+BSON Specification, Retrieved 2011-06-07.
 \begin_inset Newline newline
 \end_inset
 
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
 http://bsonspec.org/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "json"
+
+\end_inset
+
+JSON Specification, Retrieved 2011-06-19.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.json.org/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -4265,11 +4544,22 @@ key "swi"
 
 \end_inset
 
-[xxx unreferenced] SWI-Prolog Documentation
+SWI-Prolog Documentation
 \begin_inset Newline newline
 \end_inset
 
-http://www.swi-prolog.org/pldoc/
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.swi-prolog.org/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
