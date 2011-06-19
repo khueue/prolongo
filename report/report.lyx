@@ -2261,16 +2261,12 @@ Design
 \end_layout
 
 \begin_layout Standard
-This chapter discusses how documents are represented in Prolog and describes
- the driver Application Programming Interface (API).
+This chapter discusses how documents are represented in Prolog, and describes
+ the Application Programming Interface (API) of the driver.
 \end_layout
 
 \begin_layout Subsection
 Documents in Prolog
-\end_layout
-
-\begin_layout Subsubsection
-Document Literals
 \end_layout
 
 \begin_layout Standard
@@ -2414,198 +2410,16 @@ BSON document as a Prolog literal.
 
 \end_layout
 
-\begin_layout Subsubsection
-BSON Handling [XXX Rewrite and merge with 4.1]
-\end_layout
-
-\begin_layout Standard
-At the core of MongoDB lies the BSON binary data format which is used to
- communicate data as well as store data on disk.
- When communicating with a MongoDB instance, documents are transmitted over
- the network as bytes of BSON.
- The driver converts Prolog structures into series of BSON bytes before
- sending them to the database, and database responses are converted back
- to Prolog structures again.
-\end_layout
-
-\begin_layout Paragraph
-Document-BSON Conversion
-\end_layout
-
-\begin_layout Standard
-When converting a document to BSON, a list of bytes is obtained.
-\end_layout
-
-\begin_layout Standard
-When converting between structured documents and BSON encoded bytes, the
- relation 
-\noun on
-bson:doc_bytes/2
-\noun default
- can be used.
- This is a two-way relation that accepts a document and returns bytes, or
- accepts bytes and returns a document.
- xxxxxxxxxxxxxx
-\end_layout
-
-\begin_layout Standard
-Given a list of BSON encoded bytes, the relation 
-\noun on
-bson:doc_bytes/2
-\noun default
- can be used to convert it into its structured equivalent.
- The empty document is represented in BSON as five bytes, the first four
- being a 32-bit little-endian integer representing the length of the entire
- document, and the last byte signaling the end of the document with a zero.
-\end_layout
-
-\begin_layout LyX-Code
-?- bson:doc_bytes(Doc, [12,0,0,0,16,97,0,42,0,0,0,0]).
-\end_layout
-
-\begin_layout LyX-Code
-Doc = [a-42]
-\end_layout
-
-\begin_layout Standard
-If a series of BSON bytes represents a concatenation of documents, the relation
- 
-\noun on
-bson:docs_bytes/2
-\noun default
- can be used.
- The following yields an empty and a non-empty document wrapped in a list.
-\end_layout
-
-\begin_layout LyX-Code
-?- bson:docs_bytes(
-\end_layout
-
-\begin_layout LyX-Code
-       Docs,
-\end_layout
-
-\begin_layout LyX-Code
-       [5,0,0,0,0,12,0,0,0,16,97,0,42,0,0,0,0]).
-\end_layout
-
-\begin_layout LyX-Code
-Docs = [[],[a-42]]
-\end_layout
-
-\begin_layout Standard
-An exception is thrown if the conversion fails [xxx detail the exception].
-\end_layout
-
-\begin_layout Paragraph
-Document Manipulation
-\end_layout
-
-\begin_layout Standard
-[XXX This section got very manual-ish.
- Is this relevant? Should I keep it, rewrite or omit?]
-\end_layout
-
-\begin_layout Standard
-To make working with documents easier, a set of simple helper predicates
- are provided.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_is_valid(+Doc)
-\end_layout
-
-\begin_layout Standard
-True if Doc is a valid document and can be converted into BSON encoded bytes.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_empty(?Doc)
-\end_layout
-
-\begin_layout Standard
-True if Doc is an empty BSON document.
- Can be used to both check for emptiness as well as obtain an empty document.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_get(+Doc, +Key, ?Value)
-\end_layout
-
-\begin_layout Standard
-True if Value is the value associated with Key in Doc or +null if Key cannot
- be found.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_get_strict(+Doc, +Key, ?Value)
-\end_layout
-
-\begin_layout Standard
-True if Value is the value associated with Key in Doc.
- Fails if Key is not found or does not match Value.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
-\end_layout
-
-\begin_layout Standard
-True if NewDoc is Doc with the addition or update of the association Key-Value.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_delete(+Doc, +Key, ?NewDoc)
-\end_layout
-
-\begin_layout Standard
-True if NewDoc is Doc with the association removed that has Key as key.
- At most one association is removed.
- No change if Key is not found.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_keys(+Doc, ?Keys)
-\end_layout
-
-\begin_layout Standard
-True if Keys is the keys for the associations in Doc.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_values(+Doc, ?Values)
-\end_layout
-
-\begin_layout Standard
-True if Values is the values for the associations in Doc.
-\end_layout
-
-\begin_layout Subparagraph
-bson:doc_keys_values(+Doc, ?Keys, ?Values)
-\end_layout
-
-\begin_layout Standard
-True if Doc is the list of successive associations of Keys and Values.
-\end_layout
-
 \begin_layout Subsection
 Driver API
 \end_layout
 
-\begin_layout Subsubsection
-Database Connection
+\begin_layout Standard
+This section details the interface for the driver.
 \end_layout
 
-\begin_layout Standard
-Communication with a MongoDB server instance is conducted through a TCP
- socket 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "wire"
-
-\end_inset
-
-.
+\begin_layout Subsubsection
+Database Connection
 \end_layout
 
 \begin_layout Paragraph
@@ -2613,39 +2427,247 @@ Obtaining a Connection
 \end_layout
 
 \begin_layout Standard
-A connection can be established by the predicate 
-\noun on
-mongo:new_connection
-\noun default
-/1,3.
- Two versions of the predicate are provided, one which assumes the default
- MongoDB host and port, and one which allows this to be specified.
- If an error occurs during the setup, an exception is thrown.
-\end_layout
-
-\begin_layout LyX-Code
-?- mongo:new_connection(Connection).
-\end_layout
-
-\begin_layout LyX-Code
-Connection = 
+A connection to a Mongo\SpecialChar \-
+DB server can be established by the predicate 
 \emph on
-[opaque connection handle]
+new_connection/1,3
+\emph default
+.
+ Two versions of the predicate are provided, one which assumes the default
+ Mongo\SpecialChar \-
+DB host and port, and one which allows this to be specified.
+ If an error occurs during the setup, an exception is thrown.
+ The predicate interfaces are described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-new_connection-1"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-new_connection-3"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-The following will connect to a MongoDB instance running on localhost attached
- to the port 1234.
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
 \end_layout
 
-\begin_layout LyX-Code
-?- mongo:new_connection(localhost, 1234, Connection).
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
 \end_layout
 
-\begin_layout LyX-Code
-Connection = 
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Connection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Connection established to the database server
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-new_connection-1"
+
+\end_inset
+
+Interface to 
 \emph on
-[opaque connection handle]
+new_connection/1
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Host
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Host name of database server
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Port
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Port number of database server
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Connection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Connection established to the database server
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-new_connection-3"
+
+\end_inset
+
+Interface to 
+\emph on
+new_connection/3
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -2655,26 +2677,108 @@ Releasing a Connection
 \begin_layout Standard
 When a connection is no longer needed it must be properly released back
  to the system.
- Assuming 
+ The predicate 
 \emph on
-Connection
+free_connection/1
 \emph default
- is a connection obtained by the predicate 
-\noun on
-mongo:new_connection
-\noun default
-/1,3, the following will release any resources associated with it, rendering
+ will release any resources associated with the given connection, rendering
  it unusable.
+ Its interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-free-connection"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout LyX-Code
-?- mongo:free_connection(Connection).
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
 \end_layout
 
-\begin_layout LyX-Code
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
 
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Connection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Connection to release
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-free-connection"
+
+\end_inset
+
+Interface to 
 \emph on
-[Connection may no longer be used]
+free_connection/1
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -2691,31 +2795,301 @@ Databases and Collections
 \end_layout
 
 \begin_layout Standard
-A MongoDB server can contain multiple logical databases, and each database
+A Mongo\SpecialChar \-
+DB server can contain multiple logical databases, and each database
  can contain multiple document collections.
  Once a connection to the server has been established, a handle to a logical
- database can be retrieved by the predicate 
-\noun on
-mongo:get_database/3
-\noun default
+ database can be produced by the predicate 
+\emph on
+get_database/3
+\emph default
 .
- The predicate accepts a connection handle and the name of the desired database
- as an atom, and returns a handle to the database.
- The database need not exist beforehand, and will be created when it is
- first used.
+ The database need not exist beforehand as it will be created when first
+ used.
+ The predicate is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-get_database"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Connection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Connection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++DatabaseName
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Name of the database to use
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Database
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Database handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-get_database"
+
+\end_inset
+
+Interface to 
+\emph on
+get_database/3
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 The database handle can be used to execute general database commands, but
  a collection handle must be retrieved when working with documents.
  This is accomplished by the predicate 
-\noun on
-mongo:get_collection/3
-\noun default
-, which accepts a database handle and the name of the collection, and returns
- a collection handle.
- The collection need not exist beforehand, and will be created when it is
- first used.
+\emph on
+get_collection/3
+\emph default
+, which returns a collection handle.
+ The collection need not exist beforehand as it will be created when first
+ used.
+ Its interface is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-get_collection"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Database
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Database handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++CollectionName
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Name of the collection to use
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Collection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Collection handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-get_collection"
+
+\end_inset
+
+Interface to 
+\emph on
+get_collection/3
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -2725,9 +3099,13 @@ Find Documents
 \begin_layout Standard
 Querying the database for documents is accomplished through the family of
  
-\emph on
+\begin_inset Quotes eld
+\end_inset
+
 find
-\emph default
+\begin_inset Quotes erd
+\end_inset
+
  predicates.
  Depending on the nature of the query, different predicates can be used
  to retrieve, for example, a single document or all documents matching the
@@ -2752,20 +3130,20 @@ cursor
 \begin_layout Standard
 The three main predicates for finding documents are 
 \emph on
-mongo:find/8
+find/8
 \emph default
 , 
 \emph on
-mongo:find_one/4
+find_one/4
 \emph default
  and 
 \emph on
-mongo:find_all/4
+find_all/4
 \emph default
 .
  The most general predicate is 
 \emph on
-find
+find/8
 \emph default
  which takes many arguments and offers very fine-grained control over the
  query.
@@ -2784,7 +3162,7 @@ reference "tab:interface-find"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2967,7 +3345,7 @@ Cursor used to fetch more documents
 \begin_inset Text
 
 \begin_layout Plain Layout
-Documents returned by the query
+First batch of documents returned by the query
 \end_layout
 
 \end_inset
@@ -2990,7 +3368,11 @@ name "tab:interface-find"
 
 \end_inset
 
-Interface to mongo:find/8.
+Interface to 
+\emph on
+find/8
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3006,7 +3388,7 @@ Interface to mongo:find/8.
 \begin_layout Standard
 The predicate 
 \emph on
-find_one
+find_one/4
 \emph default
  is intended for the common case where you only expect one matching document.
  If no matching document is found, the returned document is the atom 'nil'.
@@ -3151,7 +3533,11 @@ name "tab:interface-find-one"
 
 \end_inset
 
-Interface to mongo:find_one/4.
+Interface to 
+\emph on
+find_one/4
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3167,7 +3553,7 @@ Interface to mongo:find_one/4.
 \begin_layout Standard
 The predicate 
 \emph on
-find_all
+find_all/4
 \emph default
  is intended for situations where all matching documents need processing
  and it is convenient to collect them into a single (potentially large)
@@ -3187,7 +3573,7 @@ reference "tab:interface-find-all"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3290,7 +3676,7 @@ Document describing which fields to return
 \begin_inset Text
 
 \begin_layout Plain Layout
-Documents returned by the query
+All documents returned by the query
 \end_layout
 
 \end_inset
@@ -3313,7 +3699,11 @@ name "tab:interface-find-all"
 
 \end_inset
 
-Interface to mongo:find_all/4.
+Interface to 
+\emph on
+find_all/4
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3334,17 +3724,23 @@ Using Cursors
 When a query matches more documents than can be returned in a single response,
  a cursor is established and returned.
  A cursor is created and maintained by the database instance, and it represents
- a pointer to a subset of the documents matched by a query [xxx ref and
- maybe rewrite].
+ a pointer to a subset of the documents matched by a query 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+ [XXX verify ref].
 \end_layout
 
 \begin_layout Standard
 After making a query, the predicate 
 \emph on
-mongo:cursor_has_more/
+cursor_has_more/1
 \emph default
-1 can be called on a cursor.
- The predicate succeeds if more documents can be retrieved, and its interface
+ can be called on a cursor.
+ The predicate succeeds if more documents may be retrieved, and its interface
  is described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -3360,7 +3756,7 @@ reference "tab:interface-cursor-has-more"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3426,7 +3822,11 @@ name "tab:interface-cursor-has-more"
 
 \end_inset
 
-Interface to mongo:cursor_has_more/1.
+Interface to 
+\emph on
+cursor_has_more/1
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3442,7 +3842,7 @@ Interface to mongo:cursor_has_more/1.
 \begin_layout Standard
 If more documents need to be retrieved, the predicate 
 \emph on
-mongo:cursor_get_more/4
+cursor_get_more/4
 \emph default
  can be used.
  This predicate takes a cursor, returns a number of documents and also a
@@ -3462,7 +3862,7 @@ reference "tab:interface-cursor-get-more"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3588,7 +3988,11 @@ name "tab:interface-cursor-get-more"
 
 \end_inset
 
-Interface to mongo:cursor_has_more/1.
+Interface to 
+\emph on
+cursor_has_more/1
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3606,7 +4010,7 @@ When a cursor is no longer needed, it must be explicitly killed in order
  for the database to clean up any resources claimed by it.
  This is accomplished by the predicate 
 \emph on
-mongo:cursor_kill/1
+cursor_kill/1
 \emph default
 , described in 
 \begin_inset CommandInset ref
@@ -3618,7 +4022,7 @@ reference "tab:interface-cursor-kill"
 .
  If several cursors need to be killed, a more efficient version called 
 \emph on
-mongo:cursor_kill_batch/1
+cursor_kill_batch/1
 \emph default
  can be used to kill them in a single database call.
  This predicate is described in 
@@ -3636,7 +4040,7 @@ reference "tab:interface-cursor-kill-batch"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3702,7 +4106,11 @@ name "tab:interface-cursor-kill"
 
 \end_inset
 
-Interface to mongo:cursor_kill/1.
+Interface to 
+\emph on
+cursor_kill/1
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3720,7 +4128,7 @@ Interface to mongo:cursor_kill/1.
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3786,7 +4194,11 @@ name "tab:interface-cursor-kill-batch"
 
 \end_inset
 
-Interface to mongo:cursor_kill_batch/1.
+Interface to 
+\emph on
+cursor_kill_batch/1
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3803,7 +4215,7 @@ Interface to mongo:cursor_kill_batch/1.
 Should all remaining documents matched by a query need to be retrieved in
  a single step, the predicate 
 \emph on
-mongo:cursor_exhaust/2
+cursor_exhaust/2
 \emph default
  can be used.
  This is a convenience predicate that simply queries the cursor until all
@@ -3824,7 +4236,7 @@ reference "tab:interface-cursor-exhaust"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3910,7 +4322,11 @@ name "tab:interface-cursor-exhaust"
 
 \end_inset
 
-Interface to mongo:cursor_exhaust/2.
+Interface to 
+\emph on
+cursor_exhaust/2
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -3931,7 +4347,7 @@ Insert Documents
 Two predicates are available to insert documents into a database collection.
  The simplest one is 
 \emph on
-mongo:insert/2
+insert/2
 \emph default
 , which accepts a collection handle and a document to insert, as described
  in 
@@ -4035,7 +4451,11 @@ name "tab:interface-insert"
 
 \end_inset
 
-Interface to mongo:insert/2.
+Interface to 
+\emph on
+insert/2
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -4052,7 +4472,7 @@ Interface to mongo:insert/2.
 If several documents need to be inserted, a more efficient predicate called
  
 \emph on
-mongo:insert_batch/3
+insert_batch/3
 \emph default
  may be used to send them in a single database call.
  This predicate is described in 
@@ -4176,7 +4596,11 @@ name "tab:interface-insert-batch"
 
 \end_inset
 
-Interface to mongo:insert_batch/3.
+Interface to 
+\emph on
+insert_batch/3
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -4203,7 +4627,7 @@ name "par:Update-Documents"
 \begin_layout Standard
 Updating a single document is done using the predicate 
 \emph on
-mongo:update/3
+update/3
 \emph default
 .
  It accepts a collection handle, a selector document and a document describing
@@ -4330,7 +4754,11 @@ name "tab:interface-update"
 
 \end_inset
 
-Interface to mongo:update/3.
+Interface to 
+\emph on
+update/3
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -4347,7 +4775,7 @@ Interface to mongo:update/3.
 If all matching documents need to be updated, a similar predicate called
  
 \emph on
-mongo:update_all/3
+update_all/3
 \emph default
  can be used.
  The interface to this predicate is identical to the one described in 
@@ -4374,7 +4802,7 @@ upsert
 .
  This predicate is called 
 \emph on
-mongo:upsert/3
+upsert/3
 \emph default
 , and works like a normal update (described in 
 \begin_inset CommandInset ref
@@ -4402,11 +4830,11 @@ Delete Documents
 Deleting documents from a collection is accomplished through the predicates
  
 \emph on
-mongo:delete/2
+delete/2
 \emph default
  and 
 \emph on
-mongo:delete/3
+delete/3
 \emph default
 .
  Both predicates accept a collection handle and a 
@@ -4442,7 +4870,7 @@ reference "tab:interface-delete-3"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -4528,7 +4956,11 @@ name "tab:interface-delete-2"
 
 \end_inset
 
-Interface to mongo:delete/3.
+Interface to 
+\emph on
+delete/3
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -4546,7 +4978,7 @@ Interface to mongo:delete/3.
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -4652,7 +5084,11 @@ name "tab:interface-delete-3"
 
 \end_inset
 
-Interface to mongo:delete/3.
+Interface to 
+\emph on
+delete/3
+\emph default
+.
 \end_layout
 
 \end_inset
@@ -4672,6 +5108,10 @@ General Database Commands
 \begin_layout Standard
 Some commands deal not with documents directly, but with whole databases,
  collections or meta data.
+\end_layout
+
+\begin_layout Standard
+[XXXXXX add command/3 etc.]
 \end_layout
 
 \begin_layout Subsubsection
@@ -4735,6 +5175,196 @@ bson
  The bson module is used internally by the mongo module, but implemented
  separately because BSON is not inherent to MongoDB and can be used without
  it.
+\end_layout
+
+\begin_layout Subsection
+Sockets and such XXX
+\end_layout
+
+\begin_layout Standard
+Communication with a MongoDB server instance is conducted through a TCP
+ socket 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wire"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+BSON Handling
+\end_layout
+
+\begin_layout Standard
+At the core of MongoDB lies the BSON binary data format which is used to
+ communicate data as well as store data on disk.
+ When communicating with a MongoDB instance, documents are transmitted over
+ the network as bytes of BSON.
+ The driver converts Prolog structures into series of BSON bytes before
+ sending them to the database, and database responses are converted back
+ to Prolog structures again.
+\end_layout
+
+\begin_layout Subsubsection
+Document-BSON Conversion
+\end_layout
+
+\begin_layout Standard
+When converting a document to BSON, a list of bytes is obtained.
+\end_layout
+
+\begin_layout Standard
+When converting between structured documents and BSON encoded bytes, the
+ relation 
+\noun on
+bson:doc_bytes/2
+\noun default
+ can be used.
+ This is a two-way relation that accepts a document and returns bytes, or
+ accepts bytes and returns a document.
+ xxxxxxxxxxxxxx
+\end_layout
+
+\begin_layout Standard
+Given a list of BSON encoded bytes, the relation 
+\noun on
+bson:doc_bytes/2
+\noun default
+ can be used to convert it into its structured equivalent.
+ The empty document is represented in BSON as five bytes, the first four
+ being a 32-bit little-endian integer representing the length of the entire
+ document, and the last byte signaling the end of the document with a zero.
+\end_layout
+
+\begin_layout LyX-Code
+?- bson:doc_bytes(Doc, [12,0,0,0,16,97,0,42,0,0,0,0]).
+\end_layout
+
+\begin_layout LyX-Code
+Doc = [a-42]
+\end_layout
+
+\begin_layout Standard
+If a series of BSON bytes represents a concatenation of documents, the relation
+ 
+\noun on
+bson:docs_bytes/2
+\noun default
+ can be used.
+ The following yields an empty and a non-empty document wrapped in a list.
+\end_layout
+
+\begin_layout LyX-Code
+?- bson:docs_bytes(
+\end_layout
+
+\begin_layout LyX-Code
+       Docs,
+\end_layout
+
+\begin_layout LyX-Code
+       [5,0,0,0,0,12,0,0,0,16,97,0,42,0,0,0,0]).
+\end_layout
+
+\begin_layout LyX-Code
+Docs = [[],[a-42]]
+\end_layout
+
+\begin_layout Standard
+An exception is thrown if the conversion fails [xxx detail the exception].
+\end_layout
+
+\begin_layout Subsubsection
+Document Manipulation
+\end_layout
+
+\begin_layout Standard
+[XXX This section got very manual-ish.
+ Is this relevant? Should I keep it, rewrite or omit?]
+\end_layout
+
+\begin_layout Standard
+To make working with documents easier, a set of simple helper predicates
+ are provided.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_is_valid(+Doc)
+\end_layout
+
+\begin_layout Standard
+True if Doc is a valid document and can be converted into BSON encoded bytes.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_empty(?Doc)
+\end_layout
+
+\begin_layout Standard
+True if Doc is an empty BSON document.
+ Can be used to both check for emptiness as well as obtain an empty document.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_get(+Doc, +Key, ?Value)
+\end_layout
+
+\begin_layout Standard
+True if Value is the value associated with Key in Doc or +null if Key cannot
+ be found.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_get_strict(+Doc, +Key, ?Value)
+\end_layout
+
+\begin_layout Standard
+True if Value is the value associated with Key in Doc.
+ Fails if Key is not found or does not match Value.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
+\end_layout
+
+\begin_layout Standard
+True if NewDoc is Doc with the addition or update of the association Key-Value.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_delete(+Doc, +Key, ?NewDoc)
+\end_layout
+
+\begin_layout Standard
+True if NewDoc is Doc with the association removed that has Key as key.
+ At most one association is removed.
+ No change if Key is not found.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_keys(+Doc, ?Keys)
+\end_layout
+
+\begin_layout Standard
+True if Keys is the keys for the associations in Doc.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_values(+Doc, ?Values)
+\end_layout
+
+\begin_layout Standard
+True if Values is the values for the associations in Doc.
+\end_layout
+
+\begin_layout Paragraph
+bson:doc_keys_values(+Doc, ?Keys, ?Values)
+\end_layout
+
+\begin_layout Standard
+True if Doc is the list of successive associations of Keys and Values.
 \end_layout
 
 \begin_layout Subsection
