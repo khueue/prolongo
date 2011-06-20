@@ -61,7 +61,11 @@
 \begin_body
 
 \begin_layout Title
-Design and Implementation of a MongoDB Driver for Prolog
+Design and Implementation
+\begin_inset Newline newline
+\end_inset
+
+of a MongoDB Driver for Prolog
 \end_layout
 
 \begin_layout Author
@@ -5267,7 +5271,7 @@ It is sometimes useful to get more information on a query than returned
 \emph on
 get_last_error/2
 \emph default
- returns a document describing the status of the last query executed on
+ returns a document describing the status of the last query executed through
  the same connection, and it is described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
