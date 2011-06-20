@@ -2419,7 +2419,7 @@ This section details the interface for the driver.
 \end_layout
 
 \begin_layout Subsubsection
-Database Connection
+Server Connection
 \end_layout
 
 \begin_layout Paragraph
@@ -2782,15 +2782,6 @@ free_connection/1
 \end_layout
 
 \begin_layout Subsubsection
-Working with Data
-\end_layout
-
-\begin_layout Standard
-This section gives an overview of the main functionality needed to work
- with databases, collections and documents.
-\end_layout
-
-\begin_layout Paragraph
 Databases and Collections
 \end_layout
 
@@ -3092,7 +3083,7 @@ get_collection/3
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Find Documents
 \end_layout
 
@@ -3716,7 +3707,7 @@ find_all/4
 
 \end_layout
 
-\begin_layout Subparagraph
+\begin_layout Paragraph
 Using Cursors
 \end_layout
 
@@ -4339,7 +4330,7 @@ cursor_exhaust/2
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Insert Documents
 \end_layout
 
@@ -4613,7 +4604,7 @@ insert_batch/3
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Update Documents
 \begin_inset CommandInset label
 LatexCommand label
@@ -4822,7 +4813,7 @@ key "mongo"
  [XXX verify ref].
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Delete Documents
 \end_layout
 
@@ -5101,17 +5092,154 @@ delete/3
 
 \end_layout
 
-\begin_layout Paragraph
-General Database Commands
+\begin_layout Subsubsection
+Database Commands
 \end_layout
 
 \begin_layout Standard
-Some commands deal not with documents directly, but with whole databases,
- collections or meta data.
+To query a database for information that does not deal with individual documents
+, a predicate called 
+\emph on
+command/3
+\emph default
+ is provided.
+ This predicate executes arbitrary database commands, such as dropping a
+ collection, and is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-command"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-[XXXXXX add command/3 etc.]
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Database
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Database handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Query
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing the command to execute
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Doc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing the result of the command
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-command"
+
+\end_inset
+
+Interface to 
+\emph on
+command/3
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -5119,13 +5247,143 @@ Error Handling
 \end_layout
 
 \begin_layout Standard
-Errors issued by a failed query is detected by the driver and an exception
- is thrown that contains the error document returned by the database.
+Errors issued by a failed database query is detected by the driver and an
+ exception is thrown that contains the error document returned by the database.
  The error document contains a key called 
-\emph on
+\begin_inset Quotes eld
+\end_inset
+
 $err
-\emph default
+\begin_inset Quotes erd
+\end_inset
+
  that maps to an atom describing the nature of the error.
+\end_layout
+
+\begin_layout Standard
+It is sometimes useful to get more information on a query than returned
+ by the query itself.
+ The predicate 
+\emph on
+get_last_error/2
+\emph default
+ returns a document describing the status of the last query executed on
+ the same connection, and it is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-get_last_error"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Argument
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++Database
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Database handle
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-Doc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Document describing the status of the last query
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:interface-get_last_error"
+
+\end_inset
+
+Interface to 
+\emph on
+get_last_error/2
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -5173,8 +5431,8 @@ bson
  The bson module exposes functionality to handle BSON conversions between
  documents and bytes, and also document manipulation predicates.
  The bson module is used internally by the mongo module, but implemented
- separately because BSON is not inherent to MongoDB and can be used without
- it.
+ separately because BSON is not inherent to MongoDB and can be used on its
+ own.
 \end_layout
 
 \begin_layout Subsection
