@@ -5395,11 +5395,648 @@ Usage Example
 \end_layout
 
 \begin_layout Standard
-This chapter shows an example of how to use the driver.
+This chapter shows a complete example of how to use the driver by implementing
+ a simple 
+\begin_inset Quotes eld
+\end_inset
+
+to
+\begin_inset space ~
+\end_inset
+
+do
+\begin_inset Quotes erd
+\end_inset
+
+ application, illustrated in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:simple-to-do"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-XXXXXXXXXXXXXXXXX
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:simple-to-do"
+
+\end_inset
+
+Simple 
+\begin_inset Quotes eld
+\end_inset
+
+to do
+\begin_inset Quotes erd
+\end_inset
+
+ application.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+:- use_module(mongo(mongo)).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+todo :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('--- Simple Todo ---~n'),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:new_connection(Connection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:get_database(Connection, todo, Database),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:get_collection(Database, items, Collection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    action(list, Collection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:free_connection(Connection).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+action(list, Collection) :- !,
+\end_layout
+
+\begin_layout Plain Layout
+
+    list_items(Collection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    new_action(Collection).
+\end_layout
+
+\begin_layout Plain Layout
+
+action(add, Collection) :- !,
+\end_layout
+
+\begin_layout Plain Layout
+
+    add_item(Collection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    new_action(Collection).
+\end_layout
+
+\begin_layout Plain Layout
+
+action(delete, Collection) :- !,
+\end_layout
+
+\begin_layout Plain Layout
+
+    delete_item(Collection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    new_action(Collection).
+\end_layout
+
+\begin_layout Plain Layout
+
+action(quit, _Collection) :- !,
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Bye!~n').
+\end_layout
+
+\begin_layout Plain Layout
+
+action(_Unknown, Collection) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Unknown alternative.~n'),
+\end_layout
+
+\begin_layout Plain Layout
+
+    new_action(Collection).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+new_action(Collection) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('~nEnter list/add/delete/quit: '),
+\end_layout
+
+\begin_layout Plain Layout
+
+    read(Action),
+\end_layout
+
+\begin_layout Plain Layout
+
+    action(Action, Collection).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+list_items(Collection) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:find_all(Collection, [], [], Docs),
+\end_layout
+
+\begin_layout Plain Layout
+
+    print_items(Docs).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+print_items(Docs) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Id~26|Label~45|Priority~n'),
+\end_layout
+
+\begin_layout Plain Layout
+
+    print_items_aux(Docs).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+print_items_aux([]).
+\end_layout
+
+\begin_layout Plain Layout
+
+print_items_aux([Doc|Docs]) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    bson:doc_get(Doc, '_id', object_id(Id)),
+\end_layout
+
+\begin_layout Plain Layout
+
+    bson:doc_get(Doc, label, Label),
+\end_layout
+
+\begin_layout Plain Layout
+
+    bson:doc_get(Doc, priority, Priority),
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('~w~26|~w~45|~w~n', [Id,Label,Priority]),
+\end_layout
+
+\begin_layout Plain Layout
+
+    print_items_aux(Docs).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+add_item(Collection) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Label: '),
+\end_layout
+
+\begin_layout Plain Layout
+
+    read(Label),
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Priority: '),
+\end_layout
+
+\begin_layout Plain Layout
+
+    read(Priority),
+\end_layout
+
+\begin_layout Plain Layout
+
+    Doc = [label-Label,priority-Priority],
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:insert(Collection, Doc).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+delete_item(Collection) :-
+\end_layout
+
+\begin_layout Plain Layout
+
+    format('Id: '),
+\end_layout
+
+\begin_layout Plain Layout
+
+    read(Id),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo:delete(Collection, ['_id'-object_id(Id)]).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first line makes sure that the driver is properly loaded into the Prolog
+ environment.
+ The 
+\emph on
+todo/0
+\emph default
+ predicate is used to start the program.
+ It establishes a database connection and obtains a handle to the collection
+ 
+\begin_inset Quotes eld
+\end_inset
+
+items
+\begin_inset Quotes erd
+\end_inset
+
+ residing in the database 
+\begin_inset Quotes eld
+\end_inset
+
+todo
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It then enters an 
+\begin_inset Quotes eld
+\end_inset
+
+action
+\begin_inset Quotes erd
+\end_inset
+
+ loop and eventually releases the connection when the loop stops.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+action/2
+\emph default
+ predicate is the engine of the program, as it triggers the user to continuously
+ enter new actions, until the 
+\begin_inset Quotes eld
+\end_inset
+
+quit
+\begin_inset Quotes erd
+\end_inset
+
+ action is given.
+ Valid actions are 
+\begin_inset Quotes eld
+\end_inset
+
+list
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+add
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+quit.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+list
+\begin_inset Quotes erd
+\end_inset
+
+ action fetches all documents stored in the collection and displays them
+ in a nicely formatted table.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+add
+\begin_inset Quotes erd
+\end_inset
+
+ action asks the user to detail a new item, and inserts it into the collection.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ command asks the user for an object identifier and deletes the corresponding
+ document from the collection.
+\end_layout
+
+\begin_layout Standard
+An example session is depicted in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:using-the-to-do"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:using-the-to-do"
+
+\end_inset
+
+Using the 
+\begin_inset Quotes eld
+\end_inset
+
+to do
+\begin_inset Quotes erd
+\end_inset
+
+ application.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+?- todo.
+\end_layout
+
+\begin_layout Plain Layout
+
+--- Simple Todo ---
+\end_layout
+
+\begin_layout Plain Layout
+
+Id                        Label              Priority
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: add.
+\end_layout
+
+\begin_layout Plain Layout
+
+Label: 'Make tea'.
+\end_layout
+
+\begin_layout Plain Layout
+
+Priority: 1.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: add.
+\end_layout
+
+\begin_layout Plain Layout
+
+Label: 'Go for a walk'.
+\end_layout
+
+\begin_layout Plain Layout
+
+Priority: 2.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: list.
+\end_layout
+
+\begin_layout Plain Layout
+
+Id                        Label              Priority
+\end_layout
+
+\begin_layout Plain Layout
+
+4dff66bd4c594ffa3e17cb70  Make tea           1
+\end_layout
+
+\begin_layout Plain Layout
+
+4dff66eb4c594ffa3e17cb71  Go for a walk      2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: delete.
+\end_layout
+
+\begin_layout Plain Layout
+
+Id: '4dff66eb4c594ffa3e17cb71'.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: list.
+\end_layout
+
+\begin_layout Plain Layout
+
+Id                        Label              Priority
+\end_layout
+
+\begin_layout Plain Layout
+
+4dff66bd4c594ffa3e17cb70  Make tea           1
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enter list/add/delete/quit: quit.
+\end_layout
+
+\begin_layout Plain Layout
+
+Bye!
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
