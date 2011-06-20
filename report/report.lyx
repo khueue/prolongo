@@ -964,7 +964,8 @@ atom
 s.
  In SWI-Prolog, integers are unbounded and floats are represented as 64-bit
  IEEE 754 doubles.
- Atoms represent UTF-8 encoded text 
+ Atoms represent UTF-8 (Unicode Transformation Format, 8-bit) encoded text
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "swi"
@@ -6373,32 +6374,49 @@ MongoDB The driver is tested on MongoDB versions 1.8.0 and 1.8.1.
 \end_layout
 
 \begin_layout Section
-Evaluation
+Conclusion and Future Work
+\end_layout
+
+\begin_layout Standard
+Making the driver compatible between different Prolog implementations requires
+ some work.
+ The UTF-8 handling makes extensive use of a facility in SWI-Prolog called
+ 
+\begin_inset Quotes eld
+\end_inset
+
+memory files
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "swi"
+
+\end_inset
+
+ which are unlikely to be similar or even exist in other implementations.
+\end_layout
+
+\begin_layout Standard
+Another compatibility challenge between Prologs is most likely the C extension.
+ SWI-Prolog has a solid mechanism for working with C, including a compiler
+ front-end to properly glue Prolog and C together.
+ Other implementations might not provide this.
+\end_layout
+
+\begin_layout Standard
+A great advantage to incorporating C code xxxxxxxxxx
 \end_layout
 
 \begin_layout Standard
 
 \emph on
-[xxx Did it work? Is it usable? What should have been done differently?]
-\end_layout
-
-\begin_layout Section
-Conclusion/Future Work [XXX merge or split?]
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-[xxx Not sure how much this section relates to Evaluation above.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to improve
- in the future? Write a C extension with more/most functionality? Incorporate
- BSON C implementation? Don't know how portable that would be though, but
- SWI (and probably SICStus?) has a mature interface to C.
+[XXX Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to
+ improve in the future? Write a C extension with more/most functionality?
+ Incorporate BSON C implementation? Don't know how portable that would be
+ though, but SWI (and probably SICStus?) has a mature interface to C.
  What is missing for it to be a 
 \begin_inset Quotes eld
 \end_inset
