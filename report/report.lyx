@@ -83,7 +83,7 @@ Sebastian Lundström
 To make MongoDB and Prolog work together, an intermediate layer is needed
  to facilitate the communication.
  Implementing such a layer, or driver, involves handling the network communicati
-on and wrapping the functionality offered by MongoDB into native Prolog
+on and encapsulating the functionality offered by MongoDB in native Prolog
  predicates.
  This thesis presents how the fundamentals of such a driver can be designed,
  developed and used, and provides a discussion on how to further develop
@@ -108,30 +108,6 @@ LatexCommand tableofcontents
 
 \begin_layout Standard
 \begin_inset Newpage cleardoublepage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Space needed to induce more page breaks ...
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Newpage newpage
 \end_inset
 
 
