@@ -220,7 +220,7 @@ collection
 \begin_inset Quotes erd
 \end_inset
 
-, and no predefined schema is enforced on the collection.
+ in which no predefined schema is enforced.
  Therefore, documents in a collection need not share the same structure.
  This allows for great flexibility, especially with data migrations, as
  individual documents can be modified freely without updating a schema and
@@ -745,6 +745,15 @@ reference "lis:adding-to-an-array"
 \end_inset
 
  shows what happens if another comment is added.
+ This time, a special field called 
+\begin_inset Quotes eld
+\end_inset
+
+$push
+\begin_inset Quotes erd
+\end_inset
+
+ is used which pushes a value onto the end of an array.
 \end_layout
 
 \begin_layout Standard
@@ -942,6 +951,8 @@ key "prolog"
 \end_inset
 
 .
+ Being dynamic means that variables can be bound to anything and need not
+ be explicitly assigned a single type.
 \end_layout
 
 \begin_layout Subsubsection
@@ -984,7 +995,7 @@ reference "lis:primitives-in-prolog"
 
 \end_inset
 
- shows the syntax for integers, floats and atoms.
+ exemplifies the syntax for integers, floats and atoms.
 \end_layout
 
 \begin_layout Standard
@@ -1199,11 +1210,11 @@ Lists in Prolog.
 \end_layout
 
 \begin_layout Subsubsection
-Unification and Pattern Matching
+Unification
 \end_layout
 
 \begin_layout Standard
-In Prolog, there is no real 
+In Prolog, there is no conventional 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1455,53 +1466,6 @@ b
 \end_inset
 
  to be the same atom.
-\end_layout
-
-\begin_layout Standard
-When invoking a predicate, a process called 
-\begin_inset Quotes eld
-\end_inset
-
-pattern matching
-\begin_inset Quotes erd
-\end_inset
-
- is initiated.
- Prolog tries to unify the given arguments with the formal parameters of
- the first clause of the predicate.
- If unification succeeds, Prolog proceeds to evaluate any premises present
- in the clause.
- If unification fails, Prolog undoes the effects of the unification so far,
- and repeats the process with the next clause of the predicate.
-\end_layout
-
-\begin_layout Standard
-It is often necessary to make a unification in order to access certain parts
- of a structure without caring for all the bindings created.
- In these cases, anonymous, or 
-\begin_inset Quotes eld
-\end_inset
-
-don't care
-\begin_inset Quotes erd
-\end_inset
-
-, variables can be used.
- These are denoted by an initial underscore.
- The predicate in listing
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "lis:length-program"
-
-\end_inset
-
- uses such a variable because the actual value of the list head is of no
- importance.
- It suffices to know that an element exists.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1977,19 +1941,52 @@ On line
 \end_layout
 
 \begin_layout Subsubsection
-Control Flow
+Anonymous Variables
 \end_layout
 
 \begin_layout Standard
-Branching is performed by 
+It is often necessary to make a unification in order to access certain parts
+ of a structure, but without caring for all the bindings created.
+ In these cases, anonymous, or 
 \begin_inset Quotes eld
 \end_inset
 
-backtracking
+don't care
 \begin_inset Quotes erd
 \end_inset
 
- 
+, variables can be used.
+ These are denoted by an initial underscore.
+ The predicate in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:length-program"
+
+\end_inset
+
+ uses such a variable because the actual value of the list head is of no
+ importance.
+ It suffices to know that an element exists.
+\end_layout
+
+\begin_layout Subsubsection
+Pattern Matching and Branching
+\end_layout
+
+\begin_layout Standard
+When invoking a predicate, a process called 
+\begin_inset Quotes eld
+\end_inset
+
+pattern matching
+\begin_inset Quotes erd
+\end_inset
+
+ is initiated 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "prolog"
@@ -1997,8 +1994,29 @@ key "prolog"
 \end_inset
 
 .
- Prolog works in a top-down, depth-first fashion when evaluating predicates.
- Calling the predicate 
+ Prolog tries to unify the given arguments with the formal parameters of
+ the first clause of the predicate.
+ If unification succeeds, Prolog proceeds to evaluate any premises present
+ in the clause.
+ If unification fails, Prolog reverts the effects of the unification so
+ far, and repeats the process with the next clause of the predicate.
+ This is called 
+\begin_inset Quotes eld
+\end_inset
+
+backtracking
+\begin_inset Quotes erd
+\end_inset
+
+ and is the Prolog equivalent to the 
+\emph on
+if
+\emph default
+-statement.
+\end_layout
+
+\begin_layout Standard
+Calling the predicate 
 \emph on
 length/3
 \emph default
@@ -2021,8 +2039,12 @@ reference "lis:length-program"
  fails.
 \end_layout
 
+\begin_layout Subsubsection
+Recursion
+\end_layout
+
 \begin_layout Standard
-Iteration is performed by recursion 
+Repetition is performed by recursion 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "prolog"
@@ -6365,8 +6387,7 @@ C
 \begin_inset space ~
 \end_inset
 
-Compiler An ANSI C compiler is required to build parts of the low-level
- BSON handling.
+Compiler A C compiler is required to build parts of the low-level BSON handling.
 \end_layout
 
 \begin_layout Description
@@ -6375,6 +6396,15 @@ MongoDB The driver is tested on MongoDB versions 1.8.0 and 1.8.1.
 
 \begin_layout Section
 Conclusion and Future Work
+\end_layout
+
+\begin_layout Standard
+The driver enables Mongo\SpecialChar \-
+DB to be used from Prolog as a basic data storage
+ system.
+ The major functionality of finding, inserting, updating and deleting documents
+ is present.
+ xxxx replica sets xxxx
 \end_layout
 
 \begin_layout Standard
@@ -6400,24 +6430,26 @@ key "swi"
 \end_layout
 
 \begin_layout Standard
-Another compatibility challenge between Prologs is most likely the C extension.
+Another compatibility challenge is most likely the C extension.
  SWI-Prolog has a solid mechanism for working with C, including a compiler
  front-end to properly glue Prolog and C together.
  Other implementations might not provide this.
 \end_layout
 
 \begin_layout Standard
-A great advantage to incorporating C code xxxxxxxxxx
+On the other hand, incorporating C code has the benefit of performance.
+ The company behind Mongo\SpecialChar \-
+DB maintains a liberally licensed open source implement
+ation of BSON written in C [XXX ref].
+ Replacing the Prolog implementation with this C library will lighten the
+ code base considerably and probably make the driver faster.
 \end_layout
 
 \begin_layout Standard
 
 \emph on
-[XXX Portability (Tested on Mac, SWI, GCC/Clang, etc.)? Efficiency? How to
- improve in the future? Write a C extension with more/most functionality?
- Incorporate BSON C implementation? Don't know how portable that would be
- though, but SWI (and probably SICStus?) has a mature interface to C.
- What is missing for it to be a 
+[XXX Efficiency? How to improve in the future? What is missing for it to
+ be a 
 \begin_inset Quotes eld
 \end_inset
 
