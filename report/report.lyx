@@ -37,7 +37,7 @@
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
-\suppress_date false
+\suppress_date true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -49,7 +49,7 @@
 \paragraph_indentation default
 \quotes_language english
 \papercolumns 1
-\papersides 1
+\papersides 2
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
@@ -72,14 +72,35 @@ of a MongoDB Driver for Prolog
 Sebastian Lundström
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Abstract
 [XXX Prolog is good stuff, and MongoDB ...]
 \end_layout
 
-\begin_layout Abstract
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
 \end_inset
 
 
@@ -1247,7 +1268,15 @@ key "prolog"
 
 \end_inset
 
-.
+, and is usually performed by the 
+\begin_inset Quotes eld
+\end_inset
+
+equals
+\begin_inset Quotes erd
+\end_inset
+
+ infix operator.
 \end_layout
 
 \begin_layout Standard
@@ -1675,7 +1704,7 @@ N1
 \emph on
 is
 \emph default
--operator to perform the addition.
+-operator to perform the arithmetic.
  The 
 \begin_inset Quotes eld
 \end_inset
@@ -2016,11 +2045,7 @@ if
 \end_layout
 
 \begin_layout Standard
-Calling the predicate 
-\emph on
-length/3
-\emph default
- in listing
+Calling the predicate in listing
 \begin_inset space ~
 \end_inset
 
@@ -2052,11 +2077,7 @@ key "prolog"
 \end_inset
 
 .
- The predicate 
-\emph on
-length/3
-\emph default
- in listing
+ The predicate in listing
 \begin_inset space ~
 \end_inset
 
@@ -2134,10 +2155,14 @@ length
 \begin_inset Quotes erd
 \end_inset
 
- predicate in 
+ predicate in listing
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sub:Program-Structure"
+reference "lis:length-program"
 
 \end_inset
 
@@ -2161,7 +2186,7 @@ Requirements
 \end_layout
 
 \begin_layout Standard
-This chapter discusses the functionality to be implemented by the driver.
+This chapter outlines the functionality implemented by the driver.
 \end_layout
 
 \begin_layout Subsection
@@ -2176,8 +2201,12 @@ name "sub:Suggested-Features"
 \end_layout
 
 \begin_layout Standard
-The Mongo\SpecialChar \-
-DB Driver Requirements 
+The 
+\emph on
+Mongo\SpecialChar \-
+DB Driver Requirements
+\emph default
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "driver_req"
@@ -3741,7 +3770,7 @@ Using Cursors
 \begin_layout Standard
 When a query matches more documents than can be returned in a single response,
  a cursor is established and returned.
- A cursor is created and maintained by the database instance, and it represents
+ A cursor is created and maintained by the database server, and it represents
  a pointer to a subset of the documents matched by a query 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -3749,7 +3778,7 @@ key "mongo"
 
 \end_inset
 
- [XXX verify ref].
+.
 \end_layout
 
 \begin_layout Standard
@@ -3757,7 +3786,7 @@ After making a query, the predicate
 \emph on
 cursor_has_more/1
 \emph default
- can be called on a cursor.
+ can be called on the given cursor.
  The predicate succeeds if more documents may be retrieved, and its interface
  is described in 
 \begin_inset CommandInset ref
@@ -4038,19 +4067,6 @@ reference "tab:interface-cursor-kill"
 \end_inset
 
 .
- If several cursors need to be killed, a more efficient version called 
-\emph on
-cursor_kill_batch/1
-\emph default
- can be used to kill them in a single database call.
- This predicate is described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "tab:interface-cursor-kill-batch"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Standard
@@ -4139,6 +4155,22 @@ cursor_kill/1
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+If several cursors need to be killed, a more efficient version called 
+\emph on
+cursor_kill_batch/1
+\emph default
+ can be used to kill them in a single database call.
+ This predicate is described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:interface-cursor-kill-batch"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -6391,7 +6423,8 @@ Compiler A C compiler is required to build parts of the low-level BSON handling.
 \end_layout
 
 \begin_layout Description
-MongoDB The driver is tested on MongoDB versions 1.8.0 and 1.8.1.
+MongoDB The driver is tested on Mongo\SpecialChar \-
+DB versions 1.8.0 and 1.8.1.
 \end_layout
 
 \begin_layout Section
@@ -6404,7 +6437,7 @@ DB to be used from Prolog as a basic data storage
  system.
  The major functionality of finding, inserting, updating and deleting documents
  is present.
- xxxx replica sets xxxx
+ [xxxx replica sets xxxx]
 \end_layout
 
 \begin_layout Standard
