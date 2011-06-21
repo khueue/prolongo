@@ -80,7 +80,14 @@ Sebastian Lundström
 \end_layout
 
 \begin_layout Abstract
-[XXX Prolog is good stuff, and MongoDB ...]
+To make MongoDB and Prolog work together, an intermediate layer is needed
+ to facilitate the communication.
+ Implementing such a layer, or driver, involves handling the network communicati
+on and wrapping the functionality offered by MongoDB into native Prolog
+ predicates.
+ This thesis presents how the fundamentals of such a driver can be designed,
+ developed and used, and provides a discussion on how to further develop
+ the driver and make it ready for production.
 \end_layout
 
 \begin_layout Standard
@@ -101,6 +108,30 @@ LatexCommand tableofcontents
 
 \begin_layout Standard
 \begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Space needed to induce more page breaks ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
 \end_inset
 
 
@@ -6424,11 +6455,11 @@ Compiler A C compiler is required to build parts of the low-level BSON handling.
 
 \begin_layout Description
 MongoDB The driver is tested on Mongo\SpecialChar \-
-DB versions 1.8.0 and 1.8.1.
+DB versions 1.8.0 through 1.8.2.
 \end_layout
 
 \begin_layout Section
-Conclusion and Future Work
+Conclusions and Future Work
 \end_layout
 
 \begin_layout Standard
