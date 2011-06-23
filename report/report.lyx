@@ -2321,6 +2321,13 @@ The driver must expose functionality to find, insert, update and delete
 
 \begin_layout Section
 Design
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Design"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4876,7 +4883,7 @@ key "mongo"
 
 \end_inset
 
- [XXX verify ref].
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -6106,13 +6113,7 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-[XXX Talk a lot more about how things actually are implemented.
- DCGs, sockets, wire bytes, ...]
-\end_layout
-
-\begin_layout Standard
-[XXX What is this chapter supposed to contain, really? Discuss code organization
-, modules? Discuss portability? Discuss efficiency (relevant?)?]
+This chapter describes how the design is implemented.
 \end_layout
 
 \begin_layout Subsection
@@ -6131,20 +6132,21 @@ bson
 .
  The mongo module is the main module which contains all the functionality
  needed to work with a MongoDB instance.
+ This is the module that needs to be included in order to use the driver.
  The bson module exposes functionality to handle BSON conversions between
- documents and bytes, and also document manipulation predicates.
+ documents and bytes, and also provides basic document manipulation predicates.
  The bson module is used internally by the mongo module, but implemented
  separately because BSON is not inherent to MongoDB and can be used on its
  own.
 \end_layout
 
 \begin_layout Subsection
-Sockets and such XXX
+Network Communication
 \end_layout
 
 \begin_layout Standard
 Communication with a MongoDB server instance is conducted through a TCP
- socket 
+ socket using a certain protocol 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "wire"
@@ -6152,6 +6154,116 @@ key "wire"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsubsection
+Sockets
+\end_layout
+
+\begin_layout Standard
+Sockets are handled using the socket library provided by SWI-Prolog 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "swi"
+
+\end_inset
+
+.
+ The predicate 
+\emph on
+new_connection/1,3
+\emph default
+ (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Design"
+
+\end_inset
+
+) creates a socket using 
+\emph on
+tcp_socket/1
+\emph default
+ and initializes it using 
+\emph on
+tcp_connect/4
+\emph default
+ which opens a read stream as well as a write stream.
+ If an error is encountered during this process, an exception is thrown
+ and the socket is destroyed.
+\end_layout
+
+\begin_layout Standard
+The predicate 
+\emph on
+free_connection/1
+\emph default
+ (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Design"
+
+\end_inset
+
+) closes both streams and releases the socket using the library predicate
+ 
+\emph on
+close/2
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Wire Protocol
+\end_layout
+
+\begin_layout Standard
+The protocol used to facilitate the network communication defines the following
+ message types 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wire"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Description
+OP_REPLY Sent by the database server in reply to a client message.
+\end_layout
+
+\begin_layout Description
+OP_MSG Deprecated type used to send a diagnostic message.
+\end_layout
+
+\begin_layout Description
+OP_UPDATE
+\end_layout
+
+\begin_layout Description
+OP_INSERT
+\end_layout
+
+\begin_layout Description
+OP_QUERY
+\end_layout
+
+\begin_layout Description
+OP_GET_MORE
+\end_layout
+
+\begin_layout Description
+OP_DELETE
+\end_layout
+
+\begin_layout Description
+OP_KILL_CURSORS
+\end_layout
+
+\begin_layout Standard
+All messages start with a message header which is defined as follows.
+ XXX
 \end_layout
 
 \begin_layout Subsection
@@ -6185,7 +6297,7 @@ bson:doc_bytes/2
  can be used.
  This is a two-way relation that accepts a document and returns bytes, or
  accepts bytes and returns a document.
- xxxxxxxxxxxxxx
+ XXX
 \end_layout
 
 \begin_layout Standard
@@ -6234,16 +6346,11 @@ Docs = [[],[a-42]]
 \end_layout
 
 \begin_layout Standard
-An exception is thrown if the conversion fails [xxx detail the exception].
+An exception is thrown if the conversion fails [XXX detail the exception?].
 \end_layout
 
 \begin_layout Subsubsection
 Document Manipulation
-\end_layout
-
-\begin_layout Standard
-[XXX This section got very manual-ish.
- Is this relevant? Should I keep it, rewrite or omit?]
 \end_layout
 
 \begin_layout Standard
@@ -6444,7 +6551,34 @@ DB to be used from Prolog as a basic data storage
  system.
  The major functionality of finding, inserting, updating and deleting documents
  is present.
- [xxxx replica sets xxxx]
+ Arbitrary database commands can be executed, providing the possibility
+ to administrate the database system.
+\end_layout
+
+\begin_layout Standard
+More advanced functionality offered by Mongo\SpecialChar \-
+DB such as dealing with 
+\begin_inset Quotes eld
+\end_inset
+
+replica
+\begin_inset space ~
+\end_inset
+
+sets
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mongo"
+
+\end_inset
+
+ and automatic server reconnection is not covered.
+ This makes the current state of the driver only useful for small scale
+ applications without need for great reliability and availability.
 \end_layout
 
 \begin_layout Standard
@@ -6480,9 +6614,23 @@ Another compatibility challenge is most likely the C extension.
 On the other hand, incorporating C code has the benefit of performance.
  The company behind Mongo\SpecialChar \-
 DB maintains a liberally licensed open source implement
-ation of BSON written in C [XXX ref].
- Replacing the Prolog implementation with this C library will lighten the
+ation of BSON written in C 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bson"
+
+\end_inset
+
+.
+ Replacing the Prolog implementation with this C library would lighten the
  code base considerably and probably make the driver faster.
+\end_layout
+
+\begin_layout Standard
+The driver is built using the module system present in several but not all
+ Prolog implementations.
+ The module system is currently not covered by a standard xxxx has not been
+ properly standardized as of yet [XXX ref].
 \end_layout
 
 \begin_layout Standard
@@ -6551,7 +6699,7 @@ key "bratko"
 Bratko, I.
  (2001) 
 \emph on
-PROLOG Programming for Artificial Intelligence.
+Prolog Programming for Artificial Intelligence.
 
 \emph default
  3rd ed.
