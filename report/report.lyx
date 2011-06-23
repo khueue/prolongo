@@ -954,7 +954,7 @@ key "bratko"
 \begin_layout Standard
 This section gives a small introduction to Prolog in order to more easily
  appreciate the code examples in subsequent sections.
- See Clocksin and Mellish (1994) or Bratko (2001) for a more complete discussion.
+ See Clocksin and Mellish (1994) or Bratko (2001) for more complete discussions.
 \end_layout
 
 \begin_layout Subsubsection
@@ -980,7 +980,7 @@ key "prolog"
 
 .
  Being dynamic means that variables can be bound to anything and need not
- be explicitly assigned a single type.
+ be explicitly assigned a fixed type.
 \end_layout
 
 \begin_layout Subsubsection
@@ -5464,8 +5464,8 @@ Usage Example
 \end_layout
 
 \begin_layout Standard
-This chapter shows a complete example of how to use the driver by implementing
- a simple 
+This chapter shows a small but complete example of how to use the driver
+ by implementing a simple 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5909,7 +5909,7 @@ list
 \end_inset
 
  action fetches all documents stored in the collection and displays them
- in a nicely formatted table.
+ in a formatted table.
  The 
 \begin_inset Quotes eld
 \end_inset
@@ -6113,7 +6113,8 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-This chapter describes how the design is implemented.
+This chapter describes how the design is implemented and what tools and
+ techniques are used.
 \end_layout
 
 \begin_layout Subsection
@@ -6230,40 +6231,65 @@ key "wire"
 \end_layout
 
 \begin_layout Description
-OP_REPLY Sent by the database server in reply to a client message.
+OP_REPLY Server reply to a client message.
 \end_layout
 
 \begin_layout Description
-OP_MSG Deprecated type used to send a diagnostic message.
+OP_MSG Deprecated type for diagnostic messages.
 \end_layout
 
 \begin_layout Description
-OP_UPDATE
+OP_UPDATE Update documents.
 \end_layout
 
 \begin_layout Description
-OP_INSERT
+OP_INSERT Insert documents.
 \end_layout
 
 \begin_layout Description
-OP_QUERY
+OP_QUERY Query a collection.
 \end_layout
 
 \begin_layout Description
-OP_GET_MORE
+OP_GET_MORE Retrieve more documents from a cursor.
 \end_layout
 
 \begin_layout Description
-OP_DELETE
+OP_DELETE Delete documents.
 \end_layout
 
 \begin_layout Description
-OP_KILL_CURSORS
+OP_KILL_CURSORS Kill cursors.
+\end_layout
+
+\begin_layout Paragraph
+Common Message Header
 \end_layout
 
 \begin_layout Standard
-All messages start with a message header which is defined as follows.
- XXX
+All messages start with a message header which is defined as four 32-bit
+ integers:
+\end_layout
+
+\begin_layout Enumerate
+length of entire message in bytes,
+\end_layout
+
+\begin_layout Enumerate
+request identifier, to uniquely identify a particular message,
+\end_layout
+
+\begin_layout Enumerate
+response identifier, sent only in database replies to associate with a request
+ identifier, and,
+\end_layout
+
+\begin_layout Enumerate
+operation code, describing the nature of the message.
+\end_layout
+
+\begin_layout Standard
+[XXX Write lots more.]
 \end_layout
 
 \begin_layout Subsection
