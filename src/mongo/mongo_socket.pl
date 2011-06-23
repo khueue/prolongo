@@ -41,7 +41,7 @@ socket_write(Socket, WriteStream) :-
 
 free_socket(Socket) :-
     socket_read(Socket, ReadStream),
-    socket_read(Socket, WriteStream),
+    socket_write(Socket, WriteStream),
     core:close(ReadStream, [force(true)]),
     core:close(WriteStream, [force(true)]).
 
