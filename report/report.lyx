@@ -6263,7 +6263,7 @@ OP_KILL_CURSORS Kill cursors.
 \end_layout
 
 \begin_layout Paragraph
-Common Message Header
+Message Header
 \end_layout
 
 \begin_layout Standard
@@ -6285,7 +6285,7 @@ response identifier, sent only in database replies to associate with a request
 \end_layout
 
 \begin_layout Enumerate
-operation code, describing the nature of the message.
+operation code, describing the type of the message following the header.
 \end_layout
 
 \begin_layout Standard
@@ -6602,9 +6602,10 @@ key "mongo"
 
 \end_inset
 
- and automatic server reconnection is not covered.
+ and automatic server reconnection is not implemented.
  This makes the current state of the driver only useful for small scale
  applications without need for great reliability and availability.
+ This is the most obvious area for future development.
 \end_layout
 
 \begin_layout Standard
@@ -6639,8 +6640,8 @@ Another compatibility challenge is most likely the C extension.
 \begin_layout Standard
 On the other hand, incorporating C code has the benefit of performance.
  The company behind Mongo\SpecialChar \-
-DB maintains a liberally licensed open source implement
-ation of BSON written in C 
+DB maintains a permissively licensed open source
+ implementation of BSON written in C 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bson"
@@ -6653,17 +6654,26 @@ key "bson"
 \end_layout
 
 \begin_layout Standard
-The driver is built using the module system present in several but not all
- Prolog implementations.
- The module system is currently not covered by a standard xxxx has not been
- properly standardized as of yet [XXX ref].
+The module system described in the current Prolog standard is considered
+ flawed and therefore not implemented by most Prologs 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "swi"
+
+\end_inset
+
+.
+ The driver is built around the module system present in SWI-Prolog, which
+ is similar to those of other popular Prologs, such as SICStus Prolog, Ciao
+ and YAP.
+ Making the module usage completely compatible with these systems might
+ require some work.
 \end_layout
 
 \begin_layout Standard
 
 \emph on
-[XXX Efficiency? How to improve in the future? What is missing for it to
- be a 
+[XXX How to improve in the future? What is missing for it to be a 
 \begin_inset Quotes eld
 \end_inset
 
