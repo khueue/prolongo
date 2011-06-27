@@ -699,7 +699,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:displaying-documents-of"
@@ -795,7 +794,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:adding-to-an-array"
@@ -1037,7 +1035,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:primitives-in-prolog"
@@ -1119,7 +1116,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:structures-in-prolog"
@@ -1207,7 +1203,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:lists-in-prolog"
@@ -2380,7 +2375,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:BSON-document"
@@ -5502,7 +5496,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:simple-to-do"
@@ -6142,6 +6135,43 @@ bson
 \end_layout
 
 \begin_layout Subsection
+Grammar Rules
+\end_layout
+
+\begin_layout Standard
+Most of the code that converts to or from lists is implemented using the
+ Definite Clause Grammar (DCG) syntax of Prolog 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prolog"
+
+\end_inset
+
+.
+ This syntax provides a convenient interface to 
+\begin_inset Quotes eld
+\end_inset
+
+difference
+\begin_inset space ~
+\end_inset
+
+lists
+\begin_inset Quotes erd
+\end_inset
+
+, which is a common technique in Prolog to avoid unnecessary (and inefficient)
+ list concatenation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "okeefe"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 Network Communication
 \end_layout
 
@@ -6247,7 +6277,7 @@ OP_INSERT Insert documents.
 \end_layout
 
 \begin_layout Description
-OP_QUERY Query a collection.
+OP_QUERY Query a collection for documents.
 \end_layout
 
 \begin_layout Description
@@ -6289,11 +6319,264 @@ operation code, describing the type of the message following the header.
 \end_layout
 
 \begin_layout Standard
-[XXX Write lots more.]
+The code for constructing a message header uses the DCG syntax and is defined
+ in the internal module 
+\emph on
+mongo_bytes
+\emph default
+.
+ This module contains predicates for converting various values into byte
+ sequences, such as 
+\emph on
+int32/1
+\emph default
+ for converting an integer into four little-endian bytes, and 
+\emph on
+c_string/1
+\emph default
+ for converting an atom into a zero-terminated byte list.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Constructing-a-message"
+
+\end_inset
+
+Constructing a message header.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+header(RequestId, ResponseTo, OpCode) -->
+\end_layout
+
+\begin_layout Plain Layout
+
+    [_,_,_,_], % Length of entire message.
+\end_layout
+
+\begin_layout Plain Layout
+
+    int32(RequestId),
+\end_layout
+
+\begin_layout Plain Layout
+
+    int32(ResponseTo),
+\end_layout
+
+\begin_layout Plain Layout
+
+    int32(OpCode).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Line
+\begin_inset space ~
+\end_inset
+
+2 in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Constructing-a-message"
+
+\end_inset
+
+ creates a list of four (anonymous) variables.
+ These represent the length of the entire message and are to be instantiated
+ later as four bytes of a 32-bit little-endian integer.
+ As soon as all bytes comprising the message have been created, they are
+ counted and the length instantiated.
+\end_layout
+
+\begin_layout Paragraph
+Example Message
+\end_layout
+
+\begin_layout Standard
+An example of how to construct an entire message is listed in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Constructing-an-OP_QUERY"
+
+\end_inset
+
+.
+ This example shows an 
+\emph on
+OP_QUERY
+\emph default
+ message.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Constructing-an-OP_QUERY"
+
+\end_inset
+
+Constructing an 
+\emph on
+OP_QUERY
+\emph default
+ message.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+build_bytes_for_find(
+\end_layout
+
+\begin_layout Plain Layout
+
+    Namespace, Query, ReturnFields,
+\end_layout
+
+\begin_layout Plain Layout
+
+    Skip, Limit, Flags)
+\end_layout
+
+\begin_layout Plain Layout
+
+-->
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:header(0, 0, 2004),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:int32(Flags),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:c_string(Namespace),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:int32(Skip),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:int32(Limit),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:bson_doc(Query),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:bson_doc(ReturnFields).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Line
+\begin_inset space ~
+\end_inset
+
+5 in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Constructing-an-OP_QUERY"
+
+\end_inset
+
+ calls the predicate defined in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Constructing-a-message"
+
+\end_inset
+
+, and passes as third argument an integer representing the message type
+ 
+\emph on
+OP_QUERY
+\emph default
+.
+ The current implementation does not handle request or response identifiers,
+ so these are simply filled with the value zero.
+ The rest of the calls construct the actual contents of the message, converted
+ to bytes in suitable ways.
+\end_layout
+
+\begin_layout Standard
+When the message is constructed, its length is instantiated and the message
+ can be sent over the connection socket.
 \end_layout
 
 \begin_layout Subsection
-BSON Handling
+BSON Handling [XXX rewrite this section]
 \end_layout
 
 \begin_layout Standard
@@ -6459,39 +6742,6 @@ bson:doc_keys_values(+Doc, ?Keys, ?Values)
 
 \begin_layout Standard
 True if Doc is the list of successive associations of Keys and Values.
-\end_layout
-
-\begin_layout Subsection
-Grammar Rules
-\end_layout
-
-\begin_layout Standard
-Most of the code that converts to or from lists is implemented using the
- Definite Clause Grammar (DCG) syntax in Prolog 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "prolog"
-
-\end_inset
-
-.
- This grammar syntax provides a convenient interface to 
-\begin_inset Quotes eld
-\end_inset
-
-difference lists
-\begin_inset Quotes erd
-\end_inset
-
-, which is a common technique in Prolog to avoid unnecessary (and inefficient)
- list concatenation 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "okeefe"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsection
@@ -6668,6 +6918,11 @@ key "swi"
  and YAP.
  Making the module usage completely compatible with these systems might
  require some work.
+\end_layout
+
+\begin_layout Standard
+Another obvious path of improvement is making the driver thread-safe.
+ XXXXXX
 \end_layout
 
 \begin_layout Standard
