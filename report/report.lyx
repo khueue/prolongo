@@ -6277,7 +6277,7 @@ OP_INSERT Insert documents.
 \end_layout
 
 \begin_layout Description
-OP_QUERY Query a collection for documents.
+OP_QUERY Find documents.
 \end_layout
 
 \begin_layout Description
@@ -6290,6 +6290,14 @@ OP_DELETE Delete documents.
 
 \begin_layout Description
 OP_KILL_CURSORS Kill cursors.
+\end_layout
+
+\begin_layout Standard
+All message types except 
+\emph on
+OP_MSG
+\emph default
+ are implemented.
 \end_layout
 
 \begin_layout Paragraph
@@ -6558,8 +6566,7 @@ reference "lis:Constructing-a-message"
 
 \end_inset
 
-, and passes as third argument an integer representing the message type
- 
+ and passes as third argument an integer representing the message type 
 \emph on
 OP_QUERY
 \emph default
@@ -6576,86 +6583,473 @@ When the message is constructed, its length is instantiated and the message
 \end_layout
 
 \begin_layout Subsection
-BSON Handling [XXX rewrite this section]
+BSON Handling
 \end_layout
 
 \begin_layout Standard
-At the core of MongoDB lies the BSON binary data format which is used to
- communicate data as well as store data on disk.
- When communicating with a MongoDB instance, documents are transmitted over
- the network as bytes of BSON.
- The driver converts Prolog structures into series of BSON bytes before
- sending them to the database, and database responses are converted back
- to Prolog structures again.
+When a driver communicates with a Mongo\SpecialChar \-
+DB instance, documents are transmitted
+ over the network as bytes of BSON.
+ The driver converts Prolog documents into series of BSON bytes before sending
+ them to the database, and documents in database responses are converted
+ back to Prolog documents again.
 \end_layout
 
 \begin_layout Subsubsection
-Document-BSON Conversion
+BSON Example
 \end_layout
 
 \begin_layout Standard
-When converting a document to BSON, a list of bytes is obtained.
+Listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:A-simple-Prolog"
+
+\end_inset
+
+ shows an example of a document represented in Prolog.
+ When this document is converted to BSON bytes, it is internally interpreted
+ as the document in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:A-simple-Prolog-actual"
+
+\end_inset
+
+ because lists (or arrays) are just a convenience notation for normal embedded
+ documents 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bson"
+
+\end_inset
+
+.
+ For the full BSON specification, see 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://bsonspec.org/
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-When converting between structured documents and BSON encoded bytes, the
- relation 
-\noun on
-bson:doc_bytes/2
-\noun default
- can be used.
- This is a two-way relation that accepts a document and returns bytes, or
- accepts bytes and returns a document.
- XXX
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:A-simple-Prolog"
+
+\end_inset
+
+A simple Prolog document.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[
+\end_layout
+
+\begin_layout Plain Layout
+
+    hello - [atom, 5.05, 1986]
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Given a list of BSON encoded bytes, the relation 
-\noun on
-bson:doc_bytes/2
-\noun default
- can be used to convert it into its structured equivalent.
- The empty document is represented in BSON as five bytes, the first four
- being a 32-bit little-endian integer representing the length of the entire
- document, and the last byte signaling the end of the document with a zero.
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:A-simple-Prolog-actual"
+
+\end_inset
+
+A simple Prolog document in its actual interpretation.
 \end_layout
 
-\begin_layout LyX-Code
-?- bson:doc_bytes(Doc, [12,0,0,0,16,97,0,42,0,0,0,0]).
+\end_inset
+
+
 \end_layout
 
-\begin_layout LyX-Code
-Doc = [a-42]
+\begin_layout Plain Layout
+
+[
+\end_layout
+
+\begin_layout Plain Layout
+
+    hello - ['0'-atom, '1'-5.05, '2'-1986]
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When the document in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:A-simple-Prolog-actual"
+
+\end_inset
+
+ is converted to BSON, the bytes obtained are shown in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Byte-sequence-for-document"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Byte-sequence-for-document"
+
+\end_inset
+
+Byte sequence for a simple document.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[
+\end_layout
+
+\begin_layout Plain Layout
+
+  47,0,0,0, % Length of entire doc.
+\end_layout
+
+\begin_layout Plain Layout
+
+  0x04, % Tag, embedded array.
+\end_layout
+
+\begin_layout Plain Layout
+
+    104,101,108,108,111, 0, % Key name, hello.
+\end_layout
+
+\begin_layout Plain Layout
+
+    38,0,0,0, % Length of embedded array.
+\end_layout
+
+\begin_layout Plain Layout
+
+    0x02, % Tag, string.
+\end_layout
+
+\begin_layout Plain Layout
+
+      48, 0, % Key name, index '0'.
+\end_layout
+
+\begin_layout Plain Layout
+
+      5,0,0,0, % String's byte length, incl.
+ zero.
+\end_layout
+
+\begin_layout Plain Layout
+
+      97,116,111,109, 0, % String data.
+\end_layout
+
+\begin_layout Plain Layout
+
+    0x01, % Tag, double.
+\end_layout
+
+\begin_layout Plain Layout
+
+      49, 0, % Key name, index '1'.
+\end_layout
+
+\begin_layout Plain Layout
+
+      51,51,51,51,51,51,20,64, % Double 8-byte data.
+\end_layout
+
+\begin_layout Plain Layout
+
+    0x10, % Tag, 32-bit integer.
+\end_layout
+
+\begin_layout Plain Layout
+
+      50, 0, % Key name, index '2'.
+\end_layout
+
+\begin_layout Plain Layout
+
+      194,7,0,0, % Int32 data.
+\end_layout
+
+\begin_layout Plain Layout
+
+    0, % End of embedded array.
+\end_layout
+
+\begin_layout Plain Layout
+
+  0 % End of entire doc.
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Conversion Predicates
+\end_layout
+
+\begin_layout Standard
+When converting between Prolog documents and BSON encoded bytes, the relation
+ 
+\emph on
+doc_bytes/2
+\emph default
+ within the 
+\emph on
+bson
+\emph default
+ module can be used.
+ This is a two-way relation that either accepts a document and returns bytes,
+ or accepts bytes and returns a document.
+\end_layout
+
+\begin_layout Standard
+Calling 
+\emph on
+doc_bytes/2
+\emph default
+ with an empty document would look like listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Converting-the-empty"
+
+\end_inset
+
+.
+ Calling it with the document in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:A-simple-Prolog"
+
+\end_inset
+
+ would result in the byte sequence in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Byte-sequence-for-document"
+
+\end_inset
+
+, and vice versa.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Converting-the-empty"
+
+\end_inset
+
+Converting the empty document into bytes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+?- bson:doc_bytes([], Bytes).
+\end_layout
+
+\begin_layout Plain Layout
+
+Bytes = [5,0,0,0,0]
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 If a series of BSON bytes represents a concatenation of documents, the relation
  
-\noun on
-bson:docs_bytes/2
-\noun default
+\emph on
+docs_bytes/2
+\emph default
  can be used.
- The following yields an empty and a non-empty document wrapped in a list.
-\end_layout
+ This predicate expects the documents to be wrapped in a list, and an example
+ containing two empty documents is shown in listing
+\begin_inset space ~
+\end_inset
 
-\begin_layout LyX-Code
-?- bson:docs_bytes(
-\end_layout
 
-\begin_layout LyX-Code
-       Docs,
-\end_layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Converting-byte-list-concatenati"
 
-\begin_layout LyX-Code
-       [5,0,0,0,0,12,0,0,0,16,97,0,42,0,0,0,0]).
-\end_layout
+\end_inset
 
-\begin_layout LyX-Code
-Docs = [[],[a-42]]
+.
 \end_layout
 
 \begin_layout Standard
-An exception is thrown if the conversion fails [XXX detail the exception?].
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Converting-byte-list-concatenati"
+
+\end_inset
+
+Converting byte-list concatenations.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+?- bson:docs_bytes(Docs, [5,0,0,0,0,5,0,0,0,0]).
+\end_layout
+
+\begin_layout Plain Layout
+
+Docs = [[],[]]
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -6665,83 +7059,92 @@ Document Manipulation
 \begin_layout Standard
 To make working with documents easier, a set of simple helper predicates
  are provided.
-\end_layout
+ These predicates make it easier to get, put and delete individual fields,
+ but also provide functionality like extracting all keys or values from
+ a document.
+ Listing
+\begin_inset space ~
+\end_inset
 
-\begin_layout Paragraph
-bson:doc_is_valid(+Doc)
-\end_layout
 
-\begin_layout Standard
-True if Doc is a valid document and can be converted into BSON encoded bytes.
-\end_layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Using-document-manipulation"
 
-\begin_layout Paragraph
-bson:doc_empty(?Doc)
-\end_layout
+\end_inset
 
-\begin_layout Standard
-True if Doc is an empty BSON document.
- Can be used to both check for emptiness as well as obtain an empty document.
-\end_layout
-
-\begin_layout Paragraph
-bson:doc_get(+Doc, +Key, ?Value)
+ shows the bindings made when using some of the manipulation predicates.
 \end_layout
 
 \begin_layout Standard
-True if Value is the value associated with Key in Doc or +null if Key cannot
- be found.
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Using-document-manipulation"
+
+\end_inset
+
+Using document manipulation predicates.
 \end_layout
 
-\begin_layout Paragraph
-bson:doc_get_strict(+Doc, +Key, ?Value)
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
-True if Value is the value associated with Key in Doc.
- Fails if Key is not found or does not match Value.
+\begin_layout Plain Layout
+
+?- Doc = [name-prolog, type-declarative],
 \end_layout
 
-\begin_layout Paragraph
-bson:doc_put(+Doc, +Key, +Value, ?NewDoc)
+\begin_layout Plain Layout
+
+   bson:doc_get(Doc, name, Name),
 \end_layout
 
-\begin_layout Standard
-True if NewDoc is Doc with the addition or update of the association Key-Value.
+\begin_layout Plain Layout
+
+   bson:doc_put(Doc, name, 'Prolog', NewDoc),
 \end_layout
 
-\begin_layout Paragraph
-bson:doc_delete(+Doc, +Key, ?NewDoc)
+\begin_layout Plain Layout
+
+   bson:doc_values(NewDoc, Values).
 \end_layout
 
-\begin_layout Standard
-True if NewDoc is Doc with the association removed that has Key as key.
- At most one association is removed.
- No change if Key is not found.
+\begin_layout Plain Layout
+
+Doc = [name-prolog, type-declarative],
 \end_layout
 
-\begin_layout Paragraph
-bson:doc_keys(+Doc, ?Keys)
+\begin_layout Plain Layout
+
+Name = prolog,
 \end_layout
 
-\begin_layout Standard
-True if Keys is the keys for the associations in Doc.
+\begin_layout Plain Layout
+
+NewDoc = [name-'Prolog', type-declarative],
 \end_layout
 
-\begin_layout Paragraph
-bson:doc_values(+Doc, ?Values)
+\begin_layout Plain Layout
+
+Values = ['Prolog', declarative].
 \end_layout
 
-\begin_layout Standard
-True if Values is the values for the associations in Doc.
-\end_layout
+\end_inset
 
-\begin_layout Paragraph
-bson:doc_keys_values(+Doc, ?Keys, ?Values)
-\end_layout
 
-\begin_layout Standard
-True if Doc is the list of successive associations of Keys and Values.
 \end_layout
 
 \begin_layout Subsection
@@ -6855,7 +7258,7 @@ key "mongo"
  and automatic server reconnection is not implemented.
  This makes the current state of the driver only useful for small scale
  applications without need for great reliability and availability.
- This is the most obvious area for future development.
+ This is the most obvious area for future improvement.
 \end_layout
 
 \begin_layout Standard
@@ -6918,26 +7321,6 @@ key "swi"
  and YAP.
  Making the module usage completely compatible with these systems might
  require some work.
-\end_layout
-
-\begin_layout Standard
-Another obvious path of improvement is making the driver thread-safe.
- XXXXXX
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-[XXX How to improve in the future? What is missing for it to be a 
-\begin_inset Quotes eld
-\end_inset
-
-real
-\begin_inset Quotes erd
-\end_inset
-
- driver? Discuss choice of list as BSON document.
- Maybe use some map-like structure instead.]
 \end_layout
 
 \begin_layout Bibliography
