@@ -7073,7 +7073,8 @@ reference "lis:Using-document-manipulation"
 
 \end_inset
 
- shows the bindings made when using some of the manipulation predicates.
+ shows the result of using some of the manipulation predicates on a simple
+ document.
 \end_layout
 
 \begin_layout Standard
@@ -7094,7 +7095,7 @@ name "lis:Using-document-manipulation"
 
 \end_inset
 
-Using document manipulation predicates.
+Using document manipulation helpers.
 \end_layout
 
 \end_inset
@@ -7120,6 +7121,10 @@ Using document manipulation predicates.
 \begin_layout Plain Layout
 
    bson:doc_values(NewDoc, Values).
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \begin_layout Plain Layout
