@@ -568,8 +568,7 @@ key "mongo"
 \end_layout
 
 \begin_layout Standard
-To add comments to the first blog post, an update can be issued, illustrated
- in listing
+Adding a comment to the first blog post is illustrated in listing
 \begin_inset space ~
 \end_inset
 
@@ -1744,19 +1743,19 @@ reference "lis:length-program"
 
 \end_inset
 
- may be used as follows, providing a starting value of zero for the accumulator.
- The example in listing
+ may be used as in listing
 \begin_inset space ~
 \end_inset
 
 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "lis:trace-of-length"
+reference "lis:tracing-a-predicate"
 
 \end_inset
 
- is illustrated using a 
+, providing a starting value of zero for the accumulator.
+ The example is illustrated using a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1781,15 +1780,11 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "lis:trace-of-length"
+name "lis:tracing-a-predicate"
 
 \end_inset
 
-Trace of a call to 
-\emph on
-length/3
-\emph default
-.
+Tracing a predicate call.
 \end_layout
 
 \end_inset
@@ -1885,7 +1880,7 @@ In listing
 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "lis:trace-of-length"
+reference "lis:tracing-a-predicate"
 
 \end_inset
 
@@ -1901,7 +1896,7 @@ reference "lis:trace-of-length"
 
 2 shows the first call being made, which matches the second clause of the
  predicate due to the non-empty list.
- Variables are renamed internally by Prolog and can be identified by the
+ Variables are renamed internally by Prolog and can be recognized by the
  
 \begin_inset Quotes eld
 \end_inset
@@ -2027,8 +2022,8 @@ key "prolog"
 .
  Prolog tries to unify the given arguments with the formal parameters of
  the first clause of the predicate.
- If unification succeeds, Prolog proceeds to evaluate any premises present
- in the clause.
+ If unification succeeds, Prolog proceeds to evaluate any and all premises
+ present in the clause.
  If unification fails, Prolog reverts the effects of the unification so
  far, and repeats the process with the next clause of the predicate.
  This is called 
@@ -2064,6 +2059,8 @@ reference "lis:length-program"
  Should this clause also fail for some reason, the next clause after that
  would be tried, and so on, until no more clauses are found and the predicate
  fails.
+ This process of backtracking implies that the order of clauses is often
+ important.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2094,7 +2091,7 @@ reference "lis:length-program"
  To solve the problem of calculating the length of a list, the predicate
  solves a smaller problem, namely calculating the length of a shorter list:
  the tail.
- It works its way to the base case and eventually arrives at a solution.
+ It works its way to the base case which is trivial enough to solve directly.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2133,13 +2130,6 @@ Output.
 \emph default
  Argument must not be already instantiated, but become instantiated by the
  predicate.
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-? [XXX used?] Argument may or may not be instantiated.
- This is commonly used when the predicate can be used to either verify the
- argument or instantiate it.
 \end_layout
 
 \begin_layout Standard
@@ -2283,7 +2273,7 @@ BSON Conversion
 
 \begin_layout Standard
 The driver must be able to convert back and forth between some idiomatic
- Prolog structure and BSON bytes.
+ Prolog structure and BSON encoded bytes.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4045,9 +4035,9 @@ name "tab:interface-cursor-get-more"
 
 Interface to 
 \emph on
-cursor_has_more/1
+cursor_get_more/
 \emph default
-.
+4.
 \end_layout
 
 \end_inset
@@ -4858,7 +4848,7 @@ upsert
 \end_inset
 
 .
- This predicate is called 
+ The predicate for this is called 
 \emph on
 upsert/3
 \emph default
@@ -4904,8 +4894,8 @@ selector
 \end_inset
 
  document that describes which documents to match and delete.
- All matching documents are deleted unless the option 'single_remove' is
- supplied.
+ All matching documents are deleted unless the option atom 'single_remove'
+ is supplied.
  The predicate interfaces are described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -5806,8 +5796,18 @@ delete_item(Collection) :-
 \end_layout
 
 \begin_layout Standard
-The first line makes sure that the driver is properly loaded into the Prolog
- environment.
+The first line in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:simple-to-do"
+
+\end_inset
+
+ makes sure that the driver is properly loaded into the Prolog environment.
  The 
 \emph on
 todo/0
@@ -5911,7 +5911,8 @@ add
 \begin_inset Quotes erd
 \end_inset
 
- action asks the user to detail a new item, and inserts it into the collection.
+ action asks the user to detail a new item by providing a label and a priority,
+ and inserts it into the collection.
  The 
 \begin_inset Quotes eld
 \end_inset
@@ -5925,7 +5926,7 @@ delete
 \end_layout
 
 \begin_layout Standard
-An example session is depicted in listing
+An example of a usage session is depicted in listing
 \begin_inset space ~
 \end_inset
 
@@ -6336,14 +6337,25 @@ mongo_bytes
  This module contains predicates for converting various values into byte
  sequences, such as 
 \emph on
-int32/1
+int32
 \emph default
  for converting an integer into four little-endian bytes, and 
 \emph on
-c_string/1
+c_string
 \emph default
  for converting an atom into a zero-terminated byte list.
- 
+ The predicate is shown in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Constructing-a-message"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -6566,7 +6578,8 @@ reference "lis:Constructing-a-message"
 
 \end_inset
 
- and passes as third argument an integer representing the message type 
+ and passes as third argument an integer, 2004, representing the message
+ type 
 \emph on
 OP_QUERY
 \emph default
