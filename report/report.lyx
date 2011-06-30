@@ -6369,7 +6369,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Constructing-a-message"
@@ -6472,7 +6471,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Constructing-an-OP_QUERY"
@@ -6671,7 +6669,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:A-simple-Prolog"
@@ -6717,7 +6714,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:A-simple-Prolog-actual"
@@ -6789,7 +6785,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Byte-sequence-for-document"
@@ -6972,7 +6967,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Converting-the-empty"
@@ -7035,7 +7029,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Converting-byte-list-concatenati"
@@ -7101,7 +7094,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 \begin_inset CommandInset label
 LatexCommand label
 name "lis:Using-document-manipulation"
@@ -7274,13 +7266,13 @@ key "mongo"
 \end_inset
 
  and automatic server reconnection is not implemented.
- This makes the current state of the driver only useful for small scale
+ This makes the current state of the driver useful only for small scale
  applications without need for great reliability and availability.
  This is the most obvious area for future improvement.
 \end_layout
 
 \begin_layout Standard
-Making the driver compatible between different Prolog implementations requires
+Making the driver compatible with different Prolog implementations requires
  some work.
  The UTF-8 handling makes extensive use of a facility in SWI-Prolog called
  
@@ -7304,7 +7296,7 @@ key "swi"
 \begin_layout Standard
 Another compatibility challenge is most likely the C extension.
  SWI-Prolog has a solid mechanism for working with C, including a compiler
- front-end to properly glue Prolog and C together.
+ front-end to properly join Prolog and C together.
  Other implementations might not provide this.
 \end_layout
 
