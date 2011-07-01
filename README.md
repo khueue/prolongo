@@ -1,17 +1,5 @@
 # Design and Implementation of a MongoDB Driver for Prolog
 
-## Todo
-
-### Report
-
- * Write report.
-
-### Development
-
- * Implement proper error handling when queries fail.
- * Decide on RequestId/ResponseTo stuff.
- * (Decide on amount of (and implement) validation in encoder/decoder.)
-
 ## Usage
 
 Clone the repository and run `make` to compile the necessary C libraries
