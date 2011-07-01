@@ -7355,21 +7355,54 @@ MongoDB: The Definitive Guide.
 \labelwidthstring References
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "prolog"
+key "bson"
 
 \end_inset
 
-Clocksin, W.
- F.
- & Mellish, C.
- S.
- (1994) 
-\emph on
-Programming in Prolog.
+BSON Specification.
+ Accessed 2011-06-07.
+\begin_inset Newline newline
+\end_inset
 
-\emph default
- 4th ed.
- New York, United States of America: Springer-Verlag.
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://bsonspec.org/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "json"
+
+\end_inset
+
+JSON Specification.
+ Accessed 2011-06-19.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.json.org/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -7394,18 +7427,48 @@ Prolog Programming for Artificial Intelligence.
 \labelwidthstring References
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "okeefe"
+key "prolog"
 
 \end_inset
 
-O'Keefe, R.
- A.
- (1990) 
+Clocksin, W.
+ F.
+ & Mellish, C.
+ S.
+ (1994) 
 \emph on
-The Craft of Prolog.
+Programming in Prolog.
 
 \emph default
- Cambridge, United States of America: The MIT Press.
+ 4th ed.
+ New York, United States of America: Springer-Verlag.
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "swi"
+
+\end_inset
+
+SWI-Prolog Reference Manual.
+ Accessed 2011-06-19.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.swi-prolog.org/pldoc/refman/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -7485,6 +7548,24 @@ http://www.mongodb.org/display/DOCS/Mongo+Driver+Requirements
 \labelwidthstring References
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "okeefe"
+
+\end_inset
+
+O'Keefe, R.
+ A.
+ (1990) 
+\emph on
+The Craft of Prolog.
+
+\emph default
+ Cambridge, United States of America: The MIT Press.
+\end_layout
+
+\begin_layout Bibliography
+\labelwidthstring References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "wire"
 
 \end_inset
@@ -7501,87 +7582,6 @@ status collapsed
 \begin_layout Plain Layout
 
 http://www.mongodb.org/display/DOCS/Mongo+Wire+Protocol
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "bson"
-
-\end_inset
-
-BSON Specification.
- Accessed 2011-06-07.
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://bsonspec.org/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "json"
-
-\end_inset
-
-JSON Specification.
- Accessed 2011-06-19.
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://www.json.org/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "swi"
-
-\end_inset
-
-SWI-Prolog Reference Manual.
- Accessed 2011-06-19.
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://www.swi-prolog.org/pldoc/refman/
 \end_layout
 
 \end_inset
