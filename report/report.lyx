@@ -2334,8 +2334,8 @@ DB work with documents directly, so being able to
 
 \begin_layout Standard
 A BSON document is represented in Prolog as a list of key/value pairs.
- A pair is a structure named '-' (dash) with two arguments, a key and a
- value.
+ A pair is a structure named '-' (hyphen) with two arguments, a key and
+ a value.
  Using a symbol as the name of the structure makes it possible to write
  it as an infix operator, avoiding the need for parentheses and making the
  key/value association more natural.
