@@ -6119,7 +6119,7 @@ This chapter describes how the design is implemented and what tools and
 \end_layout
 
 \begin_layout Subsection
-Module Organization
+Driver Organization
 \end_layout
 
 \begin_layout Standard
