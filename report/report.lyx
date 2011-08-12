@@ -81,7 +81,7 @@ Sebastian Lundström
 
 \begin_layout Abstract
 To make MongoDB and Prolog work together, an intermediate layer is needed
- to facilitate the communication.
+ to handle the communication.
  Implementing such a layer, or driver, involves handling the network communicati
 on and encapsulating the functionality offered by MongoDB in native Prolog
  predicates.
@@ -148,8 +148,8 @@ driver
 \begin_inset Quotes erd
 \end_inset
 
-, must sit in-between the database system and the language to facilitate
- the communication.
+, must sit in-between the database system and the language to handle the
+ communication.
 \end_layout
 
 \begin_layout Subsection
@@ -2466,6 +2466,13 @@ BSON document as a Prolog literal.
 
 \begin_layout Subsection
 Driver API
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Driver-API"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2523,7 +2530,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2532,7 +2539,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2611,7 +2618,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2620,7 +2627,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2762,7 +2769,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2771,7 +2778,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2876,7 +2883,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2885,7 +2892,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3024,7 +3031,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3033,7 +3040,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3217,7 +3224,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3226,7 +3233,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3462,7 +3469,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3471,7 +3478,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3628,7 +3635,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3637,7 +3644,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3811,7 +3818,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3820,7 +3827,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3917,7 +3924,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3926,7 +3933,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4082,7 +4089,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4091,7 +4098,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4186,7 +4193,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4195,7 +4202,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4294,7 +4301,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4303,7 +4310,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4423,7 +4430,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4432,7 +4439,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4548,7 +4555,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4557,7 +4564,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4706,7 +4713,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4715,7 +4722,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4928,7 +4935,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4937,7 +4944,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5036,7 +5043,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5045,7 +5052,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5186,7 +5193,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5195,7 +5202,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5350,7 +5357,7 @@ status open
 <column alignment="left" valignment="top" width="0">
 <column alignment="left" valignment="top" width="0">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5359,7 +5366,7 @@ Argument
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6178,7 +6185,7 @@ Network Communication
 
 \begin_layout Standard
 Communication with a MongoDB server instance is conducted through a TCP
- socket using a certain protocol 
+ socket using a certain network protocol 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "wire"
@@ -6249,69 +6256,351 @@ close/2
 Wire Protocol
 \end_layout
 
+\begin_layout Paragraph
+Message Types
+\end_layout
+
 \begin_layout Standard
-The protocol used to facilitate the network communication defines the following
- message types 
+The protocol used for the network communication defines the message types
+ listed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:message-types"
+
+\end_inset
+
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "wire"
 
 \end_inset
 
-:
-\end_layout
-
-\begin_layout Description
-OP_REPLY Server reply to a client message.
-\end_layout
-
-\begin_layout Description
-OP_MSG Deprecated type for diagnostic messages.
-\end_layout
-
-\begin_layout Description
-OP_UPDATE Update documents.
-\end_layout
-
-\begin_layout Description
-OP_INSERT Insert documents.
-\end_layout
-
-\begin_layout Description
-OP_QUERY Find documents.
-\end_layout
-
-\begin_layout Description
-OP_GET_MORE Retrieve more documents from a cursor.
-\end_layout
-
-\begin_layout Description
-OP_DELETE Delete documents.
-\end_layout
-
-\begin_layout Description
-OP_KILL_CURSORS Kill cursors.
-\end_layout
-
-\begin_layout Standard
-All message types except 
+.
+ All types except 
 \emph on
 OP_MSG
 \emph default
  are implemented.
 \end_layout
 
-\begin_layout Paragraph
-Message Header
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OpCode
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_REPLY
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Server reply to a client message
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_MSG
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Diagnostic message (deprecated)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_UPDATE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2001
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Update documents
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_INSERT
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2002
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Insert documents
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_QUERY
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2004
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Find documents
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_GET_MORE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2005
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Retrieve documents from a cursor
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_DELETE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2006
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Delete documents
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OP_KILL_CURSORS
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2007
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Kill cursors
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:message-types"
+
+\end_inset
+
+Message types defined by the wire protocol.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-All messages start with a message header which is defined as four 32-bit
- integers:
+A message is a sequence of bytes that represent a header followed by a payload.
+ The format of the header is common to all messages and is used to describe
+ the nature of the payload.
+ The payload is the actual message, and different message types have different
+ payload formats.
+ The message header is defined as four 32-bit integers:
 \end_layout
 
 \begin_layout Enumerate
-length of entire message in bytes,
+length of entire message (including header) in bytes,
 \end_layout
 
 \begin_layout Enumerate
@@ -6324,7 +6613,19 @@ response identifier, sent only in database replies to associate with a request
 \end_layout
 
 \begin_layout Enumerate
-operation code, describing the type of the message following the header.
+operation code, denoting the type of the message (the payload) following
+ the header (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:message-types"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+Header Creation
 \end_layout
 
 \begin_layout Standard
@@ -6344,7 +6645,7 @@ int32
 c_string
 \emph default
  for converting an atom into a zero-terminated byte list.
- The predicate is shown in listing
+ The predicate used to obtain the bytes for a header is shown in listing
 \begin_inset space ~
 \end_inset
 
@@ -6432,16 +6733,19 @@ reference "lis:Constructing-a-message"
  creates a list of four (anonymous) variables.
  These represent the length of the entire message and are to be instantiated
  later as four bytes of a 32-bit little-endian integer.
- As soon as all bytes comprising the message have been created, they are
- counted and the length instantiated.
+ As soon as all bytes comprising the message have been created, they must
+ be counted so that the length can be instantiated.
 \end_layout
 
 \begin_layout Paragraph
-Example Message
+Message Creation
 \end_layout
 
 \begin_layout Standard
-An example of how to construct an entire message is listed in listing
+The code for constructing a complete message varies depending on the type
+ of the message, but the idea remains the same: create a header with the
+ appropriate metadata, and a payload formatted accordingly.
+ Listing
 \begin_inset space ~
 \end_inset
 
@@ -6452,8 +6756,7 @@ reference "lis:Constructing-an-OP_QUERY"
 
 \end_inset
 
-.
- This example shows an 
+ shows how to construct an 
 \emph on
 OP_QUERY
 \emph default
@@ -6565,7 +6868,7 @@ reference "lis:Constructing-an-OP_QUERY"
 
 \end_inset
 
- calls the predicate defined in listing
+ calls the header predicate defined in listing
 \begin_inset space ~
 \end_inset
 
@@ -6576,7 +6879,7 @@ reference "lis:Constructing-a-message"
 
 \end_inset
 
- and passes as third argument an integer, 2004, representing the message
+ and passes as third argument the integer 2004 which represents the message
  type 
 \emph on
 OP_QUERY
@@ -6589,8 +6892,363 @@ OP_QUERY
 \end_layout
 
 \begin_layout Standard
-When the message is constructed, its length is instantiated and the message
- can be sent over the connection socket.
+When the message is constructed, its length is instantiated by the wrapper
+ predicate that calls 
+\emph on
+build_bytes_for_find/6
+\emph default
+, shown in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Wrapping-build-bytes-for-find"
+
+\end_inset
+
+.
+ This is a normal Prolog predicate that returns the message bytes as its
+ last arguments.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Wrapping-build-bytes-for-find"
+
+\end_inset
+
+Wrapper for 
+\emph on
+OP_QUERY
+\emph default
+ message creation.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+build_bytes_for_find(
+\end_layout
+
+\begin_layout Plain Layout
+
+    Namespace, Query, ReturnFields,
+\end_layout
+
+\begin_layout Plain Layout
+
+    Skip, Limit, Flags, Bytes)
+\end_layout
+
+\begin_layout Plain Layout
+
+:-
+\end_layout
+
+\begin_layout Plain Layout
+
+    phrase(
+\end_layout
+
+\begin_layout Plain Layout
+
+        build_bytes_for_find(
+\end_layout
+
+\begin_layout Plain Layout
+
+            Namespace, Query, ReturnFields,
+\end_layout
+
+\begin_layout Plain Layout
+
+            Skip, Limit, Flags),
+\end_layout
+
+\begin_layout Plain Layout
+
+        Bytes),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_bytes:count_bytes_and_set_length(Bytes).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+API Implementation
+\end_layout
+
+\begin_layout Standard
+On the highest level, all interaction with the database is initiated by
+ the API predicates (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sub:Driver-API"
+
+\end_inset
+
+).
+ Listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:Implementation-of-find-8"
+
+\end_inset
+
+ shows how the interface predicate 
+\emph on
+find/8
+\emph default
+ is implemented.
+ Other interface predicates are implemented in a similar fashion.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},numbers=left,numberstyle={\scriptsize}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Implementation-of-find-8"
+
+\end_inset
+
+Implementation of 
+\emph on
+find/8
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+find(
+\end_layout
+
+\begin_layout Plain Layout
+
+    Collection, Query, ReturnFields,
+\end_layout
+
+\begin_layout Plain Layout
+
+    Skip, Limit, Options, Cursor, Docs)
+\end_layout
+
+\begin_layout Plain Layout
+
+:-
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_collection:collection_namespace(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Collection, Namespace),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_util:options_flags(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Options, mongo_find:option_value, Flags),
+\end_layout
+
+\begin_layout Plain Layout
+
+    build_bytes_for_find(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Namespace, Query, ReturnFields,
+\end_layout
+
+\begin_layout Plain Layout
+
+        Skip, Limit, Flags, BytesToSend),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_collection:collection_connection(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Collection, Connection),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_connection:send_to_server(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Connection, BytesToSend),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_connection:read_reply(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Connection, _Header, Info, Docs),
+\end_layout
+
+\begin_layout Plain Layout
+
+    Info = info(ReturnFlags,CursorId,_,_),
+\end_layout
+
+\begin_layout Plain Layout
+
+    throw_on_error(ReturnFlags, Docs),
+\end_layout
+
+\begin_layout Plain Layout
+
+    mongo_cursor:new_cursor(
+\end_layout
+
+\begin_layout Plain Layout
+
+        Collection, CursorId, Cursor).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Line
+\begin_inset space ~
+\end_inset
+
+5 in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:Implementation-of-find-8"
+
+\end_inset
+
+ extracts a namespace atom from the collection handle.
+ A namespace is a collection identifier of the format 
+\begin_inset Quotes eld
+\end_inset
+
+database.collection
+\begin_inset Quotes erd
+\end_inset
+
+ that is used to uniquely identify a collection within a database server
+ instance.
+ Line
+\begin_inset space ~
+\end_inset
+
+7 converts the list of query options into a bitmask.
+ Line
+\begin_inset space ~
+\end_inset
+
+9 calls the predicate 
+\emph on
+build_bytes_for_find/7
+\emph default
+ (shown in listing
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "lis:Wrapping-build-bytes-for-find"
+
+\end_inset
+
+) to create the actual message bytes.
+ Line
+\begin_inset space ~
+\end_inset
+
+12 extracts the connection handle from the collection handle.
+ Line
+\begin_inset space ~
+\end_inset
+
+14 transmits the message over the socket established in the connection handle,
+ and line
+\begin_inset space ~
+\end_inset
+
+16 waits for a reply from the server.
+ When the reply has been received, any return codes and a (possibly undefined)
+ cursor identifier is extracted from it.
+ The status of the reply is checked on line
+\begin_inset space ~
+\end_inset
+
+19, and a cursor handle is created on line
+\begin_inset space ~
+\end_inset
+
+20.
+ Any documents returned with the reply are also extracted and returned as
+ the last argument.
 \end_layout
 
 \begin_layout Subsection
