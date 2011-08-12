@@ -6135,8 +6135,8 @@ bson
  The mongo module is the main module which contains all the functionality
  needed to work with a MongoDB instance.
  This is the module that needs to be included in order to use the driver.
- The bson module handles BSON parsing, and also provides basic document
- manipulation predicates.
+ The bson module handles BSON parsing and provides basic document manipulation
+ predicates.
  The bson module is used internally by the mongo module, but implemented
  separately because BSON is not inherent to MongoDB and can be used on its
  own.
@@ -6152,7 +6152,7 @@ reference "tab:mongo-modules"
 \end_inset
 
 .
- Predicates exported by these module that are meant to be part of the API
+ Predicates exported by these modules that are meant to be part of the API
  are reexported by the mongo module.
 \end_layout
 
