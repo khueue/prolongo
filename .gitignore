@@ -10,3 +10,4 @@ Icon?
 lib/*
 *.txt
 querylog.pl
+private/*
