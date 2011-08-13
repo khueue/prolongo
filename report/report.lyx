@@ -181,6 +181,13 @@ ng portability between different Prolog implementations is difficult and
  not actively pursued.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Background
 \end_layout
@@ -2173,6 +2180,13 @@ lists:length/3
 .
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Requirements
 \end_layout
@@ -2302,6 +2316,13 @@ Document Handling
 \begin_layout Standard
 The driver must expose functionality to find, insert, update and delete
  documents in a collection, providing basic CRUD coverage.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -3774,7 +3795,7 @@ Using Cursors
 
 \begin_layout Standard
 When a query matches more documents than can be returned in a single response,
- a cursor is established and returned.
+ a cursor is established and returned together with the first batch of documents.
  A cursor is created and maintained by the database server, and it represents
  a pointer to a subset of the documents matched by a query 
 \begin_inset CommandInset citation
@@ -3899,6 +3920,7 @@ cursor_get_more/4
  can be used.
  This predicate takes a cursor, returns a number of documents and also a
  new cursor handle representing the possibly modified state of the cursor.
+ The old cursor handle may no longer be used.
  The interface is described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -4275,7 +4297,8 @@ cursor_exhaust/2
  can be used.
  This is a convenience predicate that simply queries the cursor until all
  documents have been retrieved, and returns them as a single list.
- A cursor exhausted by this predicate need not be manually killed.
+ A cursor exhausted by this predicate need not be manually killed, as an
+ exhausted cursor is automatically killed.
  The interface is described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -4404,8 +4427,8 @@ Two predicates are available to insert documents into a database collection.
 \emph on
 insert/2
 \emph default
-, which accepts a collection handle and a document to insert, as described
- in 
+, which accepts a collection handle and a single document to insert, as
+ described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:interface-insert"
@@ -5167,8 +5190,9 @@ To query a database for information that does not deal with individual documents
 command/3
 \emph default
  is provided.
- This predicate executes arbitrary database commands, such as dropping a
- collection, and is described in 
+ This predicate executes arbitrary database commands such as dropping a
+ collection and listing the available commands.
+ It is described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:interface-command"
@@ -5445,6 +5469,13 @@ get_last_error/2
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
 \end_inset
 
 
@@ -6109,6 +6140,13 @@ Bye!
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Implementation
 \end_layout
@@ -6132,19 +6170,37 @@ mongo
 bson
 \emph default
 .
- The mongo module is the main module which contains all the functionality
- needed to work with a MongoDB instance.
+ The 
+\emph on
+mongo
+\emph default
+ module is the main module which contains all the functionality needed to
+ work with a MongoDB instance.
  This is the module that needs to be included in order to use the driver.
- The bson module handles BSON parsing and provides basic document manipulation
- predicates.
- The bson module is used internally by the mongo module, but implemented
- separately because BSON is not inherent to MongoDB and can be used on its
- own.
+ The 
+\emph on
+bson
+\emph default
+ module handles BSON parsing and provides basic document manipulation predicates.
+ The 
+\emph on
+bson
+\emph default
+ module is used internally by the 
+\emph on
+mongo
+\emph default
+ module, but implemented separately because BSON is not inherent to MongoDB
+ and can be used on its own.
 \end_layout
 
 \begin_layout Standard
-The mongo module acts as a wrapper around predicates located in the modules
- listed in 
+The 
+\emph on
+mongo
+\emph default
+ module acts as a wrapper around predicates located in the modules listed
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:mongo-modules"
@@ -6153,7 +6209,11 @@ reference "tab:mongo-modules"
 
 .
  Predicates exported by these modules that are meant to be part of the API
- are reexported by the mongo module.
+ are reexported by the 
+\emph on
+mongo
+\emph default
+ module.
 \end_layout
 
 \begin_layout Standard
@@ -6467,7 +6527,11 @@ name "tab:mongo-modules"
 
 \end_inset
 
-Internal mongo modules.
+Internal 
+\emph on
+mongo
+\emph default
+ modules.
 \end_layout
 
 \end_inset
@@ -6481,8 +6545,11 @@ Internal mongo modules.
 \end_layout
 
 \begin_layout Standard
-For BSON parsing, the bson module uses predicates provided by the modules
- listed in 
+For BSON parsing, the 
+\emph on
+bson
+\emph default
+ module uses predicates provided by the modules listed in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:bson-modules"
@@ -6490,7 +6557,11 @@ reference "tab:bson-modules"
 \end_inset
 
 .
- Document manipulation predicates are defined in the bson module itself.
+ Document manipulation predicates are defined in the 
+\emph on
+bson
+\emph default
+ module itself.
 \end_layout
 
 \begin_layout Standard
@@ -6624,7 +6695,11 @@ name "tab:bson-modules"
 
 \end_inset
 
-Internal bson modules.
+Internal 
+\emph on
+bson
+\emph default
+ modules.
 \end_layout
 
 \end_inset
@@ -7756,7 +7831,9 @@ DB instance, documents are transmitted
  over the network as bytes of BSON.
  The driver converts Prolog documents into series of BSON bytes before sending
  them to the database, and documents in database responses are converted
- back to Prolog documents again.
+ back to Prolog documents.
+ The BSON handling is implemented as a two-part DCG parser: a decoder and
+ an encoder.
 \end_layout
 
 \begin_layout Subsubsection
@@ -8084,6 +8161,8 @@ reference "lis:Converting-the-empty"
 \end_inset
 
 .
+ The bytes returned are simply the length (as four bytes) of the empty document
+ and a terminating zero.
  Calling it with the document in listing
 \begin_inset space ~
 \end_inset
@@ -8283,10 +8362,6 @@ Using document manipulation helpers.
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
 Doc = [name-prolog, type-declarative],
 \end_layout
 
@@ -8381,6 +8456,13 @@ Compiler A C compiler is required to build parts of the low-level BSON handling.
 \begin_layout Description
 MongoDB The driver is tested on Mongo\SpecialChar \-
 DB versions 1.8.0 through 1.8.2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
