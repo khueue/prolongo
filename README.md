@@ -2,9 +2,10 @@
 
 ## Usage
 
-Clone the repository and run `make` to compile the necessary C libraries
-and run the test suite. Part of the test suite requires a MongoDB instance
-running on localhost on the default port.
+Not much here for now, but clone the repository and run `make` to compile
+the necessary C libraries and run the test suite. Part of the test suite
+requires a MongoDB instance running on localhost on the default port.
+See the tests (*.plt) in the src folder for usage examples.
 
 ## Dependencies
 
