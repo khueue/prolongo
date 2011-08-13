@@ -6176,7 +6176,7 @@ mongo
 \emph default
  module is the main module which contains all the functionality needed to
  work with a MongoDB instance.
- This is the module that needs to be included in order to use the driver.
+ This is the module that needs to be loaded in order to use the driver.
  The 
 \emph on
 bson
