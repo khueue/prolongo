@@ -32,13 +32,6 @@ repl: compile
 	@ echo "--- Load and enter REPL ..."
 	$(PROLOG) -s load -g repl
 
-.PHONY: doc
-doc: compile
-	@ echo "--- Generate docs ..."
-	$(PROLOG) -s load -g doc -t halt
-
-#latex -output-directory=doc -output-format=pdf doc/*.tex
-
 .PHONY: compile
 compile: setup lib/bson_bits
 
@@ -58,4 +51,3 @@ lib:
 .PHONY: clean
 clean:
 	rm -rf lib/*
-	rm -rf doc/src
