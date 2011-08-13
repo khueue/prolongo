@@ -1,4 +1,4 @@
-# Design and Implementation of a MongoDB Driver for Prolog
+# MongoDB Driver for Prolog
 
 ## Usage
 
@@ -47,18 +47,3 @@ running on localhost on the default port.
  * Test and improve compatibility between Prologs.
  * Make sure exception handling is more idiomatic.
  * (Implement all the stuff I won't have time to.)
-
-## Links
-
-### SWI-Prolog
-
- * Manual: <http://www.swi-prolog.org/pldoc/refman/>
- * PlUnit: <http://www.swi-prolog.org/pldoc/package/plunit.html>
- * PlDoc: <http://www.swi-prolog.org/pldoc/package/pldoc.html>
- * C API & Sockets: <http://www.swi-prolog.org/pldoc/package/clib.html>
-
-### MongoDB
-
- * Manual: <http://www.mongodb.org/display/DOCS/Manual>
- * BSON Spec: <http://bsonspec.org/>
- * Writing Drivers: <http://www.mongodb.org/display/DOCS/Writing+Drivers+and+Tools>
