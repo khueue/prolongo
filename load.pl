@@ -46,11 +46,6 @@ cov :-
     load_project_tests,
     run_test_suite_with_coverage.
 
-doc :-
-    load_project_modules,
-    use_module('doc/doc_files'),
-    pldoc_files:doc_save('src/', [recursive(true),doc_root('doc/')]).
-
 load_project_modules :-
     use_module(library(pldoc), []), % Load first to enable comment processing.
     use_module(mongo(mongo), []).
