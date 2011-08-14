@@ -60,16 +60,27 @@
 
 \begin_body
 
-\begin_layout Title
-Design and Implementation
-\begin_inset Newline newline
-\end_inset
+\begin_layout Standard
+\begin_inset ERT
+status open
 
-of a MongoDB Driver for Prolog
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle{empty}
 \end_layout
 
-\begin_layout Author
-Sebastian Lundström
+\end_inset
+
+
+\begin_inset External
+	template PDFPages
+	filename cover.pdf
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -79,15 +90,14 @@ Sebastian Lundström
 
 \end_layout
 
-\begin_layout Abstract
-To make MongoDB and Prolog work together, an intermediate layer is needed
- to handle the communication.
- Implementing such a layer, or driver, involves handling the network communicati
-on and encapsulating the functionality offered by MongoDB in native Prolog
- predicates.
- This thesis presents how the fundamentals of such a driver can be designed,
- developed and used, and provides a discussion on how to further develop
- the driver and make it ready for production.
+\begin_layout Standard
+\begin_inset External
+	template PDFPages
+	filename abstract.pdf
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -108,6 +118,29 @@ LatexCommand tableofcontents
 
 \begin_layout Standard
 \begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle{plain}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{page}{1}
+\end_layout
+
 \end_inset
 
 
