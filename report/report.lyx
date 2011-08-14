@@ -6880,7 +6880,7 @@ key "wire"
 \end_inset
 
 .
- All types except 
+ All types except the deprecated 
 \emph on
 OP_MSG
 \emph default
@@ -7194,7 +7194,8 @@ Message types defined by the wire protocol.
 \end_layout
 
 \begin_layout Standard
-A message is a sequence of bytes that represent a header followed by a payload.
+A message is a sequence of bytes that represents a header followed by a
+ payload.
  The format of the header is common to all messages and is used to describe
  the nature of the payload.
  The payload is the actual message, and different message types have different
@@ -7513,7 +7514,7 @@ reference "lis:Wrapping-build-bytes-for-find"
 
 .
  This is a normal Prolog predicate that returns the message bytes as its
- last arguments.
+ last argument.
 \end_layout
 
 \begin_layout Standard
