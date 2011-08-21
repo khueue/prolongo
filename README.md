@@ -9,7 +9,7 @@ See the tests (*.plt) in the src folder for usage examples.
 
 ## Example Usage
 
-    ´´´prolog
+    ```prolog
     :- use_module(mongo(mongo)).
 
     todo :-
@@ -68,7 +68,7 @@ See the tests (*.plt) in the src folder for usage examples.
         format('Id: '),
         read(Id),
         mongo:delete(Collection, ['_id'-object_id(Id)]).
-    ´´´
+    ```
 
 ## Dependencies
 
