@@ -5,9 +5,12 @@
 Not much here for now, but clone the repository and run `make` to compile
 the necessary C libraries and run the test suite. Part of the test suite
 requires a MongoDB instance running on localhost on the default port.
-See the tests (*.plt) in the src folder for usage examples.
+See the example app below, and the tests (*.plt) in the src folder for
+usage examples.
 
-## Example Usage
+## Usage Example
+
+A small to-do application:
 
 ```prolog
 :- use_module(mongo(mongo)).
@@ -70,12 +73,42 @@ delete_item(Collection) :-
     mongo:delete(Collection, ['_id'-object_id(Id)]).
 ```
 
+Make sure `load.pl` and the file above are consulted and 
+a MongoDB instance is running on localhost:
+
+    ?- todo.
+    --- Simple Todo ---
+    Id                        Label              Priority
+
+    Enter list/add/delete/quit: add.
+    Label: 'Make tea'.
+    Priority: 1.
+
+    Enter list/add/delete/quit: add.
+    Label: 'Go for a walk'.
+    Priority: 2.
+
+    Enter list/add/delete/quit: list.
+    Id                        Label              Priority
+    4dff66bd4c594ffa3e17cb70  Make tea           1
+    4dff66eb4c594ffa3e17cb71  Go for a walk      2
+
+    Enter list/add/delete/quit: delete.
+    Id: '4dff66eb4c594ffa3e17cb71'.
+
+    Enter list/add/delete/quit: list.
+    Id                        Label              Priority
+    4dff66bd4c594ffa3e17cb70  Make tea           1
+
+    Enter list/add/delete/quit: quit.
+    Bye!
+
 ## Dependencies
 
- * SWI-Prolog (tested on Mac OS X using SWI 5.10.2)
+ * SWI-Prolog (tested on Mac OS X using SWI 5.10.[2|4])
     * Autoloading must be turned on (default).
  * ANSI C compiler (modify the Makefile if other than GCC)
- * MongoDB (tested on Mac OS X using MongoDB 1.8.x)
+ * MongoDB (tested on Mac OS X using MongoDB 1.8.[0|2])
 
 ## Coding Guidelines
 
