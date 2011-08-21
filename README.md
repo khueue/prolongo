@@ -9,66 +9,66 @@ See the tests (*.plt) in the src folder for usage examples.
 
 ## Example Usage
 
-    ```prolog
-    :- use_module(mongo(mongo)).
+```prolog
+:- use_module(mongo(mongo)).
 
-    todo :-
-        format('--- Simple Todo ---~n'),
-        mongo:new_connection(Connection),
-        mongo:get_database(Connection, todo, Database),
-        mongo:get_collection(Database, items, Collection),
-        action(list, Collection),
-        mongo:free_connection(Connection).
+todo :-
+    format('--- Simple Todo ---~n'),
+    mongo:new_connection(Connection),
+    mongo:get_database(Connection, todo, Database),
+    mongo:get_collection(Database, items, Collection),
+    action(list, Collection),
+    mongo:free_connection(Connection).
 
-    action(list, Collection) :- !,
-        list_items(Collection),
-        new_action(Collection).
-    action(add, Collection) :- !,
-        add_item(Collection),
-        new_action(Collection).
-    action(delete, Collection) :- !,
-        delete_item(Collection),
-        new_action(Collection).
-    action(quit, _Collection) :- !,
-        format('Bye!~n').
-    action(_Unknown, Collection) :-
-        format('Unknown alternative.~n'),
-        new_action(Collection).
+action(list, Collection) :- !,
+    list_items(Collection),
+    new_action(Collection).
+action(add, Collection) :- !,
+    add_item(Collection),
+    new_action(Collection).
+action(delete, Collection) :- !,
+    delete_item(Collection),
+    new_action(Collection).
+action(quit, _Collection) :- !,
+    format('Bye!~n').
+action(_Unknown, Collection) :-
+    format('Unknown alternative.~n'),
+    new_action(Collection).
 
-    new_action(Collection) :-
-        format('~nEnter list/add/delete/quit: '),
-        read(Action),
-        action(Action, Collection).
+new_action(Collection) :-
+    format('~nEnter list/add/delete/quit: '),
+    read(Action),
+    action(Action, Collection).
 
-    list_items(Collection) :-
-        mongo:find_all(Collection, [], [], Docs),
-        print_items(Docs).
+list_items(Collection) :-
+    mongo:find_all(Collection, [], [], Docs),
+    print_items(Docs).
 
-    print_items(Docs) :-
-        format('Id~26|Label~45|Priority~n'),
-        print_items_aux(Docs).
+print_items(Docs) :-
+    format('Id~26|Label~45|Priority~n'),
+    print_items_aux(Docs).
 
-    print_items_aux([]).
-    print_items_aux([Doc|Docs]) :-
-        bson:doc_get(Doc, '_id', object_id(Id)),
-        bson:doc_get(Doc, label, Label),
-        bson:doc_get(Doc, priority, Priority),
-        format('~w~26|~w~45|~w~n', [Id,Label,Priority]),
-        print_items_aux(Docs).
+print_items_aux([]).
+print_items_aux([Doc|Docs]) :-
+    bson:doc_get(Doc, '_id', object_id(Id)),
+    bson:doc_get(Doc, label, Label),
+    bson:doc_get(Doc, priority, Priority),
+    format('~w~26|~w~45|~w~n', [Id,Label,Priority]),
+    print_items_aux(Docs).
 
-    add_item(Collection) :-
-        format('Label: '),
-        read(Label),
-        format('Priority: '),
-        read(Priority),
-        Doc = [label-Label,priority-Priority],
-        mongo:insert(Collection, Doc).
+add_item(Collection) :-
+    format('Label: '),
+    read(Label),
+    format('Priority: '),
+    read(Priority),
+    Doc = [label-Label,priority-Priority],
+    mongo:insert(Collection, Doc).
 
-    delete_item(Collection) :-
-        format('Id: '),
-        read(Id),
-        mongo:delete(Collection, ['_id'-object_id(Id)]).
-    ```
+delete_item(Collection) :-
+    format('Id: '),
+    read(Id),
+    mongo:delete(Collection, ['_id'-object_id(Id)]).
+```
 
 ## Dependencies
 
