@@ -1,6 +1,7 @@
 :- module(mongo,
     [
-        % See reexports below.
+        version/1
+        % And see reexports below.
     ]).
 
 /** <module> MongoDB driver.
@@ -70,3 +71,10 @@
     ]).
 
 :- include(misc(common)).
+
+%%  version(?Version) is semidet.
+%
+%   True if Version is a list representing the major, minor
+%   and patch version numbers of this library.
+
+version([0,0,1]).

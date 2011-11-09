@@ -11,7 +11,7 @@
         doc_values/2,
         doc_keys_values/3,
         version/1,
-        bson_version/1
+        spec_version/1
     ]).
 
 /** <module> BSON manipulation.
@@ -33,14 +33,14 @@
 %   True if Version is a list representing the major, minor
 %   and patch version numbers of this library.
 
-version([0,0,0]).
+version([0,0,1]).
 
-%%  bson_version(?Version) is semidet.
+%%  spec_version(?Version) is semidet.
 %
 %   True if Version is a list representing the major and minor
-%   version numbers of the implemented BSON format.
+%   version numbers of the implemented BSON specification.
 
-bson_version([1,0]).
+spec_version([1,0]).
 
 %%  docs_bytes(+Docs, ?Bytes) is semidet.
 %%  docs_bytes(?Docs, +Bytes) is semidet.

@@ -89,20 +89,6 @@ memory_file_to_bytes(MemFile, Bytes) :-
         readutil:read_stream_to_codes(Read, Bytes),
         core:close(Read)).
 
-/*
-% Previous version, seems a bit slower (probably due to atom_codes).
-utf8_to_bytes(Utf8, Bytes) :-
-    core:atom_codes(Utf8, Codes),
-    setup_call_cleanup(
-        charsio:open_chars_stream(Codes, ReadStream),
-        stream_to_bytes(ReadStream, Bytes),
-        core:close(ReadStream)).
-
-stream_to_bytes(ReadStream, Bytes) :-
-    core:set_stream(ReadStream, encoding(octet)),
-    readutil:read_stream_to_codes(ReadStream, Bytes).
-*/
-
 %%  bytes_to_utf8(+Bytes, ?Utf8) is semidet.
 %
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes.
