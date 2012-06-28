@@ -15,7 +15,7 @@ trim:
 .PHONY: test
 test: compile
 	@ echo "--- Run tests and exit ..."
-	$(PROLOG) -s load -g test -t halt
+	time $(PROLOG) -s load -g test -t halt
 
 .PHONY: bench
 bench: compile
