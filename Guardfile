@@ -6,7 +6,8 @@ guard :shell do
     if m[0] =~ /^lib/
       # Don't trigger on dynamically generated files.
     else
-      system "make"
+      system "make clean"
+      m[0] + ' changed'
     end
   end
 end
