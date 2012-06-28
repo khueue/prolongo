@@ -73,7 +73,7 @@ delete_item(Collection) :-
     mongo:delete(Collection, ['_id'-object_id(Id)]).
 ```
 
-Make sure `load.pl` and the file above are consulted and 
+Make sure `load.pl` and the file above are consulted and
 a MongoDB instance is running on localhost:
 
     ?- todo.
