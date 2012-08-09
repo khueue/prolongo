@@ -352,7 +352,7 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0A, null', [true(Got == Expected)]) :-
+test('0x0a, null', [true(Got == Expected)]) :-
     Doc =
     [
         hello - +null
@@ -360,13 +360,13 @@ test('0x0A, null', [true(Got == Expected)]) :-
     Expected =
     [
         12,0,0,0, % Length of top doc.
-        0x0A, % Tag.
+        0x0a, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0B, regex', [true(Got == Expected)]) :-
+test('0x0b, regex', [true(Got == Expected)]) :-
     Doc =
     [
         hello - regex('a','i')
@@ -374,7 +374,7 @@ test('0x0B, regex', [true(Got == Expected)]) :-
     Expected =
     [
         16,0,0,0, % Length of top doc.
-        0x0B, % Tag.
+        0x0b, % Tag.
             104,101,108,108,111, 0, % Ename.
             97, 0,  % Regex pattern.
             105, 0, % Regex options.
@@ -382,7 +382,7 @@ test('0x0B, regex', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0C, db pointer', [true(Got == Expected)]) :-
+test('0x0c, db pointer', [true(Got == Expected)]) :-
     Doc =
     [
         hello - db_pointer('a', '47cc67093475061e3d95369d')
@@ -390,7 +390,7 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
     Expected =
     [
         30,0,0,0, % Length of top doc.
-        0x0C, % Tag.
+        0x0c, % Tag.
             104,101,108,108,111, 0, % Ename.
             2,0,0,0, % String's byte length, incl. nul.
             97, 0, % String data.
@@ -402,7 +402,7 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0D, js', [true(Got == Expected)]) :-
+test('0x0d, js', [true(Got == Expected)]) :-
     Doc =
     [
         js - js('code ...')
@@ -410,7 +410,7 @@ test('0x0D, js', [true(Got == Expected)]) :-
     Expected =
     [
         22,0,0,0, % Length of top doc.
-        0x0D, % Tag.
+        0x0d, % Tag.
             106,115, 0, % Ename.
             9,0,0,0, % String's byte length, incl. nul.
             99,111,100,101,32,46,46,46, 0, % String data.
@@ -418,7 +418,7 @@ test('0x0D, js', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0E, symbol', [true(Got == Expected)]) :-
+test('0x0e, symbol', [true(Got == Expected)]) :-
     Doc =
     [
         hello - symbol(atom)
@@ -426,7 +426,7 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
     Expected =
     [
         21,0,0,0, % Length of top doc.
-        0x0E, % Tag.
+        0x0e, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % String's byte length, incl. nul.
             97,116,111,109, 0, % String data.
@@ -434,7 +434,7 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x0F, js with scope', [true(Got == Expected)]) :-
+test('0x0f, js with scope', [true(Got == Expected)]) :-
     Doc =
     [
         js - js('code ...', [hello-32])
@@ -442,7 +442,7 @@ test('0x0F, js with scope', [true(Got == Expected)]) :-
     Expected =
     [
         42,0,0,0, % Length of top doc.
-        0x0F, % Tag.
+        0x0f, % Tag.
             106,115, 0, % Ename.
             33,0,0,0, % Length of entire JS with scope.
             9,0,0,0, % String's byte length, incl. nul.
@@ -496,7 +496,7 @@ test('0x12, int64', [true(Got == Expected)]) :-
         20,0,0,0, % Length of top doc.
         0x12, % Tag.
             104,101,108,108,111, 0, % Ename.
-            0xFF,0xFF,0xFF,0xFF, 0xFF,0xFF,0xFF,0x7F, % Int64 data.
+            0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0x7f, % Int64 data.
         0 % End of top doc.
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
@@ -508,7 +508,7 @@ test('0x12, int64 too large', [throws(bson_error(too_large(_)))]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, _Got).
 
-test('0xFF, min', [true(Got == Expected)]) :-
+test('0xff, min', [true(Got == Expected)]) :-
     Doc =
     [
         hello - +min
@@ -516,13 +516,13 @@ test('0xFF, min', [true(Got == Expected)]) :-
     Expected =
     [
         12,0,0,0, % Length of top doc.
-        0xFF, % Tag.
+        0xff, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x7F, max', [true(Got == Expected)]) :-
+test('0x7f, max', [true(Got == Expected)]) :-
     Doc =
     [
         hello - +max
@@ -530,7 +530,7 @@ test('0x7F, max', [true(Got == Expected)]) :-
     Expected =
     [
         12,0,0,0, % Length of top doc.
-        0x7F, % Tag.
+        0x7f, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],

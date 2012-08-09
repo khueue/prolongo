@@ -101,7 +101,7 @@ unsigned_to_bytes(Unsigned, N, big, Bytes) :- !,
 
 unsigned_to_bytes_aux(_Unsigned, N, N, []) :- !.
 unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
-    Byte is (Unsigned >> (N0*8)) /\ 0xFF,
+    Byte is (Unsigned >> (N0*8)) /\ 0xff,
     N1 is N0 + 1,
     unsigned_to_bytes_aux(Unsigned, N1, N, Bytes).
 

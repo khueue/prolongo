@@ -65,17 +65,17 @@ value(0x06, Value) --> value_undefined(Value). % Deprecated.
 value(0x07, Value) --> value_object_id(Value).
 value(0x08, Value) --> value_boolean(Value).
 value(0x09, Value) --> value_utc(Value).
-value(0x0A, Value) --> value_null(Value).
-value(0x0B, Value) --> value_regex(Value).
-value(0x0C, Value) --> value_db_pointer(Value). % Deprecated.
-value(0x0D, Value) --> value_js(Value).
-value(0x0E, Value) --> value_symbol(Value).
-value(0x0F, Value) --> value_js_with_scope(Value).
+value(0x0a, Value) --> value_null(Value).
+value(0x0b, Value) --> value_regex(Value).
+value(0x0c, Value) --> value_db_pointer(Value). % Deprecated.
+value(0x0d, Value) --> value_js(Value).
+value(0x0e, Value) --> value_symbol(Value).
+value(0x0f, Value) --> value_js_with_scope(Value).
 value(0x10, Value) --> value_int32(Value).
 value(0x11, Value) --> value_mongostamp(Value).
 value(0x12, Value) --> value_int64(Value).
-value(0xFF, Value) --> value_min(Value).
-value(0x7F, Value) --> value_max(Value).
+value(0xff, Value) --> value_min(Value).
+value(0x7f, Value) --> value_max(Value).
 
 value_array(Values) -->
     document(Document),

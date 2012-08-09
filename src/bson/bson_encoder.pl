@@ -108,18 +108,18 @@ value_compound(object_id(ObjectId), 0x07, Len) -->
     ObjectIdBytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
-value_compound(regex(Pattern,Options), 0x0B, Len) -->
+value_compound(regex(Pattern,Options), 0x0b, Len) -->
     c_string(Pattern, PatternLen),
     c_string(Options, OptionsLen),
     { Len is PatternLen + OptionsLen }.
-value_compound(db_pointer(Text,ObjectId), 0x0C, Len) --> % Deprecated.
+value_compound(db_pointer(Text,ObjectId), 0x0c, Len) --> % Deprecated.
     string(Text, StrLen),
     { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, ObjectIdLen) },
     ObjectIdBytes,
     { Len is StrLen + ObjectIdLen }.
-value_compound(js(JsText), 0x0D, Len) -->
+value_compound(js(JsText), 0x0d, Len) -->
     string(JsText, Len).
-value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
+value_compound(js(JsText,MappingsDoc), 0x0f, Len) -->
     bytes_n(BytesForLen, 4),
     string(JsText, StrLen),
     document(MappingsDoc, DocLen),
@@ -127,7 +127,7 @@ value_compound(js(JsText,MappingsDoc), 0x0F, Len) -->
     { bson_bits:integer_bytes(Len, 4, little, BytesForLen) }.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp).
-value_compound(symbol(Atom), 0x0E, Len) -->
+value_compound(symbol(Atom), 0x0e, Len) -->
     string(Atom, Len).
 value_compound(Compound, _Tag, _Len) -->
     { throw(bson_error(invalid(Compound))) }.
@@ -192,9 +192,9 @@ int_size(Integer, N) -->
 value_constant(undefined, 0x06, 0) --> [], !. % Deprecated.
 value_constant(false,     0x08, 1) --> [0], !.
 value_constant(true,      0x08, 1) --> [1], !.
-value_constant(null,      0x0A, 0) --> [], !.
-value_constant(min,       0xFF, 0) --> [], !.
-value_constant(max,       0x7F, 0) --> [], !.
+value_constant(null,      0x0a, 0) --> [], !.
+value_constant(min,       0xff, 0) --> [], !.
+value_constant(max,       0x7f, 0) --> [], !.
 value_constant(Constant,  _,    _) -->
     { throw(bson_error(unknown_constant(Constant))) }.
 

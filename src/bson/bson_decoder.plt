@@ -382,11 +382,11 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0A, null', [true(Got == Expected)]) :-
+test('0x0a, null', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0A, % Tag.
+        0x0a, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
@@ -396,11 +396,11 @@ test('0x0A, null', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0B, regex', [true(Got == Expected)]) :-
+test('0x0b, regex', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0B, % Tag.
+        0x0b, % Tag.
             104,101,108,108,111, 0, % Ename.
             97, 0,  % Regex pattern.
             105, 0, % Regex options.
@@ -412,11 +412,11 @@ test('0x0B, regex', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0C, db pointer', [true(Got == Expected)]) :-
+test('0x0c, db pointer', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0C, % Tag.
+        0x0c, % Tag.
             104,101,108,108,111, 0, % Ename.
             2,0,0,0, % String's byte length, incl. nul.
             97, 0, % String data.
@@ -432,11 +432,11 @@ test('0x0C, db pointer', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0D, js', [true(Got == Expected)]) :-
+test('0x0d, js', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0D, % Tag.
+        0x0d, % Tag.
             106,115, 0, % Ename.
             9,0,0,0, % String's byte length, incl. nul.
             99,111,100,101,32,46,46,46, 0, % String data.
@@ -448,11 +448,11 @@ test('0x0D, js', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0E, symbol', [true(Got == Expected)]) :-
+test('0x0e, symbol', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0E, % Tag.
+        0x0e, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % String's byte length, incl. nul.
             97,116,111,109, 0, % String data.
@@ -464,11 +464,11 @@ test('0x0E, symbol', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x0F, js with scope', [true(Got == Expected)]) :-
+test('0x0f, js with scope', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x0F, % Tag.
+        0x0f, % Tag.
             106,115, 0, % Ename.
             xxx_not_impl,0,0,0, % Length of entire JS with scope.
             9,0,0,0, % String's byte length, incl. nul.
@@ -531,11 +531,11 @@ test('0x12, int64', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0xFF, min', [true(Got == Expected)]) :-
+test('0xff, min', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0xFF, % Tag.
+        0xff, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
@@ -545,11 +545,11 @@ test('0xFF, min', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x7F, max', [true(Got == Expected)]) :-
+test('0x7f, max', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
-        0x7F, % Tag.
+        0x7f, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
     ],
