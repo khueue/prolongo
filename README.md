@@ -1,8 +1,16 @@
 # MongoDB Driver for Prolog
 
+## Release History
+
+### Version 1.0.0 (2012-08-11)
+
+  * First real release.
+  * Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
+  * Add runnable example program (simple todo).
+
 ## Usage
 
-Not much here for now, but clone the repository and run `make` to compile
+Clone the repository and run `make` to compile
 the necessary C libraries and run the test suite. Part of the test suite
 requires a MongoDB instance running on localhost on the default port.
 See the example app below, and the tests (*.plt) in the src folder for
