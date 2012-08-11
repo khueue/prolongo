@@ -2,7 +2,7 @@
     [
         float_bytes/2,
         integer_bytes/4,
-        unsigned_bytes/4,
+        hex_bytes/2,
         fits_in_32_bits/1,
         fits_in_64_bits/1
     ]).
@@ -76,48 +76,6 @@ bytes_to_integer(big, Bytes, Integer) :- !,
     lists:reverse(Bytes, BytesLittle),
     bytes_to_integer(little, BytesLittle, Integer).
 
-%%  unsigned_bytes(+Unsigned, +NumBytes, +Endian, ?Bytes) is semidet.
-%%  unsigned_bytes(?Unsigned, +NumBytes, +Endian, +Bytes) is semidet.
-%
-%   True if Unsigned is the unsigned (possibly unbounded) integer
-%   represented by the bytes in Bytes, given enough NumBytes to hold
-%   Unsigned, and Endian little or big.
-
-unsigned_bytes(Unsigned, NumBytes, Endian, Bytes) :-
-    core:nonvar(Unsigned),
-    !,
-    unsigned_to_bytes(Unsigned, NumBytes, Endian, Bytes).
-unsigned_bytes(Unsigned, _NumBytes, Endian, Bytes) :-
-    core:nonvar(Bytes),
-    !,
-    bytes_to_unsigned(Endian, Bytes, Unsigned).
-
-unsigned_to_bytes(Unsigned, N, little, Bytes) :- !,
-    unsigned_to_bytes_aux(Unsigned, 0, N, Bytes).
-
-unsigned_to_bytes(Unsigned, N, big, Bytes) :- !,
-    unsigned_to_bytes(Unsigned, N, little, BytesLittle),
-    lists:reverse(BytesLittle, Bytes).
-
-unsigned_to_bytes_aux(_Unsigned, N, N, []) :- !.
-unsigned_to_bytes_aux(Unsigned, N0, N, [Byte|Bytes]) :-
-    Byte is (Unsigned >> (N0*8)) /\ 0xff,
-    N1 is N0 + 1,
-    unsigned_to_bytes_aux(Unsigned, N1, N, Bytes).
-
-bytes_to_unsigned(little, Bytes, Unsigned) :- !,
-    bytes_to_unsigned_aux(Bytes, 0, 0, Unsigned).
-
-bytes_to_unsigned(big, Bytes, Unsigned) :- !,
-    lists:reverse(Bytes, BytesLittle),
-    bytes_to_unsigned(little, BytesLittle, Unsigned).
-
-bytes_to_unsigned_aux([], _N, Unsigned, Unsigned).
-bytes_to_unsigned_aux([Byte|Bytes], N, Unsigned0, Unsigned) :-
-    Unsigned1 is (Byte << (N*8)) \/ Unsigned0,
-    N1 is N + 1,
-    bytes_to_unsigned_aux(Bytes, N1, Unsigned1, Unsigned).
-
 %%  fits_in_32_bits(+Integer) is semidet.
 %
 %   True if Integer can be stored as a signed 32-bit int.
@@ -131,3 +89,42 @@ fits_in_32_bits(Integer) :-
 
 fits_in_64_bits(Integer) :-
     -(2**(64-1)) =< Integer, Integer =< (2**(64-1))-1.
+
+%%  hex_bytes(+Hex, ?Bytes) is semidet.
+%%  hex_bytes(?Hex, +Bytes) is semidet.
+%
+%   True if Hex is the hexadecimal atom (without leading '0x')
+%   represented by the big-endian bytes in Bytes.
+
+hex_bytes(Hex, Bytes) :-
+    core:nonvar(Hex),
+    !,
+    core:atom_chars(Hex, HexChars),
+    hexchars_to_bytes(HexChars, Bytes).
+hex_bytes(Hex, Bytes) :-
+    core:nonvar(Bytes),
+    !,
+    bytes_to_hexchars(Bytes, HexAtoms),
+    core:atomic_list_concat(HexAtoms, Hex).
+
+hexchars_to_bytes([], []).
+hexchars_to_bytes([D1,D2|Digits], [Decimal|Pairs]) :-
+    core:atom_concat(D1, D2, DigitPair),
+    core:atom_concat('0x', DigitPair, HexAtom),
+    core:atom_number(HexAtom, Decimal),
+    hexchars_to_bytes(Digits, Pairs).
+
+bytes_to_hexchars([], []).
+bytes_to_hexchars([Byte|Bytes], [HexPadded|Hexes]) :-
+    number_to_hex(Byte, Hex),
+    left_pad_with_zero(Byte, Hex, HexPadded),
+    bytes_to_hexchars(Bytes, Hexes).
+
+number_to_hex(Number, Atom) :-
+    core:format(atom(Atom), '~16r', [Number]).
+
+left_pad_with_zero(Number, _Hex, Padded) :-
+    Number < 10,
+    !,
+    atom_concat('0', Number, Padded).
+left_pad_with_zero(_Number, Hex, Hex).

@@ -103,8 +103,8 @@ value_compound(binary(Subtype,Bytes), 0x05, Len) -->
     subtype(Subtype),
     Bytes,
     { Len is 4 + 1 + BytesLen }.
-value_compound(object_id(ObjectId), 0x07, Len) -->
-    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, Len) },
+value_compound(object_id(ObjectId), 0x07, 12) -->
+    { bson_bits:hex_bytes(ObjectId, ObjectIdBytes) },
     ObjectIdBytes.
 value_compound(utc(Timestamp), 0x09, 8) -->
     int64(Timestamp).
@@ -114,9 +114,9 @@ value_compound(regex(Pattern,Options), 0x0b, Len) -->
     { Len is PatternLen + OptionsLen }.
 value_compound(db_pointer(Text,ObjectId), 0x0c, Len) --> % Deprecated.
     string(Text, StrLen),
-    { object_id_atom_to_bytes(ObjectId, ObjectIdBytes, ObjectIdLen) },
+    { bson_bits:hex_bytes(ObjectId, ObjectIdBytes) },
     ObjectIdBytes,
-    { Len is StrLen + ObjectIdLen }.
+    { Len is StrLen + 12 }.
 value_compound(js(JsText), 0x0d, Len) -->
     string(JsText, Len).
 value_compound(js(JsText,MappingsDoc), 0x0f, Len) -->
@@ -214,8 +214,3 @@ string(Utf8, Len) -->
     int32(NumBytesWithNul),
     Bytes,
     [0].
-
-object_id_atom_to_bytes(ObjectIdAtom, Bytes, 12) :-
-    core:atom_concat('0x', ObjectIdAtom, HexAtom),
-    core:atom_number(HexAtom, Unsigned),
-    bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes).
