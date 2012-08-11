@@ -26,3 +26,12 @@ test('bytes to utf8', [true(Got == Expected)]) :-
     bson_unicode:utf8_bytes(Got, Bytes).
 
 :- end_tests('bson_unicode:utf8_bytes/2').
+
+:- begin_tests('bson_unicode:utf8_bytes_size/3').
+
+test('utf8 to bytes, with size', [true(Got == Expected)]) :-
+    Utf8 = 'ä\0ä',
+    Expected = 5,
+    bson_unicode:utf8_bytes_size(Utf8, _Bytes, Got).
+
+:- end_tests('bson_unicode:utf8_bytes_size/3').
