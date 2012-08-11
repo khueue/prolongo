@@ -123,8 +123,8 @@ bytes_to_hexchars([Byte|Bytes], [HexPadded|Hexes]) :-
 number_to_hex(Number, Atom) :-
     core:format(atom(Atom), '~16r', [Number]).
 
-left_pad_with_zero(Number, _Hex, Padded) :-
-    Number < 10,
-    !,
-    atom_concat('0', Number, Padded).
-left_pad_with_zero(_Number, Hex, Hex).
+left_pad_with_zero(Number, Hex, Hex) :-
+    Number > 9,
+    !.
+left_pad_with_zero(_Number, Hex, Padded) :-
+    atom_concat('0', Hex, Padded).
