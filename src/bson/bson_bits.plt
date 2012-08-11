@@ -195,48 +195,11 @@ test('64-bit little-endian, max+1', [true(Got \== Expected)]) :-
 
 :- end_tests('bson_bits:integer_bytes/4').
 
-:- begin_tests('bson_bits:unsigned_bytes/4').
+:- begin_tests('bson_bits:hex_bytes/2').
 
-test('unbounded unsigned little-endian, zero', [true(Got == Expected)]) :-
-    Expected = 0,
-    bson_bits:unsigned_bytes(Expected, 42, little, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, little, Bytes).
+test('hexatom bytes', [true(Got == Expected)]) :-
+    Expected = '47cc67093475061e3d95369d',
+    bson_bits:hex_bytes(Expected, Bytes),
+    bson_bits:hex_bytes(Got,      Bytes).
 
-test('unbounded unsigned little-endian, negative', [true(Got \== Expected)]) :-
-    Expected = -1, % Not unsigned.
-    bson_bits:unsigned_bytes(Expected, 42, little, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, little, Bytes).
-
-test('unbounded unsigned little-endian, 1', [true(Got == Expected)]) :-
-    Expected = 1,
-    bson_bits:unsigned_bytes(Expected, 42, little, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, little, Bytes).
-
-test('unbounded unsigned little-endian, huge', [true(Got == Expected)]) :-
-    Expected = 92233720368547758080000000000000000,
-    bson_bits:unsigned_bytes(Expected, 42, little, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, little, Bytes).
-
-% ------------------------------------
-
-test('unbounded unsigned big-endian, zero', [true(Got == Expected)]) :-
-    Expected = 0,
-    bson_bits:unsigned_bytes(Expected, 42, big, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, big, Bytes).
-
-test('unbounded unsigned big-endian, negative', [true(Got \== Expected)]) :-
-    Expected = -1, % Not unsigned.
-    bson_bits:unsigned_bytes(Expected, 42, big, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, big, Bytes).
-
-test('unbounded unsigned big-endian, 1', [true(Got == Expected)]) :-
-    Expected = 1,
-    bson_bits:unsigned_bytes(Expected, 42, big, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, big, Bytes).
-
-test('unbounded unsigned big-endian, huge', [true(Got == Expected)]) :-
-    Expected = 92233720368547758080000000000000000,
-    bson_bits:unsigned_bytes(Expected, 42, big, Bytes),
-    bson_bits:unsigned_bytes(Got,      42, big, Bytes).
-
-:- end_tests('bson_bits:unsigned_bytes/4').
+:- end_tests('bson_bits:hex_bytes/2').

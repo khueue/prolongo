@@ -147,8 +147,7 @@ pairs_keys_values([Key-Value|Pairs], [Key|Keys], [Value|Values]) :-
 
 object_id(ObjectId) -->
     bytes_n(Bytes, 12),
-    { bson_bits:unsigned_bytes(Unsigned, 12, big, Bytes) },
-    { number_to_hex(Unsigned, ObjectId) }.
+    { bson_bits:hex_bytes(ObjectId, Bytes) }.
 
 subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.
@@ -198,6 +197,3 @@ int_size(Integer, N) -->
 double(Double) -->
     bytes_n(Bytes, 8),
     { bson_bits:float_bytes(Double, Bytes) }.
-
-number_to_hex(Number, Atom) :-
-    core:format(atom(Atom), '~16r', [Number]).
