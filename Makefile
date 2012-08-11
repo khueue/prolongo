@@ -4,13 +4,7 @@ CC        = gcc
 FLAGS     = -shared -fPIC -O4 -Wall -Wextra -cc-options,-ansi,-pedantic
 
 .PHONY: all
-all: trim compile test
-
-# Remove trailing whitespace and such. Not important.
-.PHONY: trim
-trim:
-	clear
-	@- trim *.md *.pl* ext/*.c src/*.pl* src/bson/*.pl* src/mongo/*.pl*
+all: compile test
 
 .PHONY: test
 test: compile
