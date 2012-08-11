@@ -4,9 +4,9 @@
 
 ### Version 1.0.0 (2012-08-11)
 
-  * First real release.
-  * Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
-  * Add runnable example program (simple todo).
+ * First real release.
+ * Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
+ * Add runnable example program (simple todo).
 
 ## Usage
 
@@ -113,10 +113,11 @@ a MongoDB instance is running on localhost:
 
 ## Dependencies
 
- * SWI-Prolog (tested on Mac OS X using SWI 5.10.[2|4])
+ * SWI-Prolog (tested on Mac OS X using SWI 6.0.2)
     * Autoloading must be turned on (default).
- * ANSI C compiler (modify Makefile if not GCC) (tested on Mac OS X using GCC and Clang)
- * MongoDB (tested on Mac OS X using MongoDB 1.8.[0|2] and 2.0.6)
+ * ANSI C compiler (modify Makefile if not GCC) (tested on Mac OS X
+   using GCC and Clang)
+ * MongoDB (tested on Mac OS X using MongoDB 2.0.6)
 
 ## Coding Guidelines
 
@@ -125,8 +126,8 @@ a MongoDB instance is running on localhost:
  * Always use module prefixes (mymodule:predicate(...)) in order to
    clarify where things are coming from.
  * Always use the "made-up" module prefix "core:" when calling
-   built-in predicates. This is completely unnecessary, and maybe
-   a bit weird, but I think it is a good idea as long as it doesn't
+   built-in predicates. This is completely unnecessary, and doesn't even
+   work in all cases, but I think it is a good idea as long as it doesn't
    cause any problems. This decision may need to be revised when
    compatibility between different Prologs is investigated.
  * Avoid the if-then-else construct. It just looks ugly.

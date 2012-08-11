@@ -1,3 +1,3 @@
-% Directives to be included by all files.
+% Directives to be textually included by all files.
 
 :- encoding(utf8).
