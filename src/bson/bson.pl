@@ -47,7 +47,6 @@ spec_version([1,0]).
 %
 %   True if Bytes is the flat-list BSON byte-encoding of all the
 %   documents in the list Docs.
-%   NumBytes is the number of bytes in Bytes. XXXXXXXXXXXXX ???
 %
 %   @param Docs is a list of key-value pair lists.
 %   @param Bytes is a list of bytes (in 0..255).
