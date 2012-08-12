@@ -197,9 +197,18 @@ test('64-bit little-endian, max+1', [true(Got \== Expected)]) :-
 
 :- begin_tests('bson_bits:hex_bytes/2').
 
-test('hexatom bytes', [true(Got == Expected)]) :-
-    Expected = '47cc67093475061e3d95369d',
-    bson_bits:hex_bytes(Expected, Bytes),
-    bson_bits:hex_bytes(Got,      Bytes).
+test('hex to bytes', [true(Got == Expected)]) :-
+    Hex = '47cc6709',
+    Expected = [0x47,0xcc,0x67,0x09],
+    bson_bits:hex_bytes(Hex, Got).
+
+test('bytes to hex', [true(Got == Expected)]) :-
+    Bytes = [0x47,0xcc,0x67,0x09],
+    Expected = '47cc6709',
+    bson_bits:hex_bytes(Got, Bytes).
+
+test('bytes to hex, odd length should fail', [fail]) :-
+    HexOddLength = '47c',
+    bson_bits:hex_bytes(HexOddLength, _Bytes).
 
 :- end_tests('bson_bits:hex_bytes/2').
