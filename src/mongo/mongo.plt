@@ -1,17 +1,12 @@
 :- include(misc(common)).
 
+:- use_module(mongo_test_helper, []).
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 
-test_database('prolongo_test_suite').
-test_collection('testcoll').
-
 up(Conn, Coll) :-
     mongo:new_connection(Conn),
-    test_database(DbName),
-    mongo:get_database(Conn, DbName, Db),
-    test_collection(CollName),
-    mongo:get_collection(Db, CollName, Coll).
+    mongo_test_helper:collection(Conn, Coll).
 
 down(Conn) :-
     mongo:free_connection(Conn).
@@ -242,12 +237,12 @@ test('list collection names', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 test('list database infos', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
     mongo:list_database_infos(Conn, Infos),
-    test_database(DbName),
+    mongo_test_helper:database_name(DbName),
     bson:doc_get_strict(Infos, DbName, _).
 
 test('list database names', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
     mongo:list_database_names(Conn, Names),
-    test_database(DbName),
+    mongo_test_helper:database_name(DbName),
     lists:member(DbName, Names),
     !. % Not interested in member choices.
 
