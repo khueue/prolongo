@@ -55,15 +55,15 @@ spec_version([1,0]).
 %   @throws bson_error(Reason)
 
 docs_bytes(Docs, Bytes) :-
-    core:ground(Docs),
-    !,
-    bson_encoder:docs_to_bytes(Docs, Bytes).
-docs_bytes(Docs, Bytes) :-
-    core:ground(Bytes),
+    core:nonvar(Bytes),
     !,
     bson_decoder:bytes_to_docs(Bytes, Docs).
+docs_bytes(Docs, Bytes) :-
+    core:nonvar(Docs),
+    !,
+    bson_encoder:docs_to_bytes(Docs, Bytes).
 docs_bytes(_Docs, _Bytes) :-
-    throw(bson_error('at least one arg must be ground')).
+    throw(bson_error('at least one arg must be instantiated')).
 
 %%  doc_bytes(+Doc, ?Bytes) is semidet.
 %%  doc_bytes(?Doc, +Bytes) is semidet.
@@ -76,15 +76,15 @@ docs_bytes(_Docs, _Bytes) :-
 %   @throws bson_error(Reason)
 
 doc_bytes(Doc, Bytes) :-
-    core:ground(Doc),
-    !,
-    bson_encoder:doc_to_bytes(Doc, Bytes).
-doc_bytes(Doc, Bytes) :-
-    core:ground(Bytes),
+    core:nonvar(Bytes),
     !,
     bson_decoder:bytes_to_doc(Bytes, Doc).
+doc_bytes(Doc, Bytes) :-
+    core:nonvar(Doc),
+    !,
+    bson_encoder:doc_to_bytes(Doc, Bytes).
 doc_bytes(_Doc, _Bytes) :-
-    throw(bson_error('at least one arg must be ground')).
+    throw(bson_error('at least one arg must be instantiated')).
 
 %%  doc_is_valid(+Doc) is semidet.
 %
