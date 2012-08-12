@@ -94,7 +94,8 @@ fits_in_64_bits(Integer) :-
 %%  hex_bytes(?Hex, +Bytes) is semidet.
 %
 %   True if Hex is the hexadecimal atom (without leading '0x')
-%   represented by the big-endian bytes in Bytes.
+%   represented by the big-endian bytes in Bytes. Hex must have even
+%   number of chars (each pair is a byte).
 
 hex_bytes(Hex, Bytes) :-
     core:nonvar(Hex),
@@ -108,17 +109,16 @@ hex_bytes(Hex, Bytes) :-
     core:atomic_list_concat(HexAtoms, Hex).
 
 hexchars_to_bytes([], []).
-hexchars_to_bytes([D1,D2|Digits], [Decimal|Pairs]) :-
-    core:atom_concat(D1, D2, DigitPair),
-    core:atom_concat('0x', DigitPair, HexAtom),
-    core:atom_number(HexAtom, Decimal),
-    hexchars_to_bytes(Digits, Pairs).
+hexchars_to_bytes([C1,C2|Chars], [Byte|Bytes]) :-
+    core:atomic_list_concat(['0x',C1,C2], ByteAsHexAtom),
+    core:atom_number(ByteAsHexAtom, Byte),
+    hexchars_to_bytes(Chars, Bytes).
 
 bytes_to_hexchars([], []).
-bytes_to_hexchars([Byte|Bytes], [HexPadded|Hexes]) :-
+bytes_to_hexchars([Byte|Bytes], [HexPadded|Chars]) :-
     number_to_hex(Byte, Hex),
     left_pad_with_zero(Byte, Hex, HexPadded),
-    bytes_to_hexchars(Bytes, Hexes).
+    bytes_to_hexchars(Bytes, Chars).
 
 number_to_hex(Number, Atom) :-
     core:format(atom(Atom), '~16r', [Number]).
