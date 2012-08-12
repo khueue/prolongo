@@ -11,11 +11,6 @@ test: compile
 	@ echo "--- Run tests and exit ..."
 	time $(PROLOG) -s load -g test -t halt
 
-.PHONY: bench
-bench: compile
-	@ echo "--- Run benchmark ..."
-	$(PROLOG) -s load -g bench -t halt
-
 .PHONY: cov
 cov: compile
 	@ echo "--- Run tests, print test coverage and exit ..."
