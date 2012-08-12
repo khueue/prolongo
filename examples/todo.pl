@@ -13,7 +13,7 @@ todo :-
         mongo:free_connection(Connection)).
 
 todo_run(Connection) :-
-    mongo:get_database(Connection, prolongo_test, Database),
+    mongo:get_database(Connection, prolongo_example_todo, Database),
     mongo:get_collection(Database, items, Collection),
     action(list, Collection).
 
