@@ -3,7 +3,7 @@
 # Tests can be run manually by a simple `make`.
 guard :shell do
   watch /.*/ do |m|
-    if m[0] =~ /^lib/
+    if m[0] =~ /^lib/ || m[0] == 'repl_log.pl'
       # Don't trigger on dynamically generated files.
     else
       system "make"

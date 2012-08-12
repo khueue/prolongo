@@ -9,5 +9,5 @@ Icon?
 
 lib/*
 *.txt
-querylog.pl
+repl_log.pl
 private/*

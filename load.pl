@@ -40,7 +40,7 @@ repl :-
     load_project_modules,
     load_project_tests,
     use_module(library(test_wizard), []),
-    set_prolog_flag(log_query_file, 'querylog.pl').
+    set_prolog_flag(log_query_file, 'repl_log.pl').
 
 cov :-
     load_project_modules,
