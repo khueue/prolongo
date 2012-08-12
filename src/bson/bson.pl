@@ -1,6 +1,7 @@
 :- module(bson,
     [
         doc_bytes/2,
+        docs_bytes/2,
         doc_is_valid/1,
         doc_empty/1,
         doc_get/3,
