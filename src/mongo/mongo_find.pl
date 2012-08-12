@@ -99,7 +99,7 @@ throw_on_error(Flags, [ErrorDoc]) :-
 throw_on_error(_Flags, _Docs). % Query succeeded.
 
 error_bit_is_set(Flags) :-
-    2 is Flags /\ 2.
+    0 < Flags /\ 2.
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, Bytes) :-
     phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags), Bytes),
