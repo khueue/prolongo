@@ -51,22 +51,22 @@ test('32-bit big-endian, verify endian', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(1, 4, big, Got).
 
 test('32-bit big-endian, min', [true(Got == Expected)]) :-
-    Expected = -2147483648,
+    Expected is -2**31,
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
 test('32-bit big-endian, min-1', [true(Got \== Expected)]) :-
-    Expected = -2147483649, % Too low.
+    Expected is -2**31 - 1, % Too low.
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
 test('32-bit big-endian, max', [true(Got == Expected)]) :-
-    Expected = 2147483647,
+    Expected is 2**31 - 1,
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
 test('32-bit big-endian, max+1', [true(Got \== Expected)]) :-
-    Expected = 2147483648, % Too high.
+    Expected is 2**31, % Too high.
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
@@ -92,22 +92,22 @@ test('32-bit little-endian, verify endian', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(1, 4, little, Got).
 
 test('32-bit little-endian, min', [true(Got == Expected)]) :-
-    Expected = -2147483648,
+    Expected is -2**31,
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
 test('32-bit little-endian, min-1', [true(Got \== Expected)]) :-
-    Expected = -2147483649, % Too low.
+    Expected is -2**31 - 1, % Too low.
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
 test('32-bit little-endian, max', [true(Got == Expected)]) :-
-    Expected = 2147483647,
+    Expected is 2**31 - 1,
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
 test('32-bit little-endian, max+1', [true(Got \== Expected)]) :-
-    Expected = 2147483648, % Too high.
+    Expected is 2**31, % Too high.
     bson_bits:integer_bytes(Expected, 4, little, Bytes),
     bson_bits:integer_bytes(Got,      4, little, Bytes).
 
@@ -133,22 +133,22 @@ test('64-bit big-endian, verify endian', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(1, 8, big, Got).
 
 test('64-bit big-endian, min', [true(Got == Expected)]) :-
-    Expected = -9223372036854775808,
+    Expected is -2**63,
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
 test('64-bit big-endian, min-1', [true(Got \== Expected)]) :-
-    Expected = -9223372036854775809, % Too low.
+    Expected is -2**63 - 1, % Too low.
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
 test('64-bit big-endian, max', [true(Got == Expected)]) :-
-    Expected = 9223372036854775807,
+    Expected is 2**63 - 1,
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
 test('64-bit big-endian, max+1', [true(Got \== Expected)]) :-
-    Expected = 9223372036854775808, % Too high.
+    Expected is 2**63, % Too high.
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
@@ -174,22 +174,22 @@ test('64-bit little-endian, verify endian', [true(Got == Expected)]) :-
     bson_bits:integer_bytes(1, 8, little, Got).
 
 test('64-bit little-endian, min', [true(Got == Expected)]) :-
-    Expected = -9223372036854775808,
+    Expected is -2**63,
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
 
 test('64-bit little-endian, min-1', [true(Got \== Expected)]) :-
-    Expected = -9223372036854775809, % Too low.
+    Expected is -2**63 - 1, % Too low.
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
 
 test('64-bit little-endian, max', [true(Got == Expected)]) :-
-    Expected = 9223372036854775807,
+    Expected is 2**63 - 1,
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
 
 test('64-bit little-endian, max+1', [true(Got \== Expected)]) :-
-    Expected = 9223372036854775808, % Too high.
+    Expected is 2**63, % Too high.
     bson_bits:integer_bytes(Expected, 8, little, Bytes),
     bson_bits:integer_bytes(Got,      8, little, Bytes).
 
