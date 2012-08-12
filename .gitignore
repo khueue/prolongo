@@ -9,5 +9,4 @@ Icon?
 
 lib/*
 *.txt
-repl_log.pl
 private/*
