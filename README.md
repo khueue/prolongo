@@ -117,7 +117,7 @@ a MongoDB instance is running on localhost:
     * Autoloading must be turned on (default).
  * ANSI C compiler (modify Makefile if not GCC) (tested on Mac OS X
    using GCC and Clang)
- * MongoDB (tested on Mac OS X using MongoDB 2.0.6)
+ * MongoDB (tested on Mac OS X using MongoDB 2.0.7)
 
 ## Coding Guidelines
 
