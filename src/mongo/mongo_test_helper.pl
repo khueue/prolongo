@@ -4,7 +4,10 @@
         collection_name/1,
         database/2,
         drop_database/0,
-        collection/2
+        collection/2,
+        up/2,
+        down/1,
+        create_n_docs/2
     ]).
 
 /** <module> Various helpers for dealing with the test database.
@@ -47,3 +50,15 @@ drop_database :-
     database(Conn, Db),
     mongo:drop_database(Db),
     mongo:free_connection(Conn).
+
+up(Conn, Coll) :-
+    mongo:new_connection(Conn),
+    collection(Conn, Coll).
+
+down(Conn) :-
+    mongo:free_connection(Conn).
+
+create_n_docs(0, []) :- !.
+create_n_docs(N, [[hello-world,number-N]|Docs]) :-
+    N1 is N - 1,
+    create_n_docs(N1, Docs).

@@ -4,21 +4,12 @@
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 
-up(Conn, Coll) :-
-    mongo:new_connection(Conn),
-    mongo_test_helper:collection(Conn, Coll).
-
-down(Conn) :-
-    mongo:free_connection(Conn).
-
-create_n_docs(0, []) :- !.
-create_n_docs(N, [[hello-world,number-N]|Docs]) :-
-    N1 is N - 1,
-    create_n_docs(N1, Docs).
-
 :- begin_tests('mongo:upsert/3').
 
-test('upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('upsert', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:delete(Coll, [hello-me]),
     mongo:upsert(Coll, [hello-world], [hello-me]),
@@ -29,7 +20,10 @@ test('upsert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:update/3').
 
-test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('update normal', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:delete(Coll, [hello-me]),
     mongo:insert(Coll, [hello-world]),
@@ -41,7 +35,10 @@ test('update normal', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:update_all/3').
 
-test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('update multi', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:delete(Coll, [hello-me]),
     mongo:insert(Coll, [hello-world,num-1]),
@@ -62,7 +59,10 @@ test('update multi', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:delete/2').
 
-test('delete', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('delete', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world]),
@@ -74,7 +74,10 @@ test('delete', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:delete/3').
 
-test('delete single', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('delete single', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world]),
@@ -85,12 +88,17 @@ test('delete single', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:find/7').
 
-test('error', [setup(up(Conn,Coll)),cleanup(down(Conn)),
-    throws(mongo_error(_ErrorDoc))])
-    :-
+test('error', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn)),
+        throws(mongo_error(_ErrorDoc))
+    ]) :-
     mongo:find(Coll, ['$where'-world], [], 0, 0, _Cursor, _Docs).
 
-test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('cursor', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, [hello-world,number-1]),
     mongo:insert(Coll, [hello-world,number-2]),
@@ -123,7 +131,10 @@ test('cursor', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
     ],
     \+ mongo:cursor_has_more(Cursor2).
 
-test('insert many single, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('insert many single, cursor exhaust', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
     insert_n_docs(Coll, 1000),
     mongo:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
@@ -138,9 +149,12 @@ insert_n_docs(Coll, N) :-
     N1 is N - 1,
     insert_n_docs(Coll, N1).
 
-test('insert batch, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('insert batch, cursor exhaust', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
-    create_n_docs(1000, Docs),
+    mongo_test_helper:create_n_docs(1000, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [number-1], 0, 0, Cursor, Docs0),
     mongo:cursor_exhaust(Cursor, DocsRest),
@@ -148,9 +162,12 @@ test('insert batch, cursor exhaust', [setup(up(Conn,Coll)),cleanup(down(Conn))])
     lists:length(DocsRest, N),
     1000 is N0 + N.
 
-test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('insert batch, find all', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
-    create_n_docs(1000, Docs),
+    mongo_test_helper:create_n_docs(1000, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find_all(Coll, [hello-world], [number-1], DocsAll),
     lists:length(DocsAll, 1000).
@@ -162,9 +179,12 @@ test('insert batch, find_all', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:cursor_kill/1').
 
-test('cursor kill', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('cursor kill', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
-    create_n_docs(20, Docs),
+    mongo_test_helper:create_n_docs(20, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor, _NotAllDocs),
     mongo:cursor_kill(Cursor),
@@ -174,9 +194,12 @@ test('cursor kill', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:cursor_kill_batch/1').
 
-test('cursor kill batch', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('cursor kill batch', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:delete(Coll, [hello-world]),
-    create_n_docs(20, Docs),
+    mongo_test_helper:create_n_docs(20, Docs),
     mongo:insert_batch(Coll, [], Docs),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor1, _NotAllDocs1),
     mongo:find(Coll, [hello-world], [], 0, 10, Cursor2, _NotAllDocs2),
@@ -188,14 +211,20 @@ test('cursor kill batch', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:find_one/3,4').
 
-test('entire doc', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('entire doc', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     Doc = [hello-world,number-42],
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, Doc),
     mongo:find_one(Coll, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
-test('return fields selector', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('return fields selector', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     Doc = [hello-world,number-42],
     mongo:delete(Coll, [hello-world]),
     mongo:insert(Coll, Doc),
@@ -209,7 +238,10 @@ test('return fields selector', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo:insert/2').
 
-test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('insert', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     util:ms_since_epoch(MilliSeconds),
     Doc =
     [
@@ -223,42 +255,66 @@ test('insert', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
 
 :- begin_tests('mongo commands').
 
-test('list commands', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('list commands', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:collection_database(Coll, Database),
     mongo:list_commands(Database, Doc),
     bson:doc_get_strict(Doc, commands, _).
 
-test('list collection names', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('list collection names', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:collection_database(Coll, Database),
     mongo:list_collection_names(Database, Names),
     lists:member('system.indexes', Names),
     lists:member('testcoll', Names),
     !. % Not interested in member choices.
 
-test('list database infos', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
+test('list database infos', [
+        setup(mongo_test_helper:up(Conn,_Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:list_database_infos(Conn, Infos),
     mongo_test_helper:database_name(DbName),
     bson:doc_get_strict(Infos, DbName, _).
 
-test('list database names', [setup(up(Conn,_Coll)),cleanup(down(Conn))]) :-
+test('list database names', [
+        setup(mongo_test_helper:up(Conn,_Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:list_database_names(Conn, Names),
     mongo_test_helper:database_name(DbName),
     lists:member(DbName, Names),
     !. % Not interested in member choices.
 
-test('drop collection', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('drop collection', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:drop_collection(Coll).
 
-test('drop database', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('drop database', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:collection_database(Coll, Database),
     mongo:drop_database(Database).
 
-test('generic command', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('generic command', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:collection_database(Coll, Database),
     mongo:command(Database, [profile - -1], Doc),
     bson:doc_get_strict(Doc, ok, _).
 
-test('command get last error', [setup(up(Conn,Coll)),cleanup(down(Conn))]) :-
+test('command get last error', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
     mongo:collection_database(Coll, Database),
     mongo:get_last_error(Database, Doc),
     bson:doc_get_strict(Doc, ok, _).
