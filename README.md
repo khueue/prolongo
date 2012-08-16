@@ -3,7 +3,6 @@
 ## Todo
 
  * Move BSON to separate repository (figure out how to load it properly).
- * Move mongo tests to separate files.
  * Document predicates properly.
  * Reduce amount of arguments to `find` predicates (use dict).
 
