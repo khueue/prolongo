@@ -10,7 +10,7 @@
         create_n_docs/2
     ]).
 
-/** <module> Various helpers for dealing with the test database.
+/** <module> Helpers for dealing with the test database.
  */
 
 :- include(misc(common)).

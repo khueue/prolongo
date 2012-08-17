@@ -10,7 +10,7 @@
         get_last_error/2
     ]).
 
-/** <module> xxxxxxx
+/** <module> Command handling.
  */
 
 :- include(misc(common)).

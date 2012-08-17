@@ -8,7 +8,7 @@
         read_reply/4
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Connection handling and response parsing.
  */
 
 :- include(misc(common)).
@@ -21,9 +21,9 @@
 %%  new_connection(-Connection) is semidet.
 %%  new_connection(+Host, +Port, -Connection) is semidet.
 %
-%   xxx True if Mongo represents an opaque handle to a new MongoDB
-%   server connection. Host and Port may be supplied, otherwise
-%   the defaults (see mongo_defaults) are used.
+%   True if Connection represents an opaque handle to a new MongoDB
+%   server connection. Default values (see mongo_defaults) are used unless
+%   Host and Port are provided.
 
 new_connection(Connection) :-
     mongo_defaults:host(Host),
@@ -39,7 +39,7 @@ connection_socket(Connection, Socket) :-
 
 %%  free_connection(+Connection) is det.
 %
-%   xxx Frees any resources associated with the Mongo handle,
+%   Frees any resources associated with the Connection handle,
 %   rendering it unusable.
 
 free_connection(Connection) :-
@@ -48,23 +48,24 @@ free_connection(Connection) :-
 
 %%  get_database(+Connection, +DatabaseName, -Database).
 %
-%   Database is a handle to the database DatabaseName. No communication
-%   is performed so the actual database might or might not exist.
+%   True if Database is a handle to the database called DatabaseName.
+%   No communication is performed, so the actual database might or
+%   might not already exist.
 
 get_database(Connection, DatabaseName, Database) :-
     mongo_database:new_database(Connection, DatabaseName, Database).
 
-%%  send_to_server.
+%%  send_to_server(+Connection, +Bytes).
 %
-%   xxxxxxxxx
+%   True if Bytes are sent over Connection.
 
 send_to_server(Connection, Bytes) :-
     connection_socket(Connection, Socket),
     mongo_socket:send_bytes(Socket, Bytes).
 
-%%  read_reply.
+%%  read_reply(+Connection, -Header, -Info, -Docs).
 %
-%   xxxxxxxx
+%   XXX
 
 read_reply(Connection, Header, Info, Docs) :-
     connection_socket(Connection, Socket),
@@ -84,7 +85,7 @@ read_rest_of_message(Socket, TotalLength, Bytes) :-
     mongo_socket:receive_n_bytes(Socket, LengthRest, Bytes).
 
 parse_response(Bytes, Header, Info, Docs) :-
-    % inspect_response_bytes(Bytes),
+    % inspect_response_bytes(Bytes), % For debugging.
     phrase(parse_response_meta(Header, Info), Bytes, RestBytes),
     parse_response_docs(RestBytes, Docs).
 
@@ -109,7 +110,7 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-/* For debugging:
+/* % For debugging:
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
     phrase(inspect_response_paperwork, Bytes, Rest),

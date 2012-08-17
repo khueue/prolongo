@@ -4,7 +4,7 @@
         delete/3
     ]).
 
-/** <module> xxxx
+/** <module> Document deletion.
  */
 
 :- include(misc(common)).

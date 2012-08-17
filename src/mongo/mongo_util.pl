@@ -3,7 +3,7 @@
         options_flags/3
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Helpers.
  */
 
 :- include(misc(common)).
