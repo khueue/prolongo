@@ -27,7 +27,7 @@
 
 :- use_module(bson_decoder, []).
 :- use_module(bson_encoder, []).
-:- use_module(bson(bson_format), []). % Temp during dev XXX.
+% :- use_module(bson(bson_format), []). % Useful during dev.
 
 %%  version(?Version) is semidet.
 %
