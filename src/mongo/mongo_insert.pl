@@ -26,17 +26,18 @@ insert(Collection, Doc) :-
 
 %%  insert_batch(+Collection, +Options, +Docs).
 %
-%   True if Docs are inserted into Collection using Options (keep_going).
+%   True if Docs are inserted into Collection using Options, where
+%   possible options are:
+%       keep_going
 
 insert_batch(Collection, Options, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    options_flags(Options, Flags),
+    mongo_util:options_flags(Options, mongo_find:option_value, Flags),
     build_bytes_for_insert_batch(Namespace, Flags, Docs, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
 
-options_flags([keep_going], 1) :- !.
-options_flags([],           0) :- !.
+option_value(keep_going, 1).
 
 build_bytes_for_insert_batch(Namespace, Flags, Docs, Bytes) :-
     phrase(build_bytes_for_insert_batch(Namespace, Flags, Docs), Bytes),
