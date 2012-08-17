@@ -8,7 +8,7 @@
         read_reply/4
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Connection handling and response parsing.
  */
 
 :- include(misc(common)).
@@ -109,7 +109,7 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-/* For debugging:
+/* % For debugging:
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
     phrase(inspect_response_paperwork, Bytes, Rest),
