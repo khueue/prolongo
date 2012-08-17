@@ -25,7 +25,7 @@
 
 upsert(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    options_flags([upsert], Flags),
+    mongo_util:options_flags([upsert], mongo_update:option_value, Flags),
     build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
@@ -37,7 +37,7 @@ upsert(Collection, Selector, Modifier) :-
 
 update_all(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    options_flags([multi], Flags),
+    mongo_util:options_flags([multi], mongo_update:option_value, Flags),
     build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
@@ -49,7 +49,7 @@ update_all(Collection, Selector, Modifier) :-
 
 update(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    options_flags([], Flags),
+    mongo_util:options_flags([], mongo_update:option_value, Flags),
     build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
@@ -66,7 +66,5 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
     mongo_bytes:bson_doc(Selector),
     mongo_bytes:bson_doc(Modifier).
 
-% xxx update with new strategy, look at find
-options_flags([],       0) :- !.
-options_flags([upsert], 1) :- !.
-options_flags([multi],  2) :- !.
+option_value(upsert, 1).
+option_value(multi,  2).
