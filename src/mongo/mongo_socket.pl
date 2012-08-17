@@ -6,7 +6,7 @@
         receive_n_bytes/3
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Low-level socket handling.
  */
 
 :- include(misc(common)).

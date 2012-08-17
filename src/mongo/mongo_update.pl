@@ -5,7 +5,7 @@
         update_all/3
     ]).
 
-/** <module> xxxxxxxx
+/** <module> Document updating.
  */
 
 :- include(misc(common)).

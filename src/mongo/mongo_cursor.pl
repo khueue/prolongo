@@ -7,7 +7,7 @@
         cursor_exhaust/2
     ]).
 
-/** <module> xxxx
+/** <module> Cursor handling.
  */
 
 :- include(misc(common)).

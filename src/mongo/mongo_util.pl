@@ -3,7 +3,7 @@
         options_flags/3
     ]).
 
-/** <module> Predicates for various helper routines.
+/** <module> Helpers.
  */
 
 :- include(misc(common)).

@@ -7,7 +7,7 @@
         collection_connection/2
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Collection handling.
  */
 
 :- include(misc(common)).

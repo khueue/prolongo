@@ -4,7 +4,7 @@
         insert_batch/3
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Document insertion.
  */
 
 :- include(misc(common)).

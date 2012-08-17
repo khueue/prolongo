@@ -6,7 +6,7 @@
         get_collection/3
     ]).
 
-/** <module> xxxxxxxxx
+/** <module> Database handling.
  */
 
 :- include(misc(common)).

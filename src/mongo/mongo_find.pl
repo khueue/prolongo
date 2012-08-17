@@ -7,7 +7,7 @@
         find/8
     ]).
 
-/** <module> xxxx
+/** <module> Document finding.
  */
 
 :- include(misc(common)).
