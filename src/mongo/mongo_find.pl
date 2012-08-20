@@ -84,7 +84,7 @@ find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
 
 find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_flags(Options, mongo_find:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_find:option_value, Flags),
     build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
@@ -96,7 +96,8 @@ find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
 throw_on_error(Flags, [ErrorDoc]) :-
     error_bit_is_set(Flags),
     throw(mongo_error(ErrorDoc)).
-throw_on_error(_Flags, _Docs). % Query succeeded.
+throw_on_error(_Flags, _Docs).
+    % Query succeeded.
 
 error_bit_is_set(Flags) :-
     0 < Flags /\ 2.

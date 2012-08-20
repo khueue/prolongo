@@ -1,6 +1,6 @@
 :- module(mongo_util,
     [
-        options_flags/3
+        options_to_bitmask/3
     ]).
 
 /** <module> Helpers.
@@ -8,21 +8,20 @@
 
 :- include(misc(common)).
 
-/*
-options_to_values(Pred, Options, Values) :-
-    apply:maplist(Pred, Options, Values).
+%%  options_to_bitmask(Options, PredOptionToValue, BitMask) is semidet.
+%
+%   True if BitMask is an unsigned integer with bits set according to
+%   which Options are given, where each option is mapped to a value
+%   using PredOptionToValue.
 
-values_to_bitpattern([], 0).
-values_to_bitpattern([V|Vs], Pattern) :-
-    values_to_bitpattern(Vs, Pattern0),
-    Pattern is Pattern0 \/ V.
-*/
+options_to_bitmask(Options, Pred, BitMask) :-
+    options_to_bitmask(Options, Pred, 0, BitMask).
 
-options_flags([], _Pred, 0).
-options_flags([Option|Options], Pred, Value) :-
-    options_flags(Options, Pred, Value0),
-    call(Pred, Option, Value1),
-    Value is Value0 \/ Value1,
-    !.
-options_flags([Option|_], _Pred, _Value) :-
+options_to_bitmask([], _Pred, BitMask, BitMask).
+options_to_bitmask([Option|Options], Pred, BitMask0, BitMask) :-
+    call(Pred, Option, Value),
+    !,
+    BitMask1 is BitMask0 \/ Value,
+    options_to_bitmask(Options, Pred, BitMask1, BitMask).
+options_to_bitmask([Option|_], _, _, _) :-
     throw(mongo_error('unknown option', Option)).

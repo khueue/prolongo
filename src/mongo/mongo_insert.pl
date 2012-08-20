@@ -32,7 +32,7 @@ insert(Collection, Doc) :-
 
 insert_batch(Collection, Options, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_flags(Options, mongo_find:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_find:option_value, Flags),
     build_bytes_for_insert_batch(Namespace, Flags, Docs, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
