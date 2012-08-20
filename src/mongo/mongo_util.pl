@@ -8,11 +8,11 @@
 
 :- include(misc(common)).
 
-%%  options_to_bitmask(Options, PredOptionToValue, BitMask) is semidet.
+%%  options_to_bitmask(+Options, +PredOptionToValue, ?BitMask) is semidet.
 %
 %   True if BitMask is an unsigned integer with bits set according to
-%   which Options are given, where each option is mapped to a value
-%   using PredOptionToValue.
+%   which Options are given, where each option gets its value from
+%   calling PredOptionToValue(Option, Value).
 
 options_to_bitmask(Options, Pred, BitMask) :-
     options_to_bitmask(Options, Pred, 0, BitMask).
