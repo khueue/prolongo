@@ -139,4 +139,6 @@ doc_ok(Doc) :-
     bson:doc_get_strict(Doc, ok, Value),
     doc_ok_value(Value).
 
-doc_ok_value(1.0).
+doc_ok_value(1.0) :- !.
+doc_ok_value(Unknown) :-
+    throw(mongo_error('unknown document okay value', Unknown)).
