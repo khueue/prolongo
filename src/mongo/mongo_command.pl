@@ -131,15 +131,12 @@ repack_collection([name-Namespace], Name) :-
     core:atomic_list_concat([_|L], '.', Namespace),
     core:atomic_list_concat(L, '.', Name).
 
-%%  doc_ok.
+%%  doc_ok(+Doc) is semidet.
 %
-%   xxxxxxxxxxx
+%   True if Doc is marked as okay.
 
 doc_ok(Doc) :-
     bson:doc_get_strict(Doc, ok, Value),
     doc_ok_value(Value).
 
-% XXX Which of these are actually required?
 doc_ok_value(1.0).
-doc_ok_value(1).
-doc_ok_value(+true).
