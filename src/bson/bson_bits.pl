@@ -120,8 +120,8 @@ bytes_to_hexchars([Byte|Bytes], [HexPadded|Chars]) :-
     left_pad_with_zero(Byte, Hex, HexPadded),
     bytes_to_hexchars(Bytes, Chars).
 
-number_to_hex(Number, Atom) :-
-    core:format(atom(Atom), '~16r', [Number]).
+number_to_hex(Number, HexAtom) :-
+    core:format(atom(HexAtom), '~16r', [Number]).
 
 left_pad_with_zero(Number, Hex, Hex) :-
     Number > 9,
