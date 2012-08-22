@@ -27,7 +27,7 @@ new_socket(Host, Port, Socket) :-
 
 close_socket_and_throw(SocketId) :-
     socket:tcp_close_socket(SocketId),
-    throw(mongo_error('could not connect to server')).
+    throw(mongo_error('could not connect to server', [])).
 
 socket_read(Socket, ReadStream) :-
     util:get_arg(Socket, 1, ReadStream).

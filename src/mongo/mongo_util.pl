@@ -24,4 +24,4 @@ options_to_bitmask([Option|Options], Pred, BitMask0, BitMask) :-
     BitMask1 is BitMask0 \/ Value,
     options_to_bitmask(Options, Pred, BitMask1, BitMask).
 options_to_bitmask([Option|_], _, _, _) :-
-    throw(mongo_error('unknown option', Option)).
+    throw(mongo_error('unknown option', [Option])).

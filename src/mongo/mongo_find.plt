@@ -9,7 +9,7 @@
 test('query error on invalid selector doc', [
         setup(mongo_test_helper:up(Conn,Coll)),
         cleanup(mongo_test_helper:down(Conn)),
-        throws(mongo_error(_ErrorDoc))
+        throws(mongo_error('server response error', [_ErrorDoc]))
     ]) :-
     mongo:find(Coll, [this_is-['$slice'-invalid]], [], 0, 0, _Cursor, _Docs).
 

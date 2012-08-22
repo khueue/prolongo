@@ -95,7 +95,7 @@ find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
 
 throw_on_error(Flags, [ErrorDoc]) :-
     error_bit_is_set(Flags),
-    throw(mongo_error(ErrorDoc)).
+    throw(mongo_error('server response error', [ErrorDoc])).
 throw_on_error(_Flags, _Docs).
     % Query succeeded.
 

@@ -52,7 +52,7 @@ drop_database(Database) :-
     !.
 drop_database(Database) :-
     mongo_database:database_name(Database, DatabaseName),
-    throw(mongo_error('could not drop database', DatabaseName)).
+    throw(mongo_error('could not drop database', [DatabaseName])).
 
 %%  drop_collection(+Collection).
 %
@@ -68,7 +68,7 @@ drop_collection(Collection) :-
     !.
 drop_collection(Collection) :-
     mongo_collection:collection_name(Collection, CollectionName),
-    throw(mongo_error('could not drop collection', CollectionName)).
+    throw(mongo_error('could not drop collection', [CollectionName])).
 
 %%  list_database_names(+Connection, -Names).
 %
@@ -141,4 +141,4 @@ doc_ok(Doc) :-
 
 doc_ok_value(1.0) :- !.
 doc_ok_value(Unknown) :-
-    throw(mongo_error('unknown document okay value', Unknown)).
+    throw(mongo_error('unknown document okay value', [Unknown])).
