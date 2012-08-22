@@ -7,7 +7,8 @@
         c_string/3,
         header/5,
         bson_doc/3,
-        bson_docs/3
+        bson_docs/3,
+        count_bytes_and_set_length/1
     ]).
 
 /** <module> Low-level construction of messages to send over the wire.
