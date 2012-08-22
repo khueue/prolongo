@@ -21,7 +21,8 @@
 %%  upsert(+Collection, +Selector, +Modifier).
 %
 %   True if the first document in Collection matching Selector is updated
-%   according to Modifier. If no such document exists, it is created.
+%   according to Modifier. If no such document exists, it is created
+%   (XXX with the Modifier?).
 
 upsert(Collection, Selector, Modifier) :-
     mongo_collection:collection_namespace(Collection, Namespace),

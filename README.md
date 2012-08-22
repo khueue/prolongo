@@ -4,7 +4,7 @@
 
  * Move BSON to separate repository (figure out how to load it properly).
  * Document predicates properly.
- * Reduce amount of arguments to `find` predicates (use options dict).
+ * Reduce amount of arguments to CRUD predicates (start with update?).
  * Write setup/teardown for test suite in load.pl.
 
 ## Release History
