@@ -127,4 +127,4 @@ left_pad_with_zero(Number, Hex, Hex) :-
     Number > 9,
     !.
 left_pad_with_zero(_Number, Hex, Padded) :-
-    atom_concat('0', Hex, Padded).
+    core:atom_concat('0', Hex, Padded).
