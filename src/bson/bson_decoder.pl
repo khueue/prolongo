@@ -153,6 +153,7 @@ subtype(generic)      --> [0x00], !.
 subtype(function)     --> [0x01], !.
 subtype(old_generic)  --> [0x02], !.
 subtype(uuid_old)     --> [0x03], !.
+subtype(uuid)         --> [0x04], !.
 subtype(md5)          --> [0x05], !.
 subtype(user_defined) --> [0x80], !.
 subtype(Unknown)      -->

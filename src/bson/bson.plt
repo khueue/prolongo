@@ -20,6 +20,7 @@ test('complex doc back-and-forth', [true(Got == Expected)]) :-
         k07 - binary(function,[1,2,3]),
         k08 - binary(old_generic,[1,2,3]),
         k09 - binary(uuid_old,[1,2,3]),
+        k09 - binary(uuid,[1,2,3]),
         k10 - binary(md5,[1,2,3]),
         k11 - binary(user_defined,[1,2,3]),
         k12 - +undefined,

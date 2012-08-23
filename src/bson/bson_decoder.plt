@@ -260,6 +260,23 @@ test('0x05, binary, uuid_old', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
+test('0x05, binary, uuid', [true(Got == Expected)]) :-
+    Bytes =
+    [
+        xxx_not_impl,0,0,0, % Length of top doc.
+        0x05, % Tag.
+            104,101,108,108,111, 0, % Ename.
+            5,0,0,0, % Length of binary data.
+            0x04, % Subtype.
+            0,1,2,1,0, % Binary data.
+        0 % End of top doc.
+    ],
+    Expected =
+    [
+        hello - binary(uuid, [0,1,2,1,0])
+    ],
+    bson_decoder:bytes_to_doc(Bytes, Got).
+
 test('0x05, binary, md5', [true(Got == Expected)]) :-
     Bytes =
     [

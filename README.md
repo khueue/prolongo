@@ -2,7 +2,6 @@
 
 ## Todo
 
- * Add support for the (new?) BSON binary subtype 0x04 (UUID).
  * Move BSON to separate repository (figure out how to load it properly).
  * Document predicates properly.
  * Reduce amount of arguments to CRUD predicates (start with update?).
