@@ -1,6 +1,8 @@
 /**
  * Bit-packing routines used by the Prolog BSON parser.
- * These functions do no error-checking whatsoever.
+ *
+ * These functions do no error-checking whatsoever and assume
+ * that an 'int' is 32 bits.
  */
 
 #include <SWI-Prolog.h>
@@ -106,7 +108,7 @@ int32_to_bytes4(
     term_t int32_in,
     term_t b0, term_t b1, term_t b2, term_t b3)
 {
-    int32_t val;
+    int val; /* NOTE: Assuming 32 bits! */
     unsigned char *byte = (unsigned char *)&val;
     int rc;
 
@@ -134,7 +136,7 @@ bytes4_to_int32(
     term_t b0, term_t b1, term_t b2, term_t b3,
     term_t int32_out)
 {
-    int32_t val;
+    int val; /* NOTE: Assuming 32 bits! */
     unsigned char *byte = (unsigned char *)&val;
 
     byte[0] = get_int(b0);
