@@ -45,13 +45,13 @@ docs_to_bytes(Docs, Bytes) :-
 docs_to_bytes(Docs, Bytes, NumBytes) :-
     docs_to_bytes(Docs, Bytes, 0, NumBytes).
 
-docs_to_bytes([], [], Num, Num) :- !.
-docs_to_bytes([Doc|Docs], Bytes, Num0, Num) :-
-    phrase(document(Doc, Num1), Bytes, RestBytes),
+docs_to_bytes([], [], Len, Len) :- !.
+docs_to_bytes([Doc|Docs], Bytes, Len0, Len) :-
+    phrase(document(Doc, Len1), Bytes, RestBytes),
     !,
-    Num2 is Num0 + Num1,
-    docs_to_bytes(Docs, RestBytes, Num2, Num).
-docs_to_bytes(_Docs, _Bytes, _Num0, _Num) :-
+    Len2 is Len0 + Len1,
+    docs_to_bytes(Docs, RestBytes, Len2, Len).
+docs_to_bytes(_Docs, _, _, _) :-
     throw(bson_error(invalid)).
 
 document(Elements, Len) -->
