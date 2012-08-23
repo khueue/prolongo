@@ -7,6 +7,7 @@
  * Document predicates properly.
  * Reduce amount of arguments to CRUD predicates (start with update?).
  * Write setup/teardown for test suite in load.pl.
+ * Make BSON exceptions more idiomatic: bson_error(Desc, EnvList).
 
 ## Release History
 
