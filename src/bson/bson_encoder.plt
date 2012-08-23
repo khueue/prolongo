@@ -224,10 +224,10 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
     ],
     bson_encoder:doc_to_bytes(Doc, Got).
 
-test('0x05, binary, uuid', [true(Got == Expected)]) :-
+test('0x05, binary, uuid_old', [true(Got == Expected)]) :-
     Doc =
     [
-        hello - binary(uuid, [0,1,2,1,0])
+        hello - binary(uuid_old, [0,1,2,1,0])
     ],
     Expected =
     [

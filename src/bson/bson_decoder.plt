@@ -243,7 +243,7 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
-test('0x05, binary, uuid', [true(Got == Expected)]) :-
+test('0x05, binary, uuid_old', [true(Got == Expected)]) :-
     Bytes =
     [
         xxx_not_impl,0,0,0, % Length of top doc.
@@ -256,7 +256,7 @@ test('0x05, binary, uuid', [true(Got == Expected)]) :-
     ],
     Expected =
     [
-        hello - binary(uuid, [0,1,2,1,0])
+        hello - binary(uuid_old, [0,1,2,1,0])
     ],
     bson_decoder:bytes_to_doc(Bytes, Got).
 
