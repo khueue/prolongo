@@ -55,14 +55,12 @@ load_project_tests :-
 
 run_test_suite :-
     core:format('~n% Run tests ...~n'),
-    setup_call_cleanup(
-        true,
+    call_cleanup(
         plunit:run_tests,
         mongo_test_helper:drop_database).
 
 run_test_suite_with_coverage :-
     core:format('~n% Run tests ...~n'),
-    setup_call_cleanup(
-        true,
+    call_cleanup(
         plunit:show_coverage(plunit:run_tests),
         mongo_test_helper:drop_database).
