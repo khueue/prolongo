@@ -3,7 +3,7 @@
 :- begin_tests('bson_bits:float_bytes/2').
 
 test('float, bad input, result undefined', [true(Got \== Expected)]) :-
-    Expected = bad_input,
+    Expected = bad(input),
     bson_bits:float_bytes(Expected, Bytes),
     bson_bits:float_bytes(Got,      Bytes).
 
@@ -37,7 +37,7 @@ test('float, pi', [true(Got == Expected)]) :-
 :- begin_tests('bson_bits:integer_bytes/4').
 
 test('32-bit, bad input, result undefined', [true(Got \== Expected)]) :-
-    Expected = bad_input,
+    Expected = bad(input),
     bson_bits:integer_bytes(Expected, 4, big, Bytes),
     bson_bits:integer_bytes(Got,      4, big, Bytes).
 
@@ -124,7 +124,7 @@ test('32-bit little-endian, max+1', [true(Got \== Expected)]) :-
 % ------------------------------------
 
 test('64-bit, bad input, result undefined', [true(Got \== Expected)]) :-
-    Expected = bad_input,
+    Expected = bad(input),
     bson_bits:integer_bytes(Expected, 8, big, Bytes),
     bson_bits:integer_bytes(Got,      8, big, Bytes).
 
@@ -213,7 +213,7 @@ test('64-bit little-endian, max+1', [true(Got \== Expected)]) :-
 :- begin_tests('bson_bits:hex_bytes/2').
 
 test('hex to bytes, bad input should throw', [throws(_)]) :-
-    Expected = bad_input,
+    Expected = bad(input),
     bson_bits:hex_bytes(Expected, _Bytes).
 
 test('hex <-> bytes', [true(Got == Expected)]) :-
