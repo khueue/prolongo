@@ -25,8 +25,8 @@ setup_path(PathPrefix, PathSuffix, Name) :-
 :- setup_globals.
 :- setup_load_paths.
 
-% Simply loading this speeds up phrase, maplist, etc. Can be safely removed.
-% Or does it?
+% Simply loading this module claims to speed up phrase, maplist, etc.,
+% but I haven't noticed much difference.
 % :- use_module(library(apply_macros)).
 
 :- include(misc(common)).
