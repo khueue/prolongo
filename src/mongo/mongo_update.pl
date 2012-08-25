@@ -2,6 +2,7 @@
     [
         upsert/3,
         update/3,
+        update/4,
         update_all/3
     ]).
 
@@ -21,15 +22,11 @@
 %%  upsert(+Collection, +Selector, +Modifier).
 %
 %   True if the first document in Collection matching Selector is updated
-%   according to Modifier. If no such document exists, it is created
-%   (XXX with the Modifier?).
+%   according to Modifier. If no such document exists, it is created with
+%   the Selector as a base and Modifier applied to it.
 
 upsert(Collection, Selector, Modifier) :-
-    mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask([upsert], mongo_update:option_value, Flags),
-    build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
-    mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesToSend).
+    update(Collection, Selector, Modifier, [upsert]).
 
 %%  update_all(+Collection, +Selector, +Modifier).
 %
@@ -37,11 +34,7 @@ upsert(Collection, Selector, Modifier) :-
 %   according to Modifier.
 
 update_all(Collection, Selector, Modifier) :-
-    mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask([multi], mongo_update:option_value, Flags),
-    build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
-    mongo_collection:collection_connection(Collection, Connection),
-    mongo_connection:send_to_server(Connection, BytesToSend).
+    update(Collection, Selector, Modifier, [multi]).
 
 %%  update(+Collection, +Selector, +Modifier).
 %
@@ -49,8 +42,11 @@ update_all(Collection, Selector, Modifier) :-
 %   according to Modifier.
 
 update(Collection, Selector, Modifier) :-
+    update(Collection, Selector, Modifier, []).
+
+update(Collection, Selector, Modifier, Options) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask([], mongo_update:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_update:option_value, Flags),
     build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
