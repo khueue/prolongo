@@ -69,7 +69,7 @@ value(0x0a, Value) --> value_null(Value).
 value(0x0b, Value) --> value_regex(Value).
 value(0x0c, Value) --> value_db_pointer(Value). % Deprecated.
 value(0x0d, Value) --> value_js(Value).
-value(0x0e, Value) --> value_symbol(Value).
+value(0x0e, Value) --> value_symbol(Value). % Deprecated
 value(0x0f, Value) --> value_js_with_scope(Value).
 value(0x10, Value) --> value_int32(Value).
 value(0x11, Value) --> value_mongostamp(Value).
