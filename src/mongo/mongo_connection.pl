@@ -18,8 +18,8 @@
 :- use_module(mongo(mongo_defaults), []).
 :- use_module(mongo(mongo_socket), []).
 
-%%  new_connection(-Connection) is semidet.
-%%  new_connection(+Host, +Port, -Connection) is semidet.
+%%  new_connection(-Connection) is det.
+%%  new_connection(+Host, +Port, -Connection) is det.
 %
 %   True if Connection represents an opaque handle to a new MongoDB
 %   server connection. Default values (see mongo_defaults) are used unless
