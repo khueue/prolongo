@@ -95,7 +95,10 @@ doc_bytes(_Doc, _Bytes) :-
 %   more efficiently.
 
 doc_is_valid(Doc) :-
-    catch(doc_bytes(Doc, _Bytes), bson_error(_), fail).
+    catch(
+        doc_bytes(Doc, _Bytes),
+        bson_error(_),
+        fail).
 
 %%  doc_empty(?Doc) is semidet.
 %
