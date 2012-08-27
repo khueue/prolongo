@@ -63,9 +63,24 @@ send_to_server(Connection, Bytes) :-
     connection_socket(Connection, Socket),
     mongo_socket:send_bytes(Socket, Bytes).
 
-%%  read_reply(+Connection, -Header, -Info, -Docs).
+%%  read_reply(+Connection, -Header, -Info, -Docs) is det.
 %
-%   XXX
+%   True if Header, Info and Docs together represent the next message
+%   received over Connection. Blocks until a message is completely read.
+%
+%   Header is the structure header(MessageLength,RequestId,ResponseTo,OpCode)
+%   where:
+%   - MessageLength is the total number of bytes comprising the message
+%   - RequestId is the ID of this message (unused)
+%   - ResponseTo is the ID of the query that triggered this response (unused)
+%   - OpCode is the code signifying that this is a response (always 1)
+%
+%   Info is the structure info(Flags,CursorId,StartingFrom,NumberReturned)
+%   where:
+%   - Flags is the bitmask of flags set for this response
+%   - CursorId is the cursor ID of this response
+%   - StartingFrom is the query offset of the first document in Docs
+%   - NumberReturned is the number of documents in Docs
 
 read_reply(Connection, Header, Info, Docs) :-
     connection_socket(Connection, Socket),
@@ -110,7 +125,8 @@ parse_response_info(Info) -->
 parse_response_docs(Bytes, Docs) :-
     bson:docs_bytes(Docs, Bytes).
 
-/* % For debugging:
+/*
+% For debugging:
 inspect_response_bytes(Bytes) :-
     core:format('~n--- Begin Response ---~n'),
     phrase(inspect_response_paperwork, Bytes, Rest),
@@ -135,6 +151,8 @@ inspect_response_paperwork -->
     { core:format('StartingFrom: ~p~n', [StartingFrom]) },
     mongo_bytes:int32(NumberReturned),
     { core:format('NumberReturned: ~p~n', [NumberReturned]) }.
+
+:- use_module(bson(bson_format), []).
 
 inspect_response_docs([]).
 inspect_response_docs([Doc|Docs]) :-

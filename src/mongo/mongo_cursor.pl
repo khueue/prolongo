@@ -70,9 +70,11 @@ build_bytes_for_kill_batch(NumCursors, CursorIds) -->
     mongo_bytes:int32(NumCursors),
     mongo_bytes:int64s(CursorIds).
 
-%%  cursor_get_more(+Cursor, +Limit, -Docs, -NewCursor).
+%%  cursor_get_more(+Cursor, +Limit, -Docs, -NewCursor) is det.
 %
-%   xxxxxxxx
+%   True if Docs is the next batch of Limit number of documents returned
+%   by Cursor, and NewCursor is the updated cursor used for further
+%   fetching.
 
 cursor_get_more(Cursor, Limit, Docs, NewCursor) :-
     cursor_collection(Cursor, Collection),

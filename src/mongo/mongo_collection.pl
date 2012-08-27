@@ -15,9 +15,11 @@
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
 
-%%  collection_get_database.
+%%  new_collection(+Database, +CollectionName, -Collection) is det.
 %
-%   xxxxxxxxx
+%   True if Collection is an handle to the collection named
+%   CollectionName within Database. No communication is performed,
+%   so the collection might or might not already exist.
 
 new_collection(Database, CollectionName, Collection) :-
     mongo_database:database_name(Database, DatabaseName),
