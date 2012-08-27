@@ -128,7 +128,7 @@ acceptable_collection([name-Namespace]) :-
     util:atom_contains(Namespace, '.oplog.$').
 
 repack_collection([name-Namespace], Name) :-
-    mongo_collection:collection_without_namespace(Namespace, Collection).
+    mongo_collection:collection_without_namespace(Namespace, Name).
 
 %%  doc_ok(+Doc) is semidet.
 %

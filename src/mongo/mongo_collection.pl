@@ -29,7 +29,6 @@ collection_database(Collection, Database) :-
 
 collection_name(Collection, CollectionName) :-
     collection_namespace(Collection, Namespace),
-    namespace_parts(Namespace, Parts),
     collection_without_namespace(Namespace, CollectionName).
 
 collection_without_namespace(NamespaceCollection, Collection) :-
