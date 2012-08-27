@@ -59,7 +59,7 @@ send_bytes_and_flush(Bytes, WriteStream) :-
     core:format(WriteStream, '~s', [Bytes]),
     core:flush_output(WriteStream).
 
-%%  receive_n_bytes(+Socket, +N, -Bytes) is
+%%  receive_n_bytes(+Socket, +N, -Bytes) is det.
 %
 %   True if Bytes is the next N bytes received over Socket.
 

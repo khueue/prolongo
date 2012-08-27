@@ -74,7 +74,8 @@ build_bytes_for_kill_batch(NumCursors, CursorIds) -->
 %
 %   True if Docs is the next batch of Limit number of documents returned
 %   by Cursor, and NewCursor is the updated cursor used for further
-%   fetching.
+%   fetching. Cursor is rendered unusable and must not be used after
+%   this call.
 
 cursor_get_more(Cursor, Limit, Docs, NewCursor) :-
     cursor_collection(Cursor, Collection),
