@@ -29,7 +29,8 @@ find_one(Collection, Query, Result) :-
 %
 %   True if Doc is the first document in Collection that matches Query.
 %   ReturnFields is a document describing which fields to return
-%   (empty means all fields).
+%   (empty means all fields). Doc is the atom nil if no documents
+%   were found.
 
 find_one(Collection, Query, ReturnFields, Doc) :-
     find(Collection, Query, ReturnFields, 0, 1, _Cursor, Docs),

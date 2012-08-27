@@ -107,6 +107,14 @@ test('entire doc', [
     mongo:find_one(Coll, Doc, Doc1),
     bson:doc_get(Doc1, number, 42).
 
+test('doc not found returns nil', [
+        setup(mongo_test_helper:up(Conn,Coll)),
+        cleanup(mongo_test_helper:down(Conn))
+    ]) :-
+    Doc = [hello-world,number-42],
+    mongo:delete(Coll, [hello-world]),
+    mongo:find_one(Coll, Doc, nil).
+
 test('return fields selector', [
         setup(mongo_test_helper:up(Conn,Coll)),
         cleanup(mongo_test_helper:down(Conn))
