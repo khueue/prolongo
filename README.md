@@ -4,6 +4,8 @@
 
  * Move BSON to separate repository (figure out how to load it properly).
  * Document predicates properly.
+ * Rewrite module handling in BSON.
+ * Add semidet etc. to documentation.
  * Reduce amount of arguments to CRUD predicates (start with update?).
  * Write setup/teardown for test suite in load.pl.
  * Make BSON exceptions more idiomatic: bson_error(Desc, EnvList).
