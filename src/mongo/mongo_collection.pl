@@ -29,8 +29,15 @@ collection_database(Collection, Database) :-
 
 collection_name(Collection, CollectionName) :-
     collection_namespace(Collection, Namespace),
-    core:atomic_list_concat([_|L], '.', Namespace), % xxx factor out
-    core:atomic_list_concat(L, '.', CollectionName).
+    namespace_parts(Namespace, Parts),
+    collection_without_namespace(Namespace, CollectionName).
+
+collection_without_namespace(NamespaceCollection, Collection) :-
+    namespace_parts(NamespaceCollection, [_Namespace|Rest]),
+    namespace_parts(Collection, Rest).
+
+namespace_parts(Atom, Parts) :-
+    core:atomic_list_concat(Parts, '.', Atom).
 
 collection_namespace(Collection, Namespace) :-
     util:get_arg(Collection, 2, Namespace).
@@ -40,4 +47,4 @@ collection_connection(Collection, Connection) :-
     mongo_database:database_connection(Database, Connection).
 
 namespace_atom(DatabaseName, CollectionName, Namespace) :-
-    core:atomic_list_concat([DatabaseName,CollectionName], '.', Namespace).
+    namespace_parts(Namespace, [DatabaseName,CollectionName]).
