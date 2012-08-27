@@ -17,6 +17,8 @@
 :- use_module(misc(util), []).
 :- use_module(mongo(mongo_defaults), []).
 :- use_module(mongo(mongo_socket), []).
+:- use_module(mongo(mongo_database), []).
+:- use_module(mongo(mongo_bytes), []).
 
 %%  new_connection(-Connection) is det.
 %%  new_connection(+Host, +Port, -Connection) is det.

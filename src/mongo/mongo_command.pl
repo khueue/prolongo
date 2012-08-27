@@ -17,6 +17,10 @@
 
 :- use_module(bson(bson), []).
 :- use_module(misc(util), []).
+:- use_module(mongo(mongo_collection), []).
+:- use_module(mongo(mongo_connection), []).
+:- use_module(mongo(mongo_database), []).
+:- use_module(mongo(mongo_find), []).
 
 command_collection('$cmd').
 namespace_collection('system.namespaces').

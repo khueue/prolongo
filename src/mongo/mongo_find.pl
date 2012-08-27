@@ -12,12 +12,10 @@
 
 :- include(misc(common)).
 
-:- use_module(bson(bson), []).
-:- use_module(misc(util), []).
 :- use_module(mongo(mongo_bytes), []).
+:- use_module(mongo(mongo_cursor), []).
 :- use_module(mongo(mongo_collection), []).
 :- use_module(mongo(mongo_connection), []).
-:- use_module(mongo(mongo_database), []).
 :- use_module(mongo(mongo_util), []).
 
 %%  find_one(+Collection, +Query, -Doc).
@@ -53,7 +51,7 @@ find_all(Collection, Query, ReturnFields, Docs) :-
 find_all(Collection, Query, ReturnFields) -->
     { find(Collection, Query, ReturnFields, 0, 0, Cursor, Docs0) },
     Docs0,
-    { mongo:cursor_exhaust(Cursor, DocsRest) },
+    { mongo_cursor:cursor_exhaust(Cursor, DocsRest) },
     DocsRest.
 
 option_value(tailable_cursor,     2).

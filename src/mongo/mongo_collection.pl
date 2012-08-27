@@ -12,8 +12,8 @@
 
 :- include(misc(common)).
 
-:- use_module(bson(bson), []).
 :- use_module(misc(util), []).
+:- use_module(mongo(mongo_database), []).
 
 %%  new_collection(+Database, +CollectionName, -Collection) is det.
 %
