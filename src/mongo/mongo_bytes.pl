@@ -16,9 +16,6 @@
 
 :- include(misc(common)).
 
-:- use_module(bson(bson), []).
-:- use_module(misc(util), []).
-
 int32s([]) --> [].
 int32s([Int|Ints]) -->
     int32(Int),

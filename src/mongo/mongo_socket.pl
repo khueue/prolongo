@@ -11,8 +11,6 @@
 
 :- include(misc(common)).
 
-:- use_module(misc(util), []).
-
 %%  new_socket(+Host, +Port, -Socket) is det.
 %
 %   True if Socket is a new socket connected to Host:Port.

@@ -9,10 +9,6 @@
 
 :- include(misc(common)).
 
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_connection), []).
-
 %%  delete(+Collection, +Selector).
 %
 %   Identical to calling delete/3 without options.

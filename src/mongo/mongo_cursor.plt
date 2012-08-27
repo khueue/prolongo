@@ -1,8 +1,5 @@
 :- include(misc(common)).
 
-:- use_module(mongo_test_helper, []).
-:- use_module(bson(bson), []).
-:- use_module(misc(util), []).
 :- begin_tests('mongo:cursor_kill/1').
 
 test('cursor kill', [

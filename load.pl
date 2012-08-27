@@ -50,7 +50,6 @@ load_project_modules :-
     use_module(mongo(mongo), []).
 
 load_project_tests :-
-    use_module(mongo(mongo_test_helper), []),
     plunit:load_test_files([]).
 
 run_test_suite :-

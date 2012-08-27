@@ -1,9 +1,5 @@
 :- include(misc(common)).
 
-:- use_module(mongo_test_helper, []).
-:- use_module(bson(bson), []).
-:- use_module(misc(util), []).
-
 :- begin_tests('mongo:delete/2').
 
 test('delete', [

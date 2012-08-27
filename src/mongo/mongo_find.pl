@@ -12,12 +12,6 @@
 
 :- include(misc(common)).
 
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_cursor), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_connection), []).
-:- use_module(mongo(mongo_util), []).
-
 %%  find_one(+Collection, +Query, -Doc).
 %
 %   Identical to calling find_one/4 with empty return fields (all fields).

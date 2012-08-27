@@ -9,11 +9,6 @@
 
 :- include(misc(common)).
 
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_connection), []).
-:- use_module(mongo(mongo_util), []).
-
 %%  insert(+Collection, +Doc).
 %
 %   True if Doc is inserted into Collection.

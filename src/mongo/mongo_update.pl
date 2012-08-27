@@ -11,11 +11,6 @@
 
 :- include(misc(common)).
 
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_connection), []).
-:- use_module(mongo(mongo_util), []).
-
 %%  upsert(+Collection, +Selector, +Modifier).
 %
 %   True if the first document in Collection matching Selector is updated

@@ -12,11 +12,6 @@
 
 :- include(misc(common)).
 
-:- use_module(misc(util), []).
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_collection), []).
-:- use_module(mongo(mongo_connection), []).
-
 new_cursor(Collection, CursorId, Cursor) :-
     Cursor = cursor(Collection, CursorId).
 

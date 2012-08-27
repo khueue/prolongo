@@ -11,9 +11,6 @@
 
 :- include(misc(common)).
 
-:- use_module(misc(util), []).
-:- use_module(mongo(mongo_collection), []).
-
 new_database(Connection, DatabaseName, Database) :-
     Database = database(Connection,DatabaseName).
 

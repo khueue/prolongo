@@ -15,9 +15,6 @@
 
 :- include(misc(common)).
 
-:- use_module(mongo(mongo), []).
-:- use_module(misc(util), []).
-
 :- dynamic asserted_database_name/1.
 
 %%  database_name(+DbName) is det.

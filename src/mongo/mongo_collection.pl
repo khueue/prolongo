@@ -12,9 +12,6 @@
 
 :- include(misc(common)).
 
-:- use_module(misc(util), []).
-:- use_module(mongo(mongo_database), []).
-
 %%  new_collection(+Database, +CollectionName, -Collection) is det.
 %
 %   True if Collection is an handle to the collection named
