@@ -1,7 +1,7 @@
 /** <module> Document finding.
  */
 
-:- module(mongo_find,
+:- module(_,
     [
         find_one/3,
         find_one/4,

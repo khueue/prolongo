@@ -1,7 +1,7 @@
 /** <module> Pretty-printing for BSON documents.
  */
 
-:- module(bson_format,
+:- module(_,
     [
         pp/1,
         pp/3

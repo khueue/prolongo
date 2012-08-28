@@ -1,7 +1,7 @@
 /** <module> Connection handling and response parsing.
  */
 
-:- module(mongo_connection,
+:- module(_,
     [
         new_connection/1,
         new_connection/3,
