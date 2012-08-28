@@ -17,26 +17,38 @@
 
 ## Usage
 
-Clone the repository and run `make` to compile
-the necessary C libraries and run the test suite. Part of the test suite
-requires a MongoDB instance running on localhost on the default port.
-See the example app below, and the tests (*.plt) in the src folder for
-usage examples.
+Clone the repository and run `make` to compile the necessary C libraries
+and run the test suite. Part of the test suite requires a MongoDB instance
+running on localhost on the default port. See the example app below, and
+the tests (*.plt) in the src folder for usage examples.
 
 ## Usage Example
 
-A small to-do application:
+A small to-do application (see the examples folder):
 
 ```prolog
-:- use_module(mongo(mongo)).
+#!/usr/bin/env swipl --quiet -O -t todo -f
+
+% Usage: Run `examples/todo.pl` from the project root.
+
+:- [load].
+:- use_module(mongo(mongo), []). % Empty import forces use of namespace.
 
 todo :-
+    print_welcome,
+    setup_call_cleanup(
+        mongo:new_connection(Connection),
+        todo_run(Connection),
+        mongo:free_connection(Connection)).
+
+print_welcome :-
     format('--- Simple Todo ---~n'),
-    mongo:new_connection(Connection),
-    mongo:get_database(Connection, todo, Database),
-    mongo:get_collection(Database, items, Collection),
-    action(list, Collection),
-    mongo:free_connection(Connection).
+    format('Terminate input with a period.~n~n').
+
+todo_run(Connection) :-
+    mongo:get_database(Connection, 'prolongo_example_todo', Database),
+    mongo:get_collection(Database, 'items', Collection),
+    action(list, Collection).
 
 action(list, Collection) :- !,
     list_items(Collection),
