@@ -124,7 +124,7 @@ number_to_hex(Number, HexAtom) :-
     core:format(atom(HexAtom), '~16r', [Number]).
 
 left_pad_with_zero(Number, Hex, Hex) :-
-    Number > 9,
+    Number >= 0x10,
     !.
 left_pad_with_zero(_Number, Hex, Padded) :-
     core:atom_concat('0', Hex, Padded).

@@ -230,4 +230,9 @@ test('hex to bytes, odd length should fail', [fail]) :-
     HexOddLength = '47c',
     bson_bits:hex_bytes(HexOddLength, _Bytes).
 
+test('bytes to hex, low byte is zero-padded', [true(Got == Expected)]) :-
+    Bytes = [0x0f],
+    Expected = '0f',
+    bson_bits:hex_bytes(Got, Bytes).
+
 :- end_tests('bson_bits:hex_bytes/2').
