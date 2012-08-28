@@ -8,20 +8,20 @@
 
 :- include(misc(common)).
 
-%%  options_to_bitmask(+Options, +PredOptionToValue, ?BitMask) is semidet.
+%%  options_to_bitmask(+Options, +PredOptionToBitmask, ?Bitmask) is semidet.
 %
-%   True if BitMask is an unsigned integer with bits set according to
+%   True if Bitmask is an unsigned integer with bits set according to
 %   which Options are given, where each option gets its value from
-%   calling PredOptionToValue(Option, Value).
+%   calling PredOptionToBitmask(Option, Bitmask).
 
-options_to_bitmask(Options, Pred, BitMask) :-
-    options_to_bitmask(Options, Pred, 0, BitMask).
+options_to_bitmask(Options, Pred, Bitmask) :-
+    options_to_bitmask(Options, Pred, 0, Bitmask).
 
-options_to_bitmask([], _Pred, BitMask, BitMask).
-options_to_bitmask([Option|Options], Pred, BitMask0, BitMask) :-
+options_to_bitmask([], _Pred, Bitmask, Bitmask).
+options_to_bitmask([Option|Options], Pred, Bitmask0, Bitmask) :-
     call(Pred, Option, Value),
     !,
-    BitMask1 is BitMask0 \/ Value,
-    options_to_bitmask(Options, Pred, BitMask1, BitMask).
+    Bitmask1 is Bitmask0 \/ Value,
+    options_to_bitmask(Options, Pred, Bitmask1, Bitmask).
 options_to_bitmask([Option|_], _, _, _) :-
     throw(mongo_error('unknown option', [Option])).
