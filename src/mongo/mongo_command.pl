@@ -1,3 +1,6 @@
+/** <module> Command handling.
+ */
+
 :- module(mongo_command,
     [
         command/3,
@@ -9,9 +12,6 @@
         drop_database/1,
         get_last_error/2
     ]).
-
-/** <module> Command handling.
- */
 
 :- include(misc(common)).
 

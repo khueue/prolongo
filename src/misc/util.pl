@@ -1,3 +1,6 @@
+/** <module> Various utility predicates.
+ */
+
 :- module(util,
     [
         list_shaped/1,
@@ -7,9 +10,6 @@
         replace_nth1/4,
         atom_contains/2
     ]).
-
-/** <module> Various utility predicates.
- */
 
 :- include(misc(common)).
 

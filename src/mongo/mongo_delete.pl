@@ -1,11 +1,11 @@
+/** <module> Document deletion.
+ */
+
 :- module(mongo_delete,
     [
         delete/2,
         delete/3
     ]).
-
-/** <module> Document deletion.
- */
 
 :- include(misc(common)).
 

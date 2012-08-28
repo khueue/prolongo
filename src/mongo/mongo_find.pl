@@ -1,3 +1,6 @@
+/** <module> Document finding.
+ */
+
 :- module(mongo_find,
     [
         find_one/3,
@@ -6,9 +9,6 @@
         find/7,
         find/8
     ]).
-
-/** <module> Document finding.
- */
 
 :- include(misc(common)).
 

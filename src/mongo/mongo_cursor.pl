@@ -1,3 +1,6 @@
+/** <module> Cursor handling.
+ */
+
 :- module(mongo_cursor,
     [
         cursor_kill/1,
@@ -6,9 +9,6 @@
         cursor_has_more/1,
         cursor_exhaust/2
     ]).
-
-/** <module> Cursor handling.
- */
 
 :- include(misc(common)).
 

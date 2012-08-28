@@ -1,3 +1,6 @@
+/** <module> Document updating.
+ */
+
 :- module(mongo_update,
     [
         upsert/3,
@@ -5,9 +8,6 @@
         update/4,
         update_all/3
     ]).
-
-/** <module> Document updating.
- */
 
 :- include(misc(common)).
 

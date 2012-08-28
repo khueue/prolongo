@@ -1,3 +1,6 @@
+/** <module> Collection handling.
+ */
+
 :- module(mongo_collection,
     [
         new_collection/3,
@@ -6,9 +9,6 @@
         collection_namespace/2,
         collection_connection/2
     ]).
-
-/** <module> Collection handling.
- */
 
 :- include(misc(common)).
 

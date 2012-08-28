@@ -1,3 +1,6 @@
+/** <module> Low-level socket handling.
+ */
+
 :- module(mongo_socket,
     [
         new_socket/3,
@@ -5,9 +8,6 @@
         send_bytes/2,
         receive_n_bytes/3
     ]).
-
-/** <module> Low-level socket handling.
- */
 
 :- include(misc(common)).
 

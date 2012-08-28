@@ -1,11 +1,11 @@
+/** <module> Document insertion.
+ */
+
 :- module(mongo_insert,
     [
         insert/2,
         insert_batch/3
     ]).
-
-/** <module> Document insertion.
- */
 
 :- include(misc(common)).
 

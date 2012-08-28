@@ -1,3 +1,6 @@
+/** <module> Low-level construction of messages to send over the wire.
+ */
+
 :- module(mongo_bytes,
     [
         int32/3,
@@ -10,9 +13,6 @@
         bson_docs/3,
         count_bytes_and_set_length/1
     ]).
-
-/** <module> Low-level construction of messages to send over the wire.
- */
 
 :- include(misc(common)).
 

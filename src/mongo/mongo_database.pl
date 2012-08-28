@@ -1,3 +1,6 @@
+/** <module> Database handling.
+ */
+
 :- module(mongo_database,
     [
         new_database/3,
@@ -5,9 +8,6 @@
         database_name/2,
         get_collection/3
     ]).
-
-/** <module> Database handling.
- */
 
 :- include(misc(common)).
 

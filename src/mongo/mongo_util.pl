@@ -1,10 +1,10 @@
+/** <module> Helpers.
+ */
+
 :- module(mongo_util,
     [
         options_to_bitmask/3
     ]).
-
-/** <module> Helpers.
- */
 
 :- include(misc(common)).
 

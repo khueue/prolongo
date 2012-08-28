@@ -1,15 +1,15 @@
-:- module(mongo,
-    [
-        version/1
-        % And see reexports below.
-    ]).
-
 /** <module> MongoDB driver.
  *
  *  Provides connection management and wraps the MongoDB API.
  *
  *  @see <http://www.mongodb.org/>
  */
+
+:- module(mongo,
+    [
+        version/1
+        % And see reexports below.
+    ]).
 
 :- reexport(
     [

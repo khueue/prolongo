@@ -1,3 +1,6 @@
+/** <module> Connection handling and response parsing.
+ */
+
 :- module(mongo_connection,
     [
         new_connection/1,
@@ -7,9 +10,6 @@
         send_to_server/2,
         read_reply/4
     ]).
-
-/** <module> Connection handling and response parsing.
- */
 
 :- include(misc(common)).
 

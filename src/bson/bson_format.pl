@@ -1,11 +1,11 @@
+/** <module> Pretty-printing for BSON documents.
+ */
+
 :- module(bson_format,
     [
         pp/1,
         pp/3
     ]).
-
-/** <module> Pretty-printing for BSON documents.
- */
 
 :- include(misc(common)).
 

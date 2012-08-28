@@ -1,3 +1,6 @@
+/** <module> Helpers for dealing with the test database.
+ */
+
 :- module(mongo_test_helper,
     [
         database_name/1,
@@ -9,9 +12,6 @@
         down/1,
         create_n_docs/2
     ]).
-
-/** <module> Helpers for dealing with the test database.
- */
 
 :- include(misc(common)).
 

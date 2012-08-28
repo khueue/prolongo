@@ -1,3 +1,10 @@
+/** <module> Low-level bytes-to-number conversions.
+ *
+ *  Note: This module favors little-endian conversions, meaning
+ *  that big-endian conversions are little-endian with a reverse.
+ *  This should probably be fixed in future versions.
+ */
+
 :- module(bson_bits,
     [
         float_bytes/2,
@@ -6,13 +13,6 @@
         fits_in_32_bits/1,
         fits_in_64_bits/1
     ]).
-
-/** <module> Low-level bytes-to-number conversions.
- *
- *  Note: This module favors little-endian conversions, meaning
- *  that big-endian conversions are little-endian with a reverse.
- *  This should probably be fixed in future versions.
- */
 
 :- include(misc(common)).
 

@@ -1,13 +1,13 @@
+/** <module> BSON decoder.
+ *
+ *  This module is private. See bson.
+ */
+
 :- module(bson_decoder,
     [
         bytes_to_doc/2,
         bytes_to_docs/2
     ]).
-
-/** <module> BSON decoder.
- *
- *  This module is private. See bson.
- */
 
 :- include(misc(common)).
 

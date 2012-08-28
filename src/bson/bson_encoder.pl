@@ -1,3 +1,8 @@
+/** <module> BSON encoder.
+ *
+ *  This module is private. See bson.
+ */
+
 :- module(bson_encoder,
     [
         doc_to_bytes/2,
@@ -5,11 +10,6 @@
         docs_to_bytes/2,
         docs_to_bytes/3
     ]).
-
-/** <module> BSON encoder.
- *
- *  This module is private. See bson.
- */
 
 :- include(misc(common)).
 
