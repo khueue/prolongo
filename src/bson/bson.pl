@@ -25,8 +25,11 @@
 
 :- include(misc(common)).
 
+% Internal modules.
 :- use_module(bson_decoder, []).
 :- use_module(bson_encoder, []).
+:- use_module(bson_bits, []).
+:- use_module(bson_unicode, []).
 % :- use_module(bson(bson_format), []). % Useful during dev.
 
 %%  version(?Version) is semidet.

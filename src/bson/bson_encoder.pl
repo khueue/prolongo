@@ -13,9 +13,6 @@
 
 :- include(misc(common)).
 
-:- use_module(bson_bits, []).
-:- use_module(bson_unicode, []).
-
 %%  doc_to_bytes(+Doc, ?Bytes) is semidet.
 %%  doc_to_bytes(+Doc, ?Bytes, ?NumBytes) is semidet.
 %

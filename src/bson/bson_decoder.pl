@@ -11,9 +11,6 @@
 
 :- include(misc(common)).
 
-:- use_module(bson_bits, []).
-:- use_module(bson_unicode, []).
-
 %%  bytes_to_doc(+Bytes, ?Doc) is semidet.
 %
 %   True if Bytes is the BSON byte-encoding of Doc.

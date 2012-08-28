@@ -13,25 +13,25 @@
 
 :- reexport(
     [
-        mongo(mongo_connection),
-        mongo(mongo_database),
-        mongo(mongo_defaults),
-        mongo(mongo_collection),
-        mongo(mongo_find),
-        mongo(mongo_cursor),
-        mongo(mongo_insert),
-        mongo(mongo_update),
-        mongo(mongo_delete),
-        mongo(mongo_command)
+        mongo_connection,
+        mongo_database,
+        mongo_defaults,
+        mongo_collection,
+        mongo_find,
+        mongo_cursor,
+        mongo_insert,
+        mongo_update,
+        mongo_delete,
+        mongo_command
     ]).
 
 :- include(misc(common)).
 
 % Internal modules.
-:- use_module(mongo(mongo_socket), []).
-:- use_module(mongo(mongo_util), []).
-:- use_module(mongo(mongo_bytes), []).
-:- use_module(mongo(mongo_test_helper), []).
+:- use_module(mongo_socket, []).
+:- use_module(mongo_util, []).
+:- use_module(mongo_bytes, []).
+:- use_module(mongo_test_helper, []).
 :- use_module(misc(util), []).
 :- use_module(bson(bson), []).
 
