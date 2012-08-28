@@ -43,4 +43,4 @@ build_bytes_for_delete(Namespace, Selector, Flags) -->
 %
 %   True if Bitmask is the bitmask for Option.
 
-option_bitmask(single_remove, 1).
+option_bitmask(single_remove, 0b1).
