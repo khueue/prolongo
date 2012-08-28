@@ -6,7 +6,7 @@
  *  @see <http://bsonspec.org/>
  */
 
-:- module(_,
+:- module(bson,
     [
         doc_bytes/2,
         docs_bytes/2,

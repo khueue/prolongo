@@ -1,7 +1,7 @@
 /** <module> Cursor handling.
  */
 
-:- module(_,
+:- module(mongo_cursor,
     [
         cursor_kill/1,
         cursor_kill_batch/1,

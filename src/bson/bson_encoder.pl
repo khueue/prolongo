@@ -3,7 +3,7 @@
  *  This module is private. See bson.
  */
 
-:- module(_,
+:- module(bson_encoder,
     [
         doc_to_bytes/2,
         doc_to_bytes/3,

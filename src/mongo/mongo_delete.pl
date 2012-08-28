@@ -1,7 +1,7 @@
 /** <module> Document deletion.
  */
 
-:- module(_,
+:- module(mongo_delete,
     [
         delete/2,
         delete/3

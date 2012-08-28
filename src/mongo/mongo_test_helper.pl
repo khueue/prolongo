@@ -1,7 +1,7 @@
 /** <module> Helpers for dealing with the test database.
  */
 
-:- module(_,
+:- module(mongo_test_helper,
     [
         database_name/1,
         collection_name/1,

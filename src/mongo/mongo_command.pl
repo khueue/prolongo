@@ -1,7 +1,7 @@
 /** <module> Command handling.
  */
 
-:- module(_,
+:- module(mongo_command,
     [
         command/3,
         list_commands/2,

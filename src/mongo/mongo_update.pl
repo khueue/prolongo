@@ -1,7 +1,7 @@
 /** <module> Document updating.
  */
 
-:- module(_,
+:- module(mongo_update,
     [
         upsert/3,
         update/3,

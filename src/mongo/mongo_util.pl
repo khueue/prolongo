@@ -1,7 +1,7 @@
 /** <module> Helpers.
  */
 
-:- module(_,
+:- module(mongo_util,
     [
         options_to_bitmask/3
     ]).

@@ -1,7 +1,7 @@
 /** <module> Database handling.
  */
 
-:- module(_,
+:- module(mongo_database,
     [
         new_database/3,
         database_connection/2,

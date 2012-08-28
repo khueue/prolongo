@@ -5,7 +5,7 @@
  *  @see <http://www.mongodb.org/>
  */
 
-:- module(_,
+:- module(mongo,
     [
         version/1
         % And see reexports below.
