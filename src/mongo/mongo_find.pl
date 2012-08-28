@@ -42,9 +42,8 @@ package_result_doc([Doc], Doc).
 find_all(Collection, Query, ReturnFields, Docs) :-
     phrase(find_all(Collection, Query, ReturnFields), Docs).
 
-% XXX Should be implemented using the "exhaust" flag.
 find_all(Collection, Query, ReturnFields) -->
-    { find(Collection, Query, ReturnFields, 0, 0, Cursor, Docs0) },
+    { find(Collection, Query, ReturnFields, 0, 0, [exhaust], Cursor, Docs0) },
     Docs0,
     { mongo_cursor:cursor_exhaust(Cursor, DocsRest) },
     DocsRest.
