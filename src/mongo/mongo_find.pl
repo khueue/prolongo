@@ -85,7 +85,7 @@ throw_on_error(_Flags, _Docs).
     % Query succeeded.
 
 error_bit_is_set(Flags) :-
-    0 < Flags /\ 2.
+    0 < Flags /\ 0b10.
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, Bytes) :-
     phrase(build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags), Bytes),
@@ -104,10 +104,10 @@ build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags) -->
 %
 %   True if Bitmask is the bitmask for Option.
 
-option_bitmask(tailable_cursor,     2).
-option_bitmask(slave_ok,            4).
-% option_bitmask(oplog_replay,      8). % Skip this.
-option_bitmask(no_cursor_timeout,  16).
-option_bitmask(await_data,         32).
-option_bitmask(exhaust,            64).
-option_bitmask(partial,           128).
+option_bitmask(tailable_cursor,         0b10).
+option_bitmask(slave_ok,               0b100).
+% option_bitmask(oplog_replay,        0b1000). % Skip this.
+option_bitmask(no_cursor_timeout,    0b10000).
+option_bitmask(await_data,          0b100000).
+option_bitmask(exhaust,            0b1000000).
+option_bitmask(partial,           0b10000000).
