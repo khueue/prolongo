@@ -59,5 +59,5 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
 %
 %   True if Bitmask is the bitmask for Option.
 
-option_bitmask(upsert,  0b1).
-option_bitmask(multi,  0b10).
+option_bitmask(upsert, 1).
+option_bitmask(multi,  2).

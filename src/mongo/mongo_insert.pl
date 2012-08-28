@@ -43,4 +43,4 @@ build_bytes_for_insert_batch(Namespace, Flags, Docs) -->
 %
 %   True if Bitmask is the bitmask for Option.
 
-option_bitmask(keep_going, 0b1).
+option_bitmask(keep_going, 1).
