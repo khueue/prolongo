@@ -11,11 +11,23 @@
 
 :- include(misc(common)).
 
+%%  new_database.
+%
+%   XXX
+
 new_database(Connection, DatabaseName, Database) :-
     Database = database(Connection,DatabaseName).
 
+%%  database_connection.
+%
+%   XXX
+
 database_connection(Database, Connection) :-
     util:get_arg(Database, 1, Connection).
+
+%%  database_name.
+%
+%   XXX
 
 database_name(Database, DatabaseName) :-
     util:get_arg(Database, 2, DatabaseName).

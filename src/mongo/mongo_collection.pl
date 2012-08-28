@@ -23,8 +23,16 @@ new_collection(Database, CollectionName, Collection) :-
     namespace_atom(DatabaseName, CollectionName, Namespace),
     Collection = collection(Database,Namespace).
 
+%%  collection_database.
+%
+%   XXX
+
 collection_database(Collection, Database) :-
     util:get_arg(Collection, 1, Database).
+
+%%  collection_name.
+%
+%   XXX
 
 collection_name(Collection, CollectionName) :-
     collection_namespace(Collection, Namespace),
@@ -37,8 +45,16 @@ collection_without_namespace(NamespaceCollection, Collection) :-
 namespace_parts(Atom, Parts) :-
     core:atomic_list_concat(Parts, '.', Atom).
 
+%%  collection_namespace.
+%
+%   XXX
+
 collection_namespace(Collection, Namespace) :-
     util:get_arg(Collection, 2, Namespace).
+
+%%  collection_connection.
+%
+%   XXX
 
 collection_connection(Collection, Connection) :-
     collection_database(Collection, Database),

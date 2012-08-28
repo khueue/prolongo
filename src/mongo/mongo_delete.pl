@@ -9,16 +9,16 @@
 
 :- include(misc(common)).
 
-%%  delete(+Collection, +Selector).
+%%  delete(+Collection, +Selector) is det.
 %
-%   Identical to calling delete/3 without options.
+%   Equivalent to calling delete/3 without options.
 
 delete(Collection, Selector) :-
     delete(Collection, Selector, []).
 
 option_value(single_remove, 1).
 
-%%  delete(+Collection, +Selector, +Options).
+%%  delete(+Collection, +Selector, +Options) is det.
 %
 %   True if all documents in Collection matching Selector are deleted
 %   using Options (possible: single_remove).

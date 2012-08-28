@@ -9,14 +9,14 @@
 
 :- include(misc(common)).
 
-%%  insert(+Collection, +Doc).
+%%  insert(+Collection, +Doc) is det.
 %
 %   True if Doc is inserted into Collection.
 
 insert(Collection, Doc) :-
     insert_batch(Collection, [], [Doc]).
 
-%%  insert_batch(+Collection, +Options, +Docs).
+%%  insert_batch(+Collection, +Options, +Docs) is det.
 %
 %   True if Docs are inserted into Collection using Options, where
 %   possible options are:

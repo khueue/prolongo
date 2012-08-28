@@ -11,7 +11,7 @@
 
 :- include(misc(common)).
 
-%%  upsert(+Collection, +Selector, +Modifier).
+%%  upsert(+Collection, +Selector, +Modifier) is det.
 %
 %   True if the first document in Collection matching Selector is updated
 %   according to Modifier. If no such document exists, it is created with
@@ -20,7 +20,7 @@
 upsert(Collection, Selector, Modifier) :-
     update(Collection, Selector, Modifier, [upsert]).
 
-%%  update_all(+Collection, +Selector, +Modifier).
+%%  update_all(+Collection, +Selector, +Modifier) is det.
 %
 %   True if all documents in Collection matching Selector is updated
 %   according to Modifier.
@@ -28,7 +28,7 @@ upsert(Collection, Selector, Modifier) :-
 update_all(Collection, Selector, Modifier) :-
     update(Collection, Selector, Modifier, [multi]).
 
-%%  update(+Collection, +Selector, +Modifier).
+%%  update(+Collection, +Selector, +Modifier) is det.
 %
 %   True if the first document in Collection matching Selector is updated
 %   according to Modifier.

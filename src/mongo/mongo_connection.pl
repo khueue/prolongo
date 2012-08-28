@@ -41,16 +41,16 @@ free_connection(Connection) :-
     connection_socket(Connection, Socket),
     mongo_socket:free_socket(Socket).
 
-%%  get_database(+Connection, +DatabaseName, -Database).
+%%  get_database(+Connection, +DatabaseName, -Database) is det.
 %
-%   True if Database is a handle to the database called DatabaseName.
-%   No communication is performed, so the actual database might or
-%   might not already exist.
+%   True if Database is a handle to the database called DatabaseName
+%   on Connection. No communication is performed, so the actual database
+%   might or might not already exist.
 
 get_database(Connection, DatabaseName, Database) :-
     mongo_database:new_database(Connection, DatabaseName, Database).
 
-%%  send_to_server(+Connection, +Bytes).
+%%  send_to_server(+Connection, +Bytes) is det.
 %
 %   True if Bytes are sent over Connection.
 

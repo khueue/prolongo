@@ -12,14 +12,14 @@
 
 :- include(misc(common)).
 
-%%  find_one(+Collection, +Query, -Doc).
+%%  find_one(+Collection, +Query, -Doc) is det.
 %
-%   Identical to calling find_one/4 with empty return fields (all fields).
+%   Equivalent to calling find_one/4 with empty return fields (all fields).
 
 find_one(Collection, Query, Result) :-
     find_one(Collection, Query, [], Result).
 
-%%  find_one(+Collection, +Query, +ReturnFields, -Doc).
+%%  find_one(+Collection, +Query, +ReturnFields, -Doc) is det.
 %
 %   True if Doc is the first document in Collection that matches Query.
 %   ReturnFields is a document describing which fields to return
@@ -33,7 +33,7 @@ find_one(Collection, Query, ReturnFields, Doc) :-
 package_result_doc([], nil).
 package_result_doc([Doc], Doc).
 
-%%  find_all(+Collection, +Query, +ReturnFields, -Docs).
+%%  find_all(+Collection, +Query, +ReturnFields, -Docs) is det.
 %
 %   True if Docs is all the documents in Collection that match Query.
 %   ReturnFields is a document describing which fields to return
@@ -57,14 +57,14 @@ option_value(await_data,         32).
 option_value(exhaust,            64).
 option_value(partial,           128).
 
-%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, -Cursor, -Docs).
+%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, -Cursor, -Docs) is det.
 %
-%   Identical to calling find/8 without options.
+%   Equivalent to calling find/8 without options.
 
 find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
     find(Collection, Query, ReturnFields, Skip, Limit, [], Cursor, Docs).
 
-%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, +Options, -Cursor, -Docs).
+%%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, +Options, -Cursor, -Docs) is det.
 %
 %   True if Docs is the first batch of documents in Collection that
 %   match Query. ReturnFields is a document describing which fields to

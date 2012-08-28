@@ -23,7 +23,7 @@ database_cmd_collection(Database, CmdColl) :-
     command_collection(CmdCollName),
     mongo_database:get_collection(Database, CmdCollName, CmdColl).
 
-%%  command(+Database, +Query, -Doc).
+%%  command(+Database, +Query, -Doc) is det.
 %
 %   True if Doc is the response to Query, issued on Database.
 
@@ -31,14 +31,15 @@ command(Database, Query, Doc) :-
     database_cmd_collection(Database, CmdColl),
     mongo_find:find_one(CmdColl, Query, Doc).
 
-%%  get_last_error(+Database, -Doc).
+%%  get_last_error(+Database, -Doc) is det.
 %
-%   True if Doc is a document describing the status of the latest query.
+%   True if Doc is a document describing the status of the latest query
+%   issued on Database.
 
 get_last_error(Database, Doc) :-
     command(Database, [getlasterror-1], Doc).
 
-%%  drop_database(+Database).
+%%  drop_database(+Database) is det.
 %
 %   True if Database is dropped. Throws an exception if Database could
 %   not be dropped.
@@ -51,7 +52,7 @@ drop_database(Database) :-
     mongo_database:database_name(Database, DatabaseName),
     throw(mongo_error('could not drop database', [DatabaseName])).
 
-%%  drop_collection(+Collection).
+%%  drop_collection(+Collection) is det.
 %
 %   True if Collection is dropped from its database. Throws an exception
 %   if Collection could not be dropped.
@@ -67,17 +68,19 @@ drop_collection(Collection) :-
     mongo_collection:collection_name(Collection, CollectionName),
     throw(mongo_error('could not drop collection', [CollectionName])).
 
-%%  list_database_names(+Connection, -Names).
+%%  list_database_names(+Connection, -Names) is det.
 %
-%   True if Names is a list of names of all logical databases.
+%   True if Names is a list of names of all logical databases issued
+%   over Connection.
 
 list_database_names(Connection, Names) :-
     list_database_infos(Connection, Infos),
     bson:doc_keys(Infos, Names).
 
-%%  list_database_infos(+Connection, -Infos).
+%%  list_database_infos(+Connection, -Infos) is det.
 %
-%   True if Infos is a list of documents detailing all logical databases.
+%   True if Infos is a list of documents detailing all logical databases
+%   issued over Connection.
 
 list_database_infos(Connection, Infos) :-
     admin_database(DatabaseName),
@@ -91,7 +94,7 @@ repack_database_infos([], []).
 repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
     repack_database_infos(Infos, Names).
 
-%%  list_commands(+Database, -Commands).
+%%  list_commands(+Database, -Commands) is det.
 %
 %   True if Commands is a list of documents detailing the commands that
 %   can be executed on Database.
@@ -100,7 +103,7 @@ list_commands(Database, Result) :-
     database_cmd_collection(Database, CmdColl),
     mongo_find:find_one(CmdColl, [listCommands-1], [commands-1], Result).
 
-%%  list_collection_names(+Database, -Names).
+%%  list_collection_names(+Database, -Names) is det.
 %
 %   True if Names is the list of collection names in Database.
 
