@@ -1,7 +1,7 @@
 /** <module> Low-level construction of messages to send over the wire.
  */
 
-:- module(mongo_bytes,
+:- module(_,
     [
         int32//1,
         int32s//1,

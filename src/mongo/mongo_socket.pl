@@ -1,7 +1,7 @@
 /** <module> Low-level socket handling.
  */
 
-:- module(mongo_socket,
+:- module(_,
     [
         new_socket/3,
         free_socket/1,

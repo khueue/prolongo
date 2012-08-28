@@ -1,7 +1,7 @@
 /** <module> Various utility predicates.
  */
 
-:- module(util,
+:- module(_,
     [
         list_shaped/1,
         ms_since_epoch/1,

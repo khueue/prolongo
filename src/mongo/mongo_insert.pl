@@ -1,7 +1,7 @@
 /** <module> Document insertion.
  */
 
-:- module(mongo_insert,
+:- module(_,
     [
         insert/2,
         insert_batch/3

@@ -1,7 +1,7 @@
 /** <module> Collection handling.
  */
 
-:- module(mongo_collection,
+:- module(_,
     [
         new_collection/3,
         collection_database/2,

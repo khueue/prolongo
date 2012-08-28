@@ -5,7 +5,7 @@
  *  bytes and then read them back, treating them as UTF-8.
  */
 
-:- module(bson_unicode,
+:- module(_,
     [
         utf8_bytes/2,
         utf8_bytes_size/3

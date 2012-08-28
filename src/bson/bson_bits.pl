@@ -5,7 +5,7 @@
  *  This should probably be fixed in future versions.
  */
 
-:- module(bson_bits,
+:- module(_,
     [
         float_bytes/2,
         integer_bytes/4,
