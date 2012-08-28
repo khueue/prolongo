@@ -3,14 +3,14 @@
 
 :- module(_,
     [
-        int32/3,
-        int32s/3,
-        int64/3,
-        int64s/3,
-        c_string/3,
-        header/5,
-        bson_doc/3,
-        bson_docs/3,
+        int32//1,
+        int32s//1,
+        int64//1,
+        int64s//1,
+        c_string//1,
+        header//3,
+        bson_doc//1,
+        bson_docs//1,
         count_bytes_and_set_length/1
     ]).
 
