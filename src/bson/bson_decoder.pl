@@ -154,7 +154,7 @@ subtype(uuid)         --> [0x04], !.
 subtype(md5)          --> [0x05], !.
 subtype(user_defined) --> [0x80], !.
 subtype(Unknown)      -->
-    throw(bson_error('unknown subtype', [Unknown])).
+    { throw(bson_error('unknown subtype', [Unknown])) }.
 
 string(Atom) -->
     int32(Length),
