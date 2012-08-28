@@ -38,7 +38,7 @@ update(Collection, Selector, Modifier) :-
 
 update(Collection, Selector, Modifier, Options) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask(Options, mongo_update:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_update:option_bitmask, Flags),
     build_bytes_for_update(Namespace, Selector, Modifier, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
@@ -55,5 +55,9 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
     mongo_bytes:bson_doc(Selector),
     mongo_bytes:bson_doc(Modifier).
 
-option_value(upsert, 1).
-option_value(multi,  2).
+%   option_bitmask(+Option, ?Bitmask) is semidet.
+%
+%   True if Bitmask is the bitmask for Option.
+
+option_bitmask(upsert, 1).
+option_bitmask(multi,  2).

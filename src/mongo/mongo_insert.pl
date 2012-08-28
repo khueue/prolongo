@@ -24,12 +24,10 @@ insert(Collection, Doc) :-
 
 insert_batch(Collection, Options, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask(Options, mongo_find:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_find:option_bitmask, Flags),
     build_bytes_for_insert_batch(Namespace, Flags, Docs, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
-
-option_value(keep_going, 1).
 
 build_bytes_for_insert_batch(Namespace, Flags, Docs, Bytes) :-
     phrase(build_bytes_for_insert_batch(Namespace, Flags, Docs), Bytes),
@@ -40,3 +38,9 @@ build_bytes_for_insert_batch(Namespace, Flags, Docs) -->
     mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
     mongo_bytes:bson_docs(Docs).
+
+%   option_bitmask(+Option, ?Bitmask) is semidet.
+%
+%   True if Bitmask is the bitmask for Option.
+
+option_bitmask(keep_going, 1).

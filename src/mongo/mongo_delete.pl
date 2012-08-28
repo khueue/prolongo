@@ -16,8 +16,6 @@
 delete(Collection, Selector) :-
     delete(Collection, Selector, []).
 
-option_value(single_remove, 1).
-
 %%  delete(+Collection, +Selector, +Options) is det.
 %
 %   True if all documents in Collection matching Selector are deleted
@@ -25,7 +23,7 @@ option_value(single_remove, 1).
 
 delete(Collection, Selector, Options) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask(Options, mongo_delete:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_delete:option_bitmask, Flags),
     build_bytes_for_delete(Namespace, Selector, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend).
@@ -40,3 +38,9 @@ build_bytes_for_delete(Namespace, Selector, Flags) -->
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),
     mongo_bytes:bson_doc(Selector).
+
+%   option_bitmask(+Option, ?Bitmask) is semidet.
+%
+%   True if Bitmask is the bitmask for Option.
+
+option_bitmask(single_remove, 1).

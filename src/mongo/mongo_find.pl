@@ -49,14 +49,6 @@ find_all(Collection, Query, ReturnFields) -->
     { mongo_cursor:cursor_exhaust(Cursor, DocsRest) },
     DocsRest.
 
-option_value(tailable_cursor,     2).
-option_value(slave_ok,            4).
-% option_value(oplog_replay,      8). % Skip this.
-option_value(no_cursor_timeout,  16).
-option_value(await_data,         32).
-option_value(exhaust,            64).
-option_value(partial,           128).
-
 %%  find(+Collection, +Query, +ReturnFields, +Skip, +Limit, -Cursor, -Docs) is det.
 %
 %   Equivalent to calling find/8 without options.
@@ -77,7 +69,7 @@ find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
 
 find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
-    mongo_util:options_to_bitmask(Options, mongo_find:option_value, Flags),
+    mongo_util:options_to_bitmask(Options, mongo_find:option_bitmask, Flags),
     build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, BytesToSend),
     mongo_collection:collection_connection(Collection, Connection),
     mongo_connection:send_to_server(Connection, BytesToSend),
@@ -107,3 +99,15 @@ build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags) -->
     mongo_bytes:int32(Limit),
     mongo_bytes:bson_doc(Query),
     mongo_bytes:bson_doc(ReturnFields).
+
+%   option_bitmask(+Option, ?Bitmask) is semidet.
+%
+%   True if Bitmask is the bitmask for Option.
+
+option_bitmask(tailable_cursor,     2).
+option_bitmask(slave_ok,            4).
+% option_bitmask(oplog_replay,      8). % Skip this.
+option_bitmask(no_cursor_timeout,  16).
+option_bitmask(await_data,         32).
+option_bitmask(exhaust,            64).
+option_bitmask(partial,           128).
