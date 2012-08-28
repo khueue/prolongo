@@ -7,19 +7,19 @@
 
 todo :-
     print_welcome,
-    core:setup_call_cleanup(
+    setup_call_cleanup(
         mongo:new_connection(Connection),
         todo_run(Connection),
         mongo:free_connection(Connection)).
 
-todo_run(Connection) :-
-    mongo:get_database(Connection, prolongo_example_todo, Database),
-    mongo:get_collection(Database, items, Collection),
-    action(list, Collection).
-
 print_welcome :-
     format('--- Simple Todo ---~n'),
     format('Terminate input with a period.~n~n').
+
+todo_run(Connection) :-
+    mongo:get_database(Connection, 'prolongo_example_todo', Database),
+    mongo:get_collection(Database, 'items', Collection),
+    action(list, Collection).
 
 action(list, Collection) :- !,
     list_items(Collection),

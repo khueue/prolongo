@@ -5,7 +5,6 @@
  * Move BSON to separate repository (figure out how to load it properly).
  * Document predicates properly.
  * Reduce amount of arguments to CRUD predicates (start with update?).
- * Write setup/teardown for test suite in load.pl.
  * Make BSON exceptions more idiomatic: bson_error(Desc, EnvList).
 
 ## Release History
@@ -151,13 +150,3 @@ a MongoDB instance is running on localhost:
    should use "ThisNamingStyle".
  * Try to stick to the PlDoc structure.
  * If in doubt, consult: <http://www.ai.uga.edu/mc/plcoding.pdf>
-
-## Future
-
- * Refactor mongo tests. They are too complex.
- * Implement ordered documents? Omit for now.
- * Generate ObjectID's in the driver? Push to server for now.
- * Move BSON to separate repository (BSON is not inherent to MongoDB).
- * Test and improve compatibility between Prologs.
- * Make sure exception handling is more idiomatic.
- * (Implement all the stuff I won't have time to.)
