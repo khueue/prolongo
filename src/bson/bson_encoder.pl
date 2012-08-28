@@ -124,7 +124,7 @@ value_compound(js(JsText,MappingsDoc), 0x0f, Len) -->
     { bson_bits:integer_bytes(Len, 4, little, BytesForLen) }.
 value_compound(mongostamp(Timestamp), 0x11, 8) -->
     int64(Timestamp).
-value_compound(symbol(Atom), 0x0e, Len) -->
+value_compound(symbol(Atom), 0x0e, Len) --> % Deprecated.
     string(Atom, Len).
 value_compound(Compound, _Tag, _Len) -->
     { throw(bson_error(invalid(Compound))) }.
