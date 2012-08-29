@@ -15,6 +15,7 @@ get_int(term_t t)
 {
     int val;
     int rc;
+    (void)rc;
     rc = PL_get_integer(t, &val);
     return val;
 }
@@ -26,6 +27,7 @@ static void
 set_int(term_t t, unsigned char byte)
 {
     int rc;
+    (void)rc;
     rc = PL_unify_integer(t, byte);
 }
 
@@ -48,6 +50,7 @@ double_to_bytes8(
     double val;
     unsigned char *byte = (unsigned char *)&val;
     int rc;
+    (void)rc;
 
     rc = PL_get_float(float_in, &val);
 
@@ -111,6 +114,7 @@ int32_to_bytes4(
     int32_t val;
     unsigned char *byte = (unsigned char *)&val;
     int rc;
+    (void)rc;
 
     rc = PL_get_integer(int32_in, &val);
 
@@ -166,6 +170,7 @@ int64_to_bytes8(
     int64_t val;
     unsigned char *byte = (unsigned char *)&val;
     int rc;
+    (void)rc;
 
     rc = PL_get_int64(int64_in, &val);
 
