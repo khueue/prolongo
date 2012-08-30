@@ -6,7 +6,7 @@
         database_name/1,
         collection_name/1,
         database/2,
-        drop_database/0,
+        drop_all_test_databases/0,
         collection/2,
         up/2,
         down/1,
@@ -28,7 +28,7 @@ database_name(DbName) :-
     !.
 database_name(DbName) :-
     util:ms_since_epoch(Millis),
-    core:atomic_list_concat([prolongo_test_suite,Millis], '_', DbName),
+    core:atomic_list_concat([prolongo_test_suite,Millis], '-', DbName),
     assert(asserted_database_name(DbName)).
 
 collection_name(testcoll).
@@ -42,11 +42,21 @@ collection(Conn, Coll) :-
     collection_name(CollName),
     mongo:get_collection(Db, CollName, Coll).
 
-drop_database :-
+drop_all_test_databases :-
     mongo:new_connection(Conn),
-    database(Conn, Db),
-    mongo:drop_database(Db),
+    mongo:list_database_names(Conn, DbNames),
+    drop_all_test_databases(DbNames, Conn),
     mongo:free_connection(Conn).
+
+drop_all_test_databases([], _Conn).
+drop_all_test_databases([DbName|DbNames], Conn) :-
+    core:atomic_list_concat(['prolongo_test_suite'|_], '-', DbName),
+    !,
+    mongo:get_database(Conn, DbName, Db),
+    mongo:drop_database(Db),
+    drop_all_test_databases(DbNames, Conn).
+drop_all_test_databases([_NotTestDbName|DbNames], Conn) :-
+    drop_all_test_databases(DbNames, Conn).
 
 up(Conn, Coll) :-
     mongo:new_connection(Conn),
