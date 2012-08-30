@@ -1,5 +1,11 @@
 :- include(misc(common)).
 
+% NOTE: The first four bytes in a document represent an integer
+% that dictates the total byte length of the document. This is currently
+% ignored by the decoder, so many of these tests simply mark them as
+% "doc,length,not,implemented". This is partly due to the fact that
+% they are being ignored and partly due to laziness.
+
 :- begin_tests('bson_decoder:bytes_to_docs/2').
 
 test('no docs', [true(Got == Expected)]) :-
@@ -52,7 +58,7 @@ test('several more complex docs', [true(Got == Expected)]) :-
 test('empty doc', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0 % End of top doc.
     ],
     Expected =
@@ -63,7 +69,7 @@ test('empty doc', [true(Got == Expected)]) :-
 test('0x01, float', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x01, % Tag.
             104,101,108,108,111, 0, % Ename.
             51,51,51,51, 51,51,20,64, % Double data.
@@ -78,7 +84,7 @@ test('0x01, float', [true(Got == Expected)]) :-
 test('0x02, string', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x02, % Tag.
             0xc3,0xa4, 0, % Ename.
             6,0,0,0, % String's byte length, incl. nul.
@@ -94,7 +100,7 @@ test('0x02, string', [true(Got == Expected)]) :-
 test('0x02, nuls not allowed in ename', [throws(bson_error(_))]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x02, % Tag.
             0xc3,0xa4, 0, 0xc3,0xa4, 0, % Ename, INVALID.
             3,0,0,0, % String's byte length, incl. nul.
@@ -106,7 +112,7 @@ test('0x02, nuls not allowed in ename', [throws(bson_error(_))]) :-
 test('0x03, embedded doc', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x03, % Tag.
             104,101,108,108,111, 0, % Ename.
             38,0,0,0, % Length of embedded doc.
@@ -137,7 +143,7 @@ test('0x03, embedded doc', [true(Got == Expected)]) :-
 test('0x03, embedded empty doc', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x03, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of embedded doc.
@@ -153,7 +159,7 @@ test('0x03, embedded empty doc', [true(Got == Expected)]) :-
 test('0x04, embedded array', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x04, % Tag.
             104,101,108,108,111, 0, % Ename.
             38,0,0,0, % Length of embedded doc.
@@ -179,7 +185,7 @@ test('0x04, embedded array', [true(Got == Expected)]) :-
 test('0x04, embedded empty array', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x04, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of embedded doc.
@@ -195,7 +201,7 @@ test('0x04, embedded empty array', [true(Got == Expected)]) :-
 test('0x05, binary, generic', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -212,7 +218,7 @@ test('0x05, binary, generic', [true(Got == Expected)]) :-
 test('0x05, binary, function', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -229,7 +235,7 @@ test('0x05, binary, function', [true(Got == Expected)]) :-
 test('0x05, binary, old generic', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -246,7 +252,7 @@ test('0x05, binary, old generic', [true(Got == Expected)]) :-
 test('0x05, binary, uuid_old', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -263,7 +269,7 @@ test('0x05, binary, uuid_old', [true(Got == Expected)]) :-
 test('0x05, binary, uuid', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -280,7 +286,7 @@ test('0x05, binary, uuid', [true(Got == Expected)]) :-
 test('0x05, binary, md5', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -297,7 +303,7 @@ test('0x05, binary, md5', [true(Got == Expected)]) :-
 test('0x05, binary, user defined', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x05, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % Length of binary data.
@@ -314,7 +320,7 @@ test('0x05, binary, user defined', [true(Got == Expected)]) :-
 test('0x06, undefined', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x06, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
@@ -328,7 +334,7 @@ test('0x06, undefined', [true(Got == Expected)]) :-
 test('0x07, object id', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x07, % Tag.
             104,101,108,108,111, 0, % Ename.
             0x47,0xcc,0x67,0x09, % ObjectID, time.
@@ -346,7 +352,7 @@ test('0x07, object id', [true(Got == Expected)]) :-
 test('0x08, boolean true', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x08, % Tag.
             104,101,108,108,111, 0, % Ename.
             1, % Boolean data.
@@ -361,7 +367,7 @@ test('0x08, boolean true', [true(Got == Expected)]) :-
 test('0x08, boolean false', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x08, % Tag.
             104,101,108,108,111, 0, % Ename.
             0, % Boolean data.
@@ -376,7 +382,7 @@ test('0x08, boolean false', [true(Got == Expected)]) :-
 test('0x08, boolean invalid', [throws(bson_error(invalid_boolean))]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x08, % Tag.
             104,101,108,108,111, 0, % Ename.
             2, % Boolean data, INVALID value.
@@ -387,7 +393,7 @@ test('0x08, boolean invalid', [throws(bson_error(invalid_boolean))]) :-
 test('0x09, utc datetime', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x09, % Tag.
             104,101,108,108,111, 0, % Ename.
             188,11,99,58,47,1,0,0, % UTC datetime data.
@@ -402,7 +408,7 @@ test('0x09, utc datetime', [true(Got == Expected)]) :-
 test('0x0a, null', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0a, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
@@ -416,7 +422,7 @@ test('0x0a, null', [true(Got == Expected)]) :-
 test('0x0b, regex', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0b, % Tag.
             104,101,108,108,111, 0, % Ename.
             97, 0,  % Regex pattern.
@@ -432,7 +438,7 @@ test('0x0b, regex', [true(Got == Expected)]) :-
 test('0x0c, db pointer', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0c, % Tag.
             104,101,108,108,111, 0, % Ename.
             2,0,0,0, % String's byte length, incl. nul.
@@ -452,7 +458,7 @@ test('0x0c, db pointer', [true(Got == Expected)]) :-
 test('0x0d, js', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0d, % Tag.
             106,115, 0, % Ename.
             9,0,0,0, % String's byte length, incl. nul.
@@ -468,7 +474,7 @@ test('0x0d, js', [true(Got == Expected)]) :-
 test('0x0e, symbol', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0e, % Tag.
             104,101,108,108,111, 0, % Ename.
             5,0,0,0, % String's byte length, incl. nul.
@@ -484,13 +490,13 @@ test('0x0e, symbol', [true(Got == Expected)]) :-
 test('0x0f, js with scope', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x0f, % Tag.
             106,115, 0, % Ename.
-            xxx_not_impl,0,0,0, % Length of entire JS with scope.
+            doc,length,not,implemented, % Length of entire JS with scope.
             9,0,0,0, % String's byte length, incl. nul.
             99,111,100,101,32,46,46,46, 0, % String data.
-                xxx_not_impl,0,0,0, % Length of embedded doc.
+                doc,length,not,implemented, % Length of embedded doc.
                 0x10, % Tag.
                     104,101,108,108,111, 0, % Ename.
                     32,0,0,0, % Int32 data.
@@ -506,7 +512,7 @@ test('0x0f, js with scope', [true(Got == Expected)]) :-
 test('0x10, int32', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x10, % Tag.
             104,101,108,108,111, 0, % Ename.
             32,0,0,0, % Int32 data.
@@ -521,7 +527,7 @@ test('0x10, int32', [true(Got == Expected)]) :-
 test('0x11, mongostamp', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x11, % Tag.
             104,101,108,108,111, 0, % Ename.
             0,0,0,0, 0,0,0,0, % Int64 mongostamp data.
@@ -536,7 +542,7 @@ test('0x11, mongostamp', [true(Got == Expected)]) :-
 test('0x12, int64', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x12, % Tag.
             104,101,108,108,111, 0, % Ename.
             32,0,0,0, 0,0,0,0, % Int64 data.
@@ -551,7 +557,7 @@ test('0x12, int64', [true(Got == Expected)]) :-
 test('0xff, min', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0xff, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
@@ -565,7 +571,7 @@ test('0xff, min', [true(Got == Expected)]) :-
 test('0x7f, max', [true(Got == Expected)]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x7f, % Tag.
             104,101,108,108,111, 0, % Ename.
         0 % End of top doc.
@@ -579,7 +585,7 @@ test('0x7f, max', [true(Got == Expected)]) :-
 test('invalid bson, missing terminating nul', [throws(bson_error(invalid))]) :-
     Bytes =
     [
-        xxx_not_impl,0,0,0, % Length of top doc.
+        doc,length,not,implemented, % Length of top doc.
         0x10, % Tag.
             104,101,108,108,111, 0, % Ename.
             32,0,0,0 % Int32 data.
