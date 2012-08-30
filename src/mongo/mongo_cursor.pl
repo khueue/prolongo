@@ -113,7 +113,7 @@ cursor_exhaust(Cursor, Docs) :-
 cursor_exhaust(Cursor) -->
     { cursor_has_more(Cursor) },
     !,
-    % XXX Fetching default number of docs -- good/bad? Fetch more?
+    % Zero fetches default number of docs. Good or bad? Fetch more?
     { cursor_get_more(Cursor, 0, Docs, Cursor1) },
     Docs,
     cursor_exhaust(Cursor1).
