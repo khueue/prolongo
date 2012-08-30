@@ -50,7 +50,7 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags, Bytes) :-
 build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
     % XXX mongo_bytes:header(RequestId, ResponseId, OpCode)
     mongo_bytes:header(000, 000, 2001),
-    mongo_bytes:int32(0), % ZERO.
+    mongo_bytes:int32(0), % ZERO. Reserved for future use.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),
     mongo_bytes:bson_doc(Selector),
