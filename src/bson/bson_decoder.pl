@@ -35,8 +35,12 @@ bytes_to_docs(Bytes, [Doc|Docs]) :-
 bytes_to_docs(_Bytes, _Docs) :-
     throw(bson_error(invalid)).
 
+% NOTE: This predicate does no validation on the length of the document
+% being parsed. The document is either valid and therefore successfully
+% parsed, or the parse fails. We trust the database server to send us valid
+% documents and therefore we ignore the length.
 document(Elements) -->
-    int32(_Length), % XXX Ignored for now. Validate how much?
+    int32(_LengthEntireDocIgnored),
     elements(Elements),
     [0].
 
@@ -118,8 +122,9 @@ value_binary(binary(Subtype,Bytes)) -->
 value_js(js(JsCode)) -->
     string(JsCode).
 
+% NOTE: See document//1 on why we ignore the length.
 value_js_with_scope(js(JsCode,MappingsDoc)) -->
-    int32(_LengthEntireJsWithScope), % XXX Unused for now.
+    int32(_LengthEntireJsWithScopeIgnored),
     string(JsCode),
     document(MappingsDoc).
 
