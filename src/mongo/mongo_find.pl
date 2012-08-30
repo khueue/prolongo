@@ -91,7 +91,8 @@ build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags, Bytes) 
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_find(Namespace, Query, ReturnFields, Skip, Limit, Flags) -->
-    mongo_bytes:header(000, 000, 2004), % xxxxx request, response
+    % XXX mongo_bytes:header(RequestId, ResponseId, OpCode)
+    mongo_bytes:header(000, 000, 2004),
     mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Skip),

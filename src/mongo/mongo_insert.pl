@@ -34,7 +34,8 @@ build_bytes_for_insert_batch(Namespace, Flags, Docs, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_insert_batch(Namespace, Flags, Docs) -->
-    mongo_bytes:header(000, 000, 2002), % xxxxx request, response
+    % XXX mongo_bytes:header(RequestId, ResponseId, OpCode)
+    mongo_bytes:header(000, 000, 2002),
     mongo_bytes:int32(Flags),
     mongo_bytes:c_string(Namespace),
     mongo_bytes:bson_docs(Docs).

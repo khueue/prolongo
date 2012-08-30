@@ -11,32 +11,34 @@
 
 :- include(misc(common)).
 
-%%  new_database.
+%%  new_database(+Connection, +DatabaseName, -Database) is det.
 %
-%   XXX
+%   True if Database is a handle to the database named DatabaseName
+%   issued over Connection. No communication is performed, so the
+%   database might or might not already exist.
 
 new_database(Connection, DatabaseName, Database) :-
     Database = database(Connection,DatabaseName).
 
-%%  database_connection.
+%%  database_connection(+Database, -Connection) is det.
 %
-%   XXX
+%   True if Connection is the connection used to access Database.
 
 database_connection(Database, Connection) :-
     util:get_arg(Database, 1, Connection).
 
-%%  database_name.
+%%  database_name(+Database, -DatabaseName) is det.
 %
-%   XXX
+%   True if DatabaseName is the name of Database.
 
 database_name(Database, DatabaseName) :-
     util:get_arg(Database, 2, DatabaseName).
 
 %%  get_collection(+Database, +CollectionName, -Collection) is det.
 %
-%   Collection is a handle to the collection CollectionName in Database.
-%   No communication is performed so the actual collection might or might
-%   not exist.
+%   True if Collection is a handle to the collection CollectionName in
+%   Database. No communication is performed so the actual collection might
+%   or might not exist.
 
 get_collection(Database, CollectionName, Collection) :-
     mongo_collection:new_collection(Database, CollectionName, Collection).

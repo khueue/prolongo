@@ -48,7 +48,8 @@ build_bytes_for_update(Namespace, Selector, Modifier, Flags, Bytes) :-
     mongo_bytes:count_bytes_and_set_length(Bytes).
 
 build_bytes_for_update(Namespace, Selector, Modifier, Flags) -->
-    mongo_bytes:header(000, 000, 2001), % xxxxx request, response
+    % XXX mongo_bytes:header(RequestId, ResponseId, OpCode)
+    mongo_bytes:header(000, 000, 2001),
     mongo_bytes:int32(0), % ZERO.
     mongo_bytes:c_string(Namespace),
     mongo_bytes:int32(Flags),

@@ -14,7 +14,7 @@
 
 %%  new_collection(+Database, +CollectionName, -Collection) is det.
 %
-%   True if Collection is an handle to the collection named
+%   True if Collection is a handle to the collection named
 %   CollectionName within Database. No communication is performed,
 %   so the collection might or might not already exist.
 
@@ -23,16 +23,16 @@ new_collection(Database, CollectionName, Collection) :-
     namespace_atom(DatabaseName, CollectionName, Namespace),
     Collection = collection(Database,Namespace).
 
-%%  collection_database.
+%%  collection_database(+Collection, -Database) is det.
 %
-%   XXX
+%   True if Database is a handle to the database that includes Collection.
 
 collection_database(Collection, Database) :-
     util:get_arg(Collection, 1, Database).
 
-%%  collection_name.
+%%  collection_name(+Collection, -CollectionName) is det.
 %
-%   XXX
+%   True if CollectionName is the name of Collection.
 
 collection_name(Collection, CollectionName) :-
     collection_namespace(Collection, Namespace),
@@ -45,16 +45,17 @@ collection_without_namespace(NamespaceCollection, Collection) :-
 namespace_parts(Atom, Parts) :-
     core:atomic_list_concat(Parts, '.', Atom).
 
-%%  collection_namespace.
+%%  collection_namespace(+Collection, -Namespace) is det.
 %
-%   XXX
+%   True if Namespace is the namespace name for Collection.
 
 collection_namespace(Collection, Namespace) :-
     util:get_arg(Collection, 2, Namespace).
 
-%%  collection_connection.
+%%  collection_connection(+Collection, -Connection) is det.
 %
-%   XXX
+%   True if Connection is a handle to the connection used to access
+%   Collection.
 
 collection_connection(Collection, Connection) :-
     collection_database(Collection, Database),
