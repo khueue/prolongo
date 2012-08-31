@@ -3,11 +3,23 @@
 ## Todo
 
  * Move BSON to separate repository (figure out how to load it properly).
- * Document predicates properly.
  * Reduce amount of arguments to CRUD predicates (start with update?).
  * Make BSON exceptions more idiomatic: bson_error(Desc, EnvList).
 
 ## Release History
+
+### Version 2.0.0 (not yet released)
+
+ * Updated BSON parser to handle new binary 'uuid' subtype.
+ * Rewritten exception handling (not done yet XXX).
+ * Fix buggy hex_bytes/2 (used when handling object_id).
+ * Hopefully improved compilation on Windows (now includes stdint.h).
+ * Test suite can be run in parallel by separate Prolog sessions.
+ * Better API documentation (in the code).
+ * Minor performance improvements and code cleanup.
+ * Internal module usage rewritten.
+ * Now tested on MongoDB 2.2.0.
+ * Prepared for SWI-Prolog 6.2.0.
 
 ### Version 1.0.0 (2012-08-11)
 
