@@ -1,6 +1,6 @@
 :- include(misc(common)).
 
-% NOTE: The first four bytes in a document represent an integer
+% Note: The first four bytes in a document represent an integer
 % that dictates the total byte length of the document. This is currently
 % ignored by the decoder, so many of these tests simply mark them as
 % "doc,length,not,implemented". This is partly due to the fact that
