@@ -13,30 +13,6 @@
 
 :- include(misc(common)).
 
-/*
-:- use_module(library(utf8), []).
-
-% Investigate this: using the library predicate utf8:utf8_codes/2
-% seems to be faster when the length is approx < 30 bytes.
-% (I guess the overhead of memory files etc. is too high when the
-% string is so short anyway.)
-% It might be interesting to choose this predicate if the string
-% is short enough. This might be worthwhile (if we already know
-% the length beforehand!), since most keys and
-% probably many text values are shorter than 30 bytes.
-
-utf8_bytes(Utf8, Bytes) :-
-    core:nonvar(Utf8),
-    !,
-    atom_codes(Utf8, Codes),
-    phrase(utf8:utf8_codes(Codes), Bytes).
-utf8_bytes(Utf8, Bytes) :-
-    core:nonvar(Bytes),
-    !,
-    phrase(utf8:utf8_codes(Codes), Bytes),
-    atom_codes(Utf8, Codes).
-*/
-
 %%  utf8_bytes(+Utf8, ?Bytes) is semidet.
 %%  utf8_bytes(?Utf8, +Bytes) is semidet.
 %
@@ -99,3 +75,27 @@ bytes_to_utf8(Bytes, Utf8) :-
         memory_file:atom_to_memory_file(RawAtom, MemFile),
         memory_file:memory_file_to_atom(MemFile, Utf8, utf8),
         memory_file:free_memory_file(MemFile)).
+
+/*
+:- use_module(library(utf8), []).
+
+% Investigate this: using the library predicate utf8:utf8_codes/2
+% seems to be faster when the length is approx < 30 bytes.
+% (I guess the overhead of memory files etc. is too high when the
+% string is so short anyway.)
+% It might be interesting to choose this predicate if the string
+% is short enough. This might be worthwhile (if we already know
+% the length beforehand!), since most keys and
+% probably many text values are shorter than 30 bytes.
+
+utf8_bytes(Utf8, Bytes) :-
+    core:nonvar(Utf8),
+    !,
+    atom_codes(Utf8, Codes),
+    phrase(utf8:utf8_codes(Codes), Bytes).
+utf8_bytes(Utf8, Bytes) :-
+    core:nonvar(Bytes),
+    !,
+    phrase(utf8:utf8_codes(Codes), Bytes),
+    atom_codes(Utf8, Codes).
+*/
