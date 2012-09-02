@@ -151,8 +151,7 @@ add_array_keys(List, Array) :-
     add_array_keys(List, 0, Array).
 
 add_array_keys([], _Index, []).
-add_array_keys([Value|Values], Index, [Key-Value|Pairs]) :-
-    core:atom_number(Key, Index),
+add_array_keys([Value|Values], Index, [Index-Value|Pairs]) :-
     Index1 is Index + 1,
     add_array_keys(Values, Index1, Pairs).
 
