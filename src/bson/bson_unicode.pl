@@ -27,10 +27,10 @@ utf8_bytes(Utf8, Bytes) :-
     !,
     bytes_to_utf8(Bytes, Utf8).
 
-%%  utf8_bytes_size(+Utf8, ?Bytes, ?Size) is semidet.
+%%  utf8_bytes_size(+Utf8, ?Bytes, ?NumBytes) is semidet.
 %
 %   True if Utf8 is the atom represented by the UTF-8 encoded Bytes,
-%   and Size is the number of Bytes (not the number of code points).
+%   and NumBytes is the number of Bytes (not the number of code points).
 %
 %   Right now, this predicate simply counts the number of bytes in
 %   Bytes, but maybe this can be done on-the-fly in future versions.
