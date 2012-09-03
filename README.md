@@ -1,15 +1,14 @@
 # MongoDB Driver for Prolog
 
-## Todo
-
- * Move BSON to separate repository (figure out how to load it properly).
- * Reduce amount of arguments to CRUD predicates (start with update?).
- * Make BSON exceptions more idiomatic: bson_error(Desc, EnvList).
+A MongoDB driver compatible with SWI-Prolog that implements basic CRUD
+functionality. Several things have yet to be implemented (authentication,
+GridFS, etc.), but the driver can be used for simple use-cases.
 
 ## Release History
 
 ### Version 2.0.0 (not yet released)
 
+ * BSON parser is now an external dependency (separate repository).
  * Updated BSON parser to handle new binary 'uuid' subtype.
  * Rewritten exception handling (not done yet XXX).
  * Fix buggy hex_bytes/2 (used when handling object_id).
@@ -27,10 +26,31 @@
  * Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
  * Add runnable example program (simple todo).
 
+## License
+
+Licensed under the MIT license which can be found in the file
+`LICENSE` in the project root.
+
+## Todo
+
+ * Reduce amount of arguments to CRUD predicates.
+
 ## Usage
 
+ 1. Clone the BSON parser found at <https://github.com/khueue/prolog-bson>
+    and compile it.
+ 2. Clone prolongo.
+ 3. Edit the path to the BSON loader script found in `load.pl`. The path
+    should be relative to prolongo's root (so you don't have to edit
+    anything if you clone both BSON and prolongo into the same parent
+    folder).
+ 4. Run `make` to run the tests (will also run the BSON tests). Some
+    of the tests require a MongoDB instance running on localhost on the
+    default port.
+ 5. See the example below for usage in your application.
+
 Clone the repository and run `make` to compile the necessary C libraries
-and run the test suite. Part of the test suite requires a MongoDB instance
+and run the test suite. Test suite requires a MongoDB instance
 running on localhost on the default port. See the example app below, and
 the tests (*.plt) in the src folder for usage examples.
 
@@ -146,15 +166,7 @@ localhost, then go:
 ## Dependencies
 
  * SWI-Prolog (tested on Mac OS X using SWI 6.0.2)
-    * Autoloading must be turned on (default).
- * ANSI C compiler (modify Makefile if not GCC) (tested on Mac OS X
-   using GCC and Clang)
  * MongoDB (tested on Mac OS X using MongoDB 2.2.0)
-
-## License
-
-Licensed under the MIT license which can be found in the file
-`LICENSE` in the project root.
 
 ## Coding Guidelines
 
