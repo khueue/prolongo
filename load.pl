@@ -7,7 +7,7 @@
 %   These facts should point to other loader scripts (usually 'load.pl' files)
 %   found in the root of the respective project.
 
-prolongo_external_library_loader('/../prolog-bson/load.pl').
+prolongo_external_library_loader('../prolog-bson/load.pl').
 
 %   prolongo_configure_globals is det.
 %
@@ -35,7 +35,7 @@ prolongo_load_external_libraries :-
 prolongo_load_external_libraries.
 
 prolongo_load_external_library(Root, RelativePathToLoader) :-
-    atom_concat(Root, RelativePathToLoader, Loader),
+    atomic_list_concat([Root,RelativePathToLoader], '/', Loader),
     [Loader].
 
 %   prolongo_configure_load_paths is det.
@@ -44,11 +44,11 @@ prolongo_load_external_library(Root, RelativePathToLoader) :-
 
 prolongo_configure_load_paths :-
     prolog_load_context(directory, Root), % Available only during compilation.
-    prolongo_configure_path(Root, '/src/misc', misc),
-    prolongo_configure_path(Root, '/src', mongo).
+    prolongo_configure_path(Root, 'src/misc', misc),
+    prolongo_configure_path(Root, 'src', mongo).
 
 prolongo_configure_path(PathPrefix, PathSuffix, Name) :-
-    atom_concat(PathPrefix, PathSuffix, Path),
+    atomic_list_concat([PathPrefix,PathSuffix], '/', Path),
     asserta(user:file_search_path(Name, Path)).
 
 % Set everything up.
