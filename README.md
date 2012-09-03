@@ -47,16 +47,12 @@ Licensed under the MIT license which can be found in the file
  4. Run `make` to run the tests (will also run the BSON tests). Some
     of the tests require a MongoDB instance running on localhost on the
     default port.
- 5. See the example below for usage in your application.
-
-Clone the repository and run `make` to compile the necessary C libraries
-and run the test suite. Test suite requires a MongoDB instance
-running on localhost on the default port. See the example app below, and
-the tests (*.plt) in the src folder for usage examples.
+ 5. See the example below and the tests (*.plt) in the `src` folder for
+    more usage information.
 
 ## Usage Example
 
-A small to-do application (see the examples folder):
+A small to-do application (found in the examples folder):
 
 ```prolog
 #!/usr/bin/env swipl --quiet -O -t todo -f
