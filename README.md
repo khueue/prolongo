@@ -163,6 +163,7 @@ localhost, then go:
 
  * SWI-Prolog (tested on Mac OS X using SWI 6.0.2)
  * MongoDB (tested on Mac OS X using MongoDB 2.2.0)
+ * BSON parser found at <https://github.com/khueue/prolog-bson>
 
 ## Coding Guidelines
 
