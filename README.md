@@ -43,6 +43,7 @@ A small to-do application (see the examples folder):
 
 % Usage: Run `examples/todo.pl` from the project root.
 
+% Setup prolongo load paths and load the library.
 :- [load].
 :- use_module(mongo(mongo), []). % Empty import forces use of namespace.
 
@@ -112,8 +113,8 @@ delete_item(Collection) :-
     mongo:delete(Collection, ['_id'-object_id(Id)]).
 ```
 
-Make sure `load.pl` and the file above are consulted and
-a MongoDB instance is running on localhost:
+Consult the file and make sure you have a MongoDB instance running on
+localhost, then go:
 
     ?- todo.
     --- Simple Todo ---

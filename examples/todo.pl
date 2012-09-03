@@ -2,6 +2,7 @@
 
 % Usage: Run `examples/todo.pl` from the project root.
 
+% Setup prolongo load paths and load the library.
 :- [load].
 :- use_module(mongo(mongo), []). % Empty import forces use of namespace.
 
