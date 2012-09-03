@@ -150,6 +150,11 @@ a MongoDB instance is running on localhost:
    using GCC and Clang)
  * MongoDB (tested on Mac OS X using MongoDB 2.2.0)
 
+## License
+
+Licensed under the MIT license which can be found in the file
+`LICENSE` in the project root.
+
 ## Coding Guidelines
 
  * Use empty imports (use_module(mymodule, [])) in order to not
