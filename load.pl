@@ -7,7 +7,7 @@
 %   These facts should point to other loader scripts (usually 'load.pl' files)
 %   found in the root of the respective project.
 
-prolongo_external_library_loader('/../bson/load.pl').
+prolongo_external_library_loader('/../prolog-bson/load.pl').
 
 %   prolongo_configure_globals is det.
 %
