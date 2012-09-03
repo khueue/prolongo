@@ -13,7 +13,7 @@
         get_last_error/2
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 command_collection('$cmd').
 namespace_collection('system.namespaces').
@@ -123,9 +123,9 @@ repack_collection_names([_Pair|Pairs], Names) :-
     repack_collection_names(Pairs, Names).
 
 acceptable_collection([name-Namespace]) :-
-    \+ util:atom_contains(Namespace, '$').
+    \+ mongo_util:atom_contains(Namespace, '$').
 acceptable_collection([name-Namespace]) :-
-    util:atom_contains(Namespace, '.oplog.$').
+    mongo_util:atom_contains(Namespace, '.oplog.$').
 
 repack_collection([name-Namespace], Name) :-
     mongo_collection:collection_without_namespace(Namespace, Name).

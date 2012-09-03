@@ -7,7 +7,7 @@
         delete/3
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  delete(+Collection, +Selector) is det.
 %

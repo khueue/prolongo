@@ -9,7 +9,7 @@
         receive_n_bytes/3
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  new_socket(+Host, +Port, -Socket) is det.
 %
@@ -30,10 +30,10 @@ close_socket_and_throw(SocketId, Exception) :-
     throw(mongo_error('could not connect to server', [Exception])).
 
 socket_read(Socket, ReadStream) :-
-    util:get_arg(Socket, 1, ReadStream).
+    mongo_util:get_arg(Socket, 1, ReadStream).
 
 socket_write(Socket, WriteStream) :-
-    util:get_arg(Socket, 2, WriteStream).
+    mongo_util:get_arg(Socket, 2, WriteStream).
 
 %%  free_socket(+Socket) is det.
 %

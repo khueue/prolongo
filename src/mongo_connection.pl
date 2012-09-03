@@ -11,7 +11,7 @@
         read_reply/4
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  new_connection(-Connection) is det.
 %%  new_connection(+Host, +Port, -Connection) is det.
@@ -30,7 +30,7 @@ new_connection(Host, Port, Connection) :-
     Connection = connection(Socket).
 
 connection_socket(Connection, Socket) :-
-    util:get_arg(Connection, 1, Socket).
+    mongo_util:get_arg(Connection, 1, Socket).
 
 %%  free_connection(+Connection) is det.
 %

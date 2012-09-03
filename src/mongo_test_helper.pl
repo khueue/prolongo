@@ -13,7 +13,7 @@
         create_n_docs/2
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 :- dynamic asserted_database_name/1.
 
@@ -27,7 +27,7 @@ database_name(DbName) :-
     asserted_database_name(DbName),
     !.
 database_name(DbName) :-
-    util:ms_since_epoch(Millis),
+    mongo_util:ms_since_epoch(Millis),
     core:atomic_list_concat([prolongo_test_suite,Millis], '-', DbName),
     assert(asserted_database_name(DbName)).
 

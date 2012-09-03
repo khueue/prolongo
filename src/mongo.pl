@@ -25,14 +25,13 @@
         mongo_command
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 % Internal modules.
 :- use_module(mongo_socket, []).
 :- use_module(mongo_util, []).
 :- use_module(mongo_bytes, []).
 :- use_module(mongo_test_helper, []).
-:- use_module(misc(util), []).
 :- use_module(bson(bson), []).
 
 %%  version(?Version) is semidet.

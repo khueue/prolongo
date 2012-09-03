@@ -9,7 +9,7 @@
         get_collection/3
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  new_database(+Connection, +DatabaseName, -Database) is det.
 %
@@ -25,14 +25,14 @@ new_database(Connection, DatabaseName, Database) :-
 %   True if Connection is the connection used to access Database.
 
 database_connection(Database, Connection) :-
-    util:get_arg(Database, 1, Connection).
+    mongo_util:get_arg(Database, 1, Connection).
 
 %%  database_name(+Database, -DatabaseName) is det.
 %
 %   True if DatabaseName is the name of Database.
 
 database_name(Database, DatabaseName) :-
-    util:get_arg(Database, 2, DatabaseName).
+    mongo_util:get_arg(Database, 2, DatabaseName).
 
 %%  get_collection(+Database, +CollectionName, -Collection) is det.
 %

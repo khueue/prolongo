@@ -10,7 +10,7 @@
         find/8
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  find_one(+Collection, +Query, -Doc) is det.
 %

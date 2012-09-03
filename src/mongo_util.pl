@@ -3,10 +3,13 @@
 
 :- module(_,
     [
-        options_to_bitmask/3
+        options_to_bitmask/3,
+        ms_since_epoch/1,
+        get_arg/3,
+        atom_contains/2
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  options_to_bitmask(+Options, +PredOptionToBitmask, ?Bitmask) is semidet.
 %
@@ -25,3 +28,28 @@ options_to_bitmask([Option|Options], Pred, Bitmask0, Bitmask) :-
     options_to_bitmask(Options, Pred, Bitmask1, Bitmask).
 options_to_bitmask([Option|_], _, _, _) :-
     throw(mongo_error('unknown option', [Option])).
+
+%%  ms_since_epoch(-Millis) is det.
+%
+%   True if Millis is the number of milliseconds elapsed
+%   since the Unix epoch.
+
+ms_since_epoch(Millis) :-
+    core:get_time(FloatSeconds),
+    Millis is floor(FloatSeconds * 1000).
+
+%%  get_arg(+Struct, +Index, ?Arg) is semidet.
+%
+%   True if Arg is the argument at Index in Struct. Indexing
+%   starts at 1.
+
+get_arg(Struct, Index, Arg) :-
+    core:arg(Index, Struct, Arg).
+
+%%  atom_contains(+Atom, +SubAtom) is semidet.
+%
+%   True if SubAtom is a subatom of Atom.
+
+atom_contains(Atom, SubAtom) :-
+    core:sub_atom(Atom, _, _, _, SubAtom),
+    !.

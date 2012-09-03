@@ -44,7 +44,6 @@ prolongo_load_external_library(Root, RelativePathToLoader) :-
 
 prolongo_configure_load_paths :-
     prolog_load_context(directory, Root), % Available only during compilation.
-    prolongo_configure_path(Root, 'src/misc', misc),
     prolongo_configure_path(Root, 'src', mongo).
 
 prolongo_configure_path(PathPrefix, PathSuffix, Name) :-
@@ -60,7 +59,7 @@ prolongo_configure_path(PathPrefix, PathSuffix, Name) :-
 % but I haven't noticed much difference.
 % :- use_module(library(apply_macros)).
 
-:- include(misc(common)).
+:- include(mongo(include/common)).
 
 prolongo_load_project_modules :-
     use_module(library(pldoc), []), % Load first to enable comment processing.

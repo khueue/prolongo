@@ -9,7 +9,7 @@
         update_all/3
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  upsert(+Collection, +Selector, +Modifier) is det.
 %

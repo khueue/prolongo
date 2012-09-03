@@ -1,4 +1,4 @@
-:- include(misc(common)).
+:- include(include/common).
 
 :- begin_tests('mongo:insert/2').
 
@@ -6,7 +6,7 @@ test('insert', [
         setup(mongo_test_helper:up(Conn,Coll)),
         cleanup(mongo_test_helper:down(Conn))
     ]) :-
-    util:ms_since_epoch(MilliSeconds),
+    mongo_util:ms_since_epoch(MilliSeconds),
     Doc =
     [
         hello - [åäö,5.05],
@@ -23,7 +23,7 @@ test('insert', [
         setup(mongo_test_helper:up(Conn,Coll)),
         cleanup(mongo_test_helper:down(Conn))
     ]) :-
-    util:ms_since_epoch(MilliSeconds),
+    mongo_util:ms_since_epoch(MilliSeconds),
     Doc =
     [
         hello - world,

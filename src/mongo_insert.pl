@@ -7,7 +7,7 @@
         insert_batch/3
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  insert(+Collection, +Doc) is det.
 %

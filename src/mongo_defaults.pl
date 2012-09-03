@@ -7,7 +7,7 @@
         port/1
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  host(?Host) is semidet.
 %

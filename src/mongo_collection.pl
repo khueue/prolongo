@@ -10,7 +10,7 @@
         collection_connection/2
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 %%  new_collection(+Database, +CollectionName, -Collection) is det.
 %
@@ -28,7 +28,7 @@ new_collection(Database, CollectionName, Collection) :-
 %   True if Database is a handle to the database that includes Collection.
 
 collection_database(Collection, Database) :-
-    util:get_arg(Collection, 1, Database).
+    mongo_util:get_arg(Collection, 1, Database).
 
 %%  collection_name(+Collection, -CollectionName) is det.
 %
@@ -50,7 +50,7 @@ namespace_parts(Atom, Parts) :-
 %   True if Namespace is the namespace name for Collection.
 
 collection_namespace(Collection, Namespace) :-
-    util:get_arg(Collection, 2, Namespace).
+    mongo_util:get_arg(Collection, 2, Namespace).
 
 %%  collection_connection(+Collection, -Connection) is det.
 %

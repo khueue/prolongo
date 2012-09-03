@@ -14,7 +14,7 @@
         count_bytes_and_set_length/1
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 int32s([]) --> [].
 int32s([Int|Ints]) -->

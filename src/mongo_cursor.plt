@@ -1,4 +1,4 @@
-:- include(misc(common)).
+:- include(include/common).
 
 :- begin_tests('mongo:cursor_kill/1').
 

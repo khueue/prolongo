@@ -10,16 +10,16 @@
         cursor_exhaust/2
     ]).
 
-:- include(misc(common)).
+:- include(include/common).
 
 new_cursor(Collection, CursorId, Cursor) :-
     Cursor = cursor(Collection, CursorId).
 
 cursor_collection(Cursor, Collection) :-
-    util:get_arg(Cursor, 1, Collection).
+    mongo_util:get_arg(Cursor, 1, Collection).
 
 cursor_id(Cursor, CursorId) :-
-    util:get_arg(Cursor, 2, CursorId).
+    mongo_util:get_arg(Cursor, 2, CursorId).
 
 %%  cursor_kill(+Cursor) is det.
 %
