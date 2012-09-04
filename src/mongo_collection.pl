@@ -25,7 +25,7 @@ new_collection(Database, CollectionName, Collection) :-
 
 %%  collection_database(+Collection, -Database) is det.
 %
-%   True if Database is a handle to the database that includes Collection.
+%   True if Database is a handle to the database containing Collection.
 
 collection_database(Collection, Database) :-
     mongo_util:get_nth1_arg(Collection, 1, Database).
