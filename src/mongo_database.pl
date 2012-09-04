@@ -25,14 +25,14 @@ new_database(Connection, DatabaseName, Database) :-
 %   True if Connection is the connection used to access Database.
 
 database_connection(Database, Connection) :-
-    mongo_util:get_arg(Database, 1, Connection).
+    mongo_util:get_nth1_arg(Database, 1, Connection).
 
 %%  database_name(+Database, -DatabaseName) is det.
 %
 %   True if DatabaseName is the name of Database.
 
 database_name(Database, DatabaseName) :-
-    mongo_util:get_arg(Database, 2, DatabaseName).
+    mongo_util:get_nth1_arg(Database, 2, DatabaseName).
 
 %%  get_collection(+Database, +CollectionName, -Collection) is det.
 %

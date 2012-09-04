@@ -30,7 +30,7 @@ new_connection(Host, Port, Connection) :-
     Connection = connection(Socket).
 
 connection_socket(Connection, Socket) :-
-    mongo_util:get_arg(Connection, 1, Socket).
+    mongo_util:get_nth1_arg(Connection, 1, Socket).
 
 %%  free_connection(+Connection) is det.
 %

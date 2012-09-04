@@ -30,10 +30,10 @@ close_socket_and_throw(SocketId, Exception) :-
     throw(mongo_error('could not connect to server', [Exception])).
 
 socket_read(Socket, ReadStream) :-
-    mongo_util:get_arg(Socket, 1, ReadStream).
+    mongo_util:get_nth1_arg(Socket, 1, ReadStream).
 
 socket_write(Socket, WriteStream) :-
-    mongo_util:get_arg(Socket, 2, WriteStream).
+    mongo_util:get_nth1_arg(Socket, 2, WriteStream).
 
 %%  free_socket(+Socket) is det.
 %

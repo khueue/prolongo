@@ -5,7 +5,7 @@
     [
         options_to_bitmask/3,
         ms_since_epoch/1,
-        get_arg/3,
+        get_nth1_arg/3,
         atom_contains/2
     ]).
 
@@ -38,12 +38,12 @@ ms_since_epoch(Millis) :-
     core:get_time(FloatSeconds),
     Millis is floor(FloatSeconds * 1000).
 
-%%  get_arg(+Struct, +Index, ?Arg) is semidet.
+%%  get_nth1_arg(+Struct, +Index, ?Arg) is semidet.
 %
 %   True if Arg is the argument at Index in Struct. Indexing
 %   starts at 1.
 
-get_arg(Struct, Index, Arg) :-
+get_nth1_arg(Struct, Index, Arg) :-
     core:arg(Index, Struct, Arg).
 
 %%  atom_contains(+Atom, +SubAtom) is semidet.

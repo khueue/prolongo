@@ -16,10 +16,10 @@ new_cursor(Collection, CursorId, Cursor) :-
     Cursor = cursor(Collection, CursorId).
 
 cursor_collection(Cursor, Collection) :-
-    mongo_util:get_arg(Cursor, 1, Collection).
+    mongo_util:get_nth1_arg(Cursor, 1, Collection).
 
 cursor_id(Cursor, CursorId) :-
-    mongo_util:get_arg(Cursor, 2, CursorId).
+    mongo_util:get_nth1_arg(Cursor, 2, CursorId).
 
 %%  cursor_kill(+Cursor) is det.
 %
