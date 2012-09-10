@@ -39,4 +39,4 @@
 %   True if Version is a list representing the major, minor
 %   and patch version numbers of this library.
 
-version([1,0,0]).
+version([1,1,0]).
