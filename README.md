@@ -38,9 +38,10 @@ Licensed under the MIT license which can be found in the file
 
 ## Usage
 
- 1. Clone the BSON parser found at <https://github.com/khueue/prolog-bson>
-    and compile it.
- 2. Clone prolongo.
+ 1. Clone the BSON parser found at <https://github.com/khueue/prolog-bson>,
+    switch to a certain release if you like (e.g. `git checkout v1.0.0`) and
+    compile it.
+ 2. Clone prolongo (and possibly switch to a release, `git checkout v1.1.0`).
  3. Edit the path to the BSON loader script found in `load.pl`. The path
     should be relative to prolongo's root (so you don't have to edit
     anything if you clone both BSON and prolongo into the same parent
