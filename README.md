@@ -10,7 +10,8 @@ GridFS, etc.), but the driver can be used for simple use-cases.
 
  * BSON parser is now an external dependency (separate repository).
  * Updated BSON parser to handle new binary 'uuid' subtype.
- * Rewritten exception handling in BSON parser.
+ * Rewritten exception handling, exceptions now follow:
+`mongo_error(DescriptionAtom, ListOfRelatedVars)`.
  * Fix buggy hex_bytes/2 (used when handling object_id).
  * Hopefully improved compilation on Windows (now includes stdint.h).
  * Test suite can be run in parallel by separate Prolog sessions.
