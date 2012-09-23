@@ -13,7 +13,7 @@
 
 %%  new_socket(+Host, +Port, -Socket) is det.
 %
-%   True if Socket is a new socket connected to Host:Port.
+%   True if Socket is a new TCP socket connected to Host:Port.
 %
 %   @throws mongo_error(Description, [SocketException])
 

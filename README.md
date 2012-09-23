@@ -167,6 +167,11 @@ localhost, then go:
  * MongoDB (tested on Mac OS X using MongoDB 2.2.0)
  * BSON parser found at <https://github.com/khueue/prolog-bson>
 
+## Issues
+
+ * RequestId and ResponseId are completely ignored (set to 0) in
+   mongo message headers.
+
 ## Coding Guidelines
 
  * Use empty imports (use_module(mymodule, [])) in order to not
