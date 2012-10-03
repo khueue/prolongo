@@ -49,8 +49,8 @@ Licensed under the MIT license which can be found in the file
  4. Run `make` to run the tests (will also run the BSON tests). Some
     of the tests require a MongoDB instance running on localhost on the
     default port.
- 5. See the example below and the tests (*.plt) in the `src` folder for
-    more usage information.
+ 5. See the example below, the tests (*.plt) in the `src` folder as well
+    as the API documentation in the source code for more usage information.
 
 ## Usage Example
 
