@@ -1,15 +1,14 @@
 /** <module> Connection handling and response parsing.
  */
 
-:- module(_,
-    [
-        new_connection/1,
-        new_connection/3,
-        free_connection/1,
-        get_database/3,
-        send_to_server/2,
-        read_reply/4
-    ]).
+:- module(_, [
+    new_connection/1,
+    new_connection/3,
+    free_connection/1,
+    get_database/3,
+    send_to_server/2,
+    read_reply/4
+]).
 
 :- include(include/common).
 

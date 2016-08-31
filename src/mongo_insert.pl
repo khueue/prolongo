@@ -1,11 +1,10 @@
 /** <module> Document insertion.
  */
 
-:- module(_,
-    [
-        insert/2,
-        insert_batch/3
-    ]).
+:- module(_, [
+    insert/2,
+    insert_batch/3
+]).
 
 :- include(include/common).
 

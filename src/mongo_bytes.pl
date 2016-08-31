@@ -1,18 +1,17 @@
 /** <module> Low-level construction of messages to send over the wire.
  */
 
-:- module(_,
-    [
-        int32//1,
-        int32s//1,
-        int64//1,
-        int64s//1,
-        c_string//1,
-        header//3,
-        bson_doc//1,
-        bson_docs//1,
-        count_bytes_and_set_length/1
-    ]).
+:- module(_, [
+    int32//1,
+    int32s//1,
+    int64//1,
+    int64s//1,
+    c_string//1,
+    header//3,
+    bson_doc//1,
+    bson_docs//1,
+    count_bytes_and_set_length/1
+]).
 
 :- include(include/common).
 

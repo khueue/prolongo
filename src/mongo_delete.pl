@@ -1,11 +1,10 @@
 /** <module> Document deletion.
  */
 
-:- module(_,
-    [
-        delete/2,
-        delete/3
-    ]).
+:- module(_, [
+    delete/2,
+    delete/3
+]).
 
 :- include(include/common).
 

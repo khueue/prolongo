@@ -1,14 +1,13 @@
 /** <module> Collection handling.
  */
 
-:- module(_,
-    [
-        new_collection/3,
-        collection_database/2,
-        collection_name/2,
-        collection_namespace/2,
-        collection_connection/2
-    ]).
+:- module(_, [
+    new_collection/3,
+    collection_database/2,
+    collection_name/2,
+    collection_namespace/2,
+    collection_connection/2
+]).
 
 :- include(include/common).
 

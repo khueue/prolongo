@@ -1,13 +1,12 @@
 /** <module> Document updating.
  */
 
-:- module(_,
-    [
-        upsert/3,
-        update/3,
-        update/4,
-        update_all/3
-    ]).
+:- module(_, [
+    upsert/3,
+    update/3,
+    update/4,
+    update_all/3
+]).
 
 :- include(include/common).
 

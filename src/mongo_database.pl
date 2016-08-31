@@ -1,13 +1,12 @@
 /** <module> Database handling.
  */
 
-:- module(_,
-    [
-        new_database/3,
-        database_connection/2,
-        database_name/2,
-        get_collection/3
-    ]).
+:- module(_, [
+    new_database/3,
+    database_connection/2,
+    database_name/2,
+    get_collection/3
+]).
 
 :- include(include/common).
 

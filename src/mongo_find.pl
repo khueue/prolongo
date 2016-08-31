@@ -1,14 +1,13 @@
 /** <module> Document finding.
  */
 
-:- module(_,
-    [
-        find_one/3,
-        find_one/4,
-        find_all/4,
-        find/7,
-        find/8
-    ]).
+:- module(_, [
+    find_one/3,
+    find_one/4,
+    find_all/4,
+    find/7,
+    find/8
+]).
 
 :- include(include/common).
 

@@ -1,17 +1,16 @@
 /** <module> Helpers for dealing with the test database.
  */
 
-:- module(_,
-    [
-        database_name/1,
-        collection_name/1,
-        database/2,
-        drop_all_test_databases/0,
-        collection/2,
-        up/2,
-        down/1,
-        create_n_docs/2
-    ]).
+:- module(_, [
+    database_name/1,
+    collection_name/1,
+    database/2,
+    drop_all_test_databases/0,
+    collection/2,
+    up/2,
+    down/1,
+    create_n_docs/2
+]).
 
 :- include(include/common).
 

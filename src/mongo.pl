@@ -5,25 +5,23 @@
  *  @see <http://www.mongodb.org/>
  */
 
-:- module(_,
-    [
-        version/1
-        % And see reexports below.
-    ]).
+:- module(_, [
+    version/1
+    % And see reexports below.
+]).
 
-:- reexport(
-    [
-        mongo_connection,
-        mongo_database,
-        mongo_defaults,
-        mongo_collection,
-        mongo_find,
-        mongo_cursor,
-        mongo_insert,
-        mongo_update,
-        mongo_delete,
-        mongo_command
-    ]).
+:- reexport([
+    mongo_connection,
+    mongo_database,
+    mongo_defaults,
+    mongo_collection,
+    mongo_find,
+    mongo_cursor,
+    mongo_insert,
+    mongo_update,
+    mongo_delete,
+    mongo_command
+]).
 
 :- include(include/common).
 

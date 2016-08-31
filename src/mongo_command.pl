@@ -1,17 +1,17 @@
 /** <module> Command handling.
  */
 
-:- module(_,
-    [
-        command/3,
-        list_commands/2,
-        list_collection_names/2,
-        list_database_infos/2,
-        list_database_names/2,
-        drop_collection/1,
-        drop_database/1,
-        get_last_error/2
-    ]).
+:- module(_, [
+    command/3,
+    command/4,
+    list_commands/2,
+    list_collection_names/2,
+    list_database_infos/2,
+    list_database_names/2,
+    drop_collection/1,
+    drop_database/1,
+    get_last_error/2
+]).
 
 :- include(include/common).
 

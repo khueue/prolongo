@@ -1,13 +1,12 @@
 /** <module> Helpers.
  */
 
-:- module(_,
-    [
-        options_to_bitmask/3,
-        ms_since_epoch/1,
-        get_nth1_arg/3,
-        atom_contains/2
-    ]).
+:- module(_, [
+    options_to_bitmask/3,
+    ms_since_epoch/1,
+    get_nth1_arg/3,
+    atom_contains/2
+]).
 
 :- include(include/common).
 
