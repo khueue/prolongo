@@ -1,60 +1,62 @@
-# MongoDB Driver for Prolog
+MongoDB Driver for Prolog
+=========================
 
 A MongoDB driver compatible with SWI-Prolog that implements basic CRUD
 functionality. Several things have yet to be implemented (authentication,
-GridFS, etc.), but the driver can be used for simple use-cases.
+GridFS, etc.), but the driver can be used for simple use cases.
+
 
 ## Release History
 
 ### Version 1.1.0 (2012-09-10)
 
- * BSON parser is now an external dependency (separate repository).
- * Updated BSON parser to handle new binary 'uuid' subtype.
- * Rewritten exception handling, exceptions now follow:
-`mongo_error(DescriptionAtom, ListOfRelatedVars)`.
- * Fix buggy hex_bytes/2 (used when handling object_id).
- * Hopefully improved compilation on Windows (now includes stdint.h).
- * Test suite can be run in parallel by separate Prolog sessions.
- * Better API documentation (in the code).
- * Minor performance improvements and code cleanup.
- * Internal module usage rewritten.
- * Now tested on MongoDB 2.2.0.
- * Prepared for SWI-Prolog 6.2.0.
+* BSON parser is now an external dependency (separate repository).
+* Updated BSON parser to handle new binary 'uuid' subtype.
+* Rewritten exception handling, exceptions now follow:
+  `mongo_error(DescriptionAtom, ListOfRelatedVars)`.
+* Fix buggy hex_bytes/2 (used when handling object_id).
+* Hopefully improved compilation on Windows (now includes stdint.h).
+* Test suite can be run in parallel by separate Prolog sessions.
+* Better API documentation (in the code).
+* Minor performance improvements and code cleanup.
+* Internal module usage rewritten.
+* Now tested on MongoDB 2.2.0.
+* Prepared for SWI-Prolog 6.2.0.
 
 ### Version 1.0.0 (2012-08-11)
 
- * First real release.
- * Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
- * Add runnable example program (simple todo).
+* First real release.
+* Fix issue #1 ("Two tests failing on Swi-Prolog 6.0.2").
+* Add runnable example program (simple todo).
 
-## License
 
-Licensed under the MIT license which can be found in the file
-`LICENSE` in the project root.
+## Dependencies
 
-## Todo
+* **SWI-Prolog** - Tested on Mac OS X using SWI 7.2.3.
+* **MongoDB** - Tested on Mac OS X using MongoDB 3.2.9.
+* **BSON parser** - Found at <https://github.com/khueue/prolog-bson>.
 
- * Reduce amount of arguments to CRUD predicates.
 
-## Usage
+## Installation and Usage
 
- 1. Clone the BSON parser found at <https://github.com/khueue/prolog-bson>,
-    switch to a certain release if you like (e.g. `git checkout v1.0.0`) and
-    compile it.
- 2. Clone prolongo (and possibly switch to a release, `git checkout v1.1.0`).
- 3. Edit the path to the BSON loader script found in `load.pl`. The path
-    should be relative to prolongo's root (so you don't have to edit
-    anything if you clone both BSON and prolongo into the same parent
-    folder).
- 4. Run `make` to run the tests (will also run the BSON tests). Some
-    of the tests require a MongoDB instance running on localhost on the
-    default port.
- 5. See the example below, the tests (*.plt) in the `src` folder as well
-    as the API documentation in the source code for more usage information.
+1. Clone the BSON parser found at <https://github.com/khueue/prolog-bson>,
+   switch to a certain release if you like (e.g. `git checkout v1.0.0`) and
+   build it according to its instructions.
+2. Clone prolongo (and possibly switch to a release, `git checkout v1.0.0`).
+3. Edit the path to the BSON loader script found in `load.pl`. The path
+   should be relative to prolongo's root (so you don't have to edit
+   anything if you clone both BSON and prolongo into the same parent
+   folder).
+4. Run `make` to run the tests (will also run the BSON tests). Some
+   of the tests require a MongoDB instance running on localhost on the
+   default port.
+5. See the example below, the tests (`*.plt`) in the `src` folder as well
+   as the API documentation in the source code for more usage information.
+
 
 ## Usage Example
 
-A small to-do application (found in the examples folder):
+A small to-do application (also found in the examples folder):
 
 ```prolog
 #!/usr/bin/env swipl --quiet -O -t todo -f
@@ -132,67 +134,76 @@ delete_item(Collection) :-
 ```
 
 Consult the file and make sure you have a MongoDB instance running on
-localhost, then go:
+localhost, then run it:
 
-    ?- todo.
-    --- Simple Todo ---
-    Id                        Label              Priority
+```
+?- todo.
+--- Simple Todo ---
+Id                        Label              Priority
 
-    Enter list/add/delete/quit: add.
-    Label: 'Make tea'.
-    Priority: 1.
+Enter list/add/delete/quit: add.
+Label: 'Make tea'.
+Priority: 1.
 
-    Enter list/add/delete/quit: add.
-    Label: 'Go for a walk'.
-    Priority: 2.
+Enter list/add/delete/quit: add.
+Label: 'Go for a walk'.
+Priority: 2.
 
-    Enter list/add/delete/quit: list.
-    Id                        Label              Priority
-    4dff66bd4c594ffa3e17cb70  Make tea           1
-    4dff66eb4c594ffa3e17cb71  Go for a walk      2
+Enter list/add/delete/quit: list.
+Id                        Label              Priority
+4dff66bd4c594ffa3e17cb70  Make tea           1
+4dff66eb4c594ffa3e17cb71  Go for a walk      2
 
-    Enter list/add/delete/quit: delete.
-    Id: '4dff66eb4c594ffa3e17cb71'.
+Enter list/add/delete/quit: delete.
+Id: '4dff66eb4c594ffa3e17cb71'.
 
-    Enter list/add/delete/quit: list.
-    Id                        Label              Priority
-    4dff66bd4c594ffa3e17cb70  Make tea           1
+Enter list/add/delete/quit: list.
+Id                        Label              Priority
+4dff66bd4c594ffa3e17cb70  Make tea           1
 
-    Enter list/add/delete/quit: quit.
-    Bye!
+Enter list/add/delete/quit: quit.
+Bye!
+```
 
-## Dependencies
 
- * SWI-Prolog (tested on Mac OS X using SWI 6.0.2)
- * MongoDB (tested on Mac OS X using MongoDB 2.2.0)
- * BSON parser found at <https://github.com/khueue/prolog-bson>
+## Todo
+
+* Reduce amount of arguments to CRUD predicates.
+
 
 ## Issues
 
- * RequestId and ResponseId are completely ignored (set to 0) in
-   mongo message headers.
+* RequestId and ResponseId are completely ignored (set to 0) in
+  mongo message headers.
+
+
+## License
+
+Licensed under the MIT license which can be found in the file
+`LICENSE` in the project root.
+
 
 ## Coding Guidelines
 
- * Use empty imports (use_module(mymodule, [])) in order to not
-   pollute the namespace.
- * Always use module prefixes (mymodule:predicate(...)) in order to
-   clarify where things are coming from.
- * Always use the "made-up" module prefix "core:" when calling
-   built-in predicates. This is completely unnecessary, and doesn't even
-   work in all cases, but I think it is a good idea as long as it doesn't
-   cause any problems. This decision may need to be revised when
-   compatibility between different Prologs is investigated.
- * Avoid the if-then-else construct. It just looks ugly.
- * Avoid disjunctions. They are ugly, and can be replaced by properly
-   written helpers. Think: premises are "and", clauses are "or".
- * Use cuts where appropriate, and try to keep each cut on a line by
-   itself unless its placement is obvious and consistent in each clause.
-   PlUnit is excellent at pointing out when tests succeed but leave
-   choice points.
- * Try to avoid spaces within lists and structures, but always use
-   spaces between arguments.
- * Predicates, atoms, etc. should use "this_naming_style" while variables
-   should use "ThisNamingStyle".
- * Try to stick to the PlDoc structure.
- * If in doubt, consult: <http://www.ai.uga.edu/mc/plcoding.pdf>
+* Use empty imports (use_module(mymodule, [])) in order to not
+  pollute the namespace.
+* Always use module prefixes (mymodule:predicate(...)) in order to
+  clarify where things are coming from.
+* Always use the "made-up" module prefix "core:" when calling
+  built-in predicates. This is completely unnecessary, and doesn't even
+  work in all cases, but I think it is a good idea as long as it doesn't
+  cause any problems. This decision may need to be revised when
+  compatibility between different Prologs is investigated.
+* Avoid the if-then-else construct. It just looks ugly.
+* Avoid disjunctions. They are ugly, and can be replaced by properly
+  written helpers. Think: premises are "and", clauses are "or".
+* Use cuts where appropriate, and try to keep each cut on a line by
+  itself unless its placement is obvious and consistent in each clause.
+  PlUnit is excellent at pointing out when tests succeed but leave
+  choice points.
+* Try to avoid spaces within lists and structures, but always use
+  spaces between arguments.
+* Predicates, atoms, etc. should use "this_naming_style" while variables
+  should use "ThisNamingStyle".
+* Try to stick to the PlDoc structure.
+* If in doubt, consult: <http://www.cmpe.boun.edu.tr/sites/default/files/prolog_coding_guidelines.pdf>.
