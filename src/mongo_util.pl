@@ -15,6 +15,8 @@
 %   True if Bitmask is an unsigned integer with bits set according to
 %   which Options are given, where each option gets its value from
 %   calling PredOptionToBitmask(Option, Bitmask).
+%
+%   @throws mongo_error(Description, [UnknownOption])
 
 options_to_bitmask(Options, Pred, Bitmask) :-
     options_to_bitmask(Options, Pred, 0, Bitmask).
