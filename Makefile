@@ -1,7 +1,7 @@
 PROLOG = swipl -O
 
-.PHONY: all
-all: test
+.PHONY: default
+default: test
 
 .PHONY: test
 test:
