@@ -64,6 +64,8 @@ find(Collection, Query, ReturnFields, Skip, Limit, Cursor, Docs) :-
 %   Cursor can be used to retrieve more documents. Options is a list
 %   of atoms (tailable_cursor, slave_ok, no_cursor_timeout, await_data,
 %   exhaust, partial).
+%
+%   @throws mongo_error(Description, [ErrorDoc])
 
 find(Collection, Query, ReturnFields, Skip, Limit, Options, Cursor, Docs) :-
     mongo_collection:collection_namespace(Collection, Namespace),
