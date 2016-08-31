@@ -36,7 +36,7 @@ prolongo_load_external_libraries.
 
 prolongo_load_external_library(Root, RelativePathToLoader) :-
     atomic_list_concat([Root,RelativePathToLoader], '/', Loader),
-    [Loader].
+    [Loader]. % Consult the file.
 
 %   prolongo_configure_load_paths is det.
 %

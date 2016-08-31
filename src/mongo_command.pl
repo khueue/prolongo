@@ -24,12 +24,17 @@ database_cmd_collection(Database, CmdColl) :-
     mongo_database:get_collection(Database, CmdCollName, CmdColl).
 
 %%  command(+Database, +Query, -Doc) is det.
+%%  command(+Database, +Query, +ReturnFields, -Doc) is det.
 %
-%   True if Doc is the response to Query, issued on Database.
+%   True if Doc is the response to Query issued on Database, with
+%   the optional ReturnFields being the only fields returned in Doc.
 
 command(Database, Query, Doc) :-
+    command(Database, Query, [], Doc).
+
+command(Database, Query, ReturnFields, Doc) :-
     database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, Query, Doc).
+    mongo_find:find_one(CmdColl, Query, ReturnFields, Doc).
 
 %%  get_last_error(+Database, -Doc) is det.
 %
@@ -43,6 +48,8 @@ get_last_error(Database, Doc) :-
 %
 %   True if Database is dropped. Throws an exception if Database could
 %   not be dropped.
+%
+%   @throws mongo_error(Description, [ErrorDoc])
 
 drop_database(Database) :-
     command(Database, [dropDatabase-1], Doc),
@@ -56,12 +63,13 @@ drop_database(Database) :-
 %
 %   True if Collection is dropped from its database. Throws an exception
 %   if Collection could not be dropped.
+%
+%   @throws mongo_error(Description, [ErrorDoc])
 
 drop_collection(Collection) :-
     mongo_collection:collection_database(Collection, Database),
-    database_cmd_collection(Database, CmdColl),
     mongo_collection:collection_name(Collection, CollectionName),
-    mongo_find:find_one(CmdColl, [drop-CollectionName], Doc),
+    command(Database, [drop-CollectionName], Doc),
     doc_ok(Doc),
     !.
 drop_collection(Collection) :-
@@ -85,8 +93,7 @@ list_database_names(Connection, Names) :-
 list_database_infos(Connection, Infos) :-
     admin_database(DatabaseName),
     mongo_connection:get_database(Connection, DatabaseName, Database),
-    database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, [listDatabases-1], Doc),
+    command(Database, [listDatabases-1], Doc),
     bson:doc_get(Doc, databases, InfoArray),
     repack_database_infos(InfoArray, Infos).
 
@@ -100,8 +107,7 @@ repack_database_infos([[name-Name|Info]|Infos], [Name-Info|Names]) :-
 %   can be executed on Database.
 
 list_commands(Database, Result) :-
-    database_cmd_collection(Database, CmdColl),
-    mongo_find:find_one(CmdColl, [listCommands-1], [commands-1], Result).
+    command(Database, [listCommands-1], [commands-1], Result).
 
 %%  list_collection_names(+Database, -Names) is det.
 %
@@ -138,6 +144,4 @@ doc_ok(Doc) :-
     bson:doc_get_strict(Doc, ok, Value),
     doc_ok_value(Value).
 
-doc_ok_value(1.0) :- !.
-doc_ok_value(Unknown) :-
-    throw(mongo_error('unknown document okay value', [Unknown])).
+doc_ok_value(1.0).
