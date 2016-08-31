@@ -16,7 +16,6 @@
 :- include(include/common).
 
 command_collection('$cmd').
-namespace_collection('system.namespaces').
 admin_database('admin').
 
 database_cmd_collection(Database, CmdColl) :-
@@ -112,29 +111,19 @@ list_commands(Database, Result) :-
 %%  list_collection_names(+Database, -Names) is det.
 %
 %   True if Names is the list of collection names in Database.
+%
+%   @tbd XXX This currently only returns the first batch of
+%   collection names, and I'm unsure how large that batch is.
 
 list_collection_names(Database, Names) :-
-    namespace_collection(CollNamespacesName),
-    mongo_database:get_collection(Database, CollNamespacesName, Collection),
-    mongo_find:find_all(Collection, [], [], CollectionInfos),
-    repack_collection_names(CollectionInfos, Names).
+    command(Database, [listCollections-1], Doc),
+    Doc = [cursor-Cursor|_],
+    Cursor = [id-_CursorId,ns-_CursorNamespace,firstBatch-Collections|_],
+    repack_collection_infos(Collections, Names).
 
-repack_collection_names([], []).
-repack_collection_names([Pair|Pairs], [Name|Names]) :-
-    acceptable_collection(Pair),
-    !,
-    repack_collection(Pair, Name),
-    repack_collection_names(Pairs, Names).
-repack_collection_names([_Pair|Pairs], Names) :-
-    repack_collection_names(Pairs, Names).
-
-acceptable_collection([name-Namespace]) :-
-    \+ mongo_util:atom_contains(Namespace, '$').
-acceptable_collection([name-Namespace]) :-
-    mongo_util:atom_contains(Namespace, '.oplog.$').
-
-repack_collection([name-Namespace], Name) :-
-    mongo_collection:collection_without_namespace(Namespace, Name).
+repack_collection_infos([], []).
+repack_collection_infos([[name-Name|_]|Colls], [Name|Names]) :-
+    repack_collection_infos(Colls, Names).
 
 %%  doc_ok(+Doc) is semidet.
 %

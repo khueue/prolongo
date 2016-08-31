@@ -16,8 +16,8 @@ test('list collection names', [
     ]) :-
     mongo:collection_database(Coll, Database),
     mongo:list_collection_names(Database, Names),
-    lists:member('system.indexes', Names),
-    lists:member('testcoll', Names),
+    mongo_test_helper:collection_name(TestColl),
+    lists:member(TestColl, Names),
     !. % Not interested in member choices.
 
 test('list database infos', [
