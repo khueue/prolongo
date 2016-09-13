@@ -8,6 +8,13 @@ GridFS, etc.), but the driver can be used for simple use cases.
 
 ## Release History
 
+### Version 1.1.1 (2016-09-13)
+
+* Updated implementation to be compatible with the current MongoDB
+  version (currently 3.2.9). (In particular, `mongo:list_collection_names/2`
+  was updated to stop using removed MongoDB functionality.)
+* Tested on SWI-Prolog 7.2.3.
+
 ### Version 1.1.0 (2012-09-10)
 
 * BSON parser is now an external dependency (separate repository).
