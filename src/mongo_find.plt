@@ -38,7 +38,7 @@ test('cursor', [
         ['_id'-object_id(_),number-_],
         ['_id'-object_id(_),number-_]
     ],
-    mongo:cursor_has_more(Cursor1), % Why still more, yet empty?
+    mongo:cursor_has_more(Cursor1), % @tbd XXX Why still more, yet empty?
     mongo:cursor_get_more(Cursor1, 3, Docs2, Cursor2),
     Docs2 =
     [
@@ -89,6 +89,7 @@ test('insert batch, find all', [
 :- end_tests('mongo:find/7').
 
 :- begin_tests('mongo:find/8').
+% XXX @tbd Add tests?
 :- end_tests('mongo:find/8').
 
 :- begin_tests('mongo:find_one/3,4').
