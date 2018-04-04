@@ -30,7 +30,12 @@ int64s([Int|Ints]) -->
     int64(Int),
     int64s(Ints).
 
-% Can parse or construct.
+%%  int64(+Int, -Bytes) is det.
+%%  int64(-Int, +Bytes) is det.
+%
+%   True if Bytes is the 8-element little-endian byte representation
+%   of Int. Called with phrase/2, and can be used in both directions.
+
 int64(Int) -->
     [B0,B1,B2,B3,B4,B5,B6,B7],
     { bson_bits:integer_bytes(Int, 8, little, [B0,B1,B2,B3,B4,B5,B6,B7]) }.
